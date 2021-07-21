@@ -1,14 +1,16 @@
 import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonSearchbar } from '@ionic/react';
 import { useParams, useHistory } from 'react-router';
 import React, { KeyboardEvent, useState } from 'react';
-import ExploreContainer from '../components/ExploreContainer';
 import './Page.css';
 
-const Page: React.FC = () => {
+interface ContainerProps {
+  children?: JSX.Element;
+}
+//
+const Page: React.FC<ContainerProps> = ( { children = null} ) => {
 
   const history = useHistory();
   const { name } = useParams<{ name: string; }>();
-  const { query } = useParams<{ query: string; }>();
   const [searchText, setSearchText] = useState('');
 
   const handleLoginKeyUp = (e: KeyboardEvent<HTMLIonSearchbarElement>) => {
@@ -38,12 +40,13 @@ const Page: React.FC = () => {
             <IonTitle size="large">{name}</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <ExploreContainer name={name}>
-            {query}
-        </ExploreContainer>
+        <div className="container">
+          {children}
+        </div>
       </IonContent>
     </IonPage>
   );
 };
 
 export default Page;
+

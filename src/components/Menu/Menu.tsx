@@ -7,14 +7,12 @@ import {
   IonListHeader,
   IonMenu,
   IonMenuToggle,
-  IonNote,
 } from '@ionic/react';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router';
 import { useLocation } from 'react-router-dom';
 import { stop, stopOutline, pause, pauseOutline ,play, playOutline, time, timeOutline, settings, settingsOutline, list, listOutline, musicalNotes, musicalNotesOutline, peopleOutline, people, peopleCircle, peopleCircleOutline, heartOutline, heartSharp, mailOutline, mailSharp, paperPlaneOutline, paperPlaneSharp, trashOutline, trashSharp, warningOutline, warningSharp } from 'ionicons/icons';
 import './Menu.css';
-import { act } from 'react-dom/test-utils';
 
 function debugLog(container: string, label: string, value: any = null) {
   console.log(`debug - ${container} - ${label} `, value);
@@ -23,49 +21,49 @@ function debugLog(container: string, label: string, value: any = null) {
 const appPages: AppPage[] = [
   {
     title: 'Queue',
-    url: '/page/Queue',
+    url: '/Queue',
     iosIcon: musicalNotesOutline,
     mdIcon: musicalNotes
   },
   {
     title: 'Singers',
-    url: '/page/Singers',
+    url: '/Singers',
     iosIcon: peopleCircleOutline,
     mdIcon: peopleCircle
   },
   {
     title: 'Artists',
-    url: '/page/Artists',
+    url: '/Artists',
     iosIcon: peopleOutline,
     mdIcon: people
   },
   {
     title: 'Favorites',
-    url: '/page/Favorites',
+    url: '/Favorites',
     iosIcon: heartOutline,
     mdIcon: heartSharp
   },
   {
     title: 'History',
-    url: '/page/History',
+    url: '/History',
     iosIcon: timeOutline,
     mdIcon: time
   },
   {
     title: 'Latest Songs',
-    url: '/page/LatestSongs',
+    url: '/LatestSongs',
     iosIcon: listOutline,
     mdIcon: list
   },
   {
     title: 'Song Lists',
-    url: '/page/SongLists',
+    url: '/SongLists',
     iosIcon: listOutline,
     mdIcon: list
   },
   {
     title: 'Settings',
-    url: '/page/Settings',
+    url: '/Settings',
     iosIcon: settingsOutline,
     mdIcon: settings
   }

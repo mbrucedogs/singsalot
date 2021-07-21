@@ -3,8 +3,8 @@ import Page from "../../components/Page/Page"
 
 const Queue: React.FC = () => {
     return (
-        <Page>
-          <>Queue</>
+        <Page name="Queue">
+          <div>Queue</div>
         </Page>
     );
 };

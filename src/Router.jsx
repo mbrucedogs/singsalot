@@ -4,15 +4,15 @@ import { IonReactRouter } from '@ionic/react-router';
 import { Redirect, Route } from 'react-router-dom';
 import Menu from './components/Menu/Menu';
 
-const Artists = lazy(() => import('./pages/Artists/Artists'));
-const Favorites  = lazy(() => import('./pages/Favorites/Favorites'));
-const History  = lazy(() => import('./pages/History/History'));
-const LatestSongs  = lazy(() => import('./pages/LatestSongs/LatestSongs'));
-const Queue  = lazy(() => import('./pages/Queue/Queue'));
-const Search  = lazy(() => import('./pages/Search/Search'));
-const Settings  = lazy(() => import('./pages/Settings/Settings'));
-const Singers  = lazy(() => import('./pages/Singers/Singers'));
-const SongLists  = lazy(() => import('./pages/SongLists/SongLists'));
+import Artists from './pages/Artists/Artists';
+import Favorites from './pages/Favorites/Favorites';
+import History from './pages/History/History';
+import LatestSongs from './pages/LatestSongs/LatestSongs';
+import Queue from './pages/Queue/Queue';
+import Search from './pages/Search/Search';
+import Settings from './pages/Settings/Settings';
+import Singers from './pages/Singers/Singers';
+import SongLists from './pages/SongLists/SongLists';
 
 const Router = () => {
   return (

@@ -3,8 +3,8 @@ import Page from "../../components/Page/Page"
 
 const History: React.FC = () => {
     return (
-        <Page>
-          <></>
+        <Page name="History">
+          <div>History</div>
         </Page>
     );
 };

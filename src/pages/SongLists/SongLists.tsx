@@ -3,8 +3,8 @@ import Page from "../../components/Page/Page"
 
 const SongLists: React.FC = () => {
     return (
-        <Page>
-          <></>
+        <Page name="Song Lists">
+          <div>Song Lists</div>
         </Page>
     );
 };

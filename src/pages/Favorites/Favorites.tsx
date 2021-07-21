@@ -3,8 +3,8 @@ import Page from "../../components/Page/Page"
 
 const Favorites: React.FC = () => {
     return (
-        <Page>
-          <></>
+        <Page name="Favorites">
+          <div>Favorites</div>
         </Page>
     );
 };

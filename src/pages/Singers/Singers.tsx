@@ -3,8 +3,8 @@ import Page from "../../components/Page/Page"
 
 const Singers: React.FC = () => {
     return (
-        <Page>
-          <></>
+        <Page name="Singers">
+          <div>Singers</div>
         </Page>
     );
 };

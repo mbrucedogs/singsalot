@@ -9,30 +9,35 @@ import {
   IonMenuToggle,
   IonNote,
 } from '@ionic/react';
-
+import { useState, useEffect } from 'react';
+import { useParams } from 'react-router';
 import { useLocation } from 'react-router-dom';
-import { archiveOutline, archiveSharp, bookmarkOutline, heartOutline, heartSharp, mailOutline, mailSharp, paperPlaneOutline, paperPlaneSharp, trashOutline, trashSharp, warningOutline, warningSharp } from 'ionicons/icons';
+import { stop, stopOutline, pause, pauseOutline ,play, playOutline, time, timeOutline, settings, settingsOutline, list, listOutline, musicalNotes, musicalNotesOutline, peopleOutline, people, peopleCircle, peopleCircleOutline, heartOutline, heartSharp, mailOutline, mailSharp, paperPlaneOutline, paperPlaneSharp, trashOutline, trashSharp, warningOutline, warningSharp } from 'ionicons/icons';
 import './Menu.css';
+import { act } from 'react-dom/test-utils';
 
-interface AppPage {
-  url: string;
-  iosIcon: string;
-  mdIcon: string;
-  title: string;
+function debugLog(container: string, label: string, value: any = null) {
+  console.log(`debug - ${container} - ${label} `, value);
 }
 
 const appPages: AppPage[] = [
   {
-    title: 'Inbox',
-    url: '/page/Inbox',
-    iosIcon: mailOutline,
-    mdIcon: mailSharp
+    title: 'Queue',
+    url: '/page/Queue',
+    iosIcon: musicalNotesOutline,
+    mdIcon: musicalNotes
   },
   {
-    title: 'Outbox',
-    url: '/page/Outbox',
-    iosIcon: paperPlaneOutline,
-    mdIcon: paperPlaneSharp
+    title: 'Singers',
+    url: '/page/Singers',
+    iosIcon: peopleCircleOutline,
+    mdIcon: peopleCircle
+  },
+  {
+    title: 'Artists',
+    url: '/page/Artists',
+    iosIcon: peopleOutline,
+    mdIcon: people
   },
   {
     title: 'Favorites',
@@ -41,36 +46,135 @@ const appPages: AppPage[] = [
     mdIcon: heartSharp
   },
   {
-    title: 'Archived',
-    url: '/page/Archived',
-    iosIcon: archiveOutline,
-    mdIcon: archiveSharp
+    title: 'History',
+    url: '/page/History',
+    iosIcon: timeOutline,
+    mdIcon: time
   },
   {
-    title: 'Trash',
-    url: '/page/Trash',
-    iosIcon: trashOutline,
-    mdIcon: trashSharp
+    title: 'Latest Songs',
+    url: '/page/LatestSongs',
+    iosIcon: listOutline,
+    mdIcon: list
   },
   {
-    title: 'Spam',
-    url: '/page/Spam',
-    iosIcon: warningOutline,
-    mdIcon: warningSharp
+    title: 'Song Lists',
+    url: '/page/SongLists',
+    iosIcon: listOutline,
+    mdIcon: list
+  },
+  {
+    title: 'Settings',
+    url: '/page/Settings',
+    iosIcon: settingsOutline,
+    mdIcon: settings
   }
 ];
 
-const labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
+enum PlayerState { 
+  None = 0, 
+  Playing, 
+  Paused, 
+  Stopped
+}
+
+interface AppPage {
+  url: string;
+  iosIcon: string;
+  mdIcon: string;
+  title: string;
+}
+
+interface AdminAction { 
+  playerState: PlayerState ;
+  iosIcon: string;
+  mdIcon: string;
+  title: string;
+}
+
+interface AdminState { 
+  title: string; 
+  actions: Array<AdminAction>;
+}
 
 const Menu: React.FC = () => {
-  const location = useLocation();
+  
+  const playActions: AdminAction[] = [
+    {
+      playerState: PlayerState.Playing,
+      iosIcon: playOutline,
+      mdIcon: play,
+      title: "Play"
+    }
+  ];
 
+  const pauseActions: AdminAction[] = [
+    {
+      playerState: PlayerState.Paused,
+      iosIcon: pauseOutline,
+      mdIcon: pause,
+      title: "Pause"
+    }, 
+    {
+      playerState: PlayerState.Stopped,
+      iosIcon: stopOutline,
+      mdIcon: stop,
+      title: "Stop"
+    }
+  ];
+
+  const pauseAdminState: AdminState = {
+    title: "Currently Paused",
+    actions: playActions
+  }
+
+  const playAdminState: AdminState = { 
+    title: "Currently Playing",
+    actions: pauseActions
+  }
+
+  const stopAdminState: AdminState = { 
+    title: "Currently Stopped",
+    actions: playActions
+  }
+
+  const location = useLocation();
+  const { name } = useParams<{ name: string; }>();
+  const [currentPlayerState, setCurrentPlayerState]  = useState<PlayerState>(PlayerState.None);
+  const [adminState, setAdminState]  = useState<AdminState | undefined>(undefined);
+  const isAdmin: boolean = true;
+
+  useEffect(() => {
+  
+    debugLog('Menu', 'useEffect - currentPlayerState', currentPlayerState);
+    switch(currentPlayerState){
+      case PlayerState.Stopped: {
+        setAdminState(stopAdminState);
+        break;
+      }
+      case PlayerState.Playing: {
+        setAdminState(playAdminState);
+        break;
+      }
+  
+      case PlayerState.Paused: {
+        setAdminState(pauseAdminState);
+        break;
+      }
+  
+      default: 
+        isAdmin ? setAdminState(stopAdminState) : setAdminState(undefined);
+        break;
+    }
+  
+  }, [currentPlayerState])
+  
   return (
     <IonMenu contentId="main" type="overlay">
       <IonContent>
         <IonList id="inbox-list">
-          <IonListHeader>Inbox</IonListHeader>
-          <IonNote>hi@ionicframework.com</IonNote>
+          <IonListHeader>Karaoke</IonListHeader>
+          {/* <IonNote>hi@ionicframework.com</IonNote> */}
           {appPages.map((appPage, index) => {
             return (
               <IonMenuToggle key={index} autoHide={false}>
@@ -83,15 +187,18 @@ const Menu: React.FC = () => {
           })}
         </IonList>
 
+        {adminState !== undefined && 
         <IonList id="labels-list">
-          <IonListHeader>Labels</IonListHeader>
-          {labels.map((label, index) => (
-            <IonItem lines="none" key={index}>
-              <IonIcon slot="start" icon={bookmarkOutline} />
-              <IonLabel>{label}</IonLabel>
+          <IonListHeader>{adminState.title}</IonListHeader>
+          {adminState.actions.map((action, index) => (
+            <IonItem lines="none" key={index} onClick={() => setCurrentPlayerState(action.playerState)}>
+                <IonIcon slot="start" ios={action.iosIcon} md={action.mdIcon} />
+                <IonLabel>{action.title}</IonLabel>
             </IonItem>
           ))}
-        </IonList>
+        </IonList>        
+        }
+
       </IonContent>
     </IonMenu>
   );

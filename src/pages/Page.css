@@ -1,0 +1,11 @@
+ion-header ion-toolbar .sc-ion-searchbar-ios-h {
+    padding: 10px;
+}
+ 
+ion-header ion-toolbar .sc-ion-searchbar-md {
+    padding-left: unset;
+    padding-right: unset;
+    padding-top: 10px;
+    padding-bottom: 20px;
+    box-shadow: none !important;
+}

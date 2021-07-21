@@ -1,0 +1,8 @@
+{
+  "name": "singsalot",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react",
+  "id": "3ec7626e"
+}

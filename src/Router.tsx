@@ -40,12 +40,16 @@ const PrivateRoute : React.FC<PrivateRouteProps> = ({ children, isAuthenticated 
 };
 
 const Router = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(true);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   // const [player, setPlayer] = useState<IPlayer | undefined>(undefined);
 
   const { width } = useWindowDimensions();
   const showSplitPane = isAuthenticated && width > 700;
   console.log("debug - showSplitPane:", showSplitPane);
+
+  const onLogin = (controllerId: string, singerName: string) =>{
+     console.log("debug - login", controllerId, singerName);
+  }
 
   return (
     <IonReactRouter>
@@ -94,7 +98,9 @@ const Router = () => {
             </PrivateRoute>
             
             {/* public  */}
-            <Route path="/Login" component={Login} exact={true}/>
+            <Route path="/Login" exact={true}>
+              <Login onLogin={onLogin} />
+            </Route>
 
             <Redirect to="/"/>
 

@@ -10,7 +10,7 @@ import firebase from 'firebase';
 type DataSnapshot = firebase.database.DataSnapshot
 
 interface ContainerProps {
-    onLogin: (controllerId:string)=>DataSnapshot;
+    onLogin: (controllerId:string, singerName: string)=>void;
 }
   
 const Login: React.FC<ContainerProps> = ({onLogin}) => {
@@ -26,13 +26,13 @@ const Login: React.FC<ContainerProps> = ({onLogin}) => {
             return;
         }
 
-        if (!firstName || firstName.length < 6) {
+        if (!firstName || firstName.length < 3) {
             setMessage("Please enter your First Name");
             setIserror(true);
             return;
         }
 
-        onLogin(partyId);
+        onLogin(partyId, firstName);
     };
 
     return (

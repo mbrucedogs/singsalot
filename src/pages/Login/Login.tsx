@@ -40,7 +40,7 @@ const Login: React.FC = () => {
                         <IonTitle size="large" className="title">Login</IonTitle>
                     </IonToolbar>
                 </IonHeader>
-                <div className="wrapper"> asdf
+                <div className="wrapper">
                     <IonGrid className="square">
                         <IonRow>
                             <IonCol>

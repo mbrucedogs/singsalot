@@ -1,3 +1,7 @@
+ion-menu {
+  max-width: 250px!important;
+}
+
 ion-menu ion-content {
   --background: var(--ion-item-background, var(--ion-background-color, #fff));
 }

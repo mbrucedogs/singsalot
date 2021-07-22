@@ -1,4 +1,3 @@
-import { lazy } from 'react';
 import { IonRouterOutlet, IonSplitPane } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { Redirect, Route } from 'react-router-dom';
@@ -14,26 +13,81 @@ import Search from './pages/Search/Search';
 import Settings from './pages/Settings/Settings';
 import Singers from './pages/Singers/Singers';
 import SongLists from './pages/SongLists/SongLists';
+import { useState } from 'react';
+import { useWindowDimensions } from './hooks/useWindowDimensions';
+
+const PrivateRoute = ({ children, isAuthenticated = false, ...rest }) => {
+  console.log("debug - isAuthenticated:", isAuthenticated);
+
+  return (    
+    <Route {...rest} render={({ location }) => {
+      return isAuthenticated === true
+        ? children
+        : <Redirect to={{
+            pathname: '/login',
+            state: { from: location }
+          }} />
+    }} />
+  )
+};
 
 const Router = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const { width } = useWindowDimensions();
+  const showSplitPane = isAuthenticated && width > 700;
+  console.log("debug - showSplitPane:", showSplitPane);
   return (
     <IonReactRouter>
-        <IonSplitPane contentId="main">
-        <Menu/>
-        <IonRouterOutlet id="main" animated="true">
-            <Route path="/" component={Queue} exact={true}/>
-            <Route path="/Artists" exact={true} component={Artists}/>
-            <Route path="/Favorites" exact={true} component={Favorites}/>
-            <Route path="/History" exact={true} component={History}/>
-            <Route path="/LatestSongs" exact={true} component={LatestSongs}/>
-            <Route path="/Login" exact={true} component={Login}/>
-            <Route path="/Queue" component={Queue}/>
-            <Route path="/Search/:query" exact={true} component={Search}/>
-            <Route path="/Settings" exact={true} component={Settings}/>
-            <Route path="/Singers" exact={true} component={Singers}/>
-            <Route path="/SongLists" exact={true} component={SongLists}/>
+        <IonSplitPane contentId="main" when={showSplitPane} >
+          <Menu/>
+          <IonRouterOutlet id="main" animated="true">
+            {/* private */}
+            <PrivateRoute path="/" exact={true} isAuthenticated={isAuthenticated}>
+              <Queue/>
+            </PrivateRoute>
+
+            <PrivateRoute path="/Artists" exact={true} isAuthenticated={isAuthenticated}>
+              <Artists/>
+            </PrivateRoute>
+
+            <PrivateRoute path="/Favorites" exact={true} isAuthenticated={isAuthenticated}>
+              <Favorites/>
+            </PrivateRoute>
+
+            <PrivateRoute path="/History" exact={true} isAuthenticated={isAuthenticated}>
+              <History/>
+            </PrivateRoute>
+
+            <PrivateRoute path="/LatestSongs" exact={true} isAuthenticated={isAuthenticated}>
+              <LatestSongs/>
+            </PrivateRoute>
+
+            <PrivateRoute path="/Queue" isAuthenticated={isAuthenticated}>
+              <Queue/>
+            </PrivateRoute>
+
+            <PrivateRoute path="/Search/:query" exact={true} isAuthenticated={isAuthenticated}>
+              <Search/>
+            </PrivateRoute>
+
+            <PrivateRoute path="/Settings" exact={true} isAuthenticated={isAuthenticated}>
+              <Settings/>
+            </PrivateRoute>
+
+            <PrivateRoute path="/Singers" exact={true} isAuthenticated={isAuthenticated}>
+              <Singers/>
+            </PrivateRoute>
+
+            <PrivateRoute path="/SongLists" exact={true} isAuthenticated={isAuthenticated}>
+              <SongLists/>
+            </PrivateRoute>
+            
+            {/* public  */}
+            <Route path="/Login" component={Login} exact={true}/>
+
             <Redirect to="/"/>
-        </IonRouterOutlet>
+            
+          </IonRouterOutlet>
         </IonSplitPane>
     </IonReactRouter>
   );

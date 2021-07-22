@@ -8,6 +8,7 @@ import Artists from './pages/Artists/Artists';
 import Favorites from './pages/Favorites/Favorites';
 import History from './pages/History/History';
 import LatestSongs from './pages/LatestSongs/LatestSongs';
+import Login from './pages/Login/Login';
 import Queue from './pages/Queue/Queue';
 import Search from './pages/Search/Search';
 import Settings from './pages/Settings/Settings';
@@ -25,6 +26,7 @@ const Router = () => {
             <Route path="/Favorites" exact={true} component={Favorites}/>
             <Route path="/History" exact={true} component={History}/>
             <Route path="/LatestSongs" exact={true} component={LatestSongs}/>
+            <Route path="/Login" exact={true} component={Login}/>
             <Route path="/Queue" component={Queue}/>
             <Route path="/Search/:query" exact={true} component={Search}/>
             <Route path="/Settings" exact={true} component={Settings}/>

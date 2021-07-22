@@ -1,0 +1,13 @@
+.square {
+    width: 95%;
+    margin: 1%;
+}
+
+.wrapper {
+    display: grid;
+    height: 300px;
+    width: 100%;
+    vertical-align: top;
+    align-items: center;
+    justify-items: center;
+  }

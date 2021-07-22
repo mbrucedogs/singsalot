@@ -5,8 +5,15 @@ import { personCircle } from "ionicons/icons";
 import { useHistory } from "react-router-dom";
 import { IonItem, IonLabel, IonInput, IonButton, IonIcon, IonAlert } from '@ionic/react';
 import './Login.css';
+import firebase from 'firebase';
 
-const Login: React.FC = () => {
+type DataSnapshot = firebase.database.DataSnapshot
+
+interface ContainerProps {
+    onLogin: (controllerId:string)=>DataSnapshot;
+}
+  
+const Login: React.FC<ContainerProps> = ({onLogin}) => {
     const history = useHistory();
     const [partyId, setPartyId] = useState<string>("");
     const [firstName, setFirstName] = useState<string>("");
@@ -25,11 +32,7 @@ const Login: React.FC = () => {
             return;
         }
 
-        const loginData = {
-            "partyId": partyId,
-            "firstName": firstName
-        }
-
+        onLogin(partyId);
     };
 
     return (

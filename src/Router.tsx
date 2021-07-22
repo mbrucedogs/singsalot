@@ -1,4 +1,5 @@
 import { IonRouterOutlet, IonSplitPane } from '@ionic/react';
+import { useHistory } from 'react-router';
 import { IonReactRouter } from '@ionic/react-router';
 import { Redirect, Route } from 'react-router-dom';
 import Menu from './components/Menu/Menu';
@@ -40,6 +41,7 @@ const PrivateRoute : React.FC<PrivateRouteProps> = ({ children, isAuthenticated 
 };
 
 const Router = () => {
+  const history = useHistory();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   // const [player, setPlayer] = useState<IPlayer | undefined>(undefined);
 
@@ -48,7 +50,9 @@ const Router = () => {
   console.log("debug - showSplitPane:", showSplitPane);
 
   const onLogin = (controllerId: string, singerName: string) =>{
-     console.log("debug - login", controllerId, singerName);
+    console.log("debug - login", controllerId, singerName);
+    setIsAuthenticated(true);
+    history.push("/");
   }
 
   return (

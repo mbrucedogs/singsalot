@@ -16,7 +16,15 @@ import SongLists from './pages/SongLists/SongLists';
 import { useState } from 'react';
 import { useWindowDimensions } from './hooks/useWindowDimensions';
 
-const PrivateRoute = ({ children, isAuthenticated = false, ...rest }) => {
+
+interface PrivateRouteProps {
+  path: string;
+  exact?: boolean;
+  isAuthenticated: boolean;
+  children?: JSX.Element;
+}
+
+const PrivateRoute : React.FC<PrivateRouteProps> = ({ children, isAuthenticated = false, ...rest }) => {
   console.log("debug - isAuthenticated:", isAuthenticated);
 
   return (    
@@ -32,15 +40,18 @@ const PrivateRoute = ({ children, isAuthenticated = false, ...rest }) => {
 };
 
 const Router = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(true);
+  // const [player, setPlayer] = useState<IPlayer | undefined>(undefined);
+
   const { width } = useWindowDimensions();
   const showSplitPane = isAuthenticated && width > 700;
   console.log("debug - showSplitPane:", showSplitPane);
+
   return (
     <IonReactRouter>
         <IonSplitPane contentId="main" when={showSplitPane} >
           <Menu/>
-          <IonRouterOutlet id="main" animated="true">
+          <IonRouterOutlet id="main">
             {/* private */}
             <PrivateRoute path="/" exact={true} isAuthenticated={isAuthenticated}>
               <Queue/>
@@ -86,7 +97,7 @@ const Router = () => {
             <Route path="/Login" component={Login} exact={true}/>
 
             <Redirect to="/"/>
-            
+
           </IonRouterOutlet>
         </IonSplitPane>
     </IonReactRouter>

@@ -41,7 +41,7 @@ class FirebaseService {
   }
 
   getSongLists(){
-    return this.get('songLists');
+    return this.get('songList');
   }
 
   getArtist(){

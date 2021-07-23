@@ -144,7 +144,7 @@ const Menu: React.FC = () => {
 
   useEffect(() => {
   
-    debugLog('Menu', 'useEffect - currentPlayerState', currentPlayerState);
+    //debugLog('Menu', 'useEffect - currentPlayerState', currentPlayerState);
     switch(currentPlayerState){
       case PlayerState.Stopped: {
         setAdminState(stopAdminState);

@@ -2,37 +2,37 @@ import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/rea
 import React, { useState } from 'react';
 import { IonGrid, IonRow, IonCol } from '@ionic/react';
 import { personCircle } from "ionicons/icons";
-import { useHistory } from "react-router-dom";
 import { IonItem, IonLabel, IonInput, IonButton, IonIcon, IonAlert } from '@ionic/react';
 import './Login.css';
-import firebase from 'firebase';
-
-type DataSnapshot = firebase.database.DataSnapshot
 
 interface ContainerProps {
-    onLogin: (controllerId:string, singerName: string)=>void;
+    onLogin: (controllerId:string, singerName: string)=>Promise<boolean>;
 }
   
 const Login: React.FC<ContainerProps> = ({onLogin}) => {
-    const history = useHistory();
     const [partyId, setPartyId] = useState<string>("");
     const [firstName, setFirstName] = useState<string>("");
     const [iserror, setIserror] = useState<boolean>(false);
     const [message, setMessage] = useState<string>("");
     const handleLogin = () => {
         if (!partyId) {
-            setMessage("Please enter a valid partyId");
+            setMessage("Please enter a valid Party Id");
             setIserror(true);
             return;
         }
-
         if (!firstName || firstName.length < 3) {
             setMessage("Please enter your First Name");
             setIserror(true);
             return;
         }
 
-        onLogin(partyId, firstName);
+        let promise = onLogin(partyId, firstName);
+        promise.then( success => {
+            if(!success){
+                setMessage("Your Party Id wasn't found, please try again.");
+                setIserror(true);
+            }
+        });
     };
 
     return (

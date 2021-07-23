@@ -1,4 +1,4 @@
-import firebase from '../firebase';
+import firebase from './firebase';
 
 const db = firebase.ref('/controllers');
 
@@ -6,10 +6,9 @@ class FirebaseService {
   constructor() {
     this.controllerId = "";
   }
-
-  getPlayer(controllerId){
-    this.controllerId = controllerId;
-    return this.get('player');
+  
+  controllerExists(controllerId) {
+    return db.child(controllerId).get();
   }
 
   getHistory(){

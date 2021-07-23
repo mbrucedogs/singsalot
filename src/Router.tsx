@@ -44,7 +44,6 @@ interface AuthCheckProps {
 }
 
 export const AuthCheck:React.FC<AuthCheckProps> = ({isAuthenticated, secured, children}) => {
-  console.log("isAuthenticated", isAuthenticated);
   if (isAuthenticated) {
     return <>{secured}</>
   } else {

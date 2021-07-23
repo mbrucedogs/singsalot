@@ -8,7 +8,24 @@ class FirebaseService {
   }
   
   controllerExists(controllerId) {
+    this.controllerId = controllerId;
     return db.child(controllerId).get();
+  }
+
+  getPlayerQueue(){
+    return this.get('player/queue');
+  }
+
+  getPlayerSingers(){
+    return this.get('player/singers');
+  }
+
+  getPlayerSettings(){
+    return this.get('player/settings');
+  }
+
+  getPlayerState(){
+    return this.get('player/state');
   }
 
   getHistory(){

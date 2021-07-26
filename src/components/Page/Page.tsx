@@ -40,9 +40,9 @@ const Page: React.FC<ContainerProps> = ( { name, children = null} ) => {
             <IonTitle size="large">{name}</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <div className="container">
+        <IonContent>
           {children}
-        </div>
+        </IonContent>
       </IonContent>
     </IonPage>
   );

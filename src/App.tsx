@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux'
 import { useAppDispatch } from './hooks/hooks'
 import firebase from 'firebase'
 import FirebaseService from "./services/FirebaseService";
-import { isEmpty, includes } from "lodash";
+import { isEmpty, includes, sortedUniqBy } from "lodash";
 import { artistsChange } from './store/slices/artists';
 import { favoritesChange } from './store/slices/favorites';
 import { historyChange } from './store/slices/history';
@@ -16,14 +16,13 @@ import { settingsChange } from './store/slices/settings';
 import { singersChange } from './store/slices/singers';
 import { songListsChange } from './store/slices/songLists';
 import { songsChange } from './store/slices/songs';
-
+import orderBy from 'lodash/orderBy'
 import {
-   ISongList, toSongList,
-   ISinger, toSinger,
-   IQueueItem,
-   ISong, toSong,
-
-
+  IArtist,
+  ISongList, toSongList,
+  ISinger, toSinger,
+  IQueueItem,
+  ISong, toSong,
 } 
 from './services/models'
 
@@ -131,7 +130,8 @@ const App: React.FC = () => {
   };
 
   const onSongsChange = (items: firebase.database.DataSnapshot)=>{
-    let artists: string[] = [];
+    let artists: IArtist[] = [];
+    let names: string[] = [];
     let list: ISong[] = [];
 
     items.forEach(item => {
@@ -142,12 +142,12 @@ const App: React.FC = () => {
       list.push(song);
 
       //get the artist
-      let artist = song.artist;
-      if(!isEmpty(artist) && !includes(artists, artist)){
-        artists.push(artist);
+      let name = song.artist;
+      if(!isEmpty(name) && !includes(names, name.trim())){
+       names.push(name.trim());
       }
-      
     });
+    artists = orderBy(names).map( name => { return { name: name } });
     dispatch(songsChange(list));
     dispatch(artistsChange(artists));
   };

@@ -2,19 +2,30 @@ import React from "react";
 import Page from "../../components/Page/Page"
 import { useSelector } from "react-redux";
 import { selectArtists } from "../../store/store";
+import { IonGrid, IonRow, IonCol } from '@ionic/react';
+import { Table } from "../../components/Table/Table";
+import { IArtist } from "../../services/models";
 
 const Artists: React.FC = () => {
-  const listItems: string[] = useSelector(selectArtists);
+  const listItems: IArtist[] = useSelector(selectArtists);
+
+  const columns = React.useMemo(
+    () => [
+      {
+        Header: 'Name',
+        columns: [
+          {
+            accessor: 'name',
+          }
+        ],
+      }
+    ],
+    []
+  )
 
   return (
       <Page name="Artists">
-          <div>
-          {listItems.map(item => {
-             return <div key={item}>
-                      <div>{item}</div>
-                    </div>          
-          })}
-          </div>
+          <Table columns={columns} data={listItems}/>
       </Page>
   );
 };

@@ -14,6 +14,10 @@ export interface ISinger {
     name: string;
 }
 
+export interface IArtist {
+    name: string;
+}
+
 export interface IQueueItem {
     key: string;
     singer: ISinger;

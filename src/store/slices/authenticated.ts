@@ -1,11 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 interface AuthenticatedSliceState {
-  value: boolean;
+  authenticated: boolean;
 }
 
 const initialState: AuthenticatedSliceState = {
-  value: false,
+  authenticated: false,
 }
 
 export const authenticatedSlice = createSlice({
@@ -13,7 +13,7 @@ export const authenticatedSlice = createSlice({
   initialState,
   reducers: {
     authenticatedChange: (state, action: PayloadAction<boolean>) => {
-      state.value = action.payload;
+      state.authenticated = action.payload;
     }
   }
 })

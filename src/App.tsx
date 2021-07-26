@@ -1,8 +1,8 @@
 import { IonApp } from '@ionic/react';
 import Router from './Router';
 import { useEffect } from 'react';
-import store, { selectAuthenticated } from './store/store'
-import { Provider, useSelector } from 'react-redux'
+import { selectAuthenticated } from './store/store'
+import { useSelector } from 'react-redux'
 import { useAppDispatch } from './hooks/hooks'
 import firebase from 'firebase'
 import FirebaseService from "./services/FirebaseService";
@@ -59,7 +59,7 @@ const App: React.FC = () => {
       FirebaseService.getNewSongs().on("value", onLatestSongsChange);
       FirebaseService.getHistory().on("value", onHistoryChange);
       FirebaseService.getFavorites().on("value", onFavoritesChange);
-      FirebaseService.getSongLists().on("value", onSongsChange);  
+      FirebaseService.getSongs().on("value", onSongsChange);  
     }
   }, [isAuthenticated])
 
@@ -136,26 +136,28 @@ const App: React.FC = () => {
 
     items.forEach(item => {
       let obj = item.val();
+
       //get the song
-      list.push(toSong(obj));
+      let song = toSong(obj);
+      list.push(song);
+
       //get the artist
-      let artist = obj.artist;
-      if(!isEmpty(artist) && !includes(list,artist)){
+      let artist = song.artist;
+      if(!isEmpty(artist) && !includes(artists, artist)){
         artists.push(artist);
       }
+      
     });
     dispatch(songsChange(list));
     dispatch(artistsChange(artists));
   };
 
   return (
-    <Provider store={store}>
       <IonApp>
         <ErrorBoundary>
           <Router/>
         </ErrorBoundary>
       </IonApp>
-    </Provider>
   );
 };
 

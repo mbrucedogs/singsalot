@@ -1,33 +1,13 @@
 import React from "react";
 import Page from "../../components/Page/Page"
-import FirebaseContainer from "../../components/Firebase/FirebaseContainer";
-import FirebaseService from "../../services/FirebaseService";
-import firebase from "firebase";
-import { toSong, ISong } from "../../services/models";
-import { useState, useEffect } from 'react';
+import { ISong } from "../../services/models";
+import { useSelector } from "react-redux";
+import { selectLatestSongs } from "../../store/store";
 
 const LatestSongs: React.FC = () => {
-  const [listItems, setListItems] = useState<ISong[]>([]);
-  const [databaseRef, setDatabaseRef] = useState<firebase.database.Reference | null>(null);
-
-  const onDataChange = (items: firebase.database.DataSnapshot) => {
-    let list: ISong[] = [];
-    items.forEach(item => {
-      let obj = item.val();
-      let song = toSong(obj);
-      song.key = JSON.stringify(item.ref.toJSON())
-      list.push(song);
-    });
-    setListItems(list)
-  };
-
-  useEffect(() => {
-    setDatabaseRef(FirebaseService.getNewSongs());
-  }, [])
-
+  const listItems: ISong[] = useSelector(selectLatestSongs);
   return (
       <Page name="Latest Songs">
-        <FirebaseContainer databaseRefCallback={onDataChange} databaseRef={databaseRef}>
           <div>
           {listItems.map(item => {
              return <div key={item.key}>
@@ -36,7 +16,6 @@ const LatestSongs: React.FC = () => {
                     </div>          
           })}
           </div>
-        </FirebaseContainer>
       </Page>
   );
 };

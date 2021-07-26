@@ -1,32 +1,14 @@
 import React from "react";
 import Page from "../../components/Page/Page"
-import FirebaseContainer from "../../components/Firebase/FirebaseContainer";
-import FirebaseService from "../../services/FirebaseService";
-import firebase from "firebase";
-import { ISongList, toSongList } from "../../services/models";
-import { useState, useEffect } from 'react';
+import { useSelector } from "react-redux";
+import { selectSongLists } from "../../store/store";
+import { ISongList } from "../../services/models";
 
 const SongLists: React.FC = () => {
-  const [listItems, setListItems] = useState<ISongList[]>([]);
-  const [databaseRef, setDatabaseRef] = useState<firebase.database.Reference | null>(null);
-
-
-  const onDataChange = (items: firebase.database.DataSnapshot) => {
-    let list: ISongList[] = [];
-    items.forEach(item => {
-      list.push(toSongList(item.val()));
-    });
-    console.log("songList",list);
-    setListItems(list)
-  };
-
-  useEffect(() => {
-    setDatabaseRef(FirebaseService.getSongLists());
-  }, [])
+  const listItems: ISongList[] = useSelector(selectSongLists);
 
   return (
       <Page name="SongLists">
-        <FirebaseContainer databaseRefCallback={onDataChange} databaseRef={databaseRef}>
           <div>
           {listItems.map(item => {
              return <div key={item.title}>
@@ -34,7 +16,6 @@ const SongLists: React.FC = () => {
                     </div>          
           })}
           </div>
-        </FirebaseContainer>
       </Page>
   );
 };

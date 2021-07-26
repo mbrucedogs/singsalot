@@ -1,33 +1,14 @@
 import React from "react";
 import Page from "../../components/Page/Page"
-import FirebaseContainer from "../../components/Firebase/FirebaseContainer";
-import FirebaseService from "../../services/FirebaseService";
-import firebase from "firebase";
-import { ISinger, toSinger } from "../../services/models";
-import { useState, useEffect } from 'react';
+import { ISinger } from "../../services/models";
+import { useSelector } from "react-redux";
+import { selectSingers } from "../../store/store";
 
 const Singers: React.FC = () => {
-  const [listItems, setListItems] = useState<ISinger[]>([]);
-  const [databaseRef, setDatabaseRef] = useState<firebase.database.Reference | null>(null);
-
-  const onDataChange = (items: firebase.database.DataSnapshot) => {
-    let list: ISinger[] = [];
-    items.forEach(item => {
-      let obj = item.val();
-      let song = toSinger(obj);
-      song.key = JSON.stringify(item.ref.toJSON())
-      list.push(song);
-    });
-    setListItems(list)
-  };
-
-  useEffect(() => {
-    setDatabaseRef(FirebaseService.getPlayerSingers());
-  }, [])
-
+  const listItems: ISinger[] = useSelector(selectSingers);
+  
   return (
       <Page name="Singers">
-        <FirebaseContainer databaseRefCallback={onDataChange} databaseRef={databaseRef}>
           <div>
           {listItems.map(item => {
              return <div key={item.key}>
@@ -35,7 +16,6 @@ const Singers: React.FC = () => {
                     </div>          
           })}
           </div>
-        </FirebaseContainer>
       </Page>
   );
 };

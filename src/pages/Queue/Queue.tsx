@@ -1,36 +1,13 @@
 import React from "react";
 import Page from "../../components/Page/Page"
-import FirebaseContainer from "../../components/Firebase/FirebaseContainer";
-import FirebaseService from "../../services/FirebaseService";
-import firebase from "firebase";
-import { toSong, toSinger, IQueueItem } from "../../services/models";
-import { useState, useEffect } from 'react';
+import { IQueueItem } from "../../services/models";
+import { useSelector } from "react-redux";
+import { selectQueue } from "../../store/store";
 
 const Queue: React.FC = () => {
-  const [listItems, setListItems] = useState<IQueueItem[]>([]);
-  const [databaseRef, setDatabaseRef] = useState<firebase.database.Reference | null>(null);
-
-  const onDataChange = (items: firebase.database.DataSnapshot) => {
-    let queueItems: IQueueItem[] = [];
-    items.forEach(item => {
-      let obj = item.val();
-      let newQueueItem: IQueueItem = {
-        key: JSON.stringify(item.ref.toJSON()),
-        singer: toSinger(obj.singer),           
-        song: toSong(obj.song)
-      }
-      queueItems.push(newQueueItem);
-    });
-    setListItems(queueItems)
-  };
-
-  useEffect(() => {
-    setDatabaseRef(FirebaseService.getPlayerQueue());
-  }, [])
-
+  const listItems: IQueueItem[] = useSelector(selectQueue);
   return (
       <Page name="Queue">
-        <FirebaseContainer databaseRefCallback={onDataChange} databaseRef={databaseRef}>
           <div>
           {listItems.map(item => {
              return <div key={item.key}>
@@ -39,7 +16,6 @@ const Queue: React.FC = () => {
                     </div>          
           })}
           </div>
-        </FirebaseContainer>
       </Page>
   );
 };

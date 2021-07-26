@@ -13,8 +13,11 @@ import Search from './pages/Search/Search';
 import Settings from './pages/Settings/Settings';
 import Singers from './pages/Singers/Singers';
 import SongLists from './pages/SongLists/SongLists';
-import { useState } from 'react';
 import FirebaseService from './services/FirebaseService';
+import { useAppDispatch } from './hooks/hooks'
+import authenticated, { authenticatedChange } from './store/slices/authenticated';
+import { useSelector } from 'react-redux';
+import { selectAuthenticated } from './store/store';
 
 export const PrivateRoutes:React.FC = () => { 
   return (
@@ -52,7 +55,8 @@ export const AuthCheck:React.FC<AuthCheckProps> = ({isAuthenticated, secured, ch
 }
 
 const Router: React.FC = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
+  const isAuthenticated = useSelector(selectAuthenticated);
 
   const onLogin = (controllerId: string, singerName: string):Promise<boolean> =>{
     return new Promise(function(resolve, reject) {
@@ -64,7 +68,7 @@ const Router: React.FC = () => {
         }
         resolve(success);
         if(success){
-          setIsAuthenticated(true);
+          dispatch(authenticatedChange(true));
         }
       })
     }); 

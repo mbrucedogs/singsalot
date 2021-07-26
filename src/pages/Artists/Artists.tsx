@@ -2,71 +2,48 @@ import React, {useState, useEffect} from "react";
 import Page from "../../components/Page/Page"
 import { useSelector } from "react-redux";
 import { selectArtists } from "../../store/store";
-import { IonGrid, IonRow, IonCol, IonButton, IonIcon } from '@ionic/react';
-import { playBack, playBackOutline, 
-  chevronBack, chevronBackOutline,
-  chevronForward, chevronForwardOutline,
-  playForward, playForwardOutline
- } from 'ionicons/icons';
+import { IonGrid, IonRow, IonCol } from '@ionic/react';
+import {IonInfiniteScroll, IonInfiniteScrollContent} from '@ionic/react';
 import { IArtist } from "../../services/models";
 const Artists: React.FC = () => {
+  const pageCount: number = 50;
   const [page, setPage] = useState<number>(0);
-  const [pageCount, setPageCount] = useState<number>(25);
-  const [totalPages, setTotalPages] = useState<number>(0);
+  const [disableInfiniteScroll, setDisableInfiniteScroll] = useState<boolean>(false);
   const listItems: IArtist[] = useSelector(selectArtists);
+  const [items, setItems] = useState<IArtist[]>([]);
 
   useEffect(() => {
-    setTotalPages(Math.ceil(listItems.length / pageCount));
+    setPage(0)
+    setItems(listItems.slice(page*pageCount,(page*pageCount)+pageCount))    
   }, [listItems])
 
-  const nextPage = () =>{
-    setPage(page+1);
-  };
-  const prevPage = () =>{
-    setPage(page-1);
-  };
-  const goFirst = () =>{
-    setPage(0);
-  };
-  const goLast = () =>{
-    setPage(totalPages-1);
+  const searchNext = (event: CustomEvent<void>) => {
+    let currentPage: number = page + 1;
+    let currentItems: IArtist[] = listItems.slice(currentPage*pageCount,(currentPage*pageCount)+pageCount);
+    if(currentItems.length > 0){
+    setPage(currentPage);
+    setItems([...items, ...currentItems]);
+      setDisableInfiniteScroll(currentItems.length < pageCount);
+    } else {
+      setDisableInfiniteScroll(true);
+    }
+    (event.target as HTMLIonInfiniteScrollElement).complete();
   };
 
   return (
       <Page name="Artists">
           <IonGrid>
-          {listItems.slice(page*pageCount,(page*pageCount)+pageCount).map(item => {
+          {items.map(item => {
              return <IonRow key={item.name}>
                       <IonCol>{item.name}</IonCol>
                     </IonRow>          
           })}
-            <IonRow>
-              <IonCol>
-                {page+1} of {totalPages}
-              </IonCol>
-            </IonRow>
-            <IonRow>
-              <IonCol>
-                <IonButton onClick={goFirst}>
-                  <IonIcon ios={playBackOutline} md={playBack} />
-                </IonButton>
-              </IonCol>
-              <IonCol>
-                <IonButton onClick={prevPage}>
-                  <IonIcon ios={chevronBackOutline} md={chevronBack} />
-                </IonButton>
-              </IonCol>
-              <IonCol>
-                <IonButton onClick={nextPage}>
-                  <IonIcon ios={chevronForwardOutline} md={chevronForward} />
-                </IonButton>
-              </IonCol>
-              <IonCol>
-                <IonButton onClick={goLast}>
-                  <IonIcon ios={playForwardOutline} md={playForward} />
-                </IonButton>
-              </IonCol>
-            </IonRow>
+          <IonInfiniteScroll threshold="100px" disabled={disableInfiniteScroll}
+                             onIonInfinite={(e: CustomEvent<void>) => searchNext(e)}>
+            <IonInfiniteScrollContent
+                loadingText="Loading more Artists...">
+            </IonInfiniteScrollContent>
+          </IonInfiniteScroll>
           </IonGrid>
       </Page>
   );

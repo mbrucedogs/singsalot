@@ -6,6 +6,7 @@ import { IonRow, IonCol } from '@ionic/react';
 import { IArtist } from "../../services/models";
 import ScrollingGrid from "../../components/ScrollingGrid/ScrollingGrid";
 import { pageCount } from "../../globalConfig";
+import "./Artists.css"
 
 const Artists: React.FC = () => {
   const pageName: string = "Artists";
@@ -19,7 +20,7 @@ const Artists: React.FC = () => {
           listItems={listItems}
           getRow={(item) => {
             return(
-              <IonRow key={item.name}>
+              <IonRow key={item.name} className="row">
                 <IonCol>{item.name}</IonCol>
               </IonRow>
             ); 

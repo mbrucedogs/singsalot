@@ -6,7 +6,7 @@ import { selectQueue } from "../../store/store";
 import ScrollingGrid from "../../components/ScrollingGrid/ScrollingGrid";
 import { pageCount } from "../../globalConfig";
 import { IonRow, IonCol } from "@ionic/react";
-
+import "./Queue.css"
 const Queue: React.FC = () => {
   const pageName: string = "Queue";
   const listItems: IQueueItem[] = useSelector(selectQueue);
@@ -20,8 +20,8 @@ const Queue: React.FC = () => {
         getRow={(item) => { return (
           <IonRow key={item.key}>
               <IonCol>
-                {item.singer.name}<br/>
-                {item.song.title}
+                <div className="singer">{item.singer.name}</div>
+                <div className="song">{item.song.title}</div>
               </IonCol>
           </IonRow>
          ) }}

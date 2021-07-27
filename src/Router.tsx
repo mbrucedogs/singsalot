@@ -15,42 +15,21 @@ import Singers from './pages/Singers/Singers';
 import SongLists from './pages/SongLists/SongLists';
 import FirebaseService from './services/FirebaseService';
 import { useAppDispatch } from './hooks/hooks'
-import authenticated, { authenticatedChange } from './store/slices/authenticated';
+import { authenticatedChange } from './store/slices/authenticated';
 import { useSelector } from 'react-redux';
 import { selectAuthenticated } from './store/store';
 
-export const PrivateRoutes:React.FC = () => { 
-  return (
-    <IonSplitPane contentId="main">
-      <Menu/>
-      <IonRouterOutlet id="main" animated={true}>
-          <Route path="/" component={Queue} exact={true}/>
-          <Route path="/Artists" exact={true} component={Artists}/>
-          <Route path="/Favorites" exact={true} component={Favorites}/>
-          <Route path="/History" exact={true} component={History}/>
-          <Route path="/LatestSongs" exact={true} component={LatestSongs}/>
-          <Route path="/Queue" component={Queue}/>
-          <Route path="/Search/:query" exact={true} component={Search}/>
-          <Route path="/Settings" exact={true} component={Settings}/>
-          <Route path="/Singers" exact={true} component={Singers}/>
-          <Route path="/SongLists" exact={true} component={SongLists}/>
-          <Redirect to="/"/>
-      </IonRouterOutlet>
-    </IonSplitPane>
-  );
-}
-
 interface AuthCheckProps {
-  isAuthenticated:boolean;
-  secured: React.ReactNode; 
+  isAuthenticated: boolean;
+  fallback: React.ReactNode;
   children: React.ReactNode;
 }
 
-export const AuthCheck:React.FC<AuthCheckProps> = ({isAuthenticated, secured, children}) => {
+export const AuthCheck: React.FC<AuthCheckProps> = ({ isAuthenticated, fallback, children }) => {
   if (isAuthenticated) {
-    return <>{secured}</>
+    return <>{children}</>
   } else {
-    return <>{children}</>;
+    return <>{fallback}</>;
   }
 }
 
@@ -58,8 +37,8 @@ const Router: React.FC = () => {
   const dispatch = useAppDispatch();
   const isAuthenticated = useSelector(selectAuthenticated);
 
-  const onLogin = (controllerId: string, singerName: string):Promise<boolean> =>{
-    return new Promise(function(resolve, reject) {
+  const onLogin = (controllerId: string, singerName: string): Promise<boolean> => {
+    return new Promise(function (resolve, reject) {
       let success: boolean = false;
       let promise = FirebaseService.controllerExists(controllerId);
       promise.then(snapshot => {
@@ -67,23 +46,33 @@ const Router: React.FC = () => {
           success = true;
         }
         resolve(success);
-        if(success){
+        if (success) {
           dispatch(authenticatedChange(true));
         }
       })
-    }); 
+    });
   }
   
   return (
     <IonReactRouter>
-       <AuthCheck isAuthenticated={isAuthenticated} secured={<PrivateRoutes/>}>
-          <IonRouterOutlet id="main">
-            <Route path="/Login" exact={true}>
-              <Login onLogin={onLogin} />
-            </Route>
-            <Redirect to="/login"/>
+      <AuthCheck isAuthenticated={isAuthenticated} fallback={<Login onLogin={onLogin} />}>
+        <IonSplitPane contentId="main">
+          <Menu />
+          <IonRouterOutlet id="main" animated={true}>
+            <Route path="/" component={Queue} exact={true} />
+            <Route path="/Artists" exact={true} component={Artists} />
+            <Route path="/Favorites" exact={true} component={Favorites} />
+            <Route path="/History" exact={true} component={History} />
+            <Route path="/LatestSongs" exact={true} component={LatestSongs} />
+            <Route path="/Queue" component={Queue} />
+            <Route path="/Search/:query" exact={true} component={Search} />
+            <Route path="/Settings" exact={true} component={Settings} />
+            <Route path="/Singers" exact={true} component={Singers} />
+            <Route path="/SongLists" exact={true} component={SongLists} />
+            <Redirect to="/" />
           </IonRouterOutlet>
-       </AuthCheck>
+        </IonSplitPane>
+      </AuthCheck>
     </IonReactRouter>
   );
 };

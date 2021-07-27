@@ -4,12 +4,11 @@ import { selectFavorites } from "../../store/store";
 import { useSelector } from "react-redux";
 import { ISong } from "../../services/models";
 import ScrollingGrid from "../../components/ScrollingGrid/ScrollingGrid";
-import { IonRow, IonCol } from '@ionic/react';
 import Song from "../../components/Song/Song";
+import { pageCount } from "../../globalConfig";
 
 const Favorites: React.FC = () => {
   const pageName: string = "Favorites";
-  const pageCount: number = 50;
   const listItems: ISong[] = useSelector(selectFavorites)
 
   return (

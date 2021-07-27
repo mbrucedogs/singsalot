@@ -27,7 +27,6 @@ const Queue: React.FC = () => {
          ) }}
       />
     </Page>
-
   );
 };
 

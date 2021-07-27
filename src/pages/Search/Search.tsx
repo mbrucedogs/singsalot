@@ -18,8 +18,6 @@ const Search: React.FC = () => {
   const pageName: string = "Search";
 
   useEffect(() => {
-    console.log("didScrollToTop");
-    window.scrollTo(0, 0);
     console.log("searching term: ", query);
     console.log("searching in songs: ", songs.length);
     if (isEmpty(query) || isEmpty(songs)) return;

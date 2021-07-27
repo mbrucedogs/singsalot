@@ -18,7 +18,6 @@ const Page: React.FC<ContainerProps> = ({ name, children = null }) => {
     console.log("handleKeyup", key);
     if (key === 'Enter') {
       history.push(`/Search/${searchText}`);
-      setSearchText('');
     }
   }
 

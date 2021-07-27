@@ -3,20 +3,29 @@ import Page from "../../components/Page/Page"
 import { ISinger } from "../../services/models";
 import { useSelector } from "react-redux";
 import { selectSingers } from "../../store/store";
+import ScrollingGrid from "../../components/ScrollingGrid/ScrollingGrid";
+import { pageCount } from "../../globalConfig";
+import { IonRow, IonCol } from "@ionic/react";
 
 const Singers: React.FC = () => {
   const listItems: ISinger[] = useSelector(selectSingers);
-  
+  const pageName: string = "Singers";
+
   return (
-      <Page name="Singers">
-          <div>
-          {listItems.map(item => {
-             return <div key={item.key}>
-                      <div>{item.name}</div>
-                    </div>          
-          })}
-          </div>
-      </Page>
+    <Page name={pageName}>
+      <ScrollingGrid
+        pageCount={pageCount}
+        pageName={pageName}
+        listItems={listItems}
+        getRow={(singer) => { 
+          return(
+          <IonRow>
+            <IonCol>{singer.name}</IonCol>
+          </IonRow>
+          )
+        }}
+      />
+    </Page>
   );
 };
 

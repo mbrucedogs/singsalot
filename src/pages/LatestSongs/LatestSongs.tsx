@@ -3,20 +3,23 @@ import Page from "../../components/Page/Page"
 import { ISong } from "../../services/models";
 import { useSelector } from "react-redux";
 import { selectLatestSongs } from "../../store/store";
+import ScrollingGrid from "../../components/ScrollingGrid/ScrollingGrid";
+import Song from "../../components/Song/Song";
+import { pageCount } from "../../globalConfig";
 
 const LatestSongs: React.FC = () => {
   const listItems: ISong[] = useSelector(selectLatestSongs);
+  const pageName: string = "Latest Songs";
+
   return (
-      <Page name="Latest Songs">
-          <div>
-          {listItems.map(item => {
-             return <div key={item.key}>
-                      <div>{item.artist}</div>
-                      <div>{item.title}</div>   
-                    </div>          
-          })}
-          </div>
-      </Page>
+    <Page name={pageName}>
+      <ScrollingGrid
+        pageCount={pageCount}
+        pageName={pageName}
+        listItems={listItems}
+        getRow={(song) => { return <Song song={song} /> }}
+      />
+    </Page>
   );
 };
 

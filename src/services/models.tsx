@@ -1,7 +1,10 @@
 import { isEmpty } from "lodash";
 
-export interface ISong {
+export interface IFabricObj { 
     key?: string | null;
+}
+
+export interface ISong extends IFabricObj {
     artist: string;
     title: string;
     count?: number;
@@ -9,22 +12,20 @@ export interface ISong {
     path: string;
 }
 
-export interface ISinger {
-    key?: string | null;
+export interface ISinger extends IFabricObj{
     name: string;
 }
 
-export interface IArtist {
+export interface IArtist extends IFabricObj {
     name: string;
 }
 
-export interface IQueueItem {
-    key: string;
+export interface IQueueItem extends IFabricObj{
     singer: ISinger;
     song: ISong;
 }
 
-export interface ISettings {
+export interface ISettings{
     autoadvance: boolean;
     userpick: boolean;
 }
@@ -36,14 +37,14 @@ export interface IPlayer {
     state: string;
 }
 
-export interface ISongListSong {
+export interface ISongListSong{
     artist: string;
     position: number;
     title: string;
     foundSongs: ISong[];
 }
 
-export interface ISongList {
+export interface ISongList extends IFabricObj{
     title: string;
     songs: ISongListSong[]
 }

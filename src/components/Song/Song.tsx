@@ -2,6 +2,7 @@ import React from "react";
 import { ISong } from "../../services/models";
 import { IonRow, IonCol } from '@ionic/react';
 import "./Song.css"
+
 export interface SongProps {
     song: ISong;
 }

@@ -11,6 +11,7 @@ import { artistsChange } from './store/slices/artists';
 import { favoritesChange } from './store/slices/favorites';
 import { historyChange } from './store/slices/history';
 import { latestSongsChange } from './store/slices/latestSongs';
+import { playerStateChange } from './store/slices/playerState';
 import { queueChange } from './store/slices/queue';
 import { settingsChange } from './store/slices/settings';
 import { singersChange } from './store/slices/singers';
@@ -22,9 +23,9 @@ import {
   ISongList, toSongList,
   ISinger, toSinger,
   IQueueItem,
-  ISong, toSong,
-} 
-from './services/models'
+  ISong, toSong, PlayerState,
+}
+  from './services/models'
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -51,27 +52,35 @@ const App: React.FC = () => {
   const isAuthenticated: boolean = useSelector(selectAuthenticated);
 
   useEffect(() => {
-    if(isAuthenticated){
+    if (isAuthenticated) {
       FirebaseService.getSongLists().on("value", onSongListChange);
       FirebaseService.getPlayerSingers().on("value", onSingersChange);
       FirebaseService.getPlayerQueue().on("value", onQueueChange);
+      FirebaseService.getPlayerState().on("value", onPlayerStateChange);
       FirebaseService.getNewSongs().on("value", onLatestSongsChange);
       FirebaseService.getHistory().on("value", onHistoryChange);
       FirebaseService.getFavorites().on("value", onFavoritesChange);
-      FirebaseService.getSongs().on("value", onSongsChange);  
+      FirebaseService.getSongs().on("value", onSongsChange);
     }
   }, [isAuthenticated])
 
-//datachanges
-  const onSongListChange = (items: firebase.database.DataSnapshot) =>{
+  //datachanges
+  const onPlayerStateChange = (items: firebase.database.DataSnapshot) => {
+    let state: PlayerState = PlayerState.stopped;
+    let s = items.val();
+    if(!isEmpty(s)){ state = s; }
+    dispatch(playerStateChange(state));
+  };
+
+  const onSongListChange = (items: firebase.database.DataSnapshot) => {
     let list: ISongList[] = [];
     items.forEach(item => {
       list.push(toSongList(item.val()));
     });
     dispatch(songListsChange(list));
-  };    
+  };
 
-  const onSingersChange = (items: firebase.database.DataSnapshot) =>{
+  const onSingersChange = (items: firebase.database.DataSnapshot) => {
     let list: ISinger[] = [];
     items.forEach(item => {
       let obj = item.val();
@@ -82,13 +91,13 @@ const App: React.FC = () => {
     dispatch(singersChange(list));
   };
 
-  const onQueueChange = (items: firebase.database.DataSnapshot) =>{
+  const onQueueChange = (items: firebase.database.DataSnapshot) => {
     let list: IQueueItem[] = [];
     items.forEach(item => {
       let obj = item.val();
       let newQueueItem: IQueueItem = {
         key: JSON.stringify(item.ref.toJSON()),
-        singer: toSinger(obj.singer),           
+        singer: toSinger(obj.singer),
         song: toSong(obj.song)
       }
       list.push(newQueueItem);
@@ -96,7 +105,7 @@ const App: React.FC = () => {
     dispatch(queueChange(list));
   };
 
-  const onLatestSongsChange = (items: firebase.database.DataSnapshot)=>{
+  const onLatestSongsChange = (items: firebase.database.DataSnapshot) => {
     let list: ISong[] = [];
     items.forEach(item => {
       let obj = item.val();
@@ -107,7 +116,7 @@ const App: React.FC = () => {
     dispatch(latestSongsChange(list));
   };
 
-  const onHistoryChange = (items: firebase.database.DataSnapshot)=>{
+  const onHistoryChange = (items: firebase.database.DataSnapshot) => {
     let list: ISong[] = [];
     items.forEach(item => {
       let obj = item.val();
@@ -118,7 +127,7 @@ const App: React.FC = () => {
     dispatch(historyChange(list));
   };
 
-  const onFavoritesChange = (items: firebase.database.DataSnapshot)=>{
+  const onFavoritesChange = (items: firebase.database.DataSnapshot) => {
     let list: ISong[] = [];
     items.forEach(item => {
       let obj = item.val();
@@ -129,7 +138,7 @@ const App: React.FC = () => {
     dispatch(favoritesChange(list));
   };
 
-  const onSongsChange = (items: firebase.database.DataSnapshot)=>{
+  const onSongsChange = (items: firebase.database.DataSnapshot) => {
     let artists: IArtist[] = [];
     let names: string[] = [];
     let list: ISong[] = [];
@@ -143,21 +152,21 @@ const App: React.FC = () => {
 
       //get the artist
       let name = song.artist;
-      if(!isEmpty(name) && !includes(names, name.trim())){
-       names.push(name.trim());
+      if (!isEmpty(name) && !includes(names, name.trim())) {
+        names.push(name.trim());
       }
     });
-    artists = orderBy(names).map( name => { return { name: name } });
+    artists = orderBy(names).map(name => { return { name: name } });
     dispatch(songsChange(list));
     dispatch(artistsChange(artists));
   };
 
   return (
-      <IonApp>
-        <ErrorBoundary>
-          <Router/>
-        </ErrorBoundary>
-      </IonApp>
+    <IonApp>
+      <ErrorBoundary>
+        <Router />
+      </ErrorBoundary>
+    </IonApp>
   );
 };
 

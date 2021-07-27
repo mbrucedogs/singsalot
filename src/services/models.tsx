@@ -30,11 +30,13 @@ export interface ISettings{
     userpick: boolean;
 }
 
-export interface IPlayer {
-    queue: IQueueItem[];
-    singers: ISinger[];
-    settings: ISettings;
-    state: string;
+export enum PlayerState{
+    playing = "Playing",
+    paused = "Paused",
+    stopped = "Stopped"
+}
+export interface IPlayerState {
+    state: PlayerState;
 }
 
 export interface ISongListSong{
@@ -68,7 +70,6 @@ export const toSinger = (singer: any): ISinger => {
     };
     return newSinger;
 }
-
 
 export const toSongListSong = (sls: any): ISongListSong =>{
     
@@ -105,105 +106,3 @@ export const toSongList = (sl: any): ISongList =>{
 
     return songList;
 }
-
-// export class FirebaseServiceCache {
-
-//     constructor() {
-//     }
-
-//     fetchData(){
-//         FirebaseService.getSongLists().on("value", this.onSongListChange);
-//         FirebaseService.getPlayerSingers().on("value", this.onSingersChange);
-//         FirebaseService.getPlayerQueue().on("value", this.onQueueChange);
-//         FirebaseService.getNewSongs().on("value", this.onLatestSongsChange);
-//         FirebaseService.getHistory().on("value", this.onHistoryChange);
-//         FirebaseService.getFavorites().on("value", this.onFavoritesChange);
-//         FirebaseService.getSongLists().on("value", this.onSongsChange);
-//     }
-
-//     //datachanges
-//     onSongListChange(items: firebase.database.DataSnapshot){
-//         let list: ISongList[] = [];
-//         items.forEach(item => {
-//           list.push(toSongList(item.val()));
-//         });
-//         this.songLists = list;
-//     };    
-
-//     onSingersChange(items: firebase.database.DataSnapshot) {
-//         let list: ISinger[] = [];
-//         items.forEach(item => {
-//           let obj = item.val();
-//           let song = toSinger(obj);
-//           song.key = JSON.stringify(item.ref.toJSON())
-//           list.push(song);
-//         });
-//         this.singers = list;
-//     };
-    
-//     onQueueChange(items: firebase.database.DataSnapshot) {
-//         let queueItems: IQueueItem[] = [];
-//         items.forEach(item => {
-//           let obj = item.val();
-//           let newQueueItem: IQueueItem = {
-//             key: JSON.stringify(item.ref.toJSON()),
-//             singer: toSinger(obj.singer),           
-//             song: toSong(obj.song)
-//           }
-//           queueItems.push(newQueueItem);
-//         });
-//         this.queue = queueItems;
-//     };
-
-//     onLatestSongsChange(items: firebase.database.DataSnapshot){
-//         let list: ISong[] = [];
-//         items.forEach(item => {
-//           let obj = item.val();
-//           let song = toSong(obj);
-//           song.key = JSON.stringify(item.ref.toJSON())
-//           list.push(song);
-//         });
-//         this.latestSongs = list;
-//     };
-
-//     onHistoryChange(items: firebase.database.DataSnapshot){
-//         let list: ISong[] = [];
-//         items.forEach(item => {
-//           let obj = item.val();
-//           let song = toSong(obj);
-//           song.key = JSON.stringify(item.ref.toJSON())
-//           list.push(song);
-//         });
-//         this.history = list;
-//     };
-    
-//     onFavoritesChange(items: firebase.database.DataSnapshot){
-//         let list: ISong[] = [];
-//         items.forEach(item => {
-//           let obj = item.val();
-//           let song = toSong(obj);
-//           song.key = JSON.stringify(item.ref.toJSON())
-//           list.push(song);
-//         });
-//         this.favorites = list;
-//     };
-
-//     onSongsChange(items: firebase.database.DataSnapshot){
-//         let artists: string[] = [];
-//         let list: ISong[] = [];
-
-//         items.forEach(item => {
-//           let obj = item.val();
-//           //get the song
-//           list.push(toSong(obj));
-//           //get the artist
-//           let artist = obj.artist;
-//           if(!isEmpty(artist) && !includes(list,artist)){
-//             artists.push(artist);
-//           }
-//         });
-//         this.songs = list;
-//         this.artists = artists;
-//     };
-    
-// }  

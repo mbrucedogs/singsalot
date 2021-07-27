@@ -8,7 +8,7 @@ interface ContainerProps {
   children?: JSX.Element;
 }
 //
-const Page: React.FC<ContainerProps> = ( { name, children = null} ) => {
+const Page: React.FC<ContainerProps> = ({ name, children = null }) => {
 
   const history = useHistory();
   const [searchText, setSearchText] = useState('');
@@ -16,10 +16,10 @@ const Page: React.FC<ContainerProps> = ( { name, children = null} ) => {
   const handleLoginKeyUp = (e: KeyboardEvent<HTMLIonSearchbarElement>) => {
     let key = e.key;
     console.log("handleKeyup", key);
-    if(key === 'Enter'){
+    if (key === 'Enter') {
       history.push(`/Search/${searchText}`);
       setSearchText('');
-    } 
+    }
   }
 
   return (

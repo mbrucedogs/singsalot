@@ -4,6 +4,7 @@ import { authenticatedSlice } from './slices/authenticated';
 import { favoritesSlice } from './slices/favorites';
 import { historySlice } from './slices/history';
 import { latestSongsSlice } from './slices/latestSongs';
+import { playerStateSlice } from './slices/playerState';
 import { queueSlice } from './slices/queue';
 import { settingsSlice } from './slices/settings';
 import { singersSlice } from './slices/singers';
@@ -17,6 +18,7 @@ const store = configureStore({
     favorites: favoritesSlice.reducer,
     history: historySlice.reducer,
     latestSongs: latestSongsSlice.reducer,
+    playerState: playerStateSlice.reducer,
     queue: queueSlice.reducer,
     settings: settingsSlice.reducer,
     singers: singersSlice.reducer,
@@ -33,6 +35,7 @@ export const selectAuthenticated = (state: RootState) => state.authenticated.aut
 export const selectFavorites = (state: RootState) => state.favorites.favorites;
 export const selectHistory = (state: RootState) => state.history.history;
 export const selectLatestSongs = (state: RootState) => state.latestSongs.latestSongs;
+export const selectPlayerState = (state: RootState) => state.playerState.state;
 export const selectQueue = (state: RootState) => state.queue.queue;
 export const selectSettings = (state: RootState) => state.settings.settings;
 export const selectSingers = (state: RootState) => state.singers.singers;

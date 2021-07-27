@@ -19,7 +19,7 @@ const Singers: React.FC = () => {
         listItems={listItems}
         getRow={(singer) => { 
           return(
-          <IonRow>
+          <IonRow key={singer.key}>
             <IonCol>{singer.name}</IonCol>
           </IonRow>
           )

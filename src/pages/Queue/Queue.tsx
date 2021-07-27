@@ -18,7 +18,7 @@ const Queue: React.FC = () => {
         pageName={pageName}
         listItems={listItems}
         getRow={(item) => { return (
-          <IonRow>
+          <IonRow key={item.key}>
               <IonCol>
                 {item.singer.name}<br/>
                 {item.song.title}

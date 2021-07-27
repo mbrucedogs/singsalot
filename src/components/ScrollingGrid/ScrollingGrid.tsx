@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { IonGrid, IonRow, IonCol } from '@ionic/react';
+import { useState, useEffect, useRef } from "react";
+import { IonContent } from '@ionic/react';
 import { IonInfiniteScroll, IonInfiniteScrollContent } from '@ionic/react';
 import { IFabricObj } from "../../services/models";
 import './ScrollingGrid.css';
@@ -18,8 +18,9 @@ const ScrollingGrid = <T extends IFabricObj>({ pageName, pageCount, listItems, g
 
   useEffect(() => {
     setDisableInfiniteScroll(false);
-    setPage(0)
-    setItems(listItems.slice(page * pageCount, (page * pageCount) + pageCount))
+    setPage(0);
+    setItems(listItems.slice(page * pageCount, (page * pageCount) + pageCount));
+    scrollToTop();
   }, [listItems])
 
   const searchNext = (event: CustomEvent<void>) => {
@@ -35,8 +36,15 @@ const ScrollingGrid = <T extends IFabricObj>({ pageName, pageCount, listItems, g
     (event.target as HTMLIonInfiniteScrollElement).complete();
   };
 
+  const contentRef = useRef<HTMLIonContentElement | null>(null);
+  const scrollToTop= () => {
+      contentRef.current && contentRef.current.scrollToTop();
+  };
+
   return (
-    <IonGrid className="grid">
+    <IonContent className="grid" 
+      ref={contentRef}
+      scrollEvents={true}>
       {items.map(item => {
         return getRow(item);
       })}
@@ -48,7 +56,7 @@ const ScrollingGrid = <T extends IFabricObj>({ pageName, pageCount, listItems, g
           loadingText={`Loading more ${pageName}...`}>
         </IonInfiniteScrollContent>
       </IonInfiniteScroll>
-    </IonGrid>
+    </IonContent>
   );
 };
 

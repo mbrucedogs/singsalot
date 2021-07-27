@@ -5,7 +5,6 @@ import { selectSongLists } from "../../store/store";
 import { ISongList } from "../../services/models";
 import ScrollingGrid from "../../components/ScrollingGrid/ScrollingGrid";
 import { pageCount } from "../../globalConfig";
-import { IonRow, IonCol } from "@ionic/react";
 import "./SongLists.css"
 
 const SongLists: React.FC = () => {
@@ -13,19 +12,18 @@ const SongLists: React.FC = () => {
   const listItems: ISongList[] = useSelector(selectSongLists);
 
   return (
-    
     <Page name={pageName}>
       <ScrollingGrid
         pageCount={pageCount}
         pageName={pageName}
         listItems={listItems}
-        getRow={(item) => { return (
-          <IonRow key={item.key} className="row">
-              <IonCol>
-                {item.title}
-              </IonCol>
-          </IonRow>
-         ) }}
+        getRow={(item) => {
+          return (
+            <div key={item.key} className="row">
+              {item.title}
+            </div>
+          )
+        }}
       />
     </Page>
   );

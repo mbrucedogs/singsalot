@@ -2,7 +2,6 @@ import React, {useState, useEffect} from "react";
 import Page from "../../components/Page/Page"
 import { useSelector } from "react-redux";
 import { selectArtists } from "../../store/store";
-import { IonRow, IonCol } from '@ionic/react';
 import { IArtist } from "../../services/models";
 import ScrollingGrid from "../../components/ScrollingGrid/ScrollingGrid";
 import { pageCount } from "../../globalConfig";
@@ -20,9 +19,9 @@ const Artists: React.FC = () => {
           listItems={listItems}
           getRow={(item) => {
             return(
-              <IonRow key={item.name} className="row">
-                <IonCol>{item.name}</IonCol>
-              </IonRow>
+              <div key={item.name} className="row">
+                {item.name}
+              </div>
             ); 
           }}
         />

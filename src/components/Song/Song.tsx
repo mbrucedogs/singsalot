@@ -1,6 +1,5 @@
 import React from "react";
 import { ISong } from "../../services/models";
-import { IonRow, IonCol } from '@ionic/react';
 import "./Song.css"
 
 export interface SongProps {
@@ -8,16 +7,14 @@ export interface SongProps {
 }
 
 const Song: React.FC<SongProps> = ({ song }) => {
-    const getType =(path:string) => {
+    const getType = (path: string) => {
         return path.substr(path.length - 3);
     }
     return (
-        <IonRow key={song.key} className="row">
-            <IonCol>
-                <div className="artist">{song.artist} ({getType(song.path)})</div>
-                <div className="title">{song.title}</div>
-            </IonCol>
-        </IonRow>
+        <div key={song.key} className="row">
+            <div className="artist">{song.artist} ({getType(song.path)})</div>
+            <div className="title">{song.title}</div>
+        </div>
     );
 };
 

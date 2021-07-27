@@ -5,8 +5,7 @@ import { useSelector } from "react-redux";
 import { selectSingers } from "../../store/store";
 import ScrollingGrid from "../../components/ScrollingGrid/ScrollingGrid";
 import { pageCount } from "../../globalConfig";
-import { IonRow, IonCol } from "@ionic/react";
-
+import "./Singers.css"
 const Singers: React.FC = () => {
   const listItems: ISinger[] = useSelector(selectSingers);
   const pageName: string = "Singers";
@@ -17,11 +16,11 @@ const Singers: React.FC = () => {
         pageCount={pageCount}
         pageName={pageName}
         listItems={listItems}
-        getRow={(singer) => { 
-          return(
-          <IonRow key={singer.key} className="row">
-            <IonCol>{singer.name}</IonCol>
-          </IonRow>
+        getRow={(singer) => {
+          return (
+            <div key={singer.key} className="row">
+              {singer.name}
+            </div>
           )
         }}
       />

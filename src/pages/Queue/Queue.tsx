@@ -5,7 +5,6 @@ import { useSelector } from "react-redux";
 import { selectQueue } from "../../store/store";
 import ScrollingGrid from "../../components/ScrollingGrid/ScrollingGrid";
 import { pageCount } from "../../globalConfig";
-import { IonRow, IonCol } from "@ionic/react";
 import "./Queue.css"
 
 const Queue: React.FC = () => {
@@ -18,14 +17,14 @@ const Queue: React.FC = () => {
         pageCount={pageCount}
         pageName={pageName}
         listItems={listItems}
-        getRow={(item) => { return (
-          <IonRow key={item.key} className="row">
-              <IonCol>
-                <div className="singer">{item.singer.name}</div>
-                <div className="song">{item.song.title}</div>
-              </IonCol>
-          </IonRow>
-         ) }}
+        getRow={(item) => {
+          return (
+            <div key={item.key} className="row">
+              <div className="singer">{item.singer.name}</div>
+              <div className="song">{item.song.title}</div>
+            </div>
+          )
+        }}
       />
     </Page>
   );

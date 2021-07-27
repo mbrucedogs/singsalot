@@ -12,7 +12,7 @@ const Song: React.FC<SongProps> = ({ song }) => {
         return path.substr(path.length - 3);
     }
     return (
-        <IonRow key={song.key}>
+        <IonRow key={song.key} className="row">
             <IonCol>
                 <div className="artist">{song.artist} ({getType(song.path)})</div>
                 <div className="title">{song.title}</div>

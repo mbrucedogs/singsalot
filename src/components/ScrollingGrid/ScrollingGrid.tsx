@@ -35,7 +35,7 @@ const ScrollingGrid = <T extends IFabricObj>({ pageName, pageCount, listItems, g
   };
 
 return (
-    <IonGrid>
+    <IonGrid className="grid">
     {items.map(item => {
         return getRow(item);       
     })}

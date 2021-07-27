@@ -6,3 +6,9 @@
 .song {
     font-style: italic;
 }
+
+.row {
+    padding: 2px;
+    min-height: 45px;
+    border-bottom: 1px solid #c0c0c0;
+}

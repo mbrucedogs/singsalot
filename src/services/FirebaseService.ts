@@ -1,13 +1,10 @@
-import firebase from './firebase';
+import localfirebase from './firebase';
 
-const db = firebase.ref('/controllers');
-
+const db = localfirebase.ref('/controllers');
 class FirebaseService {
-  constructor() {
-    this.controllerId = "";
-  }
-  
-  controllerExists(controllerId) {
+  controllerId: string = ""
+
+  controllerExists(controllerId: string) {
     this.controllerId = controllerId;
     return db.child(controllerId).get();
   }
@@ -15,7 +12,7 @@ class FirebaseService {
   getPlayerQueue(){
     return this.get('player/queue');
   }
-
+ 
   getPlayerSingers(){
     return this.get('player/singers');
   }
@@ -53,30 +50,29 @@ class FirebaseService {
   }
 
   //generic functions 
-  addPathFor(key){
+  addPathFor(key: string){
     return `${this.controllerId}/${key}`;
   }
 
-  getPathFor(key){
+  getPathFor(key: string){
     return  key.substr(key.indexOf(this.controllerId));
   }
 
-  get(key) {
+  get(key: string) {
     return db.child(this.addPathFor(key));
   }
 
-  add = (key, value) => {
-    db.child(this.getPath(this.pathFor(key))).push(value);
+  add = (key: string, value: any) => {
+    //db.child(this.getPath(this.pathFor(key))).push(value);
   };
 
-  update(key, value) {
+  update(key: string, value: any) {
     return db.child(this.getPathFor(key)).update(value);
   }
 
-  delete(key) {
+  delete(key: string) {
     return db.child(this.getPathFor(key)).remove();
   }
-
 }
 
 export default new FirebaseService();

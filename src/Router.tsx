@@ -19,6 +19,7 @@ import { authenticatedChange } from './store/slices/authenticated';
 import { useSelector } from 'react-redux';
 import { selectAuthenticated } from './store/store';
 import { ISongListSong, ISong, IArtist} from './services/models';
+import FirebaseReduxHandler from './components/FirebaseReduxHandler';
 
 interface AuthCheckProps {
   isAuthenticated: boolean;
@@ -28,7 +29,9 @@ interface AuthCheckProps {
 
 export const AuthCheck: React.FC<AuthCheckProps> = ({ isAuthenticated, fallback, children }) => {
   if (isAuthenticated) {
-    return <>{children}</>
+    return <FirebaseReduxHandler isAuthenticated={isAuthenticated}>
+      {children}
+      </FirebaseReduxHandler>
   } else {
     return <>{fallback}</>;
   }

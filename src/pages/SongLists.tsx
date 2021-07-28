@@ -8,24 +8,13 @@ import ScrollingGrid from "../components/ScrollingGrid";
 import Collapsible from 'react-collapsible';
 import { isEmpty } from "lodash";
 
-interface SongListsParam{
+interface SongListsProps {
   onSongListSongPick: (song: ISongListSong) => void;
 }
 
-const SongLists: React.FC<SongListsParam> = ({onSongListSongPick}) => {
+const SongLists: React.FC<SongListsProps> = ({ onSongListSongPick }) => {
   const pageName: string = "Song Lists";
   const listItems: ISongList[] = useSelector(selectSongLists);
-
-  //style 
-  const songWrapper = {
-    paddingTop: '0px',
-    paddingLeft: '10px',
-    paddingRight: '10px'
-  };
-
-  const songStyle = {
-    flex: '1 1 auto'
-  };
 
   return (
     <Page name={pageName}>
@@ -37,14 +26,15 @@ const SongLists: React.FC<SongListsParam> = ({onSongListSongPick}) => {
           return (
             <Collapsible key={item.key} trigger={<div className="one-line">{item.title} ({item.songs.length})</div>}>
               {item.songs.map(song => {
+                let hasFoundSongs: boolean = !isEmpty(song.foundSongs);
                 return (
-                  <div className={isEmpty(song.foundSongs) ? "listline notavailable" : "listline"} onClick={(e) => { onSongListSongPick(song) }}>
-                  <div style={{paddingTop: '0px', paddingLeft: '10px', paddingRight: '10px'}}>({song.position})</div>
-                  <div style={{flex: '1 1 auto'}}>
-                    <div className="artist">{song.artist}</div>
-                    <div className="title">{song.title}</div>
+                  <div className={hasFoundSongs ? "listline" : "listline notavailable"} onClick={hasFoundSongs ? (e) => { onSongListSongPick(song) } : undefined}>
+                    <div style={{ paddingTop: '0px', paddingLeft: '10px', paddingRight: '10px' }}>({song.position})</div>
+                    <div style={{ flex: '1 1 auto' }}>
+                      <div className="artist">{song.artist}</div>
+                      <div className="title">{song.title}</div>
+                    </div>
                   </div>
-                </div>                
                 );
               })}
             </Collapsible>

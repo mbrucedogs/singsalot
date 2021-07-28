@@ -12,6 +12,11 @@ export interface ISong extends IFabricObj {
     path: string;
 }
 
+export interface ISongPickable {
+    onSongPick: (song: ISong) => void;
+  }
+  
+
 export interface ISinger extends IFabricObj{
     name: string;
 }

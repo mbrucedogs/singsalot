@@ -1,5 +1,5 @@
 import React from "react";
-import { ISong } from "../services/models";
+import { ISong, ISongPickable } from "../services/models";
 import { useSelector } from "react-redux";
 import { selectLatestSongs } from "../store/store";
 import { pageCount } from "../globalConfig";
@@ -7,7 +7,7 @@ import Song from "../components/Song";
 import Page from "../components/Page"
 import ScrollingGrid from "../components/ScrollingGrid";
 
-const LatestSongs: React.FC = () => {
+const LatestSongs: React.FC<ISongPickable> = ({onSongPick}) => {
   const listItems: ISong[] = useSelector(selectLatestSongs);
   const pageName: string = "Latest Songs";
 
@@ -17,7 +17,7 @@ const LatestSongs: React.FC = () => {
         pageCount={pageCount}
         pageName={pageName}
         listItems={listItems}
-        getRow={(song) => { return <Song song={song} /> }}
+        getRow={(song) => { return <Song song={song} onSongPick={onSongPick} /> }}
       />
     </Page>
   );

@@ -18,7 +18,7 @@ import { useAppDispatch } from './hooks/hooks'
 import { authenticatedChange } from './store/slices/authenticated';
 import { useSelector } from 'react-redux';
 import { selectAuthenticated } from './store/store';
-import { ISongListSong, ISong} from './services/models';
+import { ISongListSong, ISong, IArtist} from './services/models';
 
 interface AuthCheckProps {
   isAuthenticated: boolean;
@@ -54,6 +54,10 @@ const Router: React.FC = () => {
     });
   }
 
+  const onArtistPick = (artist: IArtist) => {
+    console.log("onArtistPick - artist", artist);
+  }
+
   const onSongPick = (song: ISong) => {
     console.log("onSongPick - songListSong", song);
   }
@@ -69,12 +73,22 @@ const Router: React.FC = () => {
           <Menu />
           <IonRouterOutlet id="main" animated={true}>
             <Route path="/" component={Queue} exact={true} />
-            <Route path="/Artists" exact={true} component={Artists} />
-            <Route path="/Favorites" exact={true} component={Favorites} />
-            <Route path="/History" exact={true} component={History} />
-            <Route path="/LatestSongs" exact={true} component={LatestSongs} />
+            <Route path="/Artists" exact={true}>
+              <Artists onArtistPick={onArtistPick} />
+            </Route>
+            <Route path="/Favorites" exact={true}>
+              <Favorites onSongPick={onSongPick} />
+            </Route>
+            <Route path="/History" exact={true}>
+              <History onSongPick={onSongPick} />
+            </Route>
+            <Route path="/LatestSongs" exact={true}>
+              <LatestSongs onSongPick={onSongPick} />
+            </Route>
             <Route path="/Queue" component={Queue} />
-            <Route path="/Search/:query" exact={true} component={Search} />
+            <Route path="/Search/:query" exact={true}>
+              <Search onSongPick={onSongPick} />
+            </Route>
             <Route path="/Settings" exact={true} component={Settings} />
             <Route path="/Singers" exact={true} component={Singers} />
             <Route path="/SongLists" exact={true}>

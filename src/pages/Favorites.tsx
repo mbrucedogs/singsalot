@@ -1,13 +1,13 @@
 import React from "react";
 import { selectFavorites } from "../store/store";
 import { useSelector } from "react-redux";
-import { ISong } from "../services/models";
+import { ISong, ISongPickable } from "../services/models";
 import { pageCount } from "../globalConfig";
 import Song from "../components/Song";
 import Page from "../components/Page";
 import ScrollingGrid from "../components/ScrollingGrid";
 
-const Favorites: React.FC = () => {
+const Favorites: React.FC<ISongPickable> = ({onSongPick}) => {
   const pageName: string = "Favorites";
   const listItems: ISong[] = useSelector(selectFavorites)
 
@@ -17,7 +17,7 @@ const Favorites: React.FC = () => {
         pageCount={pageCount}
         pageName={pageName}
         listItems={listItems}
-        getRow={(song) => { return <Song song={song} /> }}
+        getRow={(song) => { return <Song song={song} onSongPick={onSongPick}/> }}
       />
     </Page>
   );

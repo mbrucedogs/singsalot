@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useParams } from 'react-router';
 import { useSelector } from "react-redux";
 import { selectSongs } from "../store/store";
-import { ISong } from "../services/models";
+import { ISong, ISongPickable } from "../services/models";
 import { pageCount } from "../globalConfig";
 import { isEmpty } from "lodash";
 import Page from "../components/Page"
 import ScrollingGrid from "../components/ScrollingGrid";
 import Song from "../components/Song";
 
-const Search: React.FC = () => {
+const Search: React.FC<ISongPickable> = ({onSongPick}) => {
 
   const { query } = useParams<{ query: string; }>();
   const songs: ISong[] = useSelector(selectSongs);
@@ -60,7 +60,7 @@ const Search: React.FC = () => {
         pageCount={pageCount}
         pageName={pageName}
         listItems={listItems}
-        getRow={(song) => { return <Song song={song} /> }}
+        getRow={(song) => { return <Song song={song} onSongPick={onSongPick}/> }}
       />
     </Page>
   );

@@ -6,7 +6,11 @@ import { pageCount } from "../globalConfig";
 import Page from "../components/Page"
 import ScrollingGrid from "../components/ScrollingGrid";
 
-const Artists: React.FC = () => {
+interface ArtistsProps { 
+  onArtistPick: (artist: IArtist) => void;
+}
+
+const Artists: React.FC<ArtistsProps> = ({onArtistPick}) => {
   const pageName: string = "Artists";
   const listItems: IArtist[] = useSelector(selectArtists);
 
@@ -18,7 +22,7 @@ const Artists: React.FC = () => {
           listItems={listItems}
           getRow={(item) => {
             return(
-              <div key={item.name} className="one-line">
+              <div key={item.name} className="one-line" onClick={(e) => onArtistPick(item)}>
                 {item.name}
               </div>
             ); 

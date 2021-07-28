@@ -4,11 +4,11 @@ import { IonGrid, IonRow, IonCol } from '@ionic/react';
 import { personCircle } from "ionicons/icons";
 import { IonItem, IonLabel, IonInput, IonButton, IonIcon, IonAlert } from '@ionic/react';
 
-interface ContainerProps {
+interface LoginProps {
     onLogin: (controllerId:string, singerName: string)=>Promise<boolean>;
 }
   
-const Login: React.FC<ContainerProps> = ({onLogin}) => {
+const Login: React.FC<LoginProps> = ({onLogin}) => {
     const [partyId, setPartyId] = useState<string>("");
     const [firstName, setFirstName] = useState<string>("");
     const [iserror, setIserror] = useState<boolean>(false);

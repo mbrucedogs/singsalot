@@ -1,13 +1,13 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { ISong } from "../services/models";
+import { ISong, ISongPickable } from "../services/models";
 import { selectHistory } from "../store/store";
 import { pageCount } from "../globalConfig";
 import Song from "../components/Song";
 import Page from "../components/Page"
 import ScrollingGrid from "../components/ScrollingGrid";
 
-const History: React.FC = () => {
+const History: React.FC<ISongPickable> = ({onSongPick}) => {
   const listItems: ISong[] = useSelector(selectHistory);
   const pageName: string = "History";
 
@@ -17,7 +17,7 @@ const History: React.FC = () => {
         pageCount={pageCount}
         pageName={pageName}
         listItems={listItems}
-        getRow={(song) => { return <Song song={song} /> }}
+        getRow={(song) => { return <Song song={song} onSongPick={onSongPick} /> }}
       />
     </Page>
   );

@@ -46,9 +46,9 @@ const Search: React.FC = () => {
       return 0;
     });
 
-    console.log("query:", query);
-    console.log("found:", results);
-    console.log("sorted:", s);
+    // console.log("query:", query);
+    // console.log("found:", results);
+    // console.log("sorted:", s);
 
     setListItems(results);
 

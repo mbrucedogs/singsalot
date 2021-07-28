@@ -18,6 +18,7 @@ import { useAppDispatch } from './hooks/hooks'
 import { authenticatedChange } from './store/slices/authenticated';
 import { useSelector } from 'react-redux';
 import { selectAuthenticated } from './store/store';
+import { ISongListSong, ISong} from './services/models';
 
 interface AuthCheckProps {
   isAuthenticated: boolean;
@@ -52,7 +53,15 @@ const Router: React.FC = () => {
       })
     });
   }
-  
+
+  const onSongPick = (song: ISong) => {
+    console.log("onSongPick - songListSong", song);
+  }
+
+  const onSongListSongPick = (song: ISongListSong) => {
+    console.log("onSongListSongPick - songListSong", song);
+  }
+
   return (
     <IonReactRouter>
       <AuthCheck isAuthenticated={isAuthenticated} fallback={<Login onLogin={onLogin} />}>
@@ -68,7 +77,9 @@ const Router: React.FC = () => {
             <Route path="/Search/:query" exact={true} component={Search} />
             <Route path="/Settings" exact={true} component={Settings} />
             <Route path="/Singers" exact={true} component={Singers} />
-            <Route path="/SongLists" exact={true} component={SongLists} />
+            <Route path="/SongLists" exact={true}>
+              <SongLists onSongListSongPick={onSongListSongPick} />
+            </Route>
             <Redirect to="/" />
           </IonRouterOutlet>
         </IonSplitPane>

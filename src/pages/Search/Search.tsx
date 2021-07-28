@@ -7,8 +7,7 @@ import { ISong } from "../../services/models";
 import ScrollingGrid from "../../components/ScrollingGrid/ScrollingGrid";
 import Song from "../../components/Song/Song";
 import { pageCount } from "../../globalConfig";
-import "./Search.css"
-import { isEmpty, result } from "lodash";
+import { isEmpty } from "lodash";
 
 const Search: React.FC = () => {
 

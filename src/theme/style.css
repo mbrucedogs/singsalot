@@ -1,0 +1,29 @@
+.grid {
+    border-collapse: collapse;
+    width: 98%;
+}
+
+.row {
+    margin: auto;
+    padding: 10px;
+    min-height: 45px;
+    border-bottom: 1px solid #c0c0c0;
+}
+
+.singer {
+    font-weight: bold;
+    padding-bottom: 5px;
+}
+
+.song {
+    font-style: italic;
+}
+
+.artist {
+    font-weight: bold;
+    padding-bottom: 5px;
+}
+
+.title {
+    font-style: italic;
+}

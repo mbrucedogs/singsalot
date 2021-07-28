@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { IonContent } from '@ionic/react';
 import { IonInfiniteScroll, IonInfiniteScrollContent } from '@ionic/react';
 import { IFabricObj } from "../../services/models";
-import './ScrollingGrid.css';
+import '../../theme/style.css';
 
 export interface ScrollingGridProps<T> {
   pageName: string;

@@ -5,7 +5,6 @@ import { useSelector } from "react-redux";
 import { selectQueue } from "../../store/store";
 import ScrollingGrid from "../../components/ScrollingGrid/ScrollingGrid";
 import { pageCount } from "../../globalConfig";
-import "./Queue.css"
 
 const Queue: React.FC = () => {
   const pageName: string = "Queue";

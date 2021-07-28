@@ -5,7 +5,6 @@ import { selectSongLists } from "../../store/store";
 import { ISongList } from "../../services/models";
 import ScrollingGrid from "../../components/ScrollingGrid/ScrollingGrid";
 import { pageCount } from "../../globalConfig";
-import "./SongLists.css"
 
 const SongLists: React.FC = () => {
   const pageName: string = "Song Lists";

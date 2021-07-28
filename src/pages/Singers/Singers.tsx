@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { selectSingers } from "../../store/store";
 import ScrollingGrid from "../../components/ScrollingGrid/ScrollingGrid";
 import { pageCount } from "../../globalConfig";
-import "./Singers.css"
+
 const Singers: React.FC = () => {
   const listItems: ISinger[] = useSelector(selectSingers);
   const pageName: string = "Singers";

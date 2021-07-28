@@ -1,6 +1,6 @@
 import React from "react";
 import { ISong } from "../../services/models";
-import "./Song.css"
+import "../../theme/style.css"
 
 export interface SongProps {
     song: ISong;

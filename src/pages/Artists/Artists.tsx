@@ -5,7 +5,6 @@ import { selectArtists } from "../../store/store";
 import { IArtist } from "../../services/models";
 import ScrollingGrid from "../../components/ScrollingGrid/ScrollingGrid";
 import { pageCount } from "../../globalConfig";
-import "./Artists.css"
 
 const Artists: React.FC = () => {
   const pageName: string = "Artists";

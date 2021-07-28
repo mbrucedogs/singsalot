@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { selectSongLists } from "../store/store";
-import { ISong, ISongList, ISongListSong } from "../services/models";
+import { ISongList, ISongListSong } from "../services/models";
 import { pageCount } from "../globalConfig";
 import Page from "../components/Page"
 import ScrollingGrid from "../components/ScrollingGrid";

@@ -1,6 +1,5 @@
 import React from "react";
-import { ISong } from "../../services/models";
-import "../../theme/style.css"
+import { ISong } from "../services/models";
 
 export interface SongProps {
     song: ISong;

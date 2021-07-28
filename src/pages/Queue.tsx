@@ -1,10 +1,10 @@
 import React from "react";
-import Page from "../../components/Page/Page"
-import { IQueueItem } from "../../services/models";
+import { IQueueItem } from "../services/models";
 import { useSelector } from "react-redux";
-import { selectQueue } from "../../store/store";
-import ScrollingGrid from "../../components/ScrollingGrid/ScrollingGrid";
-import { pageCount } from "../../globalConfig";
+import { selectQueue } from "../store/store";
+import { pageCount } from "../globalConfig";
+import Page from "../components/Page"
+import ScrollingGrid from "../components/ScrollingGrid";
 
 const Queue: React.FC = () => {
   const pageName: string = "Queue";

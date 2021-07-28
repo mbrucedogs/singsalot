@@ -1,10 +1,10 @@
 import React, {useState, useEffect} from "react";
-import Page from "../../components/Page/Page"
 import { useSelector } from "react-redux";
-import { selectArtists } from "../../store/store";
-import { IArtist } from "../../services/models";
-import ScrollingGrid from "../../components/ScrollingGrid/ScrollingGrid";
-import { pageCount } from "../../globalConfig";
+import { selectArtists } from "../store/store";
+import { IArtist } from "../services/models";
+import { pageCount } from "../globalConfig";
+import Page from "../components/Page"
+import ScrollingGrid from "../components/ScrollingGrid";
 
 const Artists: React.FC = () => {
   const pageName: string = "Artists";
@@ -18,7 +18,7 @@ const Artists: React.FC = () => {
           listItems={listItems}
           getRow={(item) => {
             return(
-              <div key={item.name} className="row">
+              <div key={item.name} className="one-line">
                 {item.name}
               </div>
             ); 

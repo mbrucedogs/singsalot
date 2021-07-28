@@ -12,10 +12,9 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router';
 import { useLocation } from 'react-router-dom';
 import { stop, stopOutline, pause, pauseOutline ,play, playOutline, time, timeOutline, settings, settingsOutline, list, listOutline, musicalNotes, musicalNotesOutline, peopleOutline, people, peopleCircle, peopleCircleOutline, heartOutline, heartSharp, mailOutline, mailSharp, paperPlaneOutline, paperPlaneSharp, trashOutline, trashSharp, warningOutline, warningSharp } from 'ionicons/icons';
-import './Menu.css';
-import { PlayerState } from '../../services/models';
+import { PlayerState } from '../services/models';
 import { useSelector } from 'react-redux';
-import { selectPlayerState } from '../../store/store';
+import { selectPlayerState } from '../store/store';
 
 function debugLog(container: string, label: string, value: any = null) {
   console.log(`debug - ${container} - ${label} `, value);

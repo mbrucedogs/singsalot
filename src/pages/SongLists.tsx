@@ -1,10 +1,10 @@
 import React from "react";
-import Page from "../../components/Page/Page"
 import { useSelector } from "react-redux";
-import { selectSongLists } from "../../store/store";
-import { ISongList } from "../../services/models";
-import ScrollingGrid from "../../components/ScrollingGrid/ScrollingGrid";
-import { pageCount } from "../../globalConfig";
+import { selectSongLists } from "../store/store";
+import { ISongList } from "../services/models";
+import { pageCount } from "../globalConfig";
+import Page from "../components/Page"
+import ScrollingGrid from "../components/ScrollingGrid";
 
 const SongLists: React.FC = () => {
   const pageName: string = "Song Lists";
@@ -18,7 +18,7 @@ const SongLists: React.FC = () => {
         listItems={listItems}
         getRow={(item) => {
           return (
-            <div key={item.key} className="row">
+            <div key={item.key} className="one-line">
               {item.title}
             </div>
           )

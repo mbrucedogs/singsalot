@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from 'react-router';
-import Page from "../../components/Page/Page"
 import { useSelector } from "react-redux";
-import { selectSongs } from "../../store/store";
-import { ISong } from "../../services/models";
-import ScrollingGrid from "../../components/ScrollingGrid/ScrollingGrid";
-import Song from "../../components/Song/Song";
-import { pageCount } from "../../globalConfig";
+import { selectSongs } from "../store/store";
+import { ISong } from "../services/models";
+import { pageCount } from "../globalConfig";
 import { isEmpty } from "lodash";
+import Page from "../components/Page"
+import ScrollingGrid from "../components/ScrollingGrid";
+import Song from "../components/Song";
 
 const Search: React.FC = () => {
 

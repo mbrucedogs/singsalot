@@ -1,11 +1,11 @@
 import React from "react";
-import Page from "../../components/Page/Page"
-import { ISong } from "../../services/models";
+import { ISong } from "../services/models";
 import { useSelector } from "react-redux";
-import { selectLatestSongs } from "../../store/store";
-import ScrollingGrid from "../../components/ScrollingGrid/ScrollingGrid";
-import Song from "../../components/Song/Song";
-import { pageCount } from "../../globalConfig";
+import { selectLatestSongs } from "../store/store";
+import { pageCount } from "../globalConfig";
+import Song from "../components/Song";
+import Page from "../components/Page"
+import ScrollingGrid from "../components/ScrollingGrid";
 
 const LatestSongs: React.FC = () => {
   const listItems: ISong[] = useSelector(selectLatestSongs);

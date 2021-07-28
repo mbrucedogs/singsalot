@@ -1,18 +1,18 @@
 import { IonRouterOutlet, IonSplitPane } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { Redirect, Route } from 'react-router-dom';
-import Menu from './components/Menu/Menu';
+import Menu from './components/Menu';
 
-import Artists from './pages/Artists/Artists';
-import Favorites from './pages/Favorites/Favorites';
-import History from './pages/History/History';
-import LatestSongs from './pages/LatestSongs/LatestSongs';
-import Login from './pages/Login/Login';
-import Queue from './pages/Queue/Queue';
-import Search from './pages/Search/Search';
-import Settings from './pages/Settings/Settings';
-import Singers from './pages/Singers/Singers';
-import SongLists from './pages/SongLists/SongLists';
+import Artists from './pages/Artists';
+import Favorites from './pages/Favorites';
+import History from './pages/History';
+import LatestSongs from './pages/LatestSongs';
+import Login from './pages/Login';
+import Queue from './pages/Queue';
+import Search from './pages/Search';
+import Settings from './pages/Settings';
+import Singers from './pages/Singers';
+import SongLists from './pages/SongLists';
 import FirebaseService from './services/FirebaseService';
 import { useAppDispatch } from './hooks/hooks'
 import { authenticatedChange } from './store/slices/authenticated';

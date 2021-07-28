@@ -1,10 +1,10 @@
 import React from "react";
-import Page from "../../components/Page/Page"
-import { ISinger } from "../../services/models";
+import { ISinger } from "../services/models";
 import { useSelector } from "react-redux";
-import { selectSingers } from "../../store/store";
-import ScrollingGrid from "../../components/ScrollingGrid/ScrollingGrid";
-import { pageCount } from "../../globalConfig";
+import { selectSingers } from "../store/store";
+import { pageCount } from "../globalConfig";
+import Page from "../components/Page"
+import ScrollingGrid from "../components/ScrollingGrid";
 
 const Singers: React.FC = () => {
   const listItems: ISinger[] = useSelector(selectSingers);
@@ -18,7 +18,7 @@ const Singers: React.FC = () => {
         listItems={listItems}
         getRow={(singer) => {
           return (
-            <div key={singer.key} className="row">
+            <div key={singer.key} className="one-line">
               {singer.name}
             </div>
           )

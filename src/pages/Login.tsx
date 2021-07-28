@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { IonGrid, IonRow, IonCol } from '@ionic/react';
 import { personCircle } from "ionicons/icons";
 import { IonItem, IonLabel, IonInput, IonButton, IonIcon, IonAlert } from '@ionic/react';
-import './Login.css';
 
 interface ContainerProps {
     onLogin: (controllerId:string, singerName: string)=>Promise<boolean>;

@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux'
 import { useAppDispatch } from './hooks/hooks'
 import firebase from 'firebase'
 import FirebaseService from "./services/FirebaseService";
-import { isEmpty, includes, sortedUniqBy } from "lodash";
+import { isEmpty, includes } from "lodash";
 import { artistsChange } from './store/slices/artists';
 import { favoritesChange } from './store/slices/favorites';
 import { historyChange } from './store/slices/history';
@@ -46,7 +46,7 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/style.css';
 import './theme/variables.css';
-import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
+import ErrorBoundary from './components/ErrorBoundary';
 
 const App: React.FC = () => {
   const dispatch = useAppDispatch()

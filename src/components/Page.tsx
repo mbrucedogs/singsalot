@@ -1,7 +1,6 @@
 import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonSearchbar } from '@ionic/react';
 import { useHistory } from 'react-router';
 import React, { KeyboardEvent, useState } from 'react';
-import './Page.css';
 
 interface ContainerProps {
   name: String,
@@ -20,7 +19,7 @@ const Page: React.FC<ContainerProps> = ({ name, children = null }) => {
       history.push(`/Search/${searchText}`);
     }
   }
-
+  
   return (
     <IonPage>
       <IonHeader>

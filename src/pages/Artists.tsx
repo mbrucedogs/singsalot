@@ -5,6 +5,7 @@ import { IArtist } from "../services/models";
 import { pageCount } from "../globalConfig";
 import Page from "../components/Page"
 import ScrollingGrid from "../components/ScrollingGrid";
+import { isEmpty } from "lodash";
 
 interface ArtistsProps { 
   onArtistPick: (artist: IArtist) => void;
@@ -13,6 +14,10 @@ interface ArtistsProps {
 const Artists: React.FC<ArtistsProps> = ({onArtistPick}) => {
   const pageName: string = "Artists";
   const listItems: IArtist[] = useSelector(selectArtists);
+
+  if(isEmpty(listItems)) { 
+    return <Page name={pageName}><h2 style={{padding:'10px'}}>Loading {pageName}...</h2></Page>
+  }
 
   return (
       <Page name={pageName}>

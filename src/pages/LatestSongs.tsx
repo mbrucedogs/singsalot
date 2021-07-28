@@ -6,10 +6,15 @@ import { pageCount } from "../globalConfig";
 import Song from "../components/Song";
 import Page from "../components/Page"
 import ScrollingGrid from "../components/ScrollingGrid";
+import { isEmpty } from "lodash";
 
 const LatestSongs: React.FC<ISongPickable> = ({onSongPick}) => {
   const listItems: ISong[] = useSelector(selectLatestSongs);
   const pageName: string = "Latest Songs";
+
+  if(isEmpty(listItems)) { 
+    return <Page name={pageName}><h2 style={{padding:'10px'}}>Loading {pageName}...</h2></Page>
+  }
 
   return (
     <Page name={pageName}>

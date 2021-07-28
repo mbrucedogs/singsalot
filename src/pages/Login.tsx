@@ -1,7 +1,7 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import React, { useState } from 'react';
 import { IonGrid, IonRow, IonCol } from '@ionic/react';
-import { personCircle } from "ionicons/icons";
+import { micCircle, micOutline, personCircle } from "ionicons/icons";
 import { IonItem, IonLabel, IonInput, IonButton, IonIcon, IonAlert } from '@ionic/react';
 
 interface LoginProps {
@@ -12,6 +12,7 @@ const Login: React.FC<LoginProps> = ({onLogin}) => {
     const [partyId, setPartyId] = useState<string>("");
     const [firstName, setFirstName] = useState<string>("");
     const [iserror, setIserror] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [message, setMessage] = useState<string>("");
     const handleLogin = () => {
         if (!partyId) {
@@ -24,12 +25,13 @@ const Login: React.FC<LoginProps> = ({onLogin}) => {
             setIserror(true);
             return;
         }
-
+        setIsLoading(true);
         let promise = onLogin(partyId, firstName);
         promise.then( success => {
             if(!success){
                 setMessage("Your Party Id wasn't found, please try again.");
                 setIserror(true);
+                setIsLoading(false);
             }
         });
     };
@@ -57,11 +59,14 @@ const Login: React.FC<LoginProps> = ({onLogin}) => {
                             </IonCol>
                         </IonRow>
                         <IonRow>
-                            <IonCol>
+                            <IonCol size="2">
                                 <IonIcon
                                     style={{ fontSize: "70px", color: "#0040ff" }}
-                                    icon={personCircle}
+                                    icon={micOutline}
                                 />
+                            </IonCol>                           
+                            <IonCol>
+                                <h1>Sings-A-Lot</h1>
                             </IonCol>
                         </IonRow>
                         <IonRow>
@@ -92,8 +97,11 @@ const Login: React.FC<LoginProps> = ({onLogin}) => {
                             </IonCol>
                         </IonRow>
                         <IonRow>
-                            <IonCol>
+                            <IonCol hidden={isLoading}>
                                 <IonButton expand="block" onClick={handleLogin}>Login</IonButton>
+                            </IonCol>
+                            <IonCol hidden={!isLoading}>
+                                <IonLabel><h1 style={{padding: '10px'}}>Loading Party!!!</h1></IonLabel>
                             </IonCol>
                         </IonRow>
                     </IonGrid>

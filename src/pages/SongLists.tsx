@@ -16,6 +16,10 @@ const SongLists: React.FC<SongListsProps> = ({ onSongListSongPick }) => {
   const pageName: string = "Song Lists";
   const listItems: ISongList[] = useSelector(selectSongLists);
 
+  if(isEmpty(listItems)) { 
+    return <Page name={pageName}><h2 style={{padding:'10px'}}>Loading {pageName}...</h2></Page>
+  }
+
   return (
     <Page name={pageName}>
       <ScrollingGrid

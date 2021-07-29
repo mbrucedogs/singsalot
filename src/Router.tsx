@@ -10,6 +10,7 @@ import LatestSongs from './pages/LatestSongs';
 import Login from './pages/Login';
 import Queue from './pages/Queue';
 import Search from './pages/Search';
+import Searching from './pages/Searching';
 import Settings from './pages/Settings';
 import Singers from './pages/Singers';
 import SongLists from './pages/SongLists';
@@ -18,7 +19,7 @@ import { useAppDispatch } from './hooks/hooks'
 import { authenticatedChange } from './store/slices/authenticated';
 import { useSelector } from 'react-redux';
 import { selectAuthenticated } from './store/store';
-import { ISongListSong, ISong, IArtist} from './services/models';
+import { ISong, IArtist} from './services/models';
 import FirebaseReduxHandler from './components/FirebaseReduxHandler';
 
 interface AuthCheckProps {
@@ -85,6 +86,7 @@ const Router: React.FC = () => {
               <LatestSongs onSongPick={onSongPick} />
             </Route>
             <Route path="/Queue" component={Queue} />
+            <Route path="/Searching" component={Searching} />
             <Route path="/Search/:query" exact={true}>
               <Search onSongPick={onSongPick} />
             </Route>

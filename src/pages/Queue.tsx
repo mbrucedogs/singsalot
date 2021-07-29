@@ -24,8 +24,8 @@ const Queue: React.FC = () => {
         getRow={(item) => {
           return (
             <div key={item.key} className="row">
-              <div className="singer">{item.singer.name}</div>
-              <div className="song">{item.song.title}</div>
+              <div className="title">{item.singer.name}</div>
+              <div className="subtitle">{item.song.title}</div>
             </div>
           )
         }}

@@ -10,10 +10,6 @@ import { IonButton, IonModal, IonContent, IonHeader, IonToolbar, IonTitle, IonBu
 import Collapsible from 'react-collapsible';
 import Song from "../components/Song";
 
-interface SongListsProps extends ISongPickable{
-  onSongListSongPick: (song: ISongListSong) => void;
-}
-
 const SongLists: React.FC<ISongPickable> = ({ onSongPick }) => {
   const pageName: string = "Song Lists";
   const listItems: ISongList[] = useSelector(selectSongLists);
@@ -74,8 +70,8 @@ const SongLists: React.FC<ISongPickable> = ({ onSongPick }) => {
                     hasFoundSongs && <div className={hasFoundSongs ? "listline" : "listline notavailable"} onClick={(e) => { setShowModal(false); }}>
                       <div style={{ paddingTop: '0px', paddingLeft: '10px', paddingRight: '10px' }}>({song.position})</div>
                       <div style={{ flex: '1 1 auto' }}>
-                        <div className="artist">{song.artist}</div>
-                        <div className="title">{song.title}</div>
+                        <div className="title">{song.artist}</div>
+                        <div className="subtitle">{song.title}</div>
                       </div>
                     </div>
                   }
@@ -83,13 +79,13 @@ const SongLists: React.FC<ISongPickable> = ({ onSongPick }) => {
                     <Collapsible trigger={<div className={hasFoundSongs ? "listline" : "listline notavailable"}>
                       <div style={{ paddingTop: '0px', paddingLeft: '10px', paddingRight: '10px' }}>({song.position})</div>
                       <div style={{ flex: '1 1 auto' }}>
-                        <div className="artist">{song.artist}</div>
-                        <div className="title">{song.title}</div>
+                        <div className="title">{song.artist}</div>
+                        <div className="subtitle">{song.title}</div>
                       </div>
                     </div>
                     }>
                       {song.foundSongs.map(song =>{
-                          return <div style={{paddingLeft:'50px'}}><Song song={song} onSongPick={(song)=> { onSongPick(song); setShowModal(false); }}/></div>
+                          return <Song style={{paddingLeft:'50px'}} song={song} showPath={true} onSongPick={(song)=> { onSongPick(song); setShowModal(false); }}/>
                       })}
                     </Collapsible>
                   )

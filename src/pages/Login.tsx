@@ -41,7 +41,7 @@ const Login: React.FC<LoginProps> = ({onLogin}) => {
             <IonContent fullscreen>
                 <IonHeader collapse="condense">
                     <IonToolbar>
-                        <IonTitle size="large" className="title">Login</IonTitle>
+                        <IonTitle size="large" className="subtitle">Login</IonTitle>
                     </IonToolbar>
                 </IonHeader>
                 <div className="wrapper">

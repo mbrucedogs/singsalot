@@ -52,28 +52,26 @@
   color: lightgray;
 }
 
+.title {
+  font-weight: bold;
+  font-size: large;
+  padding-bottom: 5px;
+}
+
+.subtitle {
+  font-size:medium;
+  font-style: italic;
+  padding-bottom: 5px;
+}
+
+.path{
+  font-size: medium;
+}
+
 @media (prefers-color-scheme: dark) {
   .notavailable {
     color: rgb(78, 74, 74);
   }
-}
-
-.singer {
-  font-weight: bold;
-  padding-bottom: 5px;
-}
-
-.song {
-  font-style: italic;
-}
-
-.artist {
-  font-weight: bold;
-  padding-bottom: 5px;
-}
-
-.title {
-  font-style: italic;
 }
 
 /* Page */

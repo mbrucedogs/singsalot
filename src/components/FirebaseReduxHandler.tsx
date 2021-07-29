@@ -48,14 +48,14 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
 
     //Listeners for loadData
     //datachanges
-    const onPlayerStateChange = (items: firebase.database.DataSnapshot) => {
+    const onPlayerStateChange = async (items: firebase.database.DataSnapshot)=> {
         let state: PlayerState = PlayerState.stopped;
         let s = items.val();
         if (!isEmpty(s)) { state = s; }
         dispatch(playerStateChange(state));
     };
 
-    const onSongListChange = (items: firebase.database.DataSnapshot) => {
+    const onSongListChange = async (items: firebase.database.DataSnapshot) => {
         let list: ISongList[] = [];
         items.forEach(item => {
             list.push(toSongList(item.val()));
@@ -63,7 +63,7 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
         dispatch(songListsChange(list));
     };
 
-    const onSingersChange = (items: firebase.database.DataSnapshot) => {
+    const onSingersChange = async (items: firebase.database.DataSnapshot) => {
         let list: ISinger[] = [];
         items.forEach(item => {
             let obj = item.val();
@@ -74,7 +74,7 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
         dispatch(singersChange(list));
     };
 
-    const onQueueChange = (items: firebase.database.DataSnapshot) => {
+    const onQueueChange = async (items: firebase.database.DataSnapshot) => {
         let list: IQueueItem[] = [];
         items.forEach(item => {
             let obj = item.val();
@@ -88,7 +88,7 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
         dispatch(queueChange(list));
     };
 
-    const onLatestSongsChange = (items: firebase.database.DataSnapshot) => {
+    const onLatestSongsChange = async (items: firebase.database.DataSnapshot) => {
         let list: ISong[] = [];
         items.forEach(item => {
             let obj = item.val();
@@ -99,7 +99,7 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
         dispatch(latestSongsChange(list));
     };
 
-    const onHistoryChange = (items: firebase.database.DataSnapshot) => {
+    const onHistoryChange = async (items: firebase.database.DataSnapshot) => {
         let list: ISong[] = [];
         items.forEach(item => {
             let obj = item.val();
@@ -110,7 +110,7 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
         dispatch(historyChange(list));
     };
 
-    const onFavoritesChange = (items: firebase.database.DataSnapshot) => {
+    const onFavoritesChange = async (items: firebase.database.DataSnapshot) => {
         let list: ISong[] = [];
         items.forEach(item => {
             let obj = item.val();
@@ -121,7 +121,7 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
         dispatch(favoritesChange(list));
     };
 
-    const onSongsChange = (items: firebase.database.DataSnapshot) => {
+    const onSongsChange = async (items: firebase.database.DataSnapshot) => {
         let artists: IArtist[] = [];
         let names: string[] = [];
         let list: ISong[] = [];

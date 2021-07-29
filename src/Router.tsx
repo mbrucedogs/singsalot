@@ -65,10 +65,6 @@ const Router: React.FC = () => {
     console.log("onSongPick - songListSong", song);
   }
 
-  const onSongListSongPick = (song: ISongListSong) => {
-    console.log("onSongListSongPick - songListSong", song);
-  }
-
   return (
     <IonReactRouter>
       <AuthCheck isAuthenticated={isAuthenticated} fallback={<Login onLogin={onLogin} />}>
@@ -95,7 +91,7 @@ const Router: React.FC = () => {
             <Route path="/Settings" exact={true} component={Settings} />
             <Route path="/Singers" exact={true} component={Singers} />
             <Route path="/SongLists" exact={true}>
-              <SongLists onSongListSongPick={onSongListSongPick} />
+              <SongLists onSongPick={onSongPick} />
             </Route>
             <Redirect to="/" />
           </IonRouterOutlet>

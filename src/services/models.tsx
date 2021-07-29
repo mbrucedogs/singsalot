@@ -44,7 +44,7 @@ export interface IPlayerState {
     state: PlayerState;
 }
 
-export interface ISongListSong{
+export interface ISongListSong extends IFabricObj{
     artist: string;
     position: number;
     title: string;

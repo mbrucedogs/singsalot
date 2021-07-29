@@ -1,31 +1,20 @@
-import React, { KeyboardEvent, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useParams } from 'react-router';
 import { useSelector } from "react-redux";
 import { selectSongs } from "../store/store";
 import { ISong, ISongPickable } from "../services/models";
 import { pageCount } from "../globalConfig";
 import { isEmpty } from "lodash";
+import Page from "../components/Page"
 import ScrollingGrid from "../components/ScrollingGrid";
 import Song from "../components/Song";
-import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonSearchbar } from '@ionic/react';
-import { isPlatform } from '@ionic/react';
 
-const Search: React.FC<ISongPickable> = ({ onSongPick }) => {
+const Search: React.FC<ISongPickable> = ({onSongPick}) => {
+
+  const { query } = useParams<{ query: string; }>();
   const songs: ISong[] = useSelector(selectSongs);
   const [listItems, setListItems] = useState<ISong[]>([]);
   const pageName: string = "Search";
-  const [searchText, setSearchText] = useState('');
-  const [query, setQuery] = useState('');
-
-  const handleLoginKeyUp = (e: KeyboardEvent<HTMLIonSearchbarElement>) => {
-    let key = e.key;
-    console.log("handleKeyup", key);
-    if (key === 'Enter') {
-      setQuery(searchText);
-      console.log("element", document.body);
-      document.body.focus()
-    }
-  }
-
 
   useEffect(() => {
     console.log("searching term: ", query);
@@ -66,33 +55,14 @@ const Search: React.FC<ISongPickable> = ({ onSongPick }) => {
   }, [query, songs]);
 
   return (
-    <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonButtons slot="start">
-            <IonMenuButton />
-          </IonButtons>
-          <IonSearchbar onKeyUp={handleLoginKeyUp} value={searchText} onIonChange={(e) => setSearchText(e.detail.value!)} ></IonSearchbar>
-          <IonTitle>{isPlatform('ios') ? '' : pageName}</IonTitle>
-        </IonToolbar>
-      </IonHeader>
-
-      <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">{pageName}</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <>
-          <ScrollingGrid
-            pageCount={pageCount}
-            pageName={pageName}
-            listItems={listItems}
-            getRow={(song) => { return <Song song={song} onSongPick={onSongPick} /> }}
-          />
-        </>
-      </IonContent>
-    </IonPage>
+    <Page name={pageName}>
+      <ScrollingGrid
+        pageCount={pageCount}
+        pageName={pageName}
+        listItems={listItems}
+        getRow={(song) => { return <Song song={song} onSongPick={onSongPick}/> }}
+      />
+    </Page>
   );
 };
 

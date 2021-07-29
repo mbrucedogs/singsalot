@@ -11,16 +11,7 @@ interface ContainerProps {
 const Page: React.FC<ContainerProps> = ({ name, children = null }) => {
 
   const history = useHistory();
-  const [searchText, setSearchText] = useState('');
-
-  const handleLoginKeyUp = (e: KeyboardEvent<HTMLIonSearchbarElement>) => {
-    let key = e.key;
-    console.log("handleKeyup", key);
-    if (key === 'Enter') {
-      history.push(`/Search/${searchText}`);
-    }
-  }
-  
+ 
   return (
     <IonPage>
       <IonHeader>
@@ -28,7 +19,6 @@ const Page: React.FC<ContainerProps> = ({ name, children = null }) => {
           <IonButtons slot="start">
             <IonMenuButton />
           </IonButtons>
-          <IonSearchbar onKeyUp={handleLoginKeyUp} value={searchText} onIonChange={(e) => setSearchText(e.detail.value!)} ></IonSearchbar>
           <IonTitle>{isPlatform('ios') ? '' : name}</IonTitle>
         </IonToolbar>
       </IonHeader>

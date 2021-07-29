@@ -10,7 +10,6 @@ import LatestSongs from './pages/LatestSongs';
 import Login from './pages/Login';
 import Queue from './pages/Queue';
 import Search from './pages/Search';
-import Searching from './pages/Searching';
 import Settings from './pages/Settings';
 import Singers from './pages/Singers';
 import SongLists from './pages/SongLists';
@@ -86,10 +85,7 @@ const Router: React.FC = () => {
               <LatestSongs onSongPick={onSongPick} />
             </Route>
             <Route path="/Queue" component={Queue} />
-            <Route path="/Searching" component={Searching} />
-            <Route path="/Search/:query" exact={true}>
-              <Search onSongPick={onSongPick} />
-            </Route>
+            <Route path="/Search" component={Search} />
             <Route path="/Settings" exact={true} component={Settings} />
             <Route path="/Singers" exact={true} component={Singers} />
             <Route path="/SongLists" exact={true}>

@@ -39,9 +39,9 @@ const SongLists: React.FC<ISongPickable> = ({ onSongPick }) => {
           listItems={listItems}
           getRow={(item) => {
             return (
-              <div className="one-line" onClick={(e) => {
-                setSelectedSongList(item);
-              }}>{item.title} ({item.songs.length})</div>
+              <div key={item.key} className="row-single" onClick={(e) => { setSelectedSongList(item); }}>
+                <div style={{ flex: "1 1 auto" }}>{item.title} ({item.songs.length})</div>
+              </div>
             )
           }}
         />
@@ -67,7 +67,7 @@ const SongLists: React.FC<ISongPickable> = ({ onSongPick }) => {
                   let hasFoundSongs: boolean = !isEmpty(song.foundSongs);
 
                   {
-                    hasFoundSongs && <div className={hasFoundSongs ? "listline" : "listline notavailable"} onClick={(e) => { setShowModal(false); }}>
+                    hasFoundSongs && <div className={hasFoundSongs ? "row-single" : "row-single notavailable"} onClick={(e) => { setShowModal(false); }}>
                       <div style={{ paddingTop: '0px', paddingLeft: '10px', paddingRight: '10px' }}>({song.position})</div>
                       <div style={{ flex: '1 1 auto' }}>
                         <div className="title">{song.artist}</div>
@@ -76,7 +76,7 @@ const SongLists: React.FC<ISongPickable> = ({ onSongPick }) => {
                     </div>
                   }
                   return (
-                    <Collapsible trigger={<div className={hasFoundSongs ? "listline" : "listline notavailable"}>
+                    <Collapsible trigger={<div className={hasFoundSongs ? "row-single" : "row-single notavailable"}>
                       <div style={{ paddingTop: '0px', paddingLeft: '10px', paddingRight: '10px' }}>({song.position})</div>
                       <div style={{ flex: '1 1 auto' }}>
                         <div className="title">{song.artist}</div>
@@ -84,8 +84,8 @@ const SongLists: React.FC<ISongPickable> = ({ onSongPick }) => {
                       </div>
                     </div>
                     }>
-                      {song.foundSongs.map(song =>{
-                          return <Song style={{paddingLeft:'50px'}} song={song} showPath={true} onSongPick={(song)=> { onSongPick(song); setShowModal(false); }}/>
+                      {song.foundSongs.map(song => {
+                        return <Song style={{ paddingLeft: '50px' }} song={song} showPath={true} onSongPick={(song) => { onSongPick(song); setShowModal(false); }} />
                       })}
                     </Collapsible>
                   )

@@ -23,8 +23,8 @@ const Singers: React.FC = () => {
         listItems={listItems}
         getRow={(singer) => {
           return (
-            <div key={singer.key} className="one-line">
-              {singer.name}
+            <div key={singer.key} className="row-single">
+              <div style={{flex: "1 1 auto"}}>{singer.name}</div>
             </div>
           )
         }}

@@ -53,7 +53,7 @@ const SongLists: React.FC<ISongPickable> = ({ onSongPick }) => {
           swipeToClose={true}
           presentingElement={undefined}
           onDidDismiss={() => setShowModal(false)}>
-          <IonContent>
+          <>
             <IonHeader>
               <IonToolbar>
                 <IonTitle>{modalTitle}</IonTitle>
@@ -62,7 +62,7 @@ const SongLists: React.FC<ISongPickable> = ({ onSongPick }) => {
                 </IonButtons>
               </IonToolbar>
             </IonHeader>
-            <IonContent fullscreen>
+            <IonContent>
               <ScrollingGrid
                 pageCount={100}
                 pageName={modalTitle}
@@ -96,7 +96,7 @@ const SongLists: React.FC<ISongPickable> = ({ onSongPick }) => {
                 }}
               />
             </IonContent>
-          </IonContent>
+          </>
         </IonModal>
       </>
     </Page>

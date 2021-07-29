@@ -31,21 +31,12 @@
   border-bottom: 1px solid #c0c0c0;
 }
 
-.one-line {
-  margin: auto;
-  padding-left: 10px;
-  height: 45px;
-  line-height: 45px;
-  border-bottom: 1px solid #c0c0c0;
-}
-
-.listline {
+.row-single {
   display: flex;
   border-bottom: 1px solid gainsboro;
   padding: 10px;
-  min-height: 45px;
+  min-height: 60px;
   align-items: center;
-  min-height: 40px;
 }
 
 .notavailable {

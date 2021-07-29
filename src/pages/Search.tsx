@@ -6,8 +6,7 @@ import { pageCount } from "../globalConfig";
 import { isEmpty } from "lodash";
 import ScrollingGrid from "../components/ScrollingGrid";
 import Song from "../components/Song";
-import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonSearchbar } from '@ionic/react';
-import { isPlatform } from '@ionic/react';
+import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonToolbar, IonSearchbar } from '@ionic/react';
 
 const Search: React.FC<ISongPickable> = ({ onSongPick }) => {
   const songs: ISong[] = useSelector(selectSongs);
@@ -74,14 +73,12 @@ const Search: React.FC<ISongPickable> = ({ onSongPick }) => {
       </IonHeader>
 
       <IonContent>
-        <>
-          <ScrollingGrid
-            pageCount={pageCount}
-            pageName={pageName}
-            listItems={listItems}
-            getRow={(song) => { return <Song song={song} onSongPick={onSongPick} /> }}
-          />
-        </>
+        <ScrollingGrid
+          pageCount={pageCount}
+          pageName={pageName}
+          listItems={listItems}
+          getRow={(song) => { return <Song song={song} onSongPick={onSongPick} /> }}
+        />
       </IonContent>
     </IonPage>
   );

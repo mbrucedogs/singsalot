@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { KeyboardEvent, useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { selectArtists, selectSongs } from "../store/store";
 import { IArtist, ISong, ISongPickable } from "../services/models";
@@ -6,32 +6,62 @@ import { pageCount } from "../globalConfig";
 import Page from "../components/Page"
 import ScrollingGrid from "../components/ScrollingGrid";
 import { isEmpty } from "lodash";
-import { IonButton, IonModal, IonContent, IonHeader, IonToolbar, IonTitle, IonButtons } from "@ionic/react";
+import { IonMenuButton, IonPage, IonSearchbar, IonButton, IonModal, IonContent, IonHeader, IonToolbar, IonTitle, IonButtons } from "@ionic/react";
 import Song from "../components/Song";
 
 const Artists: React.FC<ISongPickable> = ({ onSongPick }) => {
   const pageName: string = "Artists";
-  const listItems: IArtist[] = useSelector(selectArtists);
+  const artists: IArtist[] = useSelector(selectArtists);
   const songs: ISong[] = useSelector(selectSongs);
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [modal, setModal] = useState<{artist:string, songs:ISong[]}>({artist:'', songs:[]});
+  const [modal, setModal] = useState<{ artist: string, songs: ISong[] }>({ artist: '', songs: [] });
+  const [searchText, setSearchText] = useState('');
+  const [listItems, setListItems] = useState<IArtist[]>([]);
 
-  const search = (artist: string) => {
+  const searchArtists = (letters: string) => {
+    console.log("letters", letters);
+    if (!isEmpty(letters)) {
+      let query = letters.toLowerCase();
+      let results = artists.filter(artist => {
+        if(artist.name.toLowerCase().indexOf(query) > -1){
+          return artist;
+        }
+      });
+      let sorted = results.sort((a: IArtist, b: IArtist) => {
+        var a1: string = a.name.toLowerCase();
+        var a2: string = b.name.toLowerCase();
+        if (a1 < a2) return -1;
+        if (a1 > a2) return 1;
+        return 0;
+      });
+      if(!isEmpty(sorted)){
+        setListItems(sorted);
+      }
+    } else {
+      setListItems(artists);
+    }
+  }
+
+  useEffect(() => {
+    if(!isEmpty(artists)){
+      setListItems(artists);
+    }
+  }, [artists]);
+
+  const searchSongs = (artist: string) => {
     console.log("click search", artist);
     if (!isEmpty(songs)) {
+      let query = artist.toLowerCase();
       let results = songs.filter(song => {
         let _artist = song.artist;
         let _title = song.title;
-        //console.log("artist", _artist);
-       // console.log("title", _title);
-       // console.log("clicked", artist);
         if (!isEmpty(_artist)) {
-          if (_artist.includes(artist)) {
+          if (_artist.toLowerCase().indexOf(query) > -1) {
             return song;
           }
         }
         if (!isEmpty(_title)) {
-          if (_title.includes(artist)) {
+          if (_title.toLowerCase().indexOf(query) > -1) {
             return song;
           }
         }
@@ -43,7 +73,7 @@ const Artists: React.FC<ISongPickable> = ({ onSongPick }) => {
         if (a1 > a2) return 1;
         return 0;
       });
-      setModal({artist: artist, songs: sorted});
+      setModal({ artist: artist, songs: sorted });
     }
   }
 
@@ -58,15 +88,23 @@ const Artists: React.FC<ISongPickable> = ({ onSongPick }) => {
   }
 
   return (
-    <Page name={pageName}>
-      <>
+    <IonPage>
+      <IonHeader>
+        <IonToolbar>
+          <IonButtons slot="start">
+            <IonMenuButton />
+          </IonButtons>
+          <IonSearchbar onIonChange={(e) => searchArtists(e.detail.value!)} ></IonSearchbar>
+        </IonToolbar>
+      </IonHeader>
+      <IonContent>
         <ScrollingGrid
           pageCount={pageCount}
           pageName={pageName}
           listItems={listItems}
           getRow={(item) => {
             return (
-              <div key={item.key} className="row-single" onClick={(e) => { search(item.name) }}>
+              <div key={item.key} className="row-single" onClick={(e) => { searchSongs(item.name) }}>
                 <div style={{ flex: "1 1 auto" }}>{item.name}</div>
               </div>
             );
@@ -95,8 +133,8 @@ const Artists: React.FC<ISongPickable> = ({ onSongPick }) => {
             </IonContent>
           </>
         </IonModal>
-      </>
-    </Page>
+      </IonContent>
+    </IonPage>
   );
 };
 

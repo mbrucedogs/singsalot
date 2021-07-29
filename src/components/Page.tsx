@@ -1,6 +1,7 @@
 import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonSearchbar } from '@ionic/react';
 import { useHistory } from 'react-router';
 import React, { KeyboardEvent, useState } from 'react';
+import { isPlatform } from '@ionic/react';
 
 interface ContainerProps {
   name: String,
@@ -24,11 +25,11 @@ const Page: React.FC<ContainerProps> = ({ name, children = null }) => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonSearchbar onKeyUp={handleLoginKeyUp} value={searchText} onIonChange={(e) => setSearchText(e.detail.value!)} ></IonSearchbar>
           <IonButtons slot="start">
             <IonMenuButton />
           </IonButtons>
-          <IonTitle>{name}</IonTitle>
+          <IonSearchbar onKeyUp={handleLoginKeyUp} value={searchText} onIonChange={(e) => setSearchText(e.detail.value!)} ></IonSearchbar>
+          <IonTitle>{isPlatform('ios') ? '' : name}</IonTitle>
         </IonToolbar>
       </IonHeader>
 

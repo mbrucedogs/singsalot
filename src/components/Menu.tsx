@@ -22,6 +22,12 @@ function debugLog(container: string, label: string, value: any = null) {
 
 const appPages: AppPage[] = [
   {
+    title: 'Search',
+    url: '/Search',
+    iosIcon: searchOutline,
+    mdIcon: search
+  },
+  {
     title: 'Queue',
     url: '/Queue',
     iosIcon: musicalNotesOutline,
@@ -38,12 +44,6 @@ const appPages: AppPage[] = [
     url: '/Artists',
     iosIcon: peopleOutline,
     mdIcon: people
-  },
-  {
-    title: 'Search',
-    url: '/Search',
-    iosIcon: searchOutline,
-    mdIcon: search
   },
   {
     title: 'Favorites',

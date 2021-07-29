@@ -19,16 +19,16 @@ const Page: React.FC<ContainerProps> = ({ name, children = null }) => {
           <IonButtons slot="start">
             <IonMenuButton />
           </IonButtons>
-          <IonTitle>{isPlatform('ios') ? '' : name}</IonTitle>
+          <IonTitle>{name}</IonTitle>
         </IonToolbar>
       </IonHeader>
 
-      <IonContent fullscreen>
-        <IonHeader collapse="condense">
+      <IonContent>
+        {/* <IonHeader collapse="condense">
           <IonToolbar>
             <IonTitle size="large">{name}</IonTitle>
           </IonToolbar>
-        </IonHeader>
+        </IonHeader> */}
         <>
           {children}
         </>

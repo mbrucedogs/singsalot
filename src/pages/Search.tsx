@@ -70,16 +70,10 @@ const Search: React.FC<ISongPickable> = ({ onSongPick }) => {
             <IonMenuButton />
           </IonButtons>
           <IonSearchbar onKeyUp={handleLoginKeyUp} value={searchText} onIonChange={(e) => setSearchText(e.detail.value!)} ></IonSearchbar>
-          <IonTitle>{isPlatform('ios') ? '' : pageName}</IonTitle>
         </IonToolbar>
       </IonHeader>
 
-      <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">{pageName}</IonTitle>
-          </IonToolbar>
-        </IonHeader>
+      <IonContent>
         <>
           <ScrollingGrid
             pageCount={pageCount}

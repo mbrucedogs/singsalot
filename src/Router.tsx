@@ -57,10 +57,6 @@ const Router: React.FC = () => {
     });
   }
 
-  const onArtistPick = (artist: IArtist) => {
-    console.log("onArtistPick - artist", artist);
-  }
-
   const onSongPick = (song: ISong) => {
     console.log("onSongPick - songListSong", song);
   }
@@ -73,7 +69,7 @@ const Router: React.FC = () => {
           <IonRouterOutlet id="main" animated={true}>
             <Route path="/" component={Queue} exact={true} />
             <Route path="/Artists" exact={true}>
-              <Artists onArtistPick={onArtistPick} />
+              <Artists onSongPick={onSongPick} />
             </Route>
             <Route path="/Favorites" exact={true}>
               <Favorites onSongPick={onSongPick} />

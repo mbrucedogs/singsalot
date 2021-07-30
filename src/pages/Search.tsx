@@ -1,4 +1,4 @@
-import React, { KeyboardEvent, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectSongs } from "../store/store";
 import { ISong, ISongPickable } from "../services/models";
@@ -7,6 +7,7 @@ import { isEmpty } from "lodash";
 import ScrollingGrid from "../components/ScrollingGrid";
 import Song from "../components/Song";
 import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonToolbar, IonSearchbar } from '@ionic/react';
+import Page from "../components/Page"
 
 const Search: React.FC<ISongPickable> = ({ onSongPick }) => {
   const songs: ISong[] = useSelector(selectSongs);
@@ -51,6 +52,10 @@ const Search: React.FC<ISongPickable> = ({ onSongPick }) => {
     }
   }, [songs]);
 
+  if (isEmpty(songs)) {
+    return <Page name={pageName}><h2 style={{ padding: '10px' }}>Loading {pageName}...</h2></Page>
+  }
+
   return (
     <IonPage>
       <IonHeader>
@@ -58,7 +63,7 @@ const Search: React.FC<ISongPickable> = ({ onSongPick }) => {
           <IonButtons slot="start">
             <IonMenuButton />
           </IonButtons>
-          <IonSearchbar onIonChange={(e) => searchSongs(e.detail.value!)} ></IonSearchbar>
+          <IonSearchbar onIonChange={(e) => searchSongs(e.detail.value!)} type="text" placeholder="Search for Artists or Songs"></IonSearchbar>
         </IonToolbar>
       </IonHeader>
 
@@ -67,7 +72,7 @@ const Search: React.FC<ISongPickable> = ({ onSongPick }) => {
           pageCount={pageCount}
           pageName={pageName}
           listItems={listItems}
-          getRow={(song) => { return <Song song={song} onSongPick={onSongPick} /> }}
+          getRow={(song) => { return <Song song={song} onSongPick={onSongPick} showPath={true}/> }}
         />
       </IonContent>
     </IonPage>

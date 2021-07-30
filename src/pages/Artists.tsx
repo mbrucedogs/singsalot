@@ -94,7 +94,7 @@ const Artists: React.FC<ISongPickable> = ({ onSongPick }) => {
           <IonButtons slot="start">
             <IonMenuButton />
           </IonButtons>
-          <IonSearchbar onIonChange={(e) => searchArtists(e.detail.value!)} ></IonSearchbar>
+          <IonSearchbar onIonChange={(e) => searchArtists(e.detail.value!)} type="text" placeholder="Search for Artists"></IonSearchbar>
         </IonToolbar>
       </IonHeader>
       <IonContent>
@@ -128,7 +128,7 @@ const Artists: React.FC<ISongPickable> = ({ onSongPick }) => {
                 pageCount={100}
                 pageName={modal?.artist}
                 listItems={modal?.songs}
-                getRow={(song) => { return <Song song={song} onSongPick={onSongPick} /> }}
+                getRow={(song) => { return <Song song={song} onSongPick={onSongPick} showPath={true} /> }}
               />
             </IonContent>
           </>

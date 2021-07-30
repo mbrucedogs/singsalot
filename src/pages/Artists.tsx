@@ -45,7 +45,6 @@ const Artists: React.FC<ISongPickable> = ({ onSongPick }) => {
   }, [artists]);
 
   const searchSongs = (artist: string) => {
-    console.log("click search", artist);
     if (!isEmpty(songs)) {
       let query = artist.toLowerCase();
       let results = songs.filter(song => {

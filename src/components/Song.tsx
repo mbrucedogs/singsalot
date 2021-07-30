@@ -17,7 +17,7 @@ const Song: React.FC<SongProps> = ({ song, onSongPick, showCount=false, showPath
         return path.split("\\").splice(1).join("\\");
     }
     return (
-        <div style={style} key={song.key} className="row" onClick={(e) => onSongPick(song)}>
+        <div style={style} key={song.path} className="row" onClick={(e) => onSongPick(song)}>
             <div hidden={!showArtist} className="title"> {showCount && song.count ? `(${song.count!}) - ` : ''}{song.artist} ({getType(song.path)})</div>
             <div className="subtitle">{song.title} {!showArtist ? `(${getType(song.path)})` : '' }</div>
             <div hidden={!showPath} className="path">{getPath(song.path)}</div>

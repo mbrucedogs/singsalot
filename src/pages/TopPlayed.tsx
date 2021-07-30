@@ -19,7 +19,7 @@ const TopSongs: React.FC<ISongPickable> = ({ onSongPick }) => {
   const history: ISong[] = useSelector(selectHistory);
   const [listItems, setListItems] = useState<IHistoryCount[]>([]);
   const amount: number = 100;
-  const pageName: string = `Top ${amount} Songs`;
+  const pageName: string = `Top ${amount} Played`;
 
   useEffect(() => {
     if (!isEmpty(history)) {

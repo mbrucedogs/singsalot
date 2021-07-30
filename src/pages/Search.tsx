@@ -46,6 +46,7 @@ const Search: React.FC<ISongPickable> = ({ onSongPick }) => {
       setListItems(results);
     }
   };
+  
   useEffect(() => {
     if (!isEmpty(songs)) {
       setListItems(songs);

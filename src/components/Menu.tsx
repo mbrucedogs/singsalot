@@ -11,7 +11,7 @@ import {
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router';
 import { useLocation } from 'react-router-dom';
-import { stop, stopOutline, pause, pauseOutline ,play, playOutline, time, timeOutline, settings, settingsOutline, list, listOutline, musicalNotes, musicalNotesOutline, peopleOutline, people, peopleCircle, peopleCircleOutline, heartOutline, heartSharp, mailOutline, mailSharp, paperPlaneOutline, paperPlaneSharp, trashOutline, trashSharp, warningOutline, warningSharp, searchOutline, search } from 'ionicons/icons';
+import { stop, stopOutline, pause, pauseOutline ,play, playOutline, time, timeOutline, settings, settingsOutline, list, listOutline, musicalNotes, musicalNotesOutline, peopleOutline, people, peopleCircle, peopleCircleOutline, heartOutline, heartSharp, mailOutline, mailSharp, paperPlaneOutline, paperPlaneSharp, trashOutline, trashSharp, warningOutline, warningSharp, searchOutline, search, starOutline, star } from 'ionicons/icons';
 import { PlayerState } from '../services/models';
 import { useSelector } from 'react-redux';
 import { selectPlayerState } from '../store/store';
@@ -58,7 +58,13 @@ const appPages: AppPage[] = [
     mdIcon: time
   },
   {
-    title: 'Latest Songs',
+    title: 'Top Songs',
+    url: '/TopSongs',
+    iosIcon: starOutline,
+    mdIcon: star
+  },
+  {
+    title: 'New Songs',
     url: '/LatestSongs',
     iosIcon: listOutline,
     mdIcon: list

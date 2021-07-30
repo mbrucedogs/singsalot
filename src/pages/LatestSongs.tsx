@@ -16,6 +16,7 @@ const LatestSongs: React.FC<ISongPickable> = ({ onSongPick }) => {
   const latestSongs: ISong[] = useSelector(selectLatestSongs);
   const [listItems, setListItems] = useState<IArtistSongs[]>([]);
   const pageName: string = "Latest Songs";
+  const artistCollapse: boolean = true;
 
   useEffect(() => {
     if (!isEmpty(latestSongs)) {
@@ -64,12 +65,28 @@ const LatestSongs: React.FC<ISongPickable> = ({ onSongPick }) => {
       if (!isEmpty(sorted)) {
         setListItems(sorted);
       }
-      console.log(sorted);
     }
   }, [latestSongs]);
 
   if (isEmpty(listItems)) {
     return <Page name={pageName}><h2 style={{ padding: '10px' }}>Loading {pageName}...</h2></Page>
+  }
+
+  const buildRow = (item: IArtistSongs)=> {
+    if(artistCollapse){
+      return (            
+        <div key={item.key}>
+          <div className="row">
+            <div style={{ flex: "1 1 auto" }} className="title">{item.artist}</div>
+          </div>
+          {item.songs.map(song => { return <Song onSongPick={onSongPick} song={song} style={{ paddingLeft: '50px' }} showArtist={item.artist === "None"} /> })}
+        </div>
+      );
+    } else {
+      return <div key={item.key}>
+        {item.songs.map(song => { return <Song onSongPick={onSongPick} song={song}/> })}
+        </div>
+    }
   }
 
   return (
@@ -78,16 +95,7 @@ const LatestSongs: React.FC<ISongPickable> = ({ onSongPick }) => {
         pageCount={pageCount}
         pageName={pageName}
         listItems={listItems}
-        getRow={(item) => {
-          return (
-            <div key={item.key}>
-              <div className="row">
-                <div style={{ flex: "1 1 auto" }} className="title">{item.artist}</div>
-              </div>
-              {item.songs.map(song => { return <Song onSongPick={onSongPick} song={song} style={{ paddingLeft: '50px' }} showArtist={item.artist === "None"} /> })}
-            </div>
-          );
-        }}
+        getRow={(item) => { return buildRow(item)}}
       />
     </Page>
   );

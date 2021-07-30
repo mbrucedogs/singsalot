@@ -13,7 +13,7 @@ import Search from './pages/Search';
 import Settings from './pages/Settings';
 import Singers from './pages/Singers';
 import SongLists from './pages/SongLists';
-import TopSongs from './pages/TopSongs';
+import TopSongs from './pages/TopPlayed';
 import FirebaseService from './services/FirebaseService';
 import { useAppDispatch } from './hooks/hooks'
 import { authenticatedChange } from './store/slices/authenticated';
@@ -90,7 +90,7 @@ const Router: React.FC = () => {
             <Route path="/SongLists" exact={true}>
               <SongLists onSongPick={onSongPick} />
             </Route>
-            <Route path="/TopSongs" exact={true}>
+            <Route path="/TopPlayed" exact={true}>
               <TopSongs onSongPick={onSongPick} />
             </Route>
             <Redirect to="/" />

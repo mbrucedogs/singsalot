@@ -46,6 +46,12 @@ const appPages: AppPage[] = [
     mdIcon: people
   },
   {
+    title: 'Top 100 Played',
+    url: '/TopPlayed',
+    iosIcon: starOutline,
+    mdIcon: star
+  },
+  {
     title: 'Favorites',
     url: '/Favorites',
     iosIcon: heartOutline,
@@ -56,12 +62,6 @@ const appPages: AppPage[] = [
     url: '/History',
     iosIcon: timeOutline,
     mdIcon: time
-  },
-  {
-    title: 'Top Songs',
-    url: '/TopSongs',
-    iosIcon: starOutline,
-    mdIcon: star
   },
   {
     title: 'New Songs',

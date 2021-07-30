@@ -18,41 +18,41 @@ interface IHistoryCount extends IFabricObj {
 const TopSongs: React.FC<ISongPickable> = ({ onSongPick }) => {
   const history: ISong[] = useSelector(selectHistory);
   const [listItems, setListItems] = useState<IHistoryCount[]>([]);
-  const amount: number = 25;
+  const amount: number = 100;
   const pageName: string = `Top ${amount} Songs`;
 
   useEffect(() => {
-    console.log("history changed")
     if (!isEmpty(history)) {
       let results: IHistoryCount[] = [];
+      let reducer = (accumulator: number, currentValue: number) => accumulator + currentValue;
+
       history.map(song => {
         let artist = song.artist;
         let title = song.title;
         let key = `${artist.trim().toLowerCase()}-${title.trim().toLowerCase()}`;
-
+        let songCount = song.count!;
         let found = results.filter(item => item.key === key)?.[0];
         if (isEmpty(found)) {
-          found = { key: key, artist: artist, title: title, count: 1, songs: [song] }
+          found = { key: key, artist: artist, title: title, count: songCount, songs: [song] }
           results.push(found);
         } else {
           let foundSong = found.songs.filter(item => item.key === key)?.[0];
           if(isEmpty(foundSong)){
             found.songs.push(song);
           }
-          found.count++;
+          let accumulator = 0;
+          found.songs.map(song => {
+            accumulator = accumulator + song.count!;
+          });
+          found.count = accumulator;
         }
       });
 
       let sorted = results.sort((a: IHistoryCount, b: IHistoryCount) => {
-        var a1: number = a.count;
-        var a2: number = b.count;
-        if (a1 < a2) return 1;
-        if (a1 > a2) return -1;
-        return 0;
+        return b.count - a.count || a.key!.localeCompare(b.key!);
       });
 
-      console.log(sorted);
-      let topSongs = sorted.splice(amount);
+      let topSongs = sorted.slice(0, amount); 
       if (!isEmpty(topSongs)) {
         setListItems(topSongs);
       }
@@ -66,20 +66,20 @@ const TopSongs: React.FC<ISongPickable> = ({ onSongPick }) => {
   return (
     <Page name={pageName}>
       <ScrollingGrid
-        pageCount={1000}
+        pageCount={amount}
         pageName={pageName}
         listItems={listItems}
-        getRow={(history) => {
+        getRow={(history, idx) => {          
           return (<Collapsible trigger={<div className="row-single">
-            <div style={{ paddingTop: '0px', paddingLeft: '10px', paddingRight: '10px' }}>{history.songs.length}</div>
+            <div className="title" style={{ paddingTop: '0px', paddingLeft: '10px', paddingRight: '10px' }}>{ idx! + 1})</div>
             <div style={{ flex: '1 1 auto' }}>
-              <div className="title">{history.artist}</div>
+              <div className="title">({history.count}) {history.artist}</div>
               <div className="subtitle">{history.title}</div>
             </div>
           </div>
           }>
             {history.songs.map(song => {
-              return <Song style={{ paddingLeft: '50px' }} song={song} showPath={true} onSongPick={(song) => { onSongPick(song); }} />
+              return <Song style={{ paddingLeft: '50px' }} song={song} showCount={true} showPath={true} onSongPick={(song) => { onSongPick(song); }} />
             })}
           </Collapsible>)
         }}

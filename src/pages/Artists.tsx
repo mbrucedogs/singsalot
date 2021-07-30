@@ -28,11 +28,7 @@ const Artists: React.FC<ISongPickable> = ({ onSongPick }) => {
         }
       });
       let sorted = results.sort((a: IArtist, b: IArtist) => {
-        var a1: string = a.name.toLowerCase();
-        var a2: string = b.name.toLowerCase();
-        if (a1 < a2) return -1;
-        if (a1 > a2) return 1;
-        return 0;
+        return a.name.localeCompare(b.name)
       });
       if(!isEmpty(sorted)){
         setListItems(sorted);
@@ -67,11 +63,7 @@ const Artists: React.FC<ISongPickable> = ({ onSongPick }) => {
         }
       });
       let sorted = results.sort((a: ISong, b: ISong) => {
-        var a1: string = a.title.toLowerCase();
-        var a2: string = b.title.toLowerCase();
-        if (a1 < a2) return -1;
-        if (a1 > a2) return 1;
-        return 0;
+        return a.title.localeCompare(b.title)
       });
       setModal({ artist: artist, songs: sorted });
     }

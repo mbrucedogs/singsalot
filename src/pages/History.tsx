@@ -22,7 +22,7 @@ const History: React.FC<ISongPickable> = ({onSongPick}) => {
         pageCount={pageCount}
         pageName={pageName}
         listItems={listItems}
-        getRow={(song) => { return <Song song={song} onSongPick={onSongPick} /> }}
+        getRow={(song) => { return <Song song={song} onSongPick={onSongPick} showPath={true}/> }}
       />
     </Page>
   );

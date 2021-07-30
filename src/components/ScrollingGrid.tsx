@@ -7,7 +7,7 @@ export interface ScrollingGridProps<T> {
   pageName: string;
   pageCount: number;
   listItems: T[];
-  getRow: (item: T) => JSX.Element;
+  getRow: (item: T, index?: number) => JSX.Element;
 }
 
 const ScrollingGrid = <T extends IFabricObj>({ pageName, pageCount, listItems, getRow }: ScrollingGridProps<T>) => {
@@ -44,8 +44,8 @@ const ScrollingGrid = <T extends IFabricObj>({ pageName, pageCount, listItems, g
     <IonContent className="grid" 
       ref={contentRef}
       scrollEvents={true}>
-      {items.map(item => {
-        return getRow(item);
+      {items.map((item, index) => {
+        return getRow(item, index);
       })}
       <IonInfiniteScroll
         threshold="100px"

@@ -5,10 +5,11 @@ export interface SongProps extends ISongPickable {
     song: ISong;
     showPath?: boolean;
     showArtist?: boolean;
+    showCount?:boolean;
     style?: any;
 }
 
-const Song: React.FC<SongProps> = ({ song, onSongPick, showPath = false, showArtist = true, style = {} }) => {
+const Song: React.FC<SongProps> = ({ song, onSongPick, showCount=false, showPath = false, showArtist = true, style = {} }) => {
     const getType = (path: string) => {
         return path.substr(path.length - 3);
     }
@@ -17,7 +18,7 @@ const Song: React.FC<SongProps> = ({ song, onSongPick, showPath = false, showArt
     }
     return (
         <div style={style} key={song.key} className="row" onClick={(e) => onSongPick(song)}>
-            <div hidden={!showArtist} className="title">{song.artist} ({getType(song.path)})</div>
+            <div hidden={!showArtist} className="title"> {showCount && song.count ? `(${song.count!}) - ` : ''}{song.artist} ({getType(song.path)})</div>
             <div className="subtitle">{song.title} {!showArtist ? `(${getType(song.path)})` : '' }</div>
             <div hidden={!showPath} className="path">{getPath(song.path)}</div>
         </div>

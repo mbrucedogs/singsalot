@@ -36,11 +36,7 @@ const Search: React.FC<ISongPickable> = ({ onSongPick }) => {
       });
 
       let s = results.sort((a: ISong, b: ISong) => {
-        var a1: string = a.title.toLowerCase();
-        var a2: string = b.title.toLowerCase();
-        if (a1 < a2) return -1;
-        if (a1 > a2) return 1;
-        return 0;
+        return a.title.localeCompare(b.title)
       });
 
       setListItems(results);

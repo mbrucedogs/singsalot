@@ -81,7 +81,9 @@ const Router: React.FC = () => {
               <LatestSongs onSongPick={onSongPick} />
             </Route>
             <Route path="/Queue" component={Queue} />
-            <Route path="/Search" component={Search} />
+            <Route path="/Search">
+              <Search onSongPick={onSongPick} />
+            </Route>
             <Route path="/Settings" exact={true} component={Settings} />
             <Route path="/Singers" exact={true} component={Singers} />
             <Route path="/SongLists" exact={true}>

@@ -1,17 +1,13 @@
-import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonSearchbar } from '@ionic/react';
-import { useHistory } from 'react-router';
-import React, { KeyboardEvent, useState } from 'react';
-import { isPlatform } from '@ionic/react';
+import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import React from 'react';
 
 interface ContainerProps {
   name: String,
   children?: JSX.Element;
+  endButtons?: JSX.Element;
 }
 //
-const Page: React.FC<ContainerProps> = ({ name, children = null }) => {
-
-  const history = useHistory();
- 
+const Page: React.FC<ContainerProps> = ({ name, children = null, endButtons = null }) => {
   return (
     <IonPage>
       <IonHeader>
@@ -19,16 +15,12 @@ const Page: React.FC<ContainerProps> = ({ name, children = null }) => {
           <IonButtons slot="start">
             <IonMenuButton />
           </IonButtons>
-          <IonTitle>{name}</IonTitle>
+          {endButtons}
+          <IonTitle style={{paddingLeft: '5px', paddingTop: '10px'}}>{name}</IonTitle>
         </IonToolbar>
       </IonHeader>
 
       <IonContent>
-        {/* <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">{name}</IonTitle>
-          </IonToolbar>
-        </IonHeader> */}
         <>
           {children}
         </>

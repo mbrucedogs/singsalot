@@ -19,7 +19,7 @@ import { useAppDispatch } from './hooks/hooks'
 import { authenticatedChange } from './store/slices/authenticated';
 import { useSelector } from 'react-redux';
 import { selectAuthenticated } from './store/store';
-import { ISong, IArtist} from './services/models';
+import { ISong, IArtist, IQueueItem} from './services/models';
 import FirebaseReduxHandler from './components/FirebaseReduxHandler';
 
 interface AuthCheckProps {
@@ -62,6 +62,14 @@ const Router: React.FC = () => {
     console.log("onSongPick - songListSong", song);
   }
 
+  const onDeleteQueueItem = (queueItem: IQueueItem) =>{
+    console.log("onDeleteQueueItem - queueItem", queueItem);
+  }
+
+  const onReorderQueue = (queue: IQueueItem[]) => {
+    console.log("onReorderQueue - queue", queue);
+  }
+
   return (
     <IonReactRouter>
       <AuthCheck isAuthenticated={isAuthenticated} fallback={<Login onLogin={onLogin} />}>
@@ -81,7 +89,9 @@ const Router: React.FC = () => {
             <Route path="/LatestSongs" exact={true}>
               <LatestSongs onSongPick={onSongPick} />
             </Route>
-            <Route path="/Queue" component={Queue} />
+            <Route path="/Queue">
+              <Queue onDelete={onDeleteQueueItem} onReorder={onReorderQueue} />
+            </Route>
             <Route path="/Search">
               <Search onSongPick={onSongPick} />
             </Route>

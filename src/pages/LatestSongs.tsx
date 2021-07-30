@@ -6,12 +6,12 @@ import { pageCount } from "../globalConfig";
 import Song from "../components/Song";
 import Page from "../components/Page"
 import ScrollingGrid from "../components/ScrollingGrid";
-import { isEmpty, result } from "lodash";
-import artists from "../store/slices/artists";
+import { isEmpty } from "lodash";
 
 interface IArtistSongs extends IFabricObj {
   artist: string, songs: ISong[]
 }
+
 const LatestSongs: React.FC<ISongPickable> = ({ onSongPick }) => {
   const latestSongs: ISong[] = useSelector(selectLatestSongs);
   const [listItems, setListItems] = useState<IArtistSongs[]>([]);

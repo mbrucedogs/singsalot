@@ -1,7 +1,6 @@
 import { useCallback } from "react";
 import { useSelector } from "react-redux";
 import { QueueItem } from "../models/QueueItem";
-import { Song } from "../models/Song";
 import { selectQueue } from "../store/store";
 
 export function useQueue(): {
@@ -9,7 +8,7 @@ export function useQueue(): {
     deleteFromQueue: (item: QueueItem) => void;
     orderQueue: (items:QueueItem[]) => void;
 }{
-    const queue: QueueItem[] = useSelector(selectQueue);
+    const queue = useSelector(selectQueue);
 
     const deleteFromQueue = useCallback((item: QueueItem) => {
         console.log("useQueue - deleteFromQueue - queueItem", item);

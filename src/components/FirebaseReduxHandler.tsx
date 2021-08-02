@@ -19,7 +19,7 @@ import {
     QueueItem,
     Song, toSong, PlayerState,
 }
-    from '../services/models'
+    from '../models/models'
 import FirebaseService from "../services/FirebaseService";
 import { useEffect } from "react";
 

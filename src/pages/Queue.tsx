@@ -1,5 +1,5 @@
 import React, { useState, useEffect, MouseEventHandler } from "react";
-import { QueueItem } from "../services/models";
+import { QueueItem } from "../models/models";
 import { useSelector } from "react-redux";
 import { selectQueue } from "../store/store";
 import Page from "../components/Page"

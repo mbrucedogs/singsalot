@@ -24,7 +24,7 @@ const TopSongs: React.FC<SongPickable> = ({ onSongPick }) => {
         pageName={pageName}
         listItems={listItems}
         getRow={(history, idx) => {          
-          return (<Collapsible trigger={<div className="row-single" key={history.key}>
+          return (<Collapsible key={history.key} trigger={<div className="row-single">
             <div className="title" style={{ paddingTop: '0px', paddingLeft: '10px', paddingRight: '10px' }}>{ idx! + 1})</div>
             <div style={{ flex: '1 1 auto' }}>
               <div className="title">({history.count}) {history.artist}</div>
@@ -33,7 +33,7 @@ const TopSongs: React.FC<SongPickable> = ({ onSongPick }) => {
           </div>
           }>
             {history.songs.map(song => {
-              return <SongDiv style={{ paddingLeft: '50px' }} song={song} showCount={true} showPath={true} onSongPick={(song) => { onSongPick(song); }} />
+              return <SongDiv key={song.key} style={{ paddingLeft: '50px' }} song={song} showCount={true} showPath={true} onSongPick={(song) => { onSongPick(song); }} />
             })}
           </Collapsible>)
         }}

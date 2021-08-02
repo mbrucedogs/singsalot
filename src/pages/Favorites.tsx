@@ -23,7 +23,7 @@ const Favorites: React.FC<SongPickable> = ({onSongPick}) => {
         pageCount={pageCount}
         pageName={pageName}
         listItems={listItems}
-        getRow={(song) => { return <SongDiv song={song} onSongPick={onSongPick}/> }}
+        getRow={(song) => { return <SongDiv key={song.key} song={song} onSongPick={onSongPick}/> }}
       />
     </Page>
   );

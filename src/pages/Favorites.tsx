@@ -1,16 +1,16 @@
 import React from "react";
 import { selectFavorites } from "../store/store";
 import { useSelector } from "react-redux";
-import { ISong, ISongPickable } from "../services/models";
+import { Song, SongPickable } from "../services/models";
 import { pageCount } from "../globalConfig";
-import Song from "../components/Song";
+import SongDiv from "../components/SongDiv";
 import Page from "../components/Page";
 import ScrollingGrid from "../components/ScrollingGrid";
 import { isEmpty } from "lodash";
 
-const Favorites: React.FC<ISongPickable> = ({onSongPick}) => {
+const Favorites: React.FC<SongPickable> = ({onSongPick}) => {
   const pageName: string = "Favorites";
-  const listItems: ISong[] = useSelector(selectFavorites)
+  const listItems: Song[] = useSelector(selectFavorites)
 
   if(isEmpty(listItems)) { 
     return <Page name={pageName}><h2 style={{padding:'10px'}}>Loading or there are no {pageName}...</h2></Page>
@@ -22,7 +22,7 @@ const Favorites: React.FC<ISongPickable> = ({onSongPick}) => {
         pageCount={pageCount}
         pageName={pageName}
         listItems={listItems}
-        getRow={(song) => { return <Song song={song} onSongPick={onSongPick}/> }}
+        getRow={(song) => { return <SongDiv song={song} onSongPick={onSongPick}/> }}
       />
     </Page>
   );

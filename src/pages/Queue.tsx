@@ -1,5 +1,5 @@
 import React, { useState, useEffect, MouseEventHandler } from "react";
-import { IQueueItem } from "../services/models";
+import { QueueItem } from "../services/models";
 import { useSelector } from "react-redux";
 import { selectQueue } from "../store/store";
 import Page from "../components/Page"
@@ -8,10 +8,10 @@ import { IonIcon, IonReorder, IonReorderGroup, IonContent, IonItem, IonLabel, Io
 import { ItemReorderEventDetail } from "@ionic/core";
 import { close, closeOutline, reorderThree, reorderThreeOutline } from "ionicons/icons";
 
-const Queue: React.FC<{ onDelete: (queueItem: IQueueItem) => void, onReorder: (queue: IQueueItem[]) => void }> = ({ onDelete, onReorder }) => {
+const Queue: React.FC<{ onDelete: (queueItem: QueueItem) => void, onReorder: (queue: QueueItem[]) => void }> = ({ onDelete, onReorder }) => {
   const pageName: string = "Queue";
-  const queue: IQueueItem[] = useSelector(selectQueue);
-  const [listItems, setListItems] = useState<IQueueItem[]>([]);
+  const queue: QueueItem[] = useSelector(selectQueue);
+  const [listItems, setListItems] = useState<QueueItem[]>([]);
   const [shouldReorder, setShouldReorder] = useState<boolean>(false);
 
   const actionButton = () => {

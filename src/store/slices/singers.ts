@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { ISinger } from '../../services/models'
+import { Singer } from '../../services/models'
 interface SingersSliceState {
-  singers: ISinger[];
+  singers: Singer[];
 }
 
 const initialState: SingersSliceState = {
@@ -12,7 +12,7 @@ export const singersSlice = createSlice({
   name: 'singers',
   initialState,
   reducers: {
-    singersChange: (state, action: PayloadAction<ISinger[]>) => {
+    singersChange: (state, action: PayloadAction<Singer[]>) => {
       state.singers = action.payload;
     }
   }

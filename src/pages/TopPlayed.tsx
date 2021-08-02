@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { IFabricObj, ISong, ISongPickable } from "../services/models";
+import { Fabricable, Song, SongPickable } from "../services/models";
 import { selectHistory } from "../store/store";
 import { pageCount } from "../globalConfig";
-import Song from "../components/Song";
+import SongDiv from "../components/SongDiv";
 import Page from "../components/Page"
 import ScrollingGrid from "../components/ScrollingGrid";
 import { isEmpty } from "lodash";
 import Collapsible from "react-collapsible";
 
-interface IHistoryCount extends IFabricObj {
+interface IHistoryCount extends Fabricable {
   artist: string;
   title: string;
   count: number;
-  songs: ISong[];
+  songs: Song[];
 }
-const TopSongs: React.FC<ISongPickable> = ({ onSongPick }) => {
-  const history: ISong[] = useSelector(selectHistory);
+const TopSongs: React.FC<SongPickable> = ({ onSongPick }) => {
+  const history: Song[] = useSelector(selectHistory);
   const [listItems, setListItems] = useState<IHistoryCount[]>([]);
   const amount: number = 100;
   const pageName: string = `Top ${amount} Played`;
@@ -79,7 +79,7 @@ const TopSongs: React.FC<ISongPickable> = ({ onSongPick }) => {
           </div>
           }>
             {history.songs.map(song => {
-              return <Song style={{ paddingLeft: '50px' }} song={song} showCount={true} showPath={true} onSongPick={(song) => { onSongPick(song); }} />
+              return <SongDiv style={{ paddingLeft: '50px' }} song={song} showCount={true} showPath={true} onSongPick={(song) => { onSongPick(song); }} />
             })}
           </Collapsible>)
         }}

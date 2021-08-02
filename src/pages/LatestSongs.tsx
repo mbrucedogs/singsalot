@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { ISong, ISongPickable, IFabricObj, IArtist } from "../services/models";
+import { Song, SongPickable, Fabricable, Artist } from "../services/models";
 import { useSelector } from "react-redux";
 import { selectLatestSongs } from "../store/store";
 import { pageCount } from "../globalConfig";
-import Song from "../components/Song";
+import SongDiv from "../components/SongDiv";
 import Page from "../components/Page"
 import ScrollingGrid from "../components/ScrollingGrid";
 import { isEmpty } from "lodash";
 
-interface IArtistSongs extends IFabricObj {
-  artist: string, songs: ISong[]
+interface IArtistSongs extends Fabricable {
+  artist: string, songs: Song[]
 }
 
-const LatestSongs: React.FC<ISongPickable> = ({ onSongPick }) => {
-  const latestSongs: ISong[] = useSelector(selectLatestSongs);
+const LatestSongs: React.FC<SongPickable> = ({ onSongPick }) => {
+  const latestSongs: Song[] = useSelector(selectLatestSongs);
   const [listItems, setListItems] = useState<IArtistSongs[]>([]);
   const pageName: string = "Latest Songs";
   const artistCollapse: boolean = false;
@@ -44,7 +44,7 @@ const LatestSongs: React.FC<ISongPickable> = ({ onSongPick }) => {
 
       sorted.forEach(item => {
         if (item.songs.length > 1) {
-          let sorted = item.songs.sort((a: ISong, b: ISong) => {
+          let sorted = item.songs.sort((a: Song, b: Song) => {
             return a.title.localeCompare(b.title)
           });
           item.songs = sorted;
@@ -71,12 +71,12 @@ const LatestSongs: React.FC<ISongPickable> = ({ onSongPick }) => {
           <div className="row">
             <div style={{ flex: "1 1 auto" }} className="title">{item.artist}</div>
           </div>
-          {item.songs.map(song => { return <Song onSongPick={onSongPick} song={song} style={{ paddingLeft: '50px' }} showArtist={item.artist === "None"} /> })}
+          {item.songs.map(song => { return <SongDiv onSongPick={onSongPick} song={song} style={{ paddingLeft: '50px' }} showArtist={item.artist === "None"} /> })}
         </div>
       );
     } else {
       return <div key={item.key}>
-        {item.songs.map(song => { return <Song onSongPick={onSongPick} song={song}/> })}
+        {item.songs.map(song => { return <SongDiv onSongPick={onSongPick} song={song}/> })}
         </div>
     }
   }

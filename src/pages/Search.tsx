@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectSongs } from "../store/store";
-import { ISong, ISongPickable } from "../services/models";
+import { Song, SongPickable } from "../services/models";
 import { pageCount } from "../globalConfig";
 import { isEmpty } from "lodash";
 import ScrollingGrid from "../components/ScrollingGrid";
-import Song from "../components/Song";
+import SongDiv from "../components/SongDiv";
 import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonToolbar, IonSearchbar } from '@ionic/react';
 import Page from "../components/Page"
 
-const Search: React.FC<ISongPickable> = ({ onSongPick }) => {
-  const songs: ISong[] = useSelector(selectSongs);
-  const [listItems, setListItems] = useState<ISong[]>([]);
+const Search: React.FC<SongPickable> = ({ onSongPick }) => {
+  const songs: Song[] = useSelector(selectSongs);
+  const [listItems, setListItems] = useState<Song[]>([]);
   const pageName: string = "Search";
   
   const searchSongs = (letters: string) => {
@@ -35,7 +35,7 @@ const Search: React.FC<ISongPickable> = ({ onSongPick }) => {
         }
       });
 
-      let s = results.sort((a: ISong, b: ISong) => {
+      let s = results.sort((a: Song, b: Song) => {
         return a.title.localeCompare(b.title)
       });
 
@@ -69,7 +69,7 @@ const Search: React.FC<ISongPickable> = ({ onSongPick }) => {
           pageCount={pageCount}
           pageName={pageName}
           listItems={listItems}
-          getRow={(song) => { return <Song song={song} onSongPick={onSongPick} showPath={true}/> }}
+          getRow={(song) => { return <SongDiv song={song} onSongPick={onSongPick} showPath={true}/> }}
         />
       </IonContent>
     </IonPage>

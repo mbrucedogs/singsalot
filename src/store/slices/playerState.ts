@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import {IQueueItem, PlayerState} from '../../services/models';
+import {QueueItem, PlayerState} from '../../services/models';
 
 interface PlayerStateSliceState {
   state: PlayerState;

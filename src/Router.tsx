@@ -19,7 +19,7 @@ import { useAppDispatch } from './hooks/hooks'
 import { authenticatedChange } from './store/slices/authenticated';
 import { useSelector } from 'react-redux';
 import { selectAuthenticated } from './store/store';
-import { ISong, IArtist, IQueueItem} from './services/models';
+import { Song, Artist, QueueItem} from './services/models';
 import FirebaseReduxHandler from './components/FirebaseReduxHandler';
 
 interface AuthCheckProps {
@@ -58,15 +58,15 @@ const Router: React.FC = () => {
     });
   }
 
-  const onSongPick = (song: ISong) => {
+  const onSongPick = (song: Song) => {
     console.log("onSongPick - songListSong", song);
   }
 
-  const onDeleteQueueItem = (queueItem: IQueueItem) =>{
+  const onDeleteQueueItem = (queueItem: QueueItem) =>{
     console.log("onDeleteQueueItem - queueItem", queueItem);
   }
 
-  const onReorderQueue = (queue: IQueueItem[]) => {
+  const onReorderQueue = (queue: QueueItem[]) => {
     console.log("onReorderQueue - queue", queue);
   }
 

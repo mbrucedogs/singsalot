@@ -1,22 +1,22 @@
 import React, { KeyboardEvent, useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { selectArtists, selectSongs } from "../store/store";
-import { IArtist, ISong, ISongPickable } from "../services/models";
+import { Artist, Song, SongPickable } from "../services/models";
 import { pageCount } from "../globalConfig";
 import Page from "../components/Page"
 import ScrollingGrid from "../components/ScrollingGrid";
 import { isEmpty } from "lodash";
 import { IonMenuButton, IonPage, IonSearchbar, IonButton, IonModal, IonContent, IonHeader, IonToolbar, IonTitle, IonButtons } from "@ionic/react";
-import Song from "../components/Song";
+import SongDiv from "../components/SongDiv";
 
-const Artists: React.FC<ISongPickable> = ({ onSongPick }) => {
+const Artists: React.FC<SongPickable> = ({ onSongPick }) => {
   const pageName: string = "Artists";
-  const artists: IArtist[] = useSelector(selectArtists);
-  const songs: ISong[] = useSelector(selectSongs);
+  const artists: Artist[] = useSelector(selectArtists);
+  const songs: Song[] = useSelector(selectSongs);
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [modal, setModal] = useState<{ artist: string, songs: ISong[] }>({ artist: '', songs: [] });
+  const [modal, setModal] = useState<{ artist: string, songs: Song[] }>({ artist: '', songs: [] });
   const [searchText, setSearchText] = useState('');
-  const [listItems, setListItems] = useState<IArtist[]>([]);
+  const [listItems, setListItems] = useState<Artist[]>([]);
 
   const searchArtists = (letters: string) => {
     console.log("letters", letters);
@@ -27,7 +27,7 @@ const Artists: React.FC<ISongPickable> = ({ onSongPick }) => {
           return artist;
         }
       });
-      let sorted = results.sort((a: IArtist, b: IArtist) => {
+      let sorted = results.sort((a: Artist, b: Artist) => {
         return a.name.localeCompare(b.name)
       });
       if(!isEmpty(sorted)){
@@ -61,7 +61,7 @@ const Artists: React.FC<ISongPickable> = ({ onSongPick }) => {
           }
         }
       });
-      let sorted = results.sort((a: ISong, b: ISong) => {
+      let sorted = results.sort((a: Song, b: Song) => {
         return a.title.localeCompare(b.title)
       });
       setModal({ artist: artist, songs: sorted });
@@ -119,7 +119,7 @@ const Artists: React.FC<ISongPickable> = ({ onSongPick }) => {
                 pageCount={100}
                 pageName={modal?.artist}
                 listItems={modal?.songs}
-                getRow={(song) => { return <Song song={song} onSongPick={onSongPick} showPath={true} /> }}
+                getRow={(song) => { return <SongDiv song={song} onSongPick={onSongPick} showPath={true} /> }}
               />
             </IonContent>
           </>

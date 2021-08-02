@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import {ISong} from '../../services/models';
+import {Song} from '../../services/models';
 
 interface FavoritesSliceState {
-  favorites: ISong[];
+  favorites: Song[];
 }
 
 const initialState: FavoritesSliceState = {
@@ -13,7 +13,7 @@ export const favoritesSlice = createSlice({
   name: 'favorites',
   initialState,
   reducers: {
-    favoritesChange: (state, action: PayloadAction<ISong[]>) => {
+    favoritesChange: (state, action: PayloadAction<Song[]>) => {
       state.favorites = action.payload;
     }
   }

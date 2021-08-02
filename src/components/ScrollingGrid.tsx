@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { IonContent } from '@ionic/react';
 import { IonInfiniteScroll, IonInfiniteScrollContent } from '@ionic/react';
-import { IFabricObj } from "../services/models";
+import { Fabricable } from "../services/models";
 
 export interface ScrollingGridProps<T> {
   pageName: string;
@@ -10,7 +10,7 @@ export interface ScrollingGridProps<T> {
   getRow: (item: T, index?: number) => JSX.Element;
 }
 
-const ScrollingGrid = <T extends IFabricObj>({ pageName, pageCount, listItems, getRow }: ScrollingGridProps<T>) => {
+const ScrollingGrid = <T extends Fabricable>({ pageName, pageCount, listItems, getRow }: ScrollingGridProps<T>) => {
   const [page, setPage] = useState<number>(0);
   const [disableInfiniteScroll, setDisableInfiniteScroll] = useState<boolean>(false);
   const [items, setItems] = useState<T[]>([]);

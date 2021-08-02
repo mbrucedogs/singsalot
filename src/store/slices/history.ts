@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import {ISong} from '../../services/models';
+import {Song} from '../../services/models';
 
 interface HistorySliceState {
-  history: ISong[];
+  history: Song[];
 }
 
 const initialState: HistorySliceState = {
@@ -13,7 +13,7 @@ export const historySlice = createSlice({
   name: 'history',
   initialState,
   reducers: {
-    historyChange: (state, action: PayloadAction<ISong[]>) => {
+    historyChange: (state, action: PayloadAction<Song[]>) => {
       state.history = action.payload;
     }
   }

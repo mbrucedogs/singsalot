@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import {ISettings} from '../../services/models';
+import {Settings} from '../../services/models';
 
 interface SettingsSliceState {
-  settings: ISettings;
+  settings: Settings;
 }
 
 const initialState: SettingsSliceState = {
@@ -13,7 +13,7 @@ export const settingsSlice = createSlice({
   name: 'settings',
   initialState,
   reducers: {
-    settingsChange: (state, action: PayloadAction<ISettings>) => {
+    settingsChange: (state, action: PayloadAction<Settings>) => {
       state.settings = action.payload;
     }
   }

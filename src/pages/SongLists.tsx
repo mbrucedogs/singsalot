@@ -1,23 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectSongLists } from "../store/store";
-import { ISongList, ISongListSong, ISongPickable } from "../services/models";
+import { SongList, SongListSong, SongPickable } from "../services/models";
 import { pageCount } from "../globalConfig";
 import Page from "../components/Page"
 import ScrollingGrid from "../components/ScrollingGrid";
 import { isEmpty } from "lodash";
 import { IonButton, IonModal, IonContent, IonHeader, IonToolbar, IonTitle, IonButtons } from "@ionic/react";
 import Collapsible from 'react-collapsible';
-import Song from "../components/Song";
+import Song from "../components/SongDiv";
 
-const SongLists: React.FC<ISongPickable> = ({ onSongPick }) => {
+const SongLists: React.FC<SongPickable> = ({ onSongPick }) => {
   const pageName: string = "Song Lists";
-  const listItems: ISongList[] = useSelector(selectSongLists);
+  const listItems: SongList[] = useSelector(selectSongLists);
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [selectedSongList, setSelectedSongList] = useState<ISongList>()
+  const [selectedSongList, setSelectedSongList] = useState<SongList>()
 
   const modalTitle: string = selectedSongList?.title ?? ''
-  const modalSongs: ISongListSong[] = selectedSongList?.songs ?? []
+  const modalSongs: SongListSong[] = selectedSongList?.songs ?? []
 
   useEffect(() => {
     if (!isEmpty(selectedSongList)) {

@@ -1,15 +1,15 @@
 import React from "react";
-import { ISong, ISongPickable } from "../services/models";
+import { Song, SongPickable } from "../services/models";
 
-export interface SongProps extends ISongPickable {
-    song: ISong;
+export interface SongProps extends SongPickable {
+    song: Song;
     showPath?: boolean;
     showArtist?: boolean;
     showCount?:boolean;
     style?: any;
 }
 
-const Song: React.FC<SongProps> = ({ song, onSongPick, showCount=false, showPath = false, showArtist = true, style = {} }) => {
+const SongDiv: React.FC<SongProps> = ({ song, onSongPick, showCount=false, showPath = false, showArtist = true, style = {} }) => {
     const getType = (path: string) => {
         return path.substr(path.length - 3);
     }
@@ -25,4 +25,4 @@ const Song: React.FC<SongProps> = ({ song, onSongPick, showCount=false, showPath
     );
 };
 
-export default Song;
+export default SongDiv;

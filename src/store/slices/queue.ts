@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import {IQueueItem} from '../../services/models';
+import {QueueItem} from '../../services/models';
 
 interface QueueSliceState {
-  queue: IQueueItem[];
+  queue: QueueItem[];
 }
 
 const initialState: QueueSliceState = {
@@ -13,7 +13,7 @@ export const queueSlice = createSlice({
   name: 'queue',
   initialState,
   reducers: {
-    queueChange: (state, action: PayloadAction<IQueueItem[]>) => {
+    queueChange: (state, action: PayloadAction<QueueItem[]>) => {
       state.queue = action.payload;
     }
   }

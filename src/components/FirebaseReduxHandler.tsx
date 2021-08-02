@@ -13,11 +13,11 @@ import { songsChange } from '../store/slices/songs';
 import { useAppDispatch } from '../hooks/hooks'
 import orderBy from 'lodash/orderBy'
 import {
-    IArtist,
-    ISongList, toSongList,
-    ISinger, toSinger,
-    IQueueItem,
-    ISong, toSong, PlayerState,
+    Artist,
+    SongList, toSongList,
+    Singer, toSinger,
+    QueueItem,
+    Song, toSong, PlayerState,
 }
     from '../services/models'
 import FirebaseService from "../services/FirebaseService";
@@ -56,7 +56,7 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
     };
 
     const onSongListChange = async (items: firebase.database.DataSnapshot) => {
-        let list: ISongList[] = [];
+        let list: SongList[] = [];
         items.forEach(item => {
             list.push(toSongList(item.val()));
         });
@@ -64,7 +64,7 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
     };
 
     const onSingersChange = async (items: firebase.database.DataSnapshot) => {
-        let list: ISinger[] = [];
+        let list: Singer[] = [];
         items.forEach(item => {
             let obj = item.val();
             let song = toSinger(obj);
@@ -75,10 +75,10 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
     };
 
     const onQueueChange = async (items: firebase.database.DataSnapshot) => {
-        let list: IQueueItem[] = [];
+        let list: QueueItem[] = [];
         items.forEach(item => {
             let obj = item.val();
-            let newQueueItem: IQueueItem = {
+            let newQueueItem: QueueItem = {
                 key: JSON.stringify(item.ref.toJSON()),
                 singer: toSinger(obj.singer),
                 song: toSong(obj.song)
@@ -89,7 +89,7 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
     };
 
     const onLatestSongsChange = async (items: firebase.database.DataSnapshot) => {
-        let list: ISong[] = [];
+        let list: Song[] = [];
         items.forEach(item => {
             let obj = item.val();
             let song = toSong(obj);
@@ -100,7 +100,7 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
     };
 
     const onHistoryChange = async (items: firebase.database.DataSnapshot) => {
-        let list: ISong[] = [];
+        let list: Song[] = [];
         items.forEach(item => {
             let obj = item.val();
             let song = toSong(obj);
@@ -111,7 +111,7 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
     };
 
     const onFavoritesChange = async (items: firebase.database.DataSnapshot) => {
-        let list: ISong[] = [];
+        let list: Song[] = [];
         items.forEach(item => {
             let obj = item.val();
             let song = toSong(obj);
@@ -122,9 +122,9 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
     };
 
     const onSongsChange = async (items: firebase.database.DataSnapshot) => {
-        let artists: IArtist[] = [];
+        let artists: Artist[] = [];
         let names: string[] = [];
-        let list: ISong[] = [];
+        let list: Song[] = [];
 
         items.forEach(item => {
             let obj = item.val();

@@ -1,10 +1,10 @@
 import { isEmpty } from "lodash";
 
-export interface IFabricObj { 
+export interface Fabricable { 
     key?: string | null;
 }
 
-export interface ISong extends IFabricObj {
+export interface Song extends Fabricable {
     artist: string;
     title: string;
     count?: number;
@@ -12,25 +12,25 @@ export interface ISong extends IFabricObj {
     path: string;
 }
 
-export interface ISongPickable {
-    onSongPick: (song: ISong) => void;
+export interface SongPickable {
+    onSongPick: (song: Song) => void;
   }
   
 
-export interface ISinger extends IFabricObj{
+export interface Singer extends Fabricable{
     name: string;
 }
 
-export interface IArtist extends IFabricObj {
+export interface Artist extends Fabricable {
     name: string;
 }
 
-export interface IQueueItem extends IFabricObj{
-    singer: ISinger;
-    song: ISong;
+export interface QueueItem extends Fabricable{
+    singer: Singer;
+    song: Song;
 }
 
-export interface ISettings{
+export interface Settings{
     autoadvance: boolean;
     userpick: boolean;
 }
@@ -44,20 +44,20 @@ export interface IPlayerState {
     state: PlayerState;
 }
 
-export interface ISongListSong extends IFabricObj{
+export interface SongListSong extends Fabricable{
     artist: string;
     position: number;
     title: string;
-    foundSongs: ISong[];
+    foundSongs: Song[];
 }
 
-export interface ISongList extends IFabricObj{
+export interface SongList extends Fabricable{
     title: string;
-    songs: ISongListSong[]
+    songs: SongListSong[]
 }
 
-export const toSong = (song: any): ISong => {
-    let newSong: ISong = {
+export const toSong = (song: any): Song => {
+    let newSong: Song = {
         key: song.key,
         artist: song.artist,
         title: song.title,
@@ -68,17 +68,17 @@ export const toSong = (song: any): ISong => {
     return newSong;
 }
 
-export const toSinger = (singer: any): ISinger => {
-    let newSinger: ISinger = {
+export const toSinger = (singer: any): Singer => {
+    let newSinger: Singer = {
         key: singer.key,
         name: singer.name
     };
     return newSinger;
 }
 
-export const toSongListSong = (sls: any): ISongListSong =>{
+export const toSongListSong = (sls: any): SongListSong =>{
     
-    let foundSongs: ISong[] = [];
+    let foundSongs: Song[] = [];
     let _foundSongs: any[] = sls.foundSongs;
     
     if(!isEmpty(_foundSongs)){
@@ -87,7 +87,7 @@ export const toSongListSong = (sls: any): ISongListSong =>{
         });
     }
 
-    let songListSong: ISongListSong = { 
+    let songListSong: SongListSong = { 
       artist: sls.artist,
       position: sls.position,
       title: sls.title,
@@ -97,14 +97,14 @@ export const toSongListSong = (sls: any): ISongListSong =>{
     return songListSong;
 }
 
-export const toSongList = (sl: any): ISongList =>{
-    let songListSongs: ISongListSong[] = [];
+export const toSongList = (sl: any): SongList =>{
+    let songListSongs: SongListSong[] = [];
     let _songListSongs: any[] = sl.songs;    
     _songListSongs.forEach(_song => {
         songListSongs.push(toSongListSong(_song));
     });
 
-    let songList: ISongList = {
+    let songList: SongList = {
       title: sl.title,
       songs: songListSongs
     };

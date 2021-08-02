@@ -1,5 +1,5 @@
 import React from "react";
-import { ISinger } from "../services/models";
+import { Singer } from "../services/models";
 import { useSelector } from "react-redux";
 import { selectSingers } from "../store/store";
 import { pageCount } from "../globalConfig";
@@ -8,7 +8,7 @@ import ScrollingGrid from "../components/ScrollingGrid";
 import { isEmpty } from "lodash";
 
 const Singers: React.FC = () => {
-  const listItems: ISinger[] = useSelector(selectSingers);
+  const listItems: Singer[] = useSelector(selectSingers);
   const pageName: string = "Singers";
 
   if(isEmpty(listItems)) { 

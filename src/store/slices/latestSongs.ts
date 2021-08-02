@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import {ISong} from '../../services/models';
+import {Song} from '../../services/models';
 
 interface LatestSongsSliceState {
-  latestSongs: ISong[];
+  latestSongs: Song[];
 }
 
 const initialState: LatestSongsSliceState = {
@@ -13,7 +13,7 @@ export const latestSongsSlice = createSlice({
   name: 'latestSongs',
   initialState,
   reducers: {
-    latestSongsChange: (state, action: PayloadAction<ISong[]>) => {
+    latestSongsChange: (state, action: PayloadAction<Song[]>) => {
       state.latestSongs = action.payload;
     }
   }

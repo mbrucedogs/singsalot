@@ -1,15 +1,15 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { ISong, ISongPickable } from "../services/models";
+import { Song, SongPickable } from "../services/models";
 import { selectHistory } from "../store/store";
 import { pageCount } from "../globalConfig";
-import Song from "../components/Song";
+import SongDiv from "../components/SongDiv";
 import Page from "../components/Page"
 import ScrollingGrid from "../components/ScrollingGrid";
 import { isEmpty } from "lodash";
 
-const History: React.FC<ISongPickable> = ({onSongPick}) => {
-  const listItems: ISong[] = useSelector(selectHistory);
+const History: React.FC<SongPickable> = ({onSongPick}) => {
+  const listItems: Song[] = useSelector(selectHistory);
   const pageName: string = "History";
 
   if(isEmpty(listItems)) { 
@@ -22,7 +22,7 @@ const History: React.FC<ISongPickable> = ({onSongPick}) => {
         pageCount={pageCount}
         pageName={pageName}
         listItems={listItems}
-        getRow={(song) => { return <Song song={song} onSongPick={onSongPick} showPath={true}/> }}
+        getRow={(song) => { return <SongDiv song={song} onSongPick={onSongPick} showPath={true}/> }}
       />
     </Page>
   );

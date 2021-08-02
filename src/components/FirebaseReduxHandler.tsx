@@ -13,13 +13,17 @@ import { songsChange } from '../store/slices/songs';
 import { useAppDispatch } from '../hooks/hooks'
 import orderBy from 'lodash/orderBy'
 import {
-    Artist,
-    SongList, toSongList,
-    Singer, toSinger,
-    QueueItem,
-    Song, toSong, PlayerState,
+    toSongList,
+    toSinger,
+    toSong,
 }
-    from '../models/models'
+    from '../models/Parsers'
+import { SongList } from "../models/SongList";
+import { PlayerState } from "../models/Player";
+import { QueueItem } from "../models/QueueItem";
+import { Artist } from "../models/Artist";
+import { Singer } from "../models/Singer";
+import { Song } from "../models/Song";
 import FirebaseService from "../services/FirebaseService";
 import { useEffect } from "react";
 

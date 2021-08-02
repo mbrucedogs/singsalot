@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Song, SongPickable, Fabricable, Artist } from "../models/models";
+import { SongPickable } from "../models/SongPickable";
+import { Fabricable } from "../models/Fabricable";
+import { Artist } from "../models/Artist";
+import { Song } from "../models/Song";
 import { useSelector } from "react-redux";
 import { selectLatestSongs } from "../store/store";
 import { pageCount } from "../globalConfig";

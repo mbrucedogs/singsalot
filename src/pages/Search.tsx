@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectSongs } from "../store/store";
-import { Song, SongPickable } from "../models/models";
+import { SongPickable } from "../models/SongPickable";
+import { Song } from "../models/Song";
 import { pageCount } from "../globalConfig";
 import { isEmpty } from "lodash";
 import ScrollingGrid from "../components/ScrollingGrid";

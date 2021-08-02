@@ -19,7 +19,9 @@ import { useAppDispatch } from './hooks/hooks'
 import { authenticatedChange } from './store/slices/authenticated';
 import { useSelector } from 'react-redux';
 import { selectAuthenticated } from './store/store';
-import { Song, Artist, QueueItem} from './models/models';
+import { QueueItem } from "./models/QueueItem";
+import { Artist } from "./models/Artist";
+import { Song } from "./models/Song";
 import FirebaseReduxHandler from './components/FirebaseReduxHandler';
 
 interface AuthCheckProps {

@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { Singer } from '../../models/models'
+import { Singer } from "../../models/Singer";
 interface SingersSliceState {
   singers: Singer[];
 }

@@ -1,6 +1,6 @@
 import localfirebase from './firebase';
-
 const db = localfirebase.ref('/controllers');
+
 class FirebaseService {
   controllerId: string = ""
 

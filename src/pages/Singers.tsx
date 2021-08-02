@@ -1,5 +1,5 @@
 import React from "react";
-import { Singer } from "../models/models";
+import { Singer } from "../models/Singer";
 import { useSelector } from "react-redux";
 import { selectSingers } from "../store/store";
 import { pageCount } from "../globalConfig";

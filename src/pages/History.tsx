@@ -1,6 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { Song, SongPickable } from "../models/models";
+import { SongPickable } from "../models/SongPickable";
+import { Song } from "../models/Song";
 import { selectHistory } from "../store/store";
 import { pageCount } from "../globalConfig";
 import SongDiv from "../components/SongDiv";

@@ -1,5 +1,6 @@
 import React from "react";
-import { Song, SongPickable } from "../models/models";
+import { SongPickable } from "../models/SongPickable";
+import { Song } from "../models/Song";
 
 export interface SongProps extends SongPickable {
     song: Song;

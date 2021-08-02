@@ -1,60 +1,8 @@
 import { isEmpty } from "lodash";
-
-export interface Fabricable { 
-    key?: string | null;
-}
-
-export interface Song extends Fabricable {
-    artist: string;
-    title: string;
-    count?: number;
-    disabled?: boolean;
-    path: string;
-}
-
-export interface SongPickable {
-    onSongPick: (song: Song) => void;
-  }
-  
-
-export interface Singer extends Fabricable{
-    name: string;
-}
-
-export interface Artist extends Fabricable {
-    name: string;
-}
-
-export interface QueueItem extends Fabricable{
-    singer: Singer;
-    song: Song;
-}
-
-export interface Settings{
-    autoadvance: boolean;
-    userpick: boolean;
-}
-
-export enum PlayerState{
-    playing = "Playing",
-    paused = "Paused",
-    stopped = "Stopped"
-}
-export interface IPlayerState {
-    state: PlayerState;
-}
-
-export interface SongListSong extends Fabricable{
-    artist: string;
-    position: number;
-    title: string;
-    foundSongs: Song[];
-}
-
-export interface SongList extends Fabricable{
-    title: string;
-    songs: SongListSong[]
-}
+import { Singer } from "./Singer";
+import { Song } from "./Song";
+import { SongList } from "./SongList";
+import { SongListSong } from "./SongListSong";
 
 export const toSong = (song: any): Song => {
     let newSong: Song = {

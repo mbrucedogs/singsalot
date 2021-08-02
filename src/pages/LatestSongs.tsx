@@ -1,73 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { SongPickable } from "../models/SongPickable";
-import { Fabricable } from "../models/Fabricable";
-import { Artist } from "../models/Artist";
-import { Song } from "../models/Song";
 import { useSelector } from "react-redux";
-import { selectLatestSongs } from "../store/store";
+import { selectLatestArtistSongs } from "../store/store";
 import { pageCount } from "../globalConfig";
 import SongDiv from "../components/SongDiv";
 import Page from "../components/Page"
 import ScrollingGrid from "../components/ScrollingGrid";
 import { isEmpty } from "lodash";
-
-interface IArtistSongs extends Fabricable {
-  artist: string, songs: Song[]
-}
+import { ArtistSongs } from "../models/ArtistSongs";
 
 const LatestSongs: React.FC<SongPickable> = ({ onSongPick }) => {
-  const latestSongs: Song[] = useSelector(selectLatestSongs);
-  const [listItems, setListItems] = useState<IArtistSongs[]>([]);
+  const listItems:ArtistSongs[] = useSelector(selectLatestArtistSongs);
   const pageName: string = "Latest Songs";
-  const artistCollapse: boolean = false;
-
-  useEffect(() => {
-    if (!isEmpty(latestSongs)) {
-      let noArtist: IArtistSongs = { artist: "None", songs: [] };
-      let results: IArtistSongs[] = [];
-      latestSongs.map(song => {
-        let artist = song.artist;
-        let key = artist.trim().toLowerCase();
-        if (isEmpty(artist)) {
-          noArtist.songs.push(song);
-        } else {
-          let found = results.filter(item => item.key === key)?.[0];
-          if (isEmpty(found)) {
-            found = { key: key, artist: song.artist, songs: [song] }
-            results.push(found);
-          } else {
-            found.songs.push(song);
-          }
-        }
-      });
-
-      let sorted = results.sort((a: IArtistSongs, b: IArtistSongs) => {
-        return a.artist.localeCompare(b.artist);
-      });
-
-      sorted.forEach(item => {
-        if (item.songs.length > 1) {
-          let sorted = item.songs.sort((a: Song, b: Song) => {
-            return a.title.localeCompare(b.title)
-          });
-          item.songs = sorted;
-        }
-      })
-
-      if (!isEmpty(noArtist.songs)) {
-        sorted.push(noArtist, ...sorted);
-      }
-      if (!isEmpty(sorted)) {
-        setListItems(sorted);
-      }
-    }
-  }, [latestSongs]);
+  const artistCollapse: boolean = true;
 
   if (isEmpty(listItems)) {
     return <Page name={pageName}><h2 style={{ padding: '10px' }}>Loading {pageName}...</h2></Page>
   }
 
-  const buildRow = (item: IArtistSongs)=> {
+  const buildRow = (item: ArtistSongs)=> {
     if(artistCollapse){
       return (            
         <div key={item.key}>

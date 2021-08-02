@@ -1,16 +1,15 @@
 import React, { useState, useEffect, MouseEventHandler } from "react";
 import { QueueItem } from "../models/QueueItem";
-import { useSelector } from "react-redux";
-import { selectQueue } from "../store/store";
 import Page from "../components/Page"
 import { isEmpty } from "lodash";
 import { IonIcon, IonReorder, IonReorderGroup, IonContent, IonItem, IonLabel, IonGrid, IonButtons, IonButton } from "@ionic/react";
 import { ItemReorderEventDetail } from "@ionic/core";
 import { close, closeOutline, reorderThree, reorderThreeOutline } from "ionicons/icons";
+import { useQueue } from "../hooks/useQueue";
 
-const Queue: React.FC<{ onDelete: (queueItem: QueueItem) => void, onReorder: (queue: QueueItem[]) => void }> = ({ onDelete, onReorder }) => {
+const Queue: React.FC = () => {
   const pageName: string = "Queue";
-  const queue: QueueItem[] = useSelector(selectQueue);
+  const { queue, deleteFromQueue, orderQueue } = useQueue();
   const [listItems, setListItems] = useState<QueueItem[]>([]);
   const [shouldReorder, setShouldReorder] = useState<boolean>(false);
 
@@ -33,7 +32,7 @@ const Queue: React.FC<{ onDelete: (queueItem: QueueItem) => void, onReorder: (qu
     ordered.splice(event.detail.to, 0, itemMove);
     event.detail.complete();
     //console.log('After complete', ordered);
-    onReorder(ordered);
+    orderQueue(ordered);
   }
 
   useEffect(() => {
@@ -68,7 +67,7 @@ const Queue: React.FC<{ onDelete: (queueItem: QueueItem) => void, onReorder: (qu
                     <IonLabel className="title">{item.singer.name}</IonLabel>
                     <IonLabel className="subtitle">{item.song.title}</IonLabel>
                   </IonGrid>
-                  <IonIcon hidden={shouldReorder} ios={closeOutline} md={close} slot="end" onClick={(e) => onDelete(item)} />
+                  <IonIcon hidden={shouldReorder} ios={closeOutline} md={close} slot="end" onClick={(e) => deleteFromQueue(item)} />
                   <IonIcon hidden={!shouldReorder} ios={reorderThreeOutline} md={reorderThree} slot="end" />
                 </IonItem>
               </IonReorder>

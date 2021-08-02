@@ -18,7 +18,6 @@ import { useAppDispatch } from './hooks/hooks'
 import { authenticatedChange } from './store/slices/authenticated';
 import { useSelector } from 'react-redux';
 import { selectAuthenticated } from './store/store';
-import { QueueItem } from "./models/QueueItem";
 import { Song } from "./models/Song";
 import FirebaseReduxHandler from './components/FirebaseReduxHandler';
 import { useCallback } from 'react';
@@ -63,14 +62,6 @@ const Router: React.FC = () => {
     console.log("onSongPick - songListSong", song);
   }, []);
 
-  const onDeleteQueueItem = useCallback((queueItem: QueueItem) => {
-    console.log("onDeleteQueueItem - queueItem", queueItem);
-  }, []);
-
-  const onReorderQueue = useCallback((queue: QueueItem[]) => {
-    console.log("onReorderQueue - queue", queue);
-  }, []);
-
   return (
     <IonReactRouter>
       <AuthCheck isAuthenticated={isAuthenticated} fallback={<Login onLogin={onLogin} />}>
@@ -91,7 +82,7 @@ const Router: React.FC = () => {
               <LatestSongs onSongPick={onSongPick} />
             </Route>
             <Route path="/Queue">
-              <Queue onDelete={onDeleteQueueItem} onReorder={onReorderQueue} />
+              <Queue />
             </Route>
             <Route path="/Search">
               <Search onSongPick={onSongPick} />

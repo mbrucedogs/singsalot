@@ -67,86 +67,94 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
     };
 
     const onSongListChange = async (items: firebase.database.DataSnapshot) => {
-        snapshotToArray<SongList>(items).then(result => dispatch(songListsChange(result)));
+        snapshotToArray<SongList>(items)
+            .then(result => dispatch(songListsChange(result)));
     };
 
     const onSingersChange = async (items: firebase.database.DataSnapshot) => {
-        snapshotToArray<Singer>(items).then(result => dispatch(singersChange(result)));
+        snapshotToArray<Singer>(items)
+            .then(result => dispatch(singersChange(result)));
     };
 
     const onQueueChange = async (items: firebase.database.DataSnapshot) => {
-        snapshotToArray<QueueItem>(items).then(result => dispatch(queueChange(result)));
+        snapshotToArray<QueueItem>(items)
+            .then(result => dispatch(queueChange(result)));
     };
 
     const onLatestSongsChange = async (items: firebase.database.DataSnapshot) => {
-        snapshotToArray<Song>(items).then(latestSongs => {
-            convertToAristSongs(latestSongs).then(artistSongs => {
-                dispatch(latestSongsChange({ latestSongs: latestSongs, artistSongs: artistSongs }));
-            })
-        });
+        snapshotToArray<Song>(items)
+            .then(latestSongs => {
+                convertToAristSongs(latestSongs)
+                    .then(artistSongs => {
+                        dispatch(latestSongsChange({ latestSongs: latestSongs, artistSongs: artistSongs }));
+                    })
+            });
     };
 
     const onHistoryChange = async (items: firebase.database.DataSnapshot) => {
-        
+
         let amount = 100;
-        snapshotToArray<Song>(items).then(history => {
-            let results: TopPlayed[] = [];
-            history.map(song => {
-                let artist = song.artist;
-                let title = song.title;
-                let key = `${artist.trim().toLowerCase()}-${title.trim().toLowerCase()}`;
-                let songCount = song.count!;
-                let found = results.filter(item => item.key === key)?.[0];
-                if (isEmpty(found)) {
-                    found = { key: key, artist: artist, title: title, count: songCount, songs: [song] }
-                    results.push(found);
-                } else {
-                    let foundSong = found.songs.filter(item => item.key === key)?.[0];
-                    if (isEmpty(foundSong)) {
-                        found.songs.push(song);
+        snapshotToArray<Song>(items)
+            .then(history => {
+                let results: TopPlayed[] = [];
+                history.map(song => {
+                    let artist = song.artist;
+                    let title = song.title;
+                    let key = `${artist.trim().toLowerCase()}-${title.trim().toLowerCase()}`.replace(/\W/g,'_');
+                    let songCount = song.count!;
+                    let found = results.filter(item => item.key === key)?.[0];
+                    if (isEmpty(found)) {
+                        found = { key: key, artist: artist, title: title, count: songCount, songs: [song] }
+                        results.push(found);
+                    } else {
+                        let foundSong = found.songs.filter(item => item.key === key)?.[0];
+                        if (isEmpty(foundSong)) {
+                            found.songs.push(song);
+                        }
+                        let accumulator = 0;
+                        found.songs.map(song => {
+                            accumulator = accumulator + song.count!;
+                        });
+                        found.count = accumulator;
                     }
-                    let accumulator = 0;
-                    found.songs.map(song => {
-                        accumulator = accumulator + song.count!;
-                    });
-                    found.count = accumulator;
+                });
+
+                let sorted = results.sort((a: TopPlayed, b: TopPlayed) => {
+                    return b.count - a.count || a.key!.localeCompare(b.key!);
+                });
+
+                let payload: History = {
+                    songs: history,
+                    topPlayed: sorted.slice(0, amount)
                 }
+
+                dispatch(historyChange(payload));
             });
-    
-            let sorted = results.sort((a: TopPlayed, b: TopPlayed) => {
-                return b.count - a.count || a.key!.localeCompare(b.key!);
-            });
-    
-            let payload: History = {
-                songs: history,
-                topPlayed: sorted.slice(0, amount)
-            }
-    
-            dispatch(historyChange(payload));
-        });
 
     };
 
     const onFavoritesChange = async (items: firebase.database.DataSnapshot) => {
-        snapshotToArray<Song>(items).then(result => dispatch(favoritesChange(result)));
+        snapshotToArray<Song>(items)
+            .then(result => dispatch(favoritesChange(result)));
     };
 
     const onSongsChange = async (items: firebase.database.DataSnapshot) => {
-        snapshotToArray<Song>(items).then(list => {
-            let artists: Artist[] = [];
-            let names: string[] = [];
+        snapshotToArray<Song>(items)
+            .then(list => {
+                let artists: Artist[] = [];
+                let names: string[] = [];
 
-            list.forEach(song => {
-                let name = song.artist;
-                if (!isEmpty(name) && !includes(names, name.trim())) {
-                    names.push(name.trim());
-                }
+                list.forEach(song => {
+                    let name = song.artist;
+                    if (!isEmpty(name) && !includes(names, name.trim())) {
+                        names.push(name.trim());
+                    }
+                });
+                artists = orderBy(names).map(name => { return { key: name, name: name } });
+
+                dispatch(songsChange(list));
+                dispatch(artistsChange(artists));
             });
-            artists = orderBy(names).map(name => { return { key: name, name: name } });
-
-            dispatch(songsChange(list));
-            dispatch(artistsChange(artists));
-        });
     };
 
     return <>{children}</>

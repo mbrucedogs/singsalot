@@ -25,12 +25,12 @@ const LatestSongs: React.FC<SongPickable> = ({ onSongPick }) => {
           <div className="row">
             <div style={{ flex: "1 1 auto" }} className="title">{item.artist}</div>
           </div>
-          {item.songs.map(song => { return <SongDiv onSongPick={onSongPick} song={song} style={{ paddingLeft: '50px' }} showArtist={item.artist === "None"} /> })}
+          {item.songs.map(song => { return <SongDiv key={song.key} onSongPick={onSongPick} song={song} style={{ paddingLeft: '50px' }} showArtist={item.artist === "None"} /> })}
         </div>
       );
     } else {
       return <div key={item.key}>
-        {item.songs.map(song => { return <SongDiv onSongPick={onSongPick} song={song}/> })}
+        {item.songs.map(song => { return <SongDiv key={song.key} onSongPick={onSongPick} song={song}/> })}
         </div>
     }
   }

@@ -17,6 +17,7 @@ import { PlayerState } from "../models/Player";
 import { QueueItem } from "../models/QueueItem";
 import { Artist } from "../models/Artist";
 import { Singer } from "../models/Singer";
+import { TopPlayed } from "../models/TopPlayed";
 import { Song } from "../models/Song";
 import FirebaseService from "../services/FirebaseService";
 import { useEffect } from "react";
@@ -78,7 +79,38 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
     };
 
     const onHistoryChange = async (items: firebase.database.DataSnapshot) => {
-        dispatch(historyChange(snapshotToArray<Song>(items)));
+        let amount = 100;
+        let history: Song[] = snapshotToArray<Song>(items);
+        let results: TopPlayed[] = [];
+        let reducer = (accumulator: number, currentValue: number) => accumulator + currentValue;
+        history.map(song => {
+          let artist = song.artist;
+          let title = song.title;
+          let key = `${artist.trim().toLowerCase()}-${title.trim().toLowerCase()}`;
+          let songCount = song.count!;
+          let found = results.filter(item => item.key === key)?.[0];
+          if (isEmpty(found)) {
+            found = { key: key, artist: artist, title: title, count: songCount, songs: [song] }
+            results.push(found);
+          } else {
+            let foundSong = found.songs.filter(item => item.key === key)?.[0];
+            if(isEmpty(foundSong)){
+              found.songs.push(song);
+            }
+            let accumulator = 0;
+            found.songs.map(song => {
+              accumulator = accumulator + song.count!;
+            });
+            found.count = accumulator;
+          }
+        });
+  
+        let sorted = results.sort((a: TopPlayed, b: TopPlayed) => {
+          return b.count - a.count || a.key!.localeCompare(b.key!);
+        });
+
+        let topSongs = sorted.slice(0, amount);    
+        dispatch(historyChange({songs: history, topPlayed: topSongs}));
     };
 
     const onFavoritesChange = async (items: firebase.database.DataSnapshot) => {
@@ -96,7 +128,7 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
                 names.push(name.trim());
             }
         });
-        artists = orderBy(names).map(name => { return { name: name } });
+        artists = orderBy(names).map(name => { return { key:name, name: name } });
         dispatch(songsChange(list));
         dispatch(artistsChange(artists));
     };

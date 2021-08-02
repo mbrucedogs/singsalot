@@ -10,7 +10,7 @@ import ScrollingGrid from "../components/ScrollingGrid";
 import { isEmpty } from "lodash";
 
 const History: React.FC<SongPickable> = ({onSongPick}) => {
-  const listItems: Song[] = useSelector(selectHistory);
+  const listItems = useSelector(selectHistory);
   const pageName: string = "History";
 
   if(isEmpty(listItems)) { 
@@ -22,7 +22,7 @@ const History: React.FC<SongPickable> = ({onSongPick}) => {
       <ScrollingGrid
         pageCount={pageCount}
         pageName={pageName}
-        listItems={listItems}
+        listItems={listItems.songs}
         getRow={(song) => { return <SongDiv song={song} onSongPick={onSongPick} showPath={true}/> }}
       />
     </Page>

@@ -12,12 +12,6 @@ import { songListsChange } from '../store/slices/songLists';
 import { songsChange } from '../store/slices/songs';
 import { useAppDispatch } from '../hooks/hooks'
 import orderBy from 'lodash/orderBy'
-import {
-    toSongList,
-    toSinger,
-    toSong,
-}
-    from '../models/Parsers'
 import { SongList } from "../models/SongList";
 import { PlayerState } from "../models/Player";
 import { QueueItem } from "../models/QueueItem";
@@ -26,7 +20,6 @@ import { Singer } from "../models/Singer";
 import { Song } from "../models/Song";
 import FirebaseService from "../services/FirebaseService";
 import { useEffect } from "react";
-
 
 interface FirebaseReduxHandlerProps {
     isAuthenticated: boolean;
@@ -50,7 +43,16 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
         }
     }, [isAuthenticated])
 
-    //Listeners for loadData
+    function snapshotToArray<T>(items: firebase.database.DataSnapshot): T[] {
+        var returnArr:T[] = [];
+        items.forEach(function(childSnapshot) {
+            var item = childSnapshot.val();
+            item.key = childSnapshot.key;
+            returnArr.push(item);
+        });
+        return returnArr;
+    };
+
     //datachanges
     const onPlayerStateChange = async (items: firebase.database.DataSnapshot)=> {
         let state: PlayerState = PlayerState.stopped;
@@ -58,86 +60,37 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
         if (!isEmpty(s)) { state = s; }
         dispatch(playerStateChange(state));
     };
-
+  
     const onSongListChange = async (items: firebase.database.DataSnapshot) => {
-        let list: SongList[] = [];
-        items.forEach(item => {
-            list.push(toSongList(item.val()));
-        });
-        dispatch(songListsChange(list));
+        dispatch(songListsChange(snapshotToArray<SongList>(items)));
     };
 
     const onSingersChange = async (items: firebase.database.DataSnapshot) => {
-        let list: Singer[] = [];
-        items.forEach(item => {
-            let obj = item.val();
-            let song = toSinger(obj);
-            song.key = JSON.stringify(item.ref.toJSON())
-            list.push(song);
-        });
-        dispatch(singersChange(list));
+        dispatch(singersChange(snapshotToArray<Singer>(items)));
     };
 
     const onQueueChange = async (items: firebase.database.DataSnapshot) => {
-        let list: QueueItem[] = [];
-        items.forEach(item => {
-            let obj = item.val();
-            let newQueueItem: QueueItem = {
-                key: JSON.stringify(item.ref.toJSON()),
-                singer: toSinger(obj.singer),
-                song: toSong(obj.song)
-            }
-            list.push(newQueueItem);
-        });
-        dispatch(queueChange(list));
+        dispatch(queueChange(snapshotToArray<QueueItem>(items)));
     };
 
     const onLatestSongsChange = async (items: firebase.database.DataSnapshot) => {
-        let list: Song[] = [];
-        items.forEach(item => {
-            let obj = item.val();
-            let song = toSong(obj);
-            song.key = JSON.stringify(item.ref.toJSON())
-            list.push(song);
-        });
-        dispatch(latestSongsChange(list));
+        dispatch(latestSongsChange(snapshotToArray<Song>(items)));
     };
 
     const onHistoryChange = async (items: firebase.database.DataSnapshot) => {
-        let list: Song[] = [];
-        items.forEach(item => {
-            let obj = item.val();
-            let song = toSong(obj);
-            song.key = JSON.stringify(item.ref.toJSON())
-            list.push(song);
-        });
-        dispatch(historyChange(list));
+        dispatch(historyChange(snapshotToArray<Song>(items)));
     };
 
     const onFavoritesChange = async (items: firebase.database.DataSnapshot) => {
-        let list: Song[] = [];
-        items.forEach(item => {
-            let obj = item.val();
-            let song = toSong(obj);
-            song.key = JSON.stringify(item.ref.toJSON())
-            list.push(song);
-        });
-        dispatch(favoritesChange(list));
+        dispatch(favoritesChange(snapshotToArray<Song>(items)));
     };
 
     const onSongsChange = async (items: firebase.database.DataSnapshot) => {
         let artists: Artist[] = [];
         let names: string[] = [];
-        let list: Song[] = [];
+        let list: Song[] = snapshotToArray<Song>(items);
 
-        items.forEach(item => {
-            let obj = item.val();
-
-            //get the song
-            let song = toSong(obj);
-            list.push(song);
-
-            //get the artist
+        list.forEach(song => {
             let name = song.artist;
             if (!isEmpty(name) && !includes(names, name.trim())) {
                 names.push(name.trim());

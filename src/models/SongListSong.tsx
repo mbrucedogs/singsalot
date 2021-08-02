@@ -6,5 +6,5 @@ export interface SongListSong extends Fabricable {
     artist: string;
     position: number;
     title: string;
-    foundSongs: Song[];
+    foundSongs?: Song[];
 }

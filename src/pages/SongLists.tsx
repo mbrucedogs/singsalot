@@ -86,7 +86,7 @@ const SongLists: React.FC<SongPickable> = ({ onSongPick }) => {
                       </div>
                     </div>
                     }>
-                      {song.foundSongs.map(song => {
+                      {song.foundSongs?.map(song => {
                         return <Song style={{ paddingLeft: '50px' }} song={song} showPath={true} onSongPick={(song) => { onSongPick(song); setShowModal(false); }} />
                       })}
                     </Collapsible>

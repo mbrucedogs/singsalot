@@ -121,7 +121,7 @@ const Artists: React.FC<SongPickable> = ({ onSongPick }) => {
                 pageCount={100}
                 pageName={modal?.artist}
                 listItems={modal?.songs}
-                getRow={(song) => { return <SongDiv song={song} onSongPick={onSongPick} showPath={true} /> }}
+                getRow={(song) => { return <SongDiv key={song.key} song={song} onSongPick={onSongPick} showPath={true} /> }}
               />
             </IonContent>
           </>

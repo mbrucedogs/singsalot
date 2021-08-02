@@ -2,7 +2,6 @@ import { IonRouterOutlet, IonSplitPane } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { Redirect, Route } from 'react-router-dom';
 import Menu from './components/Menu';
-
 import Artists from './pages/Artists';
 import Favorites from './pages/Favorites';
 import History from './pages/History';
@@ -20,9 +19,9 @@ import { authenticatedChange } from './store/slices/authenticated';
 import { useSelector } from 'react-redux';
 import { selectAuthenticated } from './store/store';
 import { QueueItem } from "./models/QueueItem";
-import { Artist } from "./models/Artist";
 import { Song } from "./models/Song";
 import FirebaseReduxHandler from './components/FirebaseReduxHandler';
+import { useCallback } from 'react';
 
 interface AuthCheckProps {
   isAuthenticated: boolean;
@@ -34,7 +33,7 @@ export const AuthCheck: React.FC<AuthCheckProps> = ({ isAuthenticated, fallback,
   if (isAuthenticated) {
     return <FirebaseReduxHandler isAuthenticated={isAuthenticated}>
       {children}
-      </FirebaseReduxHandler>
+    </FirebaseReduxHandler>
   } else {
     return <>{fallback}</>;
   }
@@ -60,17 +59,17 @@ const Router: React.FC = () => {
     });
   }
 
-  const onSongPick = (song: Song) => {
+  const onSongPick = useCallback((song: Song) => {
     console.log("onSongPick - songListSong", song);
-  }
+  }, []);
 
-  const onDeleteQueueItem = (queueItem: QueueItem) =>{
+  const onDeleteQueueItem = useCallback((queueItem: QueueItem) => {
     console.log("onDeleteQueueItem - queueItem", queueItem);
-  }
+  }, []);
 
-  const onReorderQueue = (queue: QueueItem[]) => {
+  const onReorderQueue = useCallback((queue: QueueItem[]) => {
     console.log("onReorderQueue - queue", queue);
-  }
+  }, []);
 
   return (
     <IonReactRouter>

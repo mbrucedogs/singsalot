@@ -10,7 +10,7 @@ import ScrollingGrid from "../components/ScrollingGrid";
 import { isEmpty } from "lodash";
 import { IonButton, IonModal, IonContent, IonHeader, IonToolbar, IonTitle, IonButtons } from "@ionic/react";
 import Collapsible from 'react-collapsible';
-import Song from "../components/SongDiv";
+import SongDiv from "../components/SongDiv";
 
 const SongLists: React.FC<SongPickable> = ({ onSongPick }) => {
   const pageName: string = "Song Lists";
@@ -87,7 +87,7 @@ const SongLists: React.FC<SongPickable> = ({ onSongPick }) => {
                     </div>
                     }>
                       {song.foundSongs?.map(song => {
-                        return <Song style={{ paddingLeft: '50px' }} song={song} showPath={true} onSongPick={(song) => { onSongPick(song); setShowModal(false); }} />
+                        return <SongDiv key={song.key} style={{ paddingLeft: '50px' }} song={song} showPath={true} onSongPick={(song) => { onSongPick(song); setShowModal(false); }} />
                       })}
                     </Collapsible>
                   )

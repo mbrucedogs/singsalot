@@ -25,13 +25,9 @@ const Queue: React.FC = () => {
 
   const doReorder = (event: CustomEvent<ItemReorderEventDetail>) => {
     let ordered = listItems;
-    //console.log('Before complete', ordered);
-    //console.log(`Moving item from ${event.detail.from} to ${event.detail.to}`);
     const itemMove = listItems.splice(event.detail.from, 1)[0];
-    //console.log(itemMove);
     ordered.splice(event.detail.to, 0, itemMove);
     event.detail.complete();
-    //console.log('After complete', ordered);
     orderQueue(ordered);
   }
 

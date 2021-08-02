@@ -20,7 +20,7 @@ export function useSearch(): {
         if (isEmpty(allSongs)) { return; }
 
         if (isEmpty(query)) {
-            return allSongs;
+            setSongs(allSongs);
         } else {
             let q = query.toLowerCase();
             //console.log("useSearch - searchSongs - inside", q);

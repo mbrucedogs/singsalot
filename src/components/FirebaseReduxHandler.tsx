@@ -16,7 +16,7 @@ import { SongList } from "../models/SongList";
 import { PlayerState } from "../models/Player";
 import { QueueItem } from "../models/QueueItem";
 import { Artist } from "../models/Artist";
-import { ArtistSongs } from "../models/ArtistSongs"
+import { ArtistSongs, convertToAristSongs } from "../models/ArtistSongs"
 import { Singer } from "../models/Singer";
 import { TopPlayed } from "../models/TopPlayed";
 import { Song } from "../models/Song";
@@ -77,46 +77,8 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
     };
 
     const onLatestSongsChange = async (items: firebase.database.DataSnapshot) => {
-        
         let latestSongs = snapshotToArray<Song>(items);
-        let noArtist: ArtistSongs = { artist: "None", songs: [] };
-        let results: ArtistSongs[] = [];
-        latestSongs.map(song => {
-          let artist = song.artist;
-          let key = artist.trim().toLowerCase();
-          if (isEmpty(artist)) {
-            noArtist.songs.push(song);
-          } else {
-            let found = results.filter(item => item.key === key)?.[0];
-            if (isEmpty(found)) {
-              found = { key: key, artist: song.artist, songs: [song] }
-              results.push(found);
-            } else {
-              found.songs.push(song);
-            }
-          }
-        });
-  
-        let sorted = results.sort((a: ArtistSongs, b: ArtistSongs) => {
-          return a.artist.localeCompare(b.artist);
-        });
-  
-        sorted.forEach(item => {
-          if (item.songs.length > 1) {
-            let sorted = item.songs.sort((a: Song, b: Song) => {
-              return a.title.localeCompare(b.title)
-            });
-            item.songs = sorted;
-          }
-        })
-  
-        if (!isEmpty(noArtist.songs)) {
-          sorted.push(noArtist, ...sorted);
-        }
-        
-
-        dispatch(latestSongsChange({ latestSongs: latestSongs, artistSongs: sorted }));
-
+        dispatch(latestSongsChange({ latestSongs: latestSongs, artistSongs: convertToAristSongs(latestSongs) }));
     };
 
     const onHistoryChange = async (items: firebase.database.DataSnapshot) => {

@@ -12,7 +12,7 @@ import { ArtistSongs } from "../models/ArtistSongs";
 const LatestSongs: React.FC<SongPickable> = ({ onSongPick }) => {
   const listItems:ArtistSongs[] = useSelector(selectLatestArtistSongs);
   const pageName: string = "Latest Songs";
-  const artistCollapse: boolean = true;
+  const artistCollapse: boolean = false;
 
   if (isEmpty(listItems)) {
     return <Page name={pageName}><h2 style={{ padding: '10px' }}>Loading {pageName}...</h2></Page>

@@ -1,7 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { SongPickable } from "../models/SongPickable";
-import { Song } from "../models/Song";
 import { selectHistory } from "../store/store";
 import { pageCount } from "../globalConfig";
 import SongDiv from "../components/SongDiv";
@@ -22,7 +21,7 @@ const History: React.FC<SongPickable> = ({onSongPick}) => {
       <ScrollingGrid
         pageCount={pageCount}
         pageName={pageName}
-        listItems={listItems.songs}
+        listItems={listItems}
         getRow={(song) => { return <SongDiv song={song} onSongPick={onSongPick} showPath={true}/> }}
       />
     </Page>

@@ -21,6 +21,7 @@ import { TopPlayed } from "../models/TopPlayed";
 import { Song } from "../models/Song";
 import FirebaseService from "../services/FirebaseService";
 import { useEffect } from "react";
+import { History } from "../models/History";
 
 interface FirebaseReduxHandlerProps {
     isAuthenticated: boolean;
@@ -45,8 +46,8 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
     }, [isAuthenticated])
 
     function snapshotToArray<T>(items: firebase.database.DataSnapshot): T[] {
-        var returnArr:T[] = [];
-        items.forEach(function(childSnapshot) {
+        var returnArr: T[] = [];
+        items.forEach(function (childSnapshot) {
             var item = childSnapshot.val();
             item.key = childSnapshot.key;
             returnArr.push(item);
@@ -55,13 +56,13 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
     };
 
     //datachanges
-    const onPlayerStateChange = async (items: firebase.database.DataSnapshot)=> {
+    const onPlayerStateChange = async (items: firebase.database.DataSnapshot) => {
         let state: PlayerState = PlayerState.stopped;
         let s = items.val();
         if (!isEmpty(s)) { state = s; }
         dispatch(playerStateChange(state));
     };
-  
+
     const onSongListChange = async (items: firebase.database.DataSnapshot) => {
         dispatch(songListsChange(snapshotToArray<SongList>(items)));
     };
@@ -82,35 +83,38 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
         let amount = 100;
         let history: Song[] = snapshotToArray<Song>(items);
         let results: TopPlayed[] = [];
-        let reducer = (accumulator: number, currentValue: number) => accumulator + currentValue;
         history.map(song => {
-          let artist = song.artist;
-          let title = song.title;
-          let key = `${artist.trim().toLowerCase()}-${title.trim().toLowerCase()}`;
-          let songCount = song.count!;
-          let found = results.filter(item => item.key === key)?.[0];
-          if (isEmpty(found)) {
-            found = { key: key, artist: artist, title: title, count: songCount, songs: [song] }
-            results.push(found);
-          } else {
-            let foundSong = found.songs.filter(item => item.key === key)?.[0];
-            if(isEmpty(foundSong)){
-              found.songs.push(song);
+            let artist = song.artist;
+            let title = song.title;
+            let key = `${artist.trim().toLowerCase()}-${title.trim().toLowerCase()}`;
+            let songCount = song.count!;
+            let found = results.filter(item => item.key === key)?.[0];
+            if (isEmpty(found)) {
+                found = { key: key, artist: artist, title: title, count: songCount, songs: [song] }
+                results.push(found);
+            } else {
+                let foundSong = found.songs.filter(item => item.key === key)?.[0];
+                if (isEmpty(foundSong)) {
+                    found.songs.push(song);
+                }
+                let accumulator = 0;
+                found.songs.map(song => {
+                    accumulator = accumulator + song.count!;
+                });
+                found.count = accumulator;
             }
-            let accumulator = 0;
-            found.songs.map(song => {
-              accumulator = accumulator + song.count!;
-            });
-            found.count = accumulator;
-          }
-        });
-  
-        let sorted = results.sort((a: TopPlayed, b: TopPlayed) => {
-          return b.count - a.count || a.key!.localeCompare(b.key!);
         });
 
-        let topSongs = sorted.slice(0, amount);    
-        dispatch(historyChange({songs: history, topPlayed: topSongs}));
+        let sorted = results.sort((a: TopPlayed, b: TopPlayed) => {
+            return b.count - a.count || a.key!.localeCompare(b.key!);
+        });
+
+        let payload: History = {
+            songs: history,
+            topPlayed: sorted.slice(0, amount)
+        }
+        
+        dispatch(historyChange(payload));
     };
 
     const onFavoritesChange = async (items: firebase.database.DataSnapshot) => {
@@ -128,7 +132,7 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
                 names.push(name.trim());
             }
         });
-        artists = orderBy(names).map(name => { return { key:name, name: name } });
+        artists = orderBy(names).map(name => { return { key: name, name: name } });
         dispatch(songsChange(list));
         dispatch(artistsChange(artists));
     };

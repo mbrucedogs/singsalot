@@ -1,21 +1,18 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { Song } from "../../models/Song";
-import { TopPlayed } from '../../models/TopPlayed';
+import { History } from '../../models/History';
 
-interface HistorySliceState {
-  history: {songs: Song[], topPlayed: TopPlayed[]};
-}
-
-const initialState: HistorySliceState = {
-  history: {songs:[], topPlayed: []},
+const initialState: History = {
+  songs:[], 
+  topPlayed: []
 }
 
 export const historySlice = createSlice({
   name: 'history',
   initialState,
   reducers: {
-    historyChange: (state, action: PayloadAction<{songs: Song[], topPlayed: TopPlayed[]}>) => {
-      state.history = action.payload;
+    historyChange: (state, action: PayloadAction<History>) => {
+      state.songs = action.payload.songs;
+      state.topPlayed = action.payload.topPlayed;
     }
   }
 })

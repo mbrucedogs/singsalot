@@ -3,5 +3,5 @@ import { TopPlayed } from "./TopPlayed";
 
 export interface History {
     songs: Song[], 
-    topPlayed: TopPlayed
+    topPlayed: TopPlayed[]
 }

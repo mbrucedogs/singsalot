@@ -20,6 +20,10 @@ const SongLists: React.FC<SongPickable> = ({ onSongPick }) => {
   const modalTitle: string = selectedSongList?.title ?? ''
   const modalSongs: SongListSong[] = selectedSongList?.songs ?? []
 
+  const getId = (): string => {
+    return Math.random().toString(16).slice(2)
+  }
+
   useEffect(() => {
     if (!isEmpty(selectedSongList)) {
       setShowModal(true);
@@ -46,6 +50,7 @@ const SongLists: React.FC<SongPickable> = ({ onSongPick }) => {
             )
           }}
         />
+
         <IonModal isOpen={showModal}
           swipeToClose={true}
           presentingElement={undefined}
@@ -66,18 +71,18 @@ const SongLists: React.FC<SongPickable> = ({ onSongPick }) => {
                 listItems={modalSongs}
                 getRow={(song) => {
                   let hasFoundSongs: boolean = !isEmpty(song.foundSongs);
-
                   {
-                    hasFoundSongs && <div className={hasFoundSongs ? "row-single" : "row-single notavailable"} onClick={(e) => { setShowModal(false); }}>
-                      <div style={{ paddingTop: '0px', paddingLeft: '10px', paddingRight: '10px' }}>({song.position})</div>
-                      <div style={{ flex: '1 1 auto' }}>
-                        <div className="title">{song.artist}</div>
-                        <div className="subtitle">{song.title}</div>
+                    hasFoundSongs &&
+                      <div key={getId()} className={hasFoundSongs ? "row-single" : "row-single notavailable"} onClick={(e) => { setShowModal(false); }}>
+                        <div style={{ paddingTop: '0px', paddingLeft: '10px', paddingRight: '10px' }}>({song.position})</div>
+                        <div style={{ flex: '1 1 auto' }}>
+                          <div className="title">{song.artist}</div>
+                          <div className="subtitle">{song.title}</div>
+                        </div>
                       </div>
-                    </div>
                   }
                   return (
-                    <Collapsible trigger={<div className={hasFoundSongs ? "row-single" : "row-single notavailable"}>
+                    <Collapsible key={getId()} trigger={<div className={hasFoundSongs ? "row-single" : "row-single notavailable"}>
                       <div style={{ paddingTop: '0px', paddingLeft: '10px', paddingRight: '10px' }}>({song.position})</div>
                       <div style={{ flex: '1 1 auto' }}>
                         <div className="title">{song.artist}</div>
@@ -85,8 +90,8 @@ const SongLists: React.FC<SongPickable> = ({ onSongPick }) => {
                       </div>
                     </div>
                     }>
-                      {song.foundSongs?.map(song => {
-                        return <SongDiv key={song.key} style={{ paddingLeft: '50px' }} song={song} showPath={true} onSongPick={(song) => { onSongPick(song); setShowModal(false); }} />
+                      {song.foundSongs?.map(s => {
+                        return <SongDiv key={getId()} style={{ paddingLeft: '50px' }} song={s} showPath={true} onSongPick={(song) => { onSongPick(s); setShowModal(false); }} />
                       })}
                     </Collapsible>
                   )

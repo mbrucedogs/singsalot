@@ -1,7 +1,5 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import { SongPickable } from "../models/SongPickable";
-import { selectTopPlayed } from "../store/store";
 import SongDiv from "../components/SongDiv";
 import Page from "../components/Page"
 import ScrollingGrid from "../components/ScrollingGrid";

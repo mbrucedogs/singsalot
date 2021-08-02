@@ -7,10 +7,9 @@ export interface SongProps extends SongPickable {
     showPath?: boolean;
     showArtist?: boolean;
     showCount?:boolean;
-    style?: any;
 }
 
-const SongDiv: React.FC<SongProps> = ({ song, onSongPick, showCount=false, showPath = false, showArtist = true, style = {} }) => {
+const SongDiv: React.FC<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> & SongProps> = ({ style, song, onSongPick, showCount=false, showPath = false, showArtist = true}) => {
     const getType = (path: string) => {
         return path.substr(path.length - 3);
     }

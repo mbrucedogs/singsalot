@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { selectSongLists } from "../store/store";
 import { SongList } from "../models/SongList";
 import { SongListSong } from "../models/SongListSong";
 import { SongPickable } from "../models/SongPickable";
@@ -11,10 +9,11 @@ import { isEmpty } from "lodash";
 import { IonButton, IonModal, IonContent, IonHeader, IonToolbar, IonTitle, IonButtons } from "@ionic/react";
 import Collapsible from 'react-collapsible';
 import SongDiv from "../components/SongDiv";
+import { useSongLists } from "../hooks/useSongLists";
 
 const SongLists: React.FC<SongPickable> = ({ onSongPick }) => {
   const pageName: string = "Song Lists";
-  const listItems: SongList[] = useSelector(selectSongLists);
+  const { songLists } = useSongLists()
   const [showModal, setShowModal] = useState<boolean>(false);
   const [selectedSongList, setSelectedSongList] = useState<SongList>()
 
@@ -27,7 +26,7 @@ const SongLists: React.FC<SongPickable> = ({ onSongPick }) => {
     }
   }, [selectedSongList])
 
-  if (isEmpty(listItems)) {
+  if (isEmpty(songLists)) {
     return <Page name={pageName}><h2 style={{ padding: '10px' }}>Loading {pageName}...</h2></Page>
   }
 
@@ -38,7 +37,7 @@ const SongLists: React.FC<SongPickable> = ({ onSongPick }) => {
         <ScrollingGrid
           pageCount={pageCount}
           pageName={pageName}
-          listItems={listItems}
+          listItems={songLists}
           getRow={(item) => {
             return (
               <div key={item.key} className="row-single" onClick={(e) => { setSelectedSongList(item); }}>

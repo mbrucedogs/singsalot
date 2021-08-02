@@ -1,17 +1,15 @@
 import React from "react";
-import { Singer } from "../models/Singer";
-import { useSelector } from "react-redux";
-import { selectSingers } from "../store/store";
 import { pageCount } from "../globalConfig";
 import Page from "../components/Page"
 import ScrollingGrid from "../components/ScrollingGrid";
 import { isEmpty } from "lodash";
+import { useSingers } from "../hooks/useSingers";
 
 const Singers: React.FC = () => {
-  const listItems: Singer[] = useSelector(selectSingers);
+  const {singers, addSinger} = useSingers();
   const pageName: string = "Singers";
 
-  if(isEmpty(listItems)) { 
+  if(isEmpty(singers)) { 
     return <Page name={pageName}><h2 style={{padding:'10px'}}>Loading or there are no {pageName}...</h2></Page>
   }
 
@@ -20,7 +18,7 @@ const Singers: React.FC = () => {
       <ScrollingGrid
         pageCount={pageCount}
         pageName={pageName}
-        listItems={listItems}
+        listItems={singers}
         getRow={(singer) => {
           return (
             <div key={singer.key} className="row-single">

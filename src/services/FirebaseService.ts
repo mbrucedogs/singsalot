@@ -1,3 +1,8 @@
+import { Fabricable } from '../models/Fabricable';
+import { PlayerState } from '../models/Player';
+import { QueueItem } from '../models/QueueItem';
+import { Singer } from '../models/Singer';
+import { Song } from '../models/Song';
 import localfirebase from './firebase';
 const db = localfirebase.ref('/controllers');
 
@@ -13,8 +18,16 @@ class FirebaseService {
     return this.get('player/queue');
   }
  
+  setPlayerQueue(queue: QueueItem[]){
+    this.set('player/queue', queue);
+  }
+
   getPlayerSingers(){
     return this.get('player/singers');
+  }
+
+  addPlayerSinger(singer: Singer){
+    this.add('player/singers', singer);
   }
 
   getPlayerSettings(){
@@ -25,12 +38,40 @@ class FirebaseService {
     return this.get('player/state');
   }
 
+  setPlayerState(playerState: PlayerState){
+    return this.set('player/state', playerState);
+  }
+
   getHistory(){
     return this.get('history');
   }
 
+  addHistory(song: Song){
+    this.add('history', song);
+  }
+
+  setHistory(songs: Song[]){
+    this.set('history', songs);
+  }
+
+  updateHistory(song: Song){
+    this.update('history', song);
+  }
+
+  deleteHistory(song: Song){
+    this.delete('history', song);
+  }
+
   getFavorites(){
     return this.get('favorites');
+  }
+
+  addFavorite(song: Song){
+    this.add('favorites', song)
+  }
+
+  deleteFavorite(song: Song){
+    this.delete('favorites', song);
   }
 
   getNewSongs(){
@@ -50,28 +91,39 @@ class FirebaseService {
   }
 
   //generic functions 
-  addPathFor(key: string){
+  private addPathFor(key: string){
     return `${this.controllerId}/${key}`;
   }
 
-  getPathFor(key: string){
-    return  key.substr(key.indexOf(this.controllerId));
-  }
-
-  get(key: string) {
+  private get(key: string) {
     return db.child(this.addPathFor(key));
   }
 
-  add = (key: string, value: any) => {
-    //db.child(this.getPath(this.pathFor(key))).push(value);
+  private set = (path: string, value: any) => {
+    let p = this.addPathFor(`${path}`);
+    console.log('FirebaseService - add path', p);
+    console.log('FirebaseService - add value', value);
+    return db.child(p).set(value);
   };
 
-  update(key: string, value: any) {
-    return db.child(this.getPathFor(key)).update(value);
+  private add = (path: string, value: any) => {
+    let p = this.addPathFor(`${path}`);
+    console.log('FirebaseService - add path', p);
+    console.log('FirebaseService - add value', value);
+    return db.child(`${path}`).push(value);
+  };
+
+  private update(path: string, obj: Fabricable) {
+    let p = this.addPathFor(`${path}//${obj.key!}`);
+    console.log('FirebaseService - update path', p);
+    console.log('FirebaseService - update value', obj);
+    return db.child(p).update(obj);
   }
 
-  delete(key: string) {
-    return db.child(this.getPathFor(key)).remove();
+  private delete(path: string, obj: Fabricable) {
+    let p = this.addPathFor(`${path}//${obj.key!}`);
+    console.log('FirebaseService - delete', p);
+    return db.child(p).remove();
   }
 }
 

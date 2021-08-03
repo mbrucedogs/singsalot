@@ -5,14 +5,17 @@ import { Artist } from "../models/Artist";
 import { selectArtists } from "../store/store";
 
 export function useArtists(): {
+    hasLoaded: boolean;
     artists: Artist[];
     searchArtists: (artist: string) => void;
 } {
     const allArtists = useSelector(selectArtists);
     const [artists, setArtists] = useState<Artist[]>([]);
+    const [hasLoaded, setHasLoaded] = useState<boolean>(false);
 
     useEffect(() => {
-        setArtists(allArtists)
+        setArtists(allArtists);
+        setHasLoaded(true);
     }, [allArtists]);
 
     const searchArtists = useCallback((artist: string) => {
@@ -26,13 +29,11 @@ export function useArtists(): {
             let sorted = results.sort((a: Artist, b: Artist) => {
                 return a.name.localeCompare(b.name)
             });
-            if (!isEmpty(sorted)) {
-                setArtists(sorted);
-            }
+            setArtists(sorted);
         } else {
             setArtists(allArtists);
         }
     }, []);
 
-    return { artists, searchArtists }
+    return { artists, hasLoaded, searchArtists }
 }

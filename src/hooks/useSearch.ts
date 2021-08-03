@@ -5,17 +5,22 @@ import { Song } from "../models/Song";
 import { selectSongs } from "../store/store";
 
 export function useSearch(): {
+    hasLoaded: boolean;
     songs: Song[];
     searchSongs: (query: string) => void;
 } {
     const allSongs = useSelector(selectSongs);
     const [songs, setSongs] = useState<Song[]>([]);
+    const [hasLoaded, setHasLoaded] = useState<boolean>(false);
 
     useEffect(() => {
-        setSongs(allSongs)
+        setSongs(allSongs);
+        setHasLoaded(true);
     }, [allSongs]);
 
     const searchSongs = useCallback((query: string) => {
+        console.log("useSearch - searchSongs", query);
+
         //return no songs
         if (isEmpty(allSongs)) { return; }
 
@@ -23,7 +28,6 @@ export function useSearch(): {
             setSongs(allSongs);
         } else {
             let q = query.toLowerCase();
-            //console.log("useSearch - searchSongs - inside", q);
             let results = allSongs.filter(song => {
                 let _artist = song.artist;
                 let _title = song.title;
@@ -45,5 +49,5 @@ export function useSearch(): {
         }
     }, []);
 
-    return { songs, searchSongs }
+    return { songs, hasLoaded, searchSongs }
 }

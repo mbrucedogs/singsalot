@@ -19,7 +19,7 @@ export function useSearch(): {
     }, [allSongs]);
 
     const searchSongs = useCallback((query: string) => {
-        console.log("useSearch - searchSongs", query);
+        //console.log("useSearch - searchSongs", query);
 
         //return no songs
         if (isEmpty(allSongs)) { return; }

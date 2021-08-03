@@ -4,6 +4,7 @@ import { QueueItem } from '../models/QueueItem';
 import { Singer } from '../models/Singer';
 import { Song } from '../models/Song';
 import localfirebase from './firebase';
+import firebase from './firebase'
 const db = localfirebase.ref('/controllers');
 
 class FirebaseService {
@@ -14,27 +15,31 @@ class FirebaseService {
     return db.child(controllerId).get();
   }
 
-  getPlayerQueue(){
+  getPlayerQueue() {
     return this.get('player/queue');
   }
- 
-  setPlayerQueue(queue: QueueItem[]){
+
+  setPlayerQueue(queue: QueueItem[]) {
     this.set('player/queue', queue);
   }
 
-  getPlayerSingers(){
+  getPlayerSingers() {
     return this.get('player/singers');
   }
 
-  addPlayerSinger(singer: Singer){
-    this.add('player/singers', singer);
+  addPlayerSinger(singer: Singer) {
+    return this.set(`player/singers/${singer.key}`, singer);
   }
 
-  getPlayerSettings(){
+  deletePlayerSinger(singer: Singer) {
+    return this.delete(`player/singers`, singer);
+  }
+
+  getPlayerSettings() {
     return this.get('player/settings');
   }
 
-  getPlayerState(){
+  getPlayerState() {
     return this.get('player/state');
   }
 
@@ -42,62 +47,69 @@ class FirebaseService {
     return this.set('player/state', playerState);
   }
 
-  getHistory(){
+  getHistory() {
     return this.get('history');
   }
 
-  addHistory(song: Song){
-    this.add('history', song);
+  addHistory(song: Song) {
+    return this.set(`history/${song.key}`, song);
   }
 
-  setHistory(songs: Song[]){
-    this.set('history', songs);
+  setHistory(songs: Song[]) {
+    return this.set('history', songs);
   }
 
-  updateHistory(song: Song){
-    this.update('history', song);
+  updateHistory(song: Song) {
+    return this.update('history', song);
   }
 
-  deleteHistory(song: Song){
-    this.delete('history', song);
+  deleteHistory(song: Song) {
+    return this.delete('history', song);
   }
 
-  getFavorites(){
+  getFavorites() {
     return this.get('favorites');
   }
 
-  addFavorite(song: Song){
-    this.add('favorites', song)
+  addFavorite(song: Song) {
+    return this.set(`favorites/${song.key}`, song)
   }
 
-  deleteFavorite(song: Song){
-    this.delete('favorites', song);
+  deleteFavorite(song: Song) {
+    return this.delete('favorites', song);
   }
 
-  getNewSongs(){
+  getNewSongs() {
     return this.get('newSongs');
   }
 
-  getSongLists(){
+  getSongLists() {
     return this.get('songList');
   }
 
-  getArtist(){
+  getArtist() {
     return this.get('artists');
   }
 
-  getSongs(){
+  getSongs() {
     return this.get('songs');
   }
 
   //generic functions 
-  private addPathFor(key: string){
+  private addPathFor(key: string) {
     return `${this.controllerId}/${key}`;
   }
 
   private get(key: string) {
     return db.child(this.addPathFor(key));
   }
+
+  private add = (path: string, value: any) => {
+    let p = this.addPathFor(`${path}`);
+    console.log('FirebaseService - add path', p);
+    console.log('FirebaseService - add value', value);    
+    return db.child(`${path}`).push(value);
+  };
 
   private set = (path: string, value: any) => {
     let p = this.addPathFor(`${path}`);
@@ -106,22 +118,15 @@ class FirebaseService {
     return db.child(p).set(value);
   };
 
-  private add = (path: string, value: any) => {
-    let p = this.addPathFor(`${path}`);
-    console.log('FirebaseService - add path', p);
-    console.log('FirebaseService - add value', value);
-    return db.child(`${path}`).push(value);
-  };
-
   private update(path: string, obj: Fabricable) {
-    let p = this.addPathFor(`${path}//${obj.key!}`);
+    let p = this.addPathFor(`${path}/${obj.key!}`);
     console.log('FirebaseService - update path', p);
     console.log('FirebaseService - update value', obj);
     return db.child(p).update(obj);
   }
 
   private delete(path: string, obj: Fabricable) {
-    let p = this.addPathFor(`${path}//${obj.key!}`);
+    let p = this.addPathFor(`${path}/${obj.key!}`);
     console.log('FirebaseService - delete', p);
     return db.child(p).remove();
   }

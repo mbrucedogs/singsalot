@@ -230,3 +230,12 @@ ion-item.selected {
 list-item {
   padding-left: 100px;
 }
+
+ion-icon {font-size: 1.5rem;}
+
+.singer-form .modal-wrapper {
+  height: 230px;
+  width: 300px;
+  position: absolute; 
+  display: block;  
+}

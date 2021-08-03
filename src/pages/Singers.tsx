@@ -26,7 +26,7 @@ const Singers: React.FC = () => {
   const onSubmit: SubmitHandler<AddSingerForm> = data => {
     setSinger(data.name);
     if (!isEmpty(data.name)) {
-      addSinger(singers.length, data.name)
+      addSinger(data.name)
         .then(success => {
           if (success) {
             setShowModal(false);

@@ -3,21 +3,22 @@ import { useCallback } from "react";
 import { useSelector } from "react-redux";
 import { Singer } from "../models/Singer";
 import FirebaseService from "../services/FirebaseService";
+import queue from "../store/slices/queue";
 import { selectSingers } from "../store/store";
 
 export function useSingers(): {
     singers: Singer[];
-    addSinger: (key: number, name: string) => Promise<boolean>;
+    addSinger: (name: string) => Promise<boolean>;
     deleteSinger: (singer: Singer) => Promise<boolean>;
 } {
     const singers = useSelector(selectSingers);
 
-    const addSinger = useCallback((key: number, name: string): Promise<boolean> => {
+    const addSinger = useCallback((name: string): Promise<boolean> => {
         return new Promise((resolve, reject) => {
             let trimmed = name.trim();
             let found = singers.filter(singer => singer.name.toLowerCase() === trimmed.toLowerCase());
             if (isEmpty(found)) {
-                let singer = { key: key.toString(), name: trimmed }
+                let singer = { key: singers.length.toString(), name: trimmed }
                 FirebaseService
                     .addPlayerSinger(singer)
                     .then(_ => resolve(true))
@@ -27,7 +28,7 @@ export function useSingers(): {
                 reject("Singer already exists");
             }
         });
-    }, []);
+    }, [singers]);
 
     const deleteSinger = useCallback((singer: Singer): Promise<boolean> => {
         return new Promise((resolve, reject) => {
@@ -36,7 +37,7 @@ export function useSingers(): {
                 .then(_ => resolve(true))
                 .catch(error => reject(error));
         });
-    }, []);
+    }, [singers]);
 
     return { singers, addSinger, deleteSinger }
 }

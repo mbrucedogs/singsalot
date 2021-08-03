@@ -7,3 +7,8 @@ export interface Song extends Fabricable {
     disabled?: boolean;
     path: string;
 }
+
+export interface Songable {
+    onSongPick: (song: Song) => void;
+    onSongInfo: (song: Song) => void;
+}

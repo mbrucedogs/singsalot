@@ -1,19 +1,18 @@
 import React from "react";
-import { useSelector } from "react-redux";
-import { SongPickable } from "../models/SongPickable";
-import { selectHistory } from "../store/store";
 import { pageCount } from "../globalConfig";
 import SongDiv from "../components/SongDiv";
 import Page from "../components/Page"
 import ScrollingGrid from "../components/ScrollingGrid";
 import { isEmpty } from "lodash";
+import { useHistory } from "../hooks/useHistory";
+import { Songable } from "../models/Song";
 
-const History: React.FC<SongPickable> = ({onSongPick}) => {
-  const listItems = useSelector(selectHistory);
+const History: React.FC<Songable> = ({ onSongPick, onSongInfo }) => {
+  const { history, addHistory, deleteHistory } = useHistory();
   const pageName: string = "History";
 
-  if(isEmpty(listItems)) { 
-    return <Page name={pageName}><h2 style={{padding:'10px'}}>Loading or there is no {pageName}...</h2></Page>
+  if (isEmpty(history)) {
+    return <Page name={pageName}><h2 style={{ padding: '10px' }}>Loading or there is no {pageName}...</h2></Page>
   }
 
   return (
@@ -21,8 +20,8 @@ const History: React.FC<SongPickable> = ({onSongPick}) => {
       <ScrollingGrid
         pageCount={pageCount}
         pageName={pageName}
-        listItems={listItems}
-        getRow={(song) => { return <SongDiv key={song.key} song={song} onSongPick={onSongPick} showPath={true}/> }}
+        listItems={history}
+        getRow={(song, index) => {return <SongDiv key={index} song={song} onSongPick={onSongPick} onSongInfo={onSongInfo} showPath={true} />}}
       />
     </Page>
   );

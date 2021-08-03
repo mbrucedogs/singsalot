@@ -1,13 +1,13 @@
 import React from "react";
-import { SongPickable } from "../models/SongPickable";
 import SongDiv from "../components/SongDiv";
 import Page from "../components/Page"
 import ScrollingGrid from "../components/ScrollingGrid";
 import { isEmpty } from "lodash";
 import Collapsible from "react-collapsible";
 import { useTopPlayed } from "../hooks/useTopPlayed";
+import { Songable } from "../models/Song";
 
-const TopSongs: React.FC<SongPickable> = ({ onSongPick }) => {
+const TopSongs: React.FC<Songable> = ({ onSongPick, onSongInfo }) => {
   const { topPlayed } = useTopPlayed();
   const amount: number = 100;
   const pageName: string = `Top ${amount} Played`;
@@ -32,7 +32,7 @@ const TopSongs: React.FC<SongPickable> = ({ onSongPick }) => {
           </div>
           }>
             {history.songs.map(song => {
-              return <SongDiv key={song.key} style={{ paddingLeft: '50px' }} song={song} showCount={true} showPath={true} onSongPick={(song) => { onSongPick(song); }} />
+              return <SongDiv key={song.key} style={{ paddingLeft: '50px' }} song={song} showCount={true} showPath={true} onSongInfo={onSongInfo} onSongPick={(song) => { onSongPick(song); }} />
             })}
           </Collapsible>)
         }}

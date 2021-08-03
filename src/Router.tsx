@@ -59,7 +59,11 @@ const Router: React.FC = () => {
   }
 
   const onSongPick = useCallback((song: Song) => {
-    console.log("onSongPick - songListSong", song);
+    console.log("onSongPick", song);
+  }, []);
+
+  const onSongInfo = useCallback((song: Song) => {
+    console.log("onSongInfo", song);
   }, []);
 
   return (
@@ -70,30 +74,30 @@ const Router: React.FC = () => {
           <IonRouterOutlet id="main" animated={true}>
             <Route path="/" component={Queue} exact={true} />
             <Route path="/Artists" exact={true}>
-              <Artists onSongPick={onSongPick} />
+              <Artists onSongPick={onSongPick} onSongInfo={onSongInfo} />
             </Route>
             <Route path="/Favorites" exact={true}>
-              <Favorites onSongPick={onSongPick} />
+              <Favorites onSongPick={onSongPick} onSongInfo={onSongInfo}/>
             </Route>
             <Route path="/History" exact={true}>
-              <History onSongPick={onSongPick} />
+              <History onSongPick={onSongPick} onSongInfo={onSongInfo}/>
             </Route>
             <Route path="/LatestSongs" exact={true}>
-              <LatestSongs onSongPick={onSongPick} />
+              <LatestSongs onSongPick={onSongPick} onSongInfo={onSongInfo}/>
             </Route>
             <Route path="/Queue">
               <Queue />
             </Route>
             <Route path="/Search">
-              <Search onSongPick={onSongPick} />
+              <Search onSongPick={onSongPick} onSongInfo={onSongInfo}/>
             </Route>
             <Route path="/Settings" exact={true} component={Settings} />
             <Route path="/Singers" exact={true} component={Singers} />
             <Route path="/SongLists" exact={true}>
-              <SongLists onSongPick={onSongPick} />
+              <SongLists onSongPick={onSongPick} onSongInfo={onSongInfo}/>
             </Route>
             <Route path="/TopPlayed" exact={true}>
-              <TopSongs onSongPick={onSongPick} />
+              <TopSongs onSongPick={onSongPick} onSongInfo={onSongInfo}/>
             </Route>
             <Redirect to="/" />
           </IonRouterOutlet>

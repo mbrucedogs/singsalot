@@ -1,5 +1,4 @@
 import React from "react";
-import { SongPickable } from "../models/SongPickable";
 import { pageCount } from "../globalConfig";
 import SongDiv from "../components/SongDiv";
 import Page from "../components/Page"
@@ -7,8 +6,9 @@ import ScrollingGrid from "../components/ScrollingGrid";
 import { isEmpty } from "lodash";
 import { ArtistSongs } from "../models/ArtistSongs";
 import { useLatestSongs } from "../hooks/useLatestSongs";
+import { Songable } from "../models/Song";
 
-const LatestSongs: React.FC<SongPickable> = ({ onSongPick }) => {
+const LatestSongs: React.FC<Songable> = ({ onSongPick, onSongInfo }) => {
   const pageName: string = "Latest Songs";
   const { artistSongs } = useLatestSongs();
   const artistCollapse: boolean = false;
@@ -24,12 +24,12 @@ const LatestSongs: React.FC<SongPickable> = ({ onSongPick }) => {
           <div className="row">
             <div style={{ flex: "1 1 auto" }} className="title">{item.artist}</div>
           </div>
-          {item.songs.map(song => { return <SongDiv key={song.key} onSongPick={onSongPick} song={song} style={{ paddingLeft: '50px' }} showArtist={item.artist === "None"} /> })}
+          {item.songs.map(song => { return <SongDiv key={song.key} onSongPick={onSongPick} onSongInfo={onSongInfo} song={song} style={{ paddingLeft: '50px' }} showArtist={item.artist === "None"} /> })}
         </div>
       );
     } else {
       return <div key={item.key}>
-        {item.songs.map(song => { return <SongDiv key={song.key} onSongPick={onSongPick} song={song}/> })}
+        {item.songs.map(song => { return <SongDiv key={song.key} onSongPick={onSongPick} onSongInfo={onSongInfo} song={song}/> })}
         </div>
     }
   }

@@ -234,3 +234,6 @@ http://ionicframework.com/docs/theming/ */
     --ion-card-background: #1e1e1e;
   }
 }
+
+ion-icon {font-size: 1.5rem;}
+

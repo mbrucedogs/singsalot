@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { SongPickable } from "../models/SongPickable";
-import { Song } from "../models/Song";
 import { pageCount } from "../globalConfig";
 import { isEmpty } from "lodash";
 import ScrollingGrid from "../components/ScrollingGrid";
@@ -8,12 +6,18 @@ import SongDiv from "../components/SongDiv";
 import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonToolbar, IonSearchbar } from '@ionic/react';
 import Page from "../components/Page"
 import { useSearch } from "../hooks/useSearch";
+import { Songable } from "../models/Song";
 
-const Search: React.FC<SongPickable> = ({ onSongPick }) => {
-  const { songs, searchSongs } = useSearch();
+const Search: React.FC<Songable> = ({ onSongPick, onSongInfo }) => {
+  const { songs, hasLoaded, searchSongs } = useSearch();
   const pageName: string = "Search";
-  
-  if (isEmpty(songs)) {
+  const [searchText, setSearchText] = useState<string>('');
+
+  useEffect(() => {
+    searchSongs(searchText)
+  }, [searchText, searchSongs]);
+
+  if (!hasLoaded) {
     return <Page name={pageName}><h2 style={{ padding: '10px' }}>Loading {pageName}...</h2></Page>
   }
 
@@ -24,17 +28,20 @@ const Search: React.FC<SongPickable> = ({ onSongPick }) => {
           <IonButtons slot="start">
             <IonMenuButton />
           </IonButtons>
-          <IonSearchbar onIonChange={(e) => searchSongs(e.detail.value!)} type="text" placeholder="Search for Artists or Songs"></IonSearchbar>
+          <IonSearchbar onIonChange={(e) => setSearchText(e.detail.value!)} type="text" placeholder="Search for Artists or Songs"></IonSearchbar>
         </IonToolbar>
       </IonHeader>
 
       <IonContent>
-        <ScrollingGrid
-          pageCount={pageCount}
-          pageName={pageName}
-          listItems={songs}
-          getRow={(song) => { return <SongDiv key={song.key} song={song} onSongPick={onSongPick} showPath={true}/> }}
-        />
+        {!isEmpty(songs) &&
+          <ScrollingGrid
+            pageCount={pageCount}
+            pageName={pageName}
+            listItems={songs}
+            getRow={(song) => { return <SongDiv key={song.key} song={song} onSongPick={onSongPick} onSongInfo={onSongInfo} showPath={true} /> }}
+          />
+        }
+        {isEmpty(songs) &&  <h4 style={{ padding: '10px' }}>No Artists or Songs found...</h4>}
       </IonContent>
     </IonPage>
   );

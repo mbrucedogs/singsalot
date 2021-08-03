@@ -1,4 +1,4 @@
-import React, { useState, useEffect, MouseEventHandler } from "react";
+import React, { useState, useEffect } from "react";
 import { QueueItem } from "../models/QueueItem";
 import Page from "../components/Page"
 import { isEmpty } from "lodash";
@@ -15,11 +15,11 @@ const Queue: React.FC = () => {
 
   const actionButton = () => {
     return (
-    <IonButtons slot="end" style={{paddingRight:'10px'}}>
-      <IonButton onClick={(e) => setShouldReorder(!shouldReorder)}>
-        <IonIcon size="large" ios={!shouldReorder ? reorderThreeOutline : closeOutline} md={!shouldReorder ? reorderThree : close} slot="end" />
-      </IonButton>
-    </IonButtons>
+      <IonButtons slot="end" style={{ paddingRight: '10px' }}>
+        <IonButton onClick={(e) => setShouldReorder(!shouldReorder)}>
+          <IonIcon size="large" ios={!shouldReorder ? reorderThreeOutline : closeOutline} md={!shouldReorder ? reorderThree : close} slot="end" />
+        </IonButton>
+      </IonButtons>
     )
   }
 
@@ -69,7 +69,7 @@ const Queue: React.FC = () => {
               </IonReorder>
             )
           })}
-        </IonReorderGroup>
+        </IonReorderGroup>        
       </IonContent>
     </Page>
   );

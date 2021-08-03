@@ -20,7 +20,11 @@ class FirebaseService {
   }
 
   setPlayerQueue(queue: QueueItem[]) {
-    this.set('player/queue', queue);
+    return this.set('player/queue', queue);
+  }
+
+  deletePlayerQueue(queue: QueueItem) {
+    return this.delete(`player/queue`, queue);
   }
 
   getPlayerSingers() {

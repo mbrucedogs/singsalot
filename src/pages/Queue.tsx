@@ -9,7 +9,7 @@ import { useQueue } from "../hooks/useQueue";
 
 const Queue: React.FC = () => {
   const pageName: string = "Queue";
-  const { queue, deleteFromQueue, orderQueue } = useQueue();
+  const { queue, deleteFromQueue, reorderQueue } = useQueue();
   const [listItems, setListItems] = useState<QueueItem[]>([]);
   const [shouldReorder, setShouldReorder] = useState<boolean>(false);
 
@@ -24,11 +24,24 @@ const Queue: React.FC = () => {
   }
 
   const doReorder = (event: CustomEvent<ItemReorderEventDetail>) => {
-    let ordered = listItems;
-    const itemMove = listItems.splice(event.detail.from, 1)[0];
-    ordered.splice(event.detail.to, 0, itemMove);
-    event.detail.complete();
-    orderQueue(ordered);
+    //let ordered = listItems;
+    //console.log("before", ordered);
+    //const itemMove = listItems.splice(event.detail.from, 1)[0];
+    // ordered.splice(event.detail.to, 0, itemMove);
+     event.detail.complete();
+    // console.log("after", ordered);
+    // let send = [queue[0],...ordered].map((qi, index) => {
+    //   let item: QueueItem = {
+    //     key: qi.key,
+    //     order: index,
+    //     singer: qi.singer,
+    //     song: qi.song
+    //   };
+    //   return item;
+    // });
+    // console.log("send", send);
+    reorderQueue(event.detail.from + 1, event.detail.to + 1, queue);
+
   }
 
   useEffect(() => {

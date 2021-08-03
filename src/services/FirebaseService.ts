@@ -15,86 +15,109 @@ class FirebaseService {
     return db.child(controllerId).get();
   }
 
+  ////////////////////////////////////////////////////////////////
+  ///Player Queue
+  ////////////////////////////////////////////////////////////////
   getPlayerQueue() {
     return this.get('player/queue');
   }
 
-  setPlayerQueue(queue: QueueItem[]) {
-    return this.set('player/queue', queue);
+  addPlayerQueue(queueItem: QueueItem) {
+    return this.setObject('player/queue/', queueItem);
   }
 
-  deletePlayerQueue(queue: QueueItem) {
-    return this.delete(`player/queue`, queue);
+  deletePlayerQueue(queueItem: QueueItem) {
+    return this.delete(`player/queue`, queueItem);
   }
 
+  updatePlayerQueue(queueItem: QueueItem) {
+    return this.updateObject('player/queue', queueItem);
+  }
+
+  ////////////////////////////////////////////////////////////////
+  ///Player Singers
+  ////////////////////////////////////////////////////////////////
   getPlayerSingers() {
     return this.get('player/singers');
   }
 
   addPlayerSinger(singer: Singer) {
-    return this.set(`player/singers/${singer.key}`, singer);
+    return this.setObject(`player/singers`, singer);
   }
 
   deletePlayerSinger(singer: Singer) {
     return this.delete(`player/singers`, singer);
   }
 
+  ////////////////////////////////////////////////////////////////
+  ///Player Settings
+  ////////////////////////////////////////////////////////////////
   getPlayerSettings() {
     return this.get('player/settings');
   }
 
+  ////////////////////////////////////////////////////////////////
+  ///Player State
+  ////////////////////////////////////////////////////////////////
   getPlayerState() {
     return this.get('player/state');
   }
 
   setPlayerState(playerState: PlayerState){
-    return this.set('player/state', playerState);
+    return this.setValue('player/state', playerState);
   }
 
+  ////////////////////////////////////////////////////////////////
+  ///History
+  ////////////////////////////////////////////////////////////////
   getHistory() {
     return this.get('history');
   }
 
   addHistory(song: Song) {
-    return this.set(`history/${song.key}`, song);
-  }
-
-  setHistory(songs: Song[]) {
-    return this.set('history', songs);
+    return this.setObject(`history`, song);
   }
 
   updateHistory(song: Song) {
-    return this.update('history', song);
+    return this.updateObject('history', song);
   }
 
   deleteHistory(song: Song) {
     return this.delete('history', song);
   }
 
+  ////////////////////////////////////////////////////////////////
+  ///Favorites
+  ////////////////////////////////////////////////////////////////
   getFavorites() {
     return this.get('favorites');
   }
 
   addFavorite(song: Song) {
-    return this.set(`favorites/${song.key}`, song)
+    return this.setObject(`favorites`, song)
   }
 
   deleteFavorite(song: Song) {
     return this.delete('favorites', song);
   }
 
+  ////////////////////////////////////////////////////////////////
+  ///New Songs
+  ////////////////////////////////////////////////////////////////
   getNewSongs() {
     return this.get('newSongs');
   }
 
+  ////////////////////////////////////////////////////////////////
+  ///Song List
+  ////////////////////////////////////////////////////////////////
   getSongLists() {
     return this.get('songList');
   }
 
-  getArtist() {
-    return this.get('artists');
-  }
-
+  ////////////////////////////////////////////////////////////////
+  ///Songs
+  ////////////////////////////////////////////////////////////////
   getSongs() {
     return this.get('songs');
   }
@@ -108,25 +131,39 @@ class FirebaseService {
     return db.child(this.addPathFor(key));
   }
 
-  private add = (path: string, value: any) => {
+  private add = (path: string, value: Fabricable) => {
     let p = this.addPathFor(`${path}`);
     console.log('FirebaseService - add path', p);
     console.log('FirebaseService - add value', value);    
     return db.child(`${path}`).push(value);
   };
 
-  private set = (path: string, value: any) => {
+  private setValue = (path: string, value: any) => {
     let p = this.addPathFor(`${path}`);
     console.log('FirebaseService - add path', p);
     console.log('FirebaseService - add value', value);
     return db.child(p).set(value);
   };
 
-  private update(path: string, obj: Fabricable) {
+  private setObject = (path: string, obj: Fabricable) => {
+    let p = this.addPathFor(`${path}/${obj.key!}`);
+    console.log('FirebaseService - add path', p);
+    console.log('FirebaseService - add value', obj);
+    return db.child(p).set(obj);
+  };
+
+  private updateObject(path: string, obj: Fabricable) {
     let p = this.addPathFor(`${path}/${obj.key!}`);
     console.log('FirebaseService - update path', p);
     console.log('FirebaseService - update value', obj);
     return db.child(p).update(obj);
+  }  
+  
+  private updateValue(path: string, value: any) {
+    let p = this.addPathFor(`${path}`);
+    console.log('FirebaseService - update path', p);
+    console.log('FirebaseService - update value', value);
+    return db.child(p).update(value);
   }
 
   private delete(path: string, obj: Fabricable) {

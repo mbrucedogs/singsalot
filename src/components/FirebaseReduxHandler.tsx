@@ -121,7 +121,12 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
 
     const onQueueChange = async (items: firebase.database.DataSnapshot) => {
         convertToArray<QueueItem>(items)
-            .then(result => dispatch(queueChange(result)));
+            .then(result => {
+                let sorted = result.sort((a: QueueItem, b: QueueItem) => {
+                    return a.order - b.order;
+                });
+                dispatch(queueChange(sorted))
+            });
     };
 
     const onLatestSongsChange = async (items: firebase.database.DataSnapshot) => {

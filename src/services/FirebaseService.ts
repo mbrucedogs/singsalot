@@ -133,42 +133,42 @@ class FirebaseService {
 
   private add = (path: string, value: Fabricable) => {
     let p = this.addPathFor(`${path}`);
-    console.log('FirebaseService - add path', p);
-    console.log('FirebaseService - add value', value);    
+    //console.log('FirebaseService - add path', p);
+    //console.log('FirebaseService - add value', value);    
     return db.child(`${path}`).push(value);
   };
 
   private setValue = (path: string, value: any) => {
     let p = this.addPathFor(`${path}`);
-    console.log('FirebaseService - add path', p);
-    console.log('FirebaseService - add value', value);
+    //console.log('FirebaseService - add path', p);
+    //console.log('FirebaseService - add value', value);
     return db.child(p).set(value);
   };
 
   private setObject = (path: string, obj: Fabricable) => {
     let p = this.addPathFor(`${path}/${obj.key!}`);
-    console.log('FirebaseService - add path', p);
-    console.log('FirebaseService - add value', obj);
+    //console.log('FirebaseService - add path', p);
+    //console.log('FirebaseService - add value', obj);
     return db.child(p).set(obj);
   };
 
   private updateObject(path: string, obj: Fabricable) {
     let p = this.addPathFor(`${path}/${obj.key!}`);
-    console.log('FirebaseService - update path', p);
-    console.log('FirebaseService - update value', obj);
+    //console.log('FirebaseService - update path', p);
+    //console.log('FirebaseService - update value', obj);
     return db.child(p).update(obj);
   }  
   
   private updateValue(path: string, value: any) {
     let p = this.addPathFor(`${path}`);
-    console.log('FirebaseService - update path', p);
-    console.log('FirebaseService - update value', value);
+    //console.log('FirebaseService - update path', p);
+    //console.log('FirebaseService - update value', value);
     return db.child(p).update(value);
   }
 
   private delete(path: string, obj: Fabricable) {
     let p = this.addPathFor(`${path}/${obj.key!}`);
-    console.log('FirebaseService - delete', p);
+    //console.log('FirebaseService - delete', p);
     return db.child(p).remove();
   }
 }

@@ -4,7 +4,6 @@ import { QueueItem } from '../models/QueueItem';
 import { Singer } from '../models/Singer';
 import { Song } from '../models/Song';
 import localfirebase from './firebase';
-import firebase from './firebase'
 const db = localfirebase.ref('/controllers');
 
 class FirebaseService {

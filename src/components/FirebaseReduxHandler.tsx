@@ -23,6 +23,7 @@ import { Song } from "../models/Song";
 import FirebaseService from "../services/FirebaseService";
 import { useEffect } from "react";
 import { History } from "../models/History";
+import { convertToArray } from '../services/firebaseHelpers'
 
 interface FirebaseReduxHandlerProps {
     isAuthenticated: boolean;
@@ -47,18 +48,6 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
     }, [isAuthenticated])
 
     //helper functions
-    function convertToArray<T>(items: firebase.database.DataSnapshot): Promise<T[]> {
-        return new Promise((resolve) => {
-            var returnArr: T[] = [];
-            items.forEach(function (childSnapshot) {
-                var item = childSnapshot.val();
-                item.key = childSnapshot.key;
-                returnArr.push(item);
-            });
-            resolve(returnArr);
-        });
-    };
-
     const convertToAristSongs = (songs: Song[]): Promise<ArtistSongs[]> => {
         return new Promise((resolve) => {
 

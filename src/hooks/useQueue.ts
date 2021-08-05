@@ -5,7 +5,6 @@ import { QueueItem } from "../models/QueueItem";
 import { Singer } from "../models/Singer";
 import FirebaseService from "../services/FirebaseService";
 import { selectQueue, selectSingers } from "../store/store";
-import { convertToArray } from '../services/firebaseHelpers'
 
 export function useQueue(): {
     queue: QueueItem[];
@@ -33,20 +32,37 @@ export function useQueue(): {
     }, [queue, singers]);
 
     const addToQueue = useCallback((queueItem: QueueItem): Promise<boolean> => {
-        let index = getFairQueueIndex(queueItem.singer, queue, singers);
-        queueItem.order = index;
+        //get the index for the order
+        queueItem.order = getFairQueueIndex(queueItem.singer, queue, singers);
+
+        //update the singer songCount
         let singer = queueItem.singer;
-        singer.songCount = singer.songCount + 1; 
+        singer.songCount = singer.songCount + 1;
         queueItem.singer = singer;
-        return doAddToQueue(queueItem);
+
+        //update the singers for the queue so you get the latest counts
+        let singerUpdated = queue.map(qi => {
+            let s = singers.find(singer => singer.name === qi.singer.name);
+            if (isEmpty(s)) {
+                return qi;
+            } else {
+                let nqi: QueueItem = {
+                    key: qi.key,
+                    order: qi.order,
+                    singer: s!.name === singer.name ? singer : s!,
+                    song: qi.song
+                };
+                return nqi;
+            }
+        });
+
+        return doAddToQueue(queueItem, singerUpdated);
     }, [queue, singers]);
 
-    const doAddToQueue = async (queueItem: QueueItem): Promise<boolean> => {
+    const doAddToQueue = async (queueItem: QueueItem, cachedQueue: QueueItem[]): Promise<boolean> => {
         try {
-            await FirebaseService.addPlayerQueue(queueItem)  
-            await FirebaseService.updatePlayerSinger(queueItem.singer);         
-            let newQueue = await FirebaseService.getPlayerQueue().get();
-            let q = await convertToArray<QueueItem>(newQueue);
+            await FirebaseService.updatePlayerSinger(queueItem.singer);
+            let q = [queueItem, ...cachedQueue];
             let sorted = q.sort((a: QueueItem, b: QueueItem) => {
                 return a.order - b.order;
             });
@@ -60,8 +76,8 @@ export function useQueue(): {
                 };
                 return item;
             });
-            await orderQueue(reordered); 
-            return true;           
+            await FirebaseService.setPlayerQueue(reordered);
+            return true;
         } catch (error) {
             return false;
         }

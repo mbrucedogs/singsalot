@@ -21,6 +21,10 @@ class FirebaseService {
     return this.get('player/queue');
   }
 
+  setPlayerQueue(queue: QueueItem[]){
+    return this.updateValue('player/queue', queue);
+  }
+
   addPlayerQueue(queueItem: QueueItem) {
     return this.setObject('player/queue/', queueItem);
   }

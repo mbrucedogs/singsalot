@@ -44,7 +44,7 @@ const Queue: React.FC = () => {
 
         <IonItem>
           <IonGrid style={{ paddingTop: '15px' }}>
-            <IonLabel className="title">{queue[0].singer.name}</IonLabel>
+            <IonLabel className="title">{queue[0].singer.name} ({queue[0].singer.songCount})</IonLabel>
             <IonLabel className="subtitle">{queue[0].song.title}</IonLabel>
           </IonGrid>
         </IonItem>
@@ -57,7 +57,7 @@ const Queue: React.FC = () => {
               <IonReorder style={{ minHeight: '60px' }} key={item.key}>
                 <IonItem>
                   <IonGrid>
-                    <IonLabel className="title">{item.singer.name}</IonLabel>
+                    <IonLabel className="title">{item.singer.name} ({item.singer.songCount})</IonLabel>
                     <IonLabel className="subtitle">{item.song.title}</IonLabel>
                   </IonGrid>
                   <IonIcon hidden={shouldReorder} ios={closeOutline} md={close} slot="end" onClick={(e) => deleteFromQueue(item)} />

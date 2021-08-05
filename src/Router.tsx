@@ -23,6 +23,8 @@ import FirebaseReduxHandler from './components/FirebaseReduxHandler';
 import { useCallback } from 'react';
 import { useQueue } from './hooks/useQueue'
 import { QueueItem } from './models/QueueItem';
+import { useSingers } from './hooks/useSingers';
+import { isEmpty } from 'lodash';
 interface AuthCheckProps {
   isAuthenticated: boolean;
   fallback: React.ReactNode;
@@ -42,7 +44,8 @@ export const AuthCheck: React.FC<AuthCheckProps> = ({ isAuthenticated, fallback,
 const Router: React.FC = () => {
   const dispatch = useAppDispatch();
   const isAuthenticated = useSelector(selectAuthenticated);
-  const { queue, addToQueue } = useQueue()
+  const { queue, addToQueue } = useQueue();
+  const { singers } = useSingers();
 
   const onLogin = (controllerId: string, singerName: string): Promise<boolean> => {
     return new Promise(function (resolve, reject) {
@@ -64,20 +67,21 @@ const Router: React.FC = () => {
     console.log("*******************************************************************");
     console.log("onSongPick", song);
     console.log("onSongPick - queue", queue);
-    let item: QueueItem ={
-      key: queue.length.toString(),
-      order: queue.length, 
-      singer: { 
-        key: '4',
-        name: 'Fred',
-        songCount: 3,
-      }, 
-      song: song 
+    let singer = singers.find(s => s.name === "Fred");
+    console.log('onSongPick - singer', singer);
+    if (!isEmpty(singer)) {
+      let item: QueueItem = {
+        key: queue.length.toString(),
+        order: queue.length,
+        singer: singer!,
+        song: song
+      }
+      console.log("onSongPick - addToQueue ", item);
+      console.log("*******************************************************************");
+      addToQueue(item);
     }
-    console.log("onSongPick - addToQueue ", item);
-    console.log("*******************************************************************");
-    addToQueue(item);
-  }, [queue, addToQueue]);
+
+  }, [queue, addToQueue, singers]);
 
   const onSongInfo = useCallback((song: Song) => {
     console.log("onSongInfo", song);
@@ -94,27 +98,27 @@ const Router: React.FC = () => {
               <Artists onSongPick={onSongPick} onSongInfo={onSongInfo} />
             </Route>
             <Route path="/Favorites" exact={true}>
-              <Favorites onSongPick={onSongPick} onSongInfo={onSongInfo}/>
+              <Favorites onSongPick={onSongPick} onSongInfo={onSongInfo} />
             </Route>
             <Route path="/History" exact={true}>
-              <History onSongPick={onSongPick} onSongInfo={onSongInfo}/>
+              <History onSongPick={onSongPick} onSongInfo={onSongInfo} />
             </Route>
             <Route path="/LatestSongs" exact={true}>
-              <LatestSongs onSongPick={onSongPick} onSongInfo={onSongInfo}/>
+              <LatestSongs onSongPick={onSongPick} onSongInfo={onSongInfo} />
             </Route>
             <Route path="/Queue">
               <Queue />
             </Route>
             <Route path="/Search">
-              <Search onSongPick={onSongPick} onSongInfo={onSongInfo}/>
+              <Search onSongPick={onSongPick} onSongInfo={onSongInfo} />
             </Route>
             <Route path="/Settings" exact={true} component={Settings} />
             <Route path="/Singers" exact={true} component={Singers} />
             <Route path="/SongLists" exact={true}>
-              <SongLists onSongPick={onSongPick} onSongInfo={onSongInfo}/>
+              <SongLists onSongPick={onSongPick} onSongInfo={onSongInfo} />
             </Route>
             <Route path="/TopPlayed" exact={true}>
-              <TopSongs onSongPick={onSongPick} onSongInfo={onSongInfo}/>
+              <TopSongs onSongPick={onSongPick} onSongInfo={onSongInfo} />
             </Route>
             <Redirect to="/" />
           </IonRouterOutlet>

@@ -36,8 +36,11 @@ export function useQueue(): {
         queueItem.order = getFairQueueIndex(queueItem.singer, queue, singers);
 
         //update the singer songCount
-        let singer = queueItem.singer;
-        singer.songCount = singer.songCount + 1;
+        let singer: Singer = {
+            name: queueItem.singer.name,
+            songCount: queueItem.singer.songCount + 1,
+            key: queueItem.singer.key
+        }
         queueItem.singer = singer;
 
         //update the singers for the queue so you get the latest counts

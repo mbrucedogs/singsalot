@@ -24,6 +24,7 @@ import { useCallback } from 'react';
 import { useQueue } from './hooks/useQueue'
 import { QueueItem } from './models/QueueItem';
 import { isEmpty } from 'lodash';
+import { useSingers } from './hooks/useSingers';
 interface AuthCheckProps {
   isAuthenticated: boolean;
   fallback: React.ReactNode;
@@ -68,7 +69,10 @@ const Router: React.FC = () => {
     let item: QueueItem ={
       key: queue.length.toString(),
       order: queue.length, 
-      singer: { name: 'Sully'}, 
+      singer: { 
+        name: 'Sully',
+        songCount: 5,
+      }, 
       song: song 
     }
     console.log("onSongPick - addToQueue ", item);

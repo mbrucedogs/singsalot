@@ -69,7 +69,7 @@ const Singers: React.FC = () => {
                 <IonRow className="row-single">
                   <IonCol size="11">
                     <div>
-                      <div style={{ flex: "1 1 auto" }}>{singer.name}</div>
+                      <div style={{ flex: "1 1 auto" }}>{singer.name} ({singer.songCount})</div>
                     </div>
                   </IonCol>
                   <IonCol size="1">

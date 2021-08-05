@@ -9,6 +9,7 @@ import { selectSingers } from "../store/store";
 export function useSingers(): {
     singers: Singer[];
     addSinger: (name: string) => Promise<boolean>;
+    updateSinger: (singer: Singer) => Promise<boolean>;
     deleteSinger: (singer: Singer) => Promise<boolean>;
 } {
     const singers = useSelector(selectSingers);
@@ -18,7 +19,7 @@ export function useSingers(): {
             let trimmed = name.trim();
             let found = singers.filter(singer => singer.name.toLowerCase() === trimmed.toLowerCase());
             if (isEmpty(found)) {
-                let singer = { key: singers.length.toString(), name: trimmed }
+                let singer = { key: singers.length.toString(), songCount:0, name: trimmed }
                 FirebaseService
                     .addPlayerSinger(singer)
                     .then(_ => resolve(true))
@@ -27,6 +28,15 @@ export function useSingers(): {
             } else {
                 reject("Singer already exists");
             }
+        });
+    }, [singers]);
+
+    const updateSinger = useCallback((singer: Singer): Promise<boolean> => {
+        return new Promise((resolve, reject) => {
+            FirebaseService
+                .updatePlayerSinger(singer)
+                .then(_ => resolve(true))
+                .catch(error => reject(error));
         });
     }, [singers]);
 
@@ -39,5 +49,5 @@ export function useSingers(): {
         });
     }, [singers]);
 
-    return { singers, addSinger, deleteSinger }
+    return { singers, addSinger, updateSinger, deleteSinger }
 }

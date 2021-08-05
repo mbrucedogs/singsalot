@@ -45,6 +45,10 @@ class FirebaseService {
     return this.setObject(`player/singers`, singer);
   }
 
+  updatePlayerSinger(singer: Singer) {
+    return this.updateObject(`player/singers`, singer);
+  }
+
   deletePlayerSinger(singer: Singer) {
     return this.delete(`player/singers`, singer);
   }

@@ -26,6 +26,28 @@ export function useQueue(): {
         });
     }, [queue]);
 
+    const reorderQueue = useCallback((fromIndex: number, toIndex: number, toQueue: QueueItem[]): Promise<boolean> => {
+        let reordered = moveItem(fromIndex, toIndex, toQueue);
+        return orderQueue(reordered);
+    }, [queue, singers]);
+
+    const addToQueue = useCallback((queueItem: QueueItem): Promise<boolean> => {
+        console.log("*******************************************************************");
+        console.log("useQueue - addToQueue - entry", queueItem);
+        console.log("*******************************************************************");
+        console.log("useQueue - addToQueue - queue before ", queue);
+        console.log("useQueue - addToQueue - singers ", singers);
+        let index = getFairQueueIndex(queueItem.singer, queue, singers);
+        queueItem.order = index;
+        console.log("useQueue - addToQueue - getFairQueueIndex ", index);
+        console.log("useQueue - addToQueue - updatedItem", queueItem);
+        console.log("*******************************************************************");
+
+        return FirebaseService.addPlayerQueue(queueItem);
+        //return new Promise<boolean>((resolve) => resolve(true));
+    }, [queue, singers]);
+
+    //Private Functions
     const orderQueue = useCallback((items: QueueItem[]): Promise<boolean> => {
         //console.log("useQueue - orderQueue - in", items);   
         //console.log("useQueue - orderQueue - ordered", items);
@@ -55,27 +77,6 @@ export function useQueue(): {
 
     }, [queue, singers]);
 
-    const reorderQueue = useCallback((fromIndex: number, toIndex: number, toQueue: QueueItem[]): Promise<boolean> => {
-        let reordered = moveItem(fromIndex, toIndex, toQueue);
-        return orderQueue(reordered);
-    }, [queue, singers]);
-
-    const addToQueue = useCallback((queueItem: QueueItem): Promise<boolean> => {
-        console.log("*******************************************************************");
-        console.log("useQueue - addToQueue - entry", queueItem);
-        console.log("*******************************************************************");
-        console.log("useQueue - addToQueue - queue before ", queue);
-        console.log("useQueue - addToQueue - singers ", singers);
-        let index = getFairQueueIndex(queueItem.singer, queue, singers);
-        queueItem.order = index;
-        console.log("useQueue - addToQueue - getFairQueueIndex ", index);
-        console.log("useQueue - addToQueue - updatedItem", queueItem);
-        console.log("*******************************************************************");
-
-        return FirebaseService.addPlayerQueue(queueItem);
-        //return new Promise<boolean>((resolve) => resolve(true));
-    }, [queue, singers]);
-
     const moveItem = useCallback((fromIndex: number, toIndex: number, toQueue: QueueItem[]): QueueItem[] => {
         //console.log(`moveItem fromIndex: ${fromIndex}, toIndex: ${toIndex}, toQueue:`, queue);
         let ordered = toQueue.slice(0);
@@ -100,17 +101,22 @@ export function useQueue(): {
     const getFairQueueIndex = (newSinger: Singer, cachedQueue: QueueItem[], singers: Singer[]) => {
         if (isEmpty(cachedQueue)) return 0;
         let index = cachedQueue.findIndex(function (e, index, arr) {
-            return (index == arr.length - 1) ? true : isBetween(singers, newSinger.name.toLowerCase(), arr[index].singer.name.toLowerCase(), arr[index + 1].singer.name.toLowerCase());;
+            return (index == arr.length - 1) ? true : isBetween(singers, newSinger, arr[index].singer, arr[index + 1].singer);;
         });
         let final = (index * orderMultiplier) + 1;
         console.log(`-- getFairQueueIndex - RESULT - foundIndex: ${index} finalIndex: ${final} `);
         return  final;
+        
     };
 
-    const isBetween = (arr: Singer[], targetSinger: string, startSinger: string, endSinger: string) => {
-        var startIndex = arr.findIndex(function (e) {return e.name === startSinger;});
-        var endIndex = arr.findIndex(function (e) { return e.name == endSinger });
-        var targetIndex = arr.findIndex(function (e) { return e.name == targetSinger });
+    const isBetween = (arr: Singer[], targetSinger: Singer, startSinger: Singer, endSinger: Singer) => {
+        // var startIndex = arr.findIndex(function (e) {return e.name.toLowerCase() === startSinger.name.toLowerCase();});
+        // var endIndex = arr.findIndex(function (e) { return e.name.toLowerCase() == endSinger.name.toLowerCase() });
+        // var targetIndex = arr.findIndex(function (e) { return e.name.toLowerCase() == targetSinger.name.toLowerCase() });
+
+        var startIndex = arr.findIndex(function (e) {return e.name.toLowerCase() === startSinger.name.toLowerCase();});
+        var endIndex = arr.findIndex(function (e) { return e.name.toLowerCase() == endSinger.name.toLowerCase() });
+        var targetIndex = arr.findIndex(function (e) { return e.name.toLowerCase() == targetSinger.name.toLowerCase() });
 
         console.log(`-- -- isBetween -  startSinger: ${startSinger} startIndex: ${startIndex}`)
         console.log(`-- -- isBetween -    endSinger: ${endSinger} endIndex: ${endIndex}`)

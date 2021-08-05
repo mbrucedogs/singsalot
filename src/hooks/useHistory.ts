@@ -19,7 +19,7 @@ export function useHistory(): {
             song.count = 1;
             const copy = history.slice(0);
             copy.splice(0, 0, song);
-            FirebaseService.setHistory(copy);
+            FirebaseService.addHistory(song);
         } else { 
             found.count = found.count ? found.count + 1 : 1;
             FirebaseService.updateHistory(song);

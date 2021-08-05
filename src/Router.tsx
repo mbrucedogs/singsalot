@@ -21,7 +21,9 @@ import { selectAuthenticated } from './store/store';
 import { Song } from "./models/Song";
 import FirebaseReduxHandler from './components/FirebaseReduxHandler';
 import { useCallback } from 'react';
-
+import { useQueue } from './hooks/useQueue'
+import { QueueItem } from './models/QueueItem';
+import { isEmpty } from 'lodash';
 interface AuthCheckProps {
   isAuthenticated: boolean;
   fallback: React.ReactNode;
@@ -41,6 +43,7 @@ export const AuthCheck: React.FC<AuthCheckProps> = ({ isAuthenticated, fallback,
 const Router: React.FC = () => {
   const dispatch = useAppDispatch();
   const isAuthenticated = useSelector(selectAuthenticated);
+  const { queue, addToQueue } = useQueue()
 
   const onLogin = (controllerId: string, singerName: string): Promise<boolean> => {
     return new Promise(function (resolve, reject) {
@@ -59,8 +62,19 @@ const Router: React.FC = () => {
   }
 
   const onSongPick = useCallback((song: Song) => {
+    console.log("*******************************************************************");
     console.log("onSongPick", song);
-  }, []);
+    console.log("onSongPick - queue", queue);
+    let item: QueueItem ={
+      key: queue.length.toString(),
+      order: queue.length, 
+      singer: { name: 'Sully'}, 
+      song: song 
+    }
+    console.log("onSongPick - addToQueue ", item);
+    console.log("*******************************************************************");
+    addToQueue(item);
+  }, [queue, addToQueue]);
 
   const onSongInfo = useCallback((song: Song) => {
     console.log("onSongInfo", song);

@@ -1,10 +1,11 @@
-import { endsWith, isEmpty } from "lodash";
+import { isEmpty } from "lodash";
 import { useCallback } from "react";
 import { useSelector } from "react-redux";
 import { QueueItem } from "../models/QueueItem";
 import { Singer } from "../models/Singer";
 import FirebaseService from "../services/FirebaseService";
 import { selectQueue, selectSingers } from "../store/store";
+import { convertToArray } from '../services/firebaseHelpers'
 
 export function useQueue(): {
     queue: QueueItem[];
@@ -32,20 +33,39 @@ export function useQueue(): {
     }, [queue, singers]);
 
     const addToQueue = useCallback((queueItem: QueueItem): Promise<boolean> => {
-        console.log("*******************************************************************");
-        console.log("useQueue - addToQueue - entry", queueItem);
-        console.log("*******************************************************************");
-        console.log("useQueue - addToQueue - queue before ", queue);
-        console.log("useQueue - addToQueue - singers ", singers);
         let index = getFairQueueIndex(queueItem.singer, queue, singers);
         queueItem.order = index;
-        console.log("useQueue - addToQueue - getFairQueueIndex ", index);
-        console.log("useQueue - addToQueue - updatedItem", queueItem);
-        console.log("*******************************************************************");
-
-        return FirebaseService.addPlayerQueue(queueItem);
-        //return new Promise<boolean>((resolve) => resolve(true));
+        let singer = queueItem.singer;
+        singer.songCount = singer.songCount + 1; 
+        queueItem.singer = singer;
+        return doAddToQueue(queueItem);
     }, [queue, singers]);
+
+    const doAddToQueue = async (queueItem: QueueItem): Promise<boolean> => {
+        try {
+            await FirebaseService.addPlayerQueue(queueItem)  
+            await FirebaseService.updatePlayerSinger(queueItem.singer);         
+            let newQueue = await FirebaseService.getPlayerQueue().get();
+            let q = await convertToArray<QueueItem>(newQueue);
+            let sorted = q.sort((a: QueueItem, b: QueueItem) => {
+                return a.order - b.order;
+            });
+            let reordered = sorted.map((qi, index) => {
+                let order = index * orderMultiplier;
+                let item: QueueItem = {
+                    key: qi.key,
+                    order: order,
+                    singer: qi.singer,
+                    song: qi.song
+                };
+                return item;
+            });
+            await orderQueue(reordered); 
+            return true;           
+        } catch (error) {
+            return false;
+        }
+    };
 
     //Private Functions
     const orderQueue = useCallback((items: QueueItem[]): Promise<boolean> => {
@@ -100,13 +120,47 @@ export function useQueue(): {
 
     const getFairQueueIndex = (newSinger: Singer, cachedQueue: QueueItem[], singers: Singer[]) => {
         if (isEmpty(cachedQueue)) return 0;
-        let index = cachedQueue.findIndex(function (e, index, arr) {
-            return (index == arr.length - 1) ? true : isBetween(singers, newSinger, arr[index].singer, arr[index + 1].singer);;
-        });
+        let nsc = newSinger.songCount;
+        //let nsn = newSinger.name;
+        // console.log(`**********************************************************`);
+        // console.log(`getFairQueueIndex Start`);
+        // console.log(`**********************************************************`);
+        let index = cachedQueue.length;
+        //if singer is in queue, then put at the end.
+        if (isEmpty(cachedQueue.find(qi => qi.singer.name.toLowerCase() === newSinger.name.toLowerCase()))) {
+            index = cachedQueue.findIndex(function (e, idx, arr) {
+                //return (index == arr.length - 1) ? true : isBetween(singers, newSinger, arr[index].singer, arr[index + 1].singer);
+                if (idx == arr.length - 1) {
+                    return true;
+                } else {
+                    //console.log(`index: ${idx}`);                   
+                    //console.log(`looking for singer1: ${arr[idx].singer.name}`);
+                    let foundSinger = singers.find(s => s.name === arr[idx].singer.name);
+                    if (isEmpty(foundSinger)) {
+                        // console.log(`singer not in singers list: ${arr[idx].singer.name}`)
+                        // console.log(`**********************************************************`);
+                        return false;
+                    }
+                    let s1c = foundSinger?.songCount ?? 0;
+                    let value = nsc < s1c;
+                    //let s1n = foundSinger?.name
+                    //let ns = `n-singer:${nsn}(${nsc})`;
+                    //let s1 = `singer:${s1n}(${s1c})`;
+                    // console.log(`----- newSinger:${nsn}(${nsc}) singer1:${s1n}(${s1c})`);
+                    // console.log(`----- ${value} = ${nsc} < ${s1c}`);
+                    // console.log(`**********************************************************`);
+                    return value;
+                }
+            });
+        } else {
+
+        }
         let final = (index * orderMultiplier) + 1;
-        console.log(`-- getFairQueueIndex - RESULT - foundIndex: ${index} finalIndex: ${final} `);
-        return  final;
-        
+        // console.log(`-- getFairQueueIndex - RESULT - foundIndex: ${index} finalIndex: ${final} `);
+        // console.log(`**********************************************************`);
+        // console.log(`getFairQueueIndex end`);
+        // console.log(`**********************************************************`);
+        return final;
     };
 
     const isBetween = (arr: Singer[], targetSinger: Singer, startSinger: Singer, endSinger: Singer) => {
@@ -114,7 +168,7 @@ export function useQueue(): {
         // var endIndex = arr.findIndex(function (e) { return e.name.toLowerCase() == endSinger.name.toLowerCase() });
         // var targetIndex = arr.findIndex(function (e) { return e.name.toLowerCase() == targetSinger.name.toLowerCase() });
 
-        var startIndex = arr.findIndex(function (e) {return e.name.toLowerCase() === startSinger.name.toLowerCase();});
+        var startIndex = arr.findIndex(function (e) { return e.name.toLowerCase() === startSinger.name.toLowerCase(); });
         var endIndex = arr.findIndex(function (e) { return e.name.toLowerCase() == endSinger.name.toLowerCase() });
         var targetIndex = arr.findIndex(function (e) { return e.name.toLowerCase() == targetSinger.name.toLowerCase() });
 

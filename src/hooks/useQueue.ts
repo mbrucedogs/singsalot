@@ -5,10 +5,11 @@ import { QueueItem } from "../models/QueueItem";
 import { Singer } from "../models/Singer";
 import FirebaseService from "../services/FirebaseService";
 import { selectQueue, selectSingers } from "../store/store";
+import { Song } from "../models/Song";
 
 export function useQueue(): {
     queue: QueueItem[];
-    addToQueue: (queueItem: QueueItem) => Promise<boolean>;
+    addToQueue: (singer: Singer, song: Song) => Promise<boolean>;
     deleteFromQueue: (item: QueueItem) => Promise<boolean>;
     reorderQueue: (fromIndex: number, toIndex: number, toQueue: QueueItem[]) => Promise<boolean>;
 } {
@@ -31,19 +32,25 @@ export function useQueue(): {
         return FirebaseService.setPlayerQueue(reordered);
     }, [queue, singers]);
 
-    const addToQueue = useCallback((queueItem: QueueItem): Promise<boolean> => {
+    const addToQueue = useCallback((singer: Singer, song: Song): Promise<boolean> => {
         //get the index for the order
-        queueItem.order = getFairQueueIndex(queueItem.singer, queue, singers);
+        let order = getFairQueueIndex(singer, queue, singers);
+        console.log('onSongPick - singer', singer);
 
-        //update the singer songCount
-        let singer: Singer = {
-            ...queueItem.singer,
-            songCount: queueItem.singer.songCount + 1
+        let newSinger: Singer = {
+            ...singer,
+            songCount: singer.songCount + 1
         }
-        queueItem.singer = singer;
+
+        let queueItem: QueueItem = {
+            key: queue.length.toString(),
+            order: queue.length,
+            singer: newSinger,
+            song: song
+        }
 
         //update the singers for the queue so you get the latest counts
-        let singerUpdated = queue.map(qi => {
+        let queueWithSingersUpdate = queue.map(qi => {
             let s = singers.find(singer => singer.name === qi.singer.name);
             if (isEmpty(s)) {
                 return qi;
@@ -56,7 +63,7 @@ export function useQueue(): {
             }
         });
 
-        return doAddToQueue(queueItem, singerUpdated);
+        return doAddToQueue(queueItem, queueWithSingersUpdate);
     }, [queue, singers]);
 
     const doAddToQueue = async (queueItem: QueueItem, cachedQueue: QueueItem[]): Promise<boolean> => {
@@ -103,7 +110,7 @@ export function useQueue(): {
 
     const getFairQueueIndex = (newSinger: Singer, cachedQueue: QueueItem[], singers: Singer[]) => {
         if (isEmpty(cachedQueue)) return 0;
-        if(cachedQueue.length == 1) return orderMultiplier + 1;
+        if (cachedQueue.length == 1) return orderMultiplier + 1;
         let nsc = newSinger.songCount;
         let index = cachedQueue.length;
         if (isEmpty(cachedQueue.find(qi => qi.singer.name.toLowerCase() === newSinger.name.toLowerCase()))) {

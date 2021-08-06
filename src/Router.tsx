@@ -66,22 +66,10 @@ const Router: React.FC = () => {
   }
 
   const onSongPick = useCallback((song: Song) => {
-    console.log("*******************************************************************");
-    console.log("onSongPick", song);
-    console.log("onSongPick - queue", queue);
     let singer = singers.find(s => s.name === "Fred");
-    console.log('onSongPick - singer', singer);
     if (!isEmpty(singer)) {
-      let item: QueueItem = {
-        key: queue.length.toString(),
-        order: queue.length,
-        singer: singer!,
-        song: song
-      }
-      console.log("onSongPick - addToQueue ", item);
-      console.log("*******************************************************************");
-      addToQueue(item).then(s=>{
-        addHistory(item.song);
+      addToQueue(singer!, song).then(s=>{
+        addHistory(song);
       });
     }
 

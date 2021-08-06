@@ -33,7 +33,7 @@ export function useArtists(): {
         } else {
             setArtists(allArtists);
         }
-    }, []);
+    }, [allArtists]);
 
     return { artists, hasLoaded, searchArtists }
 }

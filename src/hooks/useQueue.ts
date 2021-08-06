@@ -37,9 +37,8 @@ export function useQueue(): {
 
         //update the singer songCount
         let singer: Singer = {
-            name: queueItem.singer.name,
-            songCount: queueItem.singer.songCount + 1,
-            key: queueItem.singer.key
+            ...queueItem.singer,
+            songCount: queueItem.singer.songCount + 1
         }
         queueItem.singer = singer;
 
@@ -50,10 +49,8 @@ export function useQueue(): {
                 return qi;
             } else {
                 let nqi: QueueItem = {
-                    key: qi.key,
-                    order: qi.order,
+                    ...qi,
                     singer: s!.name === singer.name ? singer : s!,
-                    song: qi.song
                 };
                 return nqi;
             }
@@ -72,10 +69,8 @@ export function useQueue(): {
             let reordered = sorted.map((qi, index) => {
                 let order = index * orderMultiplier;
                 let item: QueueItem = {
-                    key: qi.key,
-                    order: order,
-                    singer: qi.singer,
-                    song: qi.song
+                    ...qi,
+                    order: order
                 };
                 return item;
             });
@@ -97,10 +92,8 @@ export function useQueue(): {
         let reordered = ordered.map((qi, index) => {
             let order = index * orderMultiplier;
             let item: QueueItem = {
-                key: qi.key,
+                ...qi,
                 order: order,
-                singer: qi.singer,
-                song: qi.song
             };
             return item;
         });
@@ -110,35 +103,20 @@ export function useQueue(): {
 
     const getFairQueueIndex = (newSinger: Singer, cachedQueue: QueueItem[], singers: Singer[]) => {
         if (isEmpty(cachedQueue)) return 0;
+        if(cachedQueue.length == 1) return orderMultiplier + 1;
         let nsc = newSinger.songCount;
-        //let nsn = newSinger.name;
-        // console.log(`**********************************************************`);
-        // console.log(`getFairQueueIndex Start`);
-        // console.log(`**********************************************************`);
         let index = cachedQueue.length;
-        //if singer is in queue, then put at the end.
         if (isEmpty(cachedQueue.find(qi => qi.singer.name.toLowerCase() === newSinger.name.toLowerCase()))) {
             index = cachedQueue.findIndex(function (e, idx, arr) {
-                //return (index == arr.length - 1) ? true : isBetween(singers, newSinger, arr[index].singer, arr[index + 1].singer);
                 if (idx == arr.length - 1) {
                     return true;
                 } else {
-                    //console.log(`index: ${idx}`);                   
-                    //console.log(`looking for singer1: ${arr[idx].singer.name}`);
                     let foundSinger = singers.find(s => s.name === arr[idx].singer.name);
                     if (isEmpty(foundSinger)) {
-                        // console.log(`singer not in singers list: ${arr[idx].singer.name}`)
-                        // console.log(`**********************************************************`);
                         return false;
                     }
                     let s1c = foundSinger?.songCount ?? 0;
                     let value = nsc < s1c;
-                    //let s1n = foundSinger?.name
-                    //let ns = `n-singer:${nsn}(${nsc})`;
-                    //let s1 = `singer:${s1n}(${s1c})`;
-                    // console.log(`----- newSinger:${nsn}(${nsc}) singer1:${s1n}(${s1c})`);
-                    // console.log(`----- ${value} = ${nsc} < ${s1c}`);
-                    // console.log(`**********************************************************`);
                     return value;
                 }
             });

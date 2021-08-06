@@ -13,23 +13,25 @@ export function useHistory(): {
     const history = useSelector(selectHistory);
 
     const addHistory = useCallback((song: Song) => {
-        console.log("useHistory - addHistory", song);
         let found = history.filter(history => history.path === song.path)[0];
+        let newSong: Song = {
+            ...song
+        };
         if(isEmpty(found)){
-            song.count = 1;
-            const copy = history.slice(0);
-            copy.splice(0, 0, song);
-            FirebaseService.addHistory(song);
+            newSong.count = 1;
+            FirebaseService.addHistory(newSong);
+            console.log("addHistory", newSong)
         } else { 
-            found.count = found.count ? found.count + 1 : 1;
-            FirebaseService.updateHistory(song);
+            newSong.count = found.count ? found.count + 1 : 1;
+            console.log("updateHistory", newSong)
+            FirebaseService.updateHistory(newSong);
         }
-    }, []);
+    }, [history]);
 
     const deleteHistory = useCallback((song: Song) => {
         console.log("useHistory - deleteHistory", song);
         FirebaseService.deleteHistory(song);      
-    }, []);
+    }, [history]);
 
     return { history, addHistory, deleteHistory }
 }

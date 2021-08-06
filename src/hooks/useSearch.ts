@@ -47,7 +47,7 @@ export function useSearch(): {
             });
             setSongs(sorted);
         }
-    }, []);
+    }, [allSongs]);
 
     return { songs, hasLoaded, searchSongs }
 }

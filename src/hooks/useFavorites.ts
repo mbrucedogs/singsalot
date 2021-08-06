@@ -14,12 +14,12 @@ export function useFavorites(): {
     const addFavorite = useCallback((song: Song) => {
         console.log("useFavorites - addFavorite", song);
         FirebaseService.addFavorite(song);      
-    }, []);
+    }, [favorites]);
 
     const deleteFavorite = useCallback((song: Song) => {
         console.log("useFavorites - deleteFavorite", song);
         FirebaseService.deleteFavorite(song);      
-    }, []);
+    }, [favorites]);
 
     return { favorites, addFavorite, deleteFavorite }
 }

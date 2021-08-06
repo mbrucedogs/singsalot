@@ -24,6 +24,7 @@ import { useCallback } from 'react';
 import { useQueue } from './hooks/useQueue'
 import { QueueItem } from './models/QueueItem';
 import { useSingers } from './hooks/useSingers';
+import { useHistory } from './hooks/useHistory'
 import { isEmpty } from 'lodash';
 interface AuthCheckProps {
   isAuthenticated: boolean;
@@ -46,7 +47,8 @@ const Router: React.FC = () => {
   const isAuthenticated = useSelector(selectAuthenticated);
   const { queue, addToQueue } = useQueue();
   const { singers } = useSingers();
-
+  const { addHistory } = useHistory();
+  
   const onLogin = (controllerId: string, singerName: string): Promise<boolean> => {
     return new Promise(function (resolve, reject) {
       let success: boolean = false;
@@ -78,7 +80,9 @@ const Router: React.FC = () => {
       }
       console.log("onSongPick - addToQueue ", item);
       console.log("*******************************************************************");
-      addToQueue(item);
+      addToQueue(item).then(s=>{
+        addHistory(item.song);
+      });
     }
 
   }, [queue, addToQueue, singers]);

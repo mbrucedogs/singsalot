@@ -1,4 +1,5 @@
 import firebase from 'firebase';
+import { isEmpty } from 'lodash';
 
 //helper functions
 export function convertToArray<T>(items: firebase.database.DataSnapshot): Promise<T[]> {
@@ -12,4 +13,3 @@ export function convertToArray<T>(items: firebase.database.DataSnapshot): Promis
         resolve(returnArr);
     });
 };
-

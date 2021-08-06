@@ -81,6 +81,10 @@ class FirebaseService {
     return this.get('history');
   }
 
+  setHistory(songs: Song[]){
+    return this.updateValue('history', songs);
+  }
+
   addHistory(song: Song) {
     return this.setObject(`history`, song);
   }

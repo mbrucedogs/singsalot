@@ -7,13 +7,14 @@ import {
   IonListHeader,
   IonMenu,
   IonMenuToggle,
+  IonNote,
 } from '@ionic/react';
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { stop, stopOutline, pause, pauseOutline ,play, playOutline, time, timeOutline, settings, settingsOutline, list, listOutline, musicalNotes, musicalNotesOutline, peopleOutline, people, peopleCircle, peopleCircleOutline, heartOutline, heartSharp, mailOutline, mailSharp, paperPlaneOutline, paperPlaneSharp, trashOutline, trashSharp, warningOutline, warningSharp, searchOutline, search, starOutline, star } from 'ionicons/icons';
 import { PlayerState } from "../models/Player";
 import { useSelector } from 'react-redux';
-import { selectPlayerState } from '../store/store';
+import { selectAuthenticated, selectPlayerState } from '../store/store';
 
 function debugLog(container: string, label: string, value: any = null) {
   console.log(`debug - ${container} - ${label} `, value);
@@ -142,10 +143,10 @@ const Menu: React.FC = () => {
     actions: playActions
   }
 
-  const isAdmin: boolean = true;
   const location = useLocation();
   const [adminState, setAdminState]  = useState<AdminState | undefined>(undefined);
   const currentPlayerState = useSelector(selectPlayerState);
+  const { authenticated, singer, isAdmin} = useSelector(selectAuthenticated);
 
   useEffect(() => {
   
@@ -172,12 +173,13 @@ const Menu: React.FC = () => {
   
   }, [currentPlayerState])
   
+
   return (
     <IonMenu contentId="main" type="overlay">
       <IonContent>
         <IonList id="inbox-list">
           <IonListHeader>Karaoke</IonListHeader>
-          {/* <IonNote>hi@ionicframework.com</IonNote> */}
+           {authenticated && <IonNote>Singer: {singer}</IonNote>}
           {appPages.map((appPage, index) => {
             return (
               <IonMenuToggle key={index} autoHide={false}>

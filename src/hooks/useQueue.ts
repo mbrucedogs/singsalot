@@ -1,4 +1,4 @@
-import { isEmpty } from "lodash";
+import { isEmpty, reject } from "lodash";
 import { useCallback } from "react";
 import { useSelector } from "react-redux";
 import { QueueItem } from "../models/QueueItem";
@@ -6,73 +6,89 @@ import { Singer } from "../models/Singer";
 import FirebaseService from "../services/FirebaseService";
 import { selectQueue, selectSingers } from "../store/store";
 import { Song } from "../models/Song";
+import { resolve } from "dns";
+import { queries } from "@testing-library/react";
 
 export function useQueue(): {
     queue: QueueItem[];
     addToQueue: (singer: Singer, song: Song) => Promise<boolean>;
     deleteFromQueue: (item: QueueItem) => Promise<boolean>;
-    reorderQueue: (fromIndex: number, toIndex: number, toQueue: QueueItem[]) => Promise<boolean>;
+    reorderQueue: (fromIndex: number, toIndex: number) => Promise<boolean>;
 } {
     const queue = useSelector(selectQueue);
     const singers = useSelector(selectSingers);
     const orderMultiplier = 10;
 
     const deleteFromQueue = useCallback((item: QueueItem): Promise<boolean> => {
-        //console.log("useQueue - deleteFromQueue - queueItem", item);
-        return new Promise((resolve, reject) => {
-            FirebaseService
-                .deletePlayerQueue(item)
-                .then(_ => resolve(true))
-                .catch(error => reject(error));
-        });
+        console.log('deleteFromQueue', item)
+        return doDeleteToQueue(item);
     }, [queue]);
 
-    const reorderQueue = useCallback((fromIndex: number, toIndex: number, toQueue: QueueItem[]): Promise<boolean> => {
-        let reordered = moveItem(fromIndex, toIndex, toQueue);
-        return FirebaseService.setPlayerQueue(reordered);
+    const reorderQueue = useCallback((fromIndex: number, toIndex: number): Promise<boolean> => {
+        let ordered = [...queue];
+        const itemToMove = ordered.splice(fromIndex, 1)[0];
+        const updateditemToMove = {
+            ...itemToMove,
+            order: toIndex * orderMultiplier + 1,
+        };
+        ordered.splice(toIndex, 0, updateditemToMove);
+        let reordered = ordered.map((qi, index) => {
+            let order = index * orderMultiplier;
+            let item: QueueItem = {
+                ...qi,
+                order: order,
+            };
+            return item;
+        });
+        return FirebaseService.updatePlayerQueue(updateditemToMove)
+            .then( _ => FirebaseService.setPlayerQueue(reordered).then(resolve => resolve(true)).catch(e => reject(e)));
     }, [queue, singers]);
 
     const addToQueue = useCallback((singer: Singer, song: Song): Promise<boolean> => {
         //get the index for the order
-        let order = getFairQueueIndex(singer, queue, singers);
-        console.log('onSongPick - singer', singer);
+        let order = getFairQueueOrder(singer);
 
+        //update for the singer songcount
         let newSinger: Singer = {
             ...singer,
             songCount: singer.songCount + 1
         }
 
+        //create the queue item 
         let queueItem: QueueItem = {
-            key: queue.length.toString(),
-            order: queue.length,
+            order: order,
             singer: newSinger,
             song: song
         }
-
-        //update the singers for the queue so you get the latest counts
-        let queueWithSingersUpdate = queue.map(qi => {
-            let s = singers.find(singer => singer.name === qi.singer.name);
-            if (isEmpty(s)) {
-                return qi;
-            } else {
-                let nqi: QueueItem = {
-                    ...qi,
-                    singer: s!.name === singer.name ? singer : s!,
-                };
-                return nqi;
-            }
-        });
-
-        return doAddToQueue(queueItem, queueWithSingersUpdate);
+        console.log("addToQueue: ", queueItem);
+        //return new Promise<boolean>(resolve => resolve(true))
+        return doAddToQueue(queueItem);
     }, [queue, singers]);
 
-    const doAddToQueue = async (queueItem: QueueItem, cachedQueue: QueueItem[]): Promise<boolean> => {
+    const doAddToQueue = async (queueItem: QueueItem): Promise<boolean> => {
         try {
             await FirebaseService.updatePlayerSinger(queueItem.singer);
-            let q = [queueItem, ...cachedQueue];
-            let sorted = q.sort((a: QueueItem, b: QueueItem) => {
+
+            //update the singers for the queue so you get the latest counts
+            let queueWithSingersUpdate = queue.map(qi => {
+                let foundSinger = singers.find(s => s.name === qi.singer.name);
+                if (foundSinger) {
+                    let nqi: QueueItem = {
+                        ...qi,
+                        singer: foundSinger.name === queueItem.singer.name ? queueItem.singer : foundSinger,
+                    };
+                    return nqi;
+                } else {
+                    return qi;
+                }
+            });
+
+            //add new queueItem
+            let sorted = [queueItem, ...queueWithSingersUpdate].sort((a: QueueItem, b: QueueItem) => {
                 return a.order - b.order;
             });
+
+            //update with new multiplier
             let reordered = sorted.map((qi, index) => {
                 let order = index * orderMultiplier;
                 let item: QueueItem = {
@@ -88,55 +104,85 @@ export function useQueue(): {
         }
     };
 
-    //Private Functions
-    const moveItem = useCallback((fromIndex: number, toIndex: number, toQueue: QueueItem[]): QueueItem[] => {
-        //console.log(`moveItem fromIndex: ${fromIndex}, toIndex: ${toIndex}, toQueue:`, queue);
-        let ordered = toQueue.slice(0);
-        const itemToMove = ordered.splice(fromIndex, 1)[0];
-        //console.log('moveItem itemToMove;',itemToMove);
-        //console.log("moveItem before", ordered);
-        ordered.splice(toIndex, 0, itemToMove);
-        let reordered = ordered.map((qi, index) => {
-            let order = index * orderMultiplier;
-            let item: QueueItem = {
-                ...qi,
-                order: order,
-            };
-            return item;
-        });
-        //console.log("moveItem send", reordered);
-        return reordered;
-    }, [queue, singers]);
+    const doDeleteToQueue = async (queueItem: QueueItem): Promise<boolean> => {
+        try {           
+            //remove new queueItem
+            console.log("doDeleteToQueue queue", queue);
+            let copy = [...queue];
+            console.log("doDeleteToQueue copy orig", copy);
+            let delIdx = copy.findIndex(qi => qi === queueItem);
+            console.log("doDeleteToQueue delIndex", delIdx);
+            copy.splice(delIdx,1);
 
-    const getFairQueueIndex = (newSinger: Singer, cachedQueue: QueueItem[], singers: Singer[]) => {
-        if (isEmpty(cachedQueue)) return 0;
-        if (cachedQueue.length == 1) return orderMultiplier + 1;
-        let nsc = newSinger.songCount;
-        let index = cachedQueue.length;
-        if (isEmpty(cachedQueue.find(qi => qi.singer.name.toLowerCase() === newSinger.name.toLowerCase()))) {
-            index = cachedQueue.findIndex(function (e, idx, arr) {
-                if (idx == arr.length - 1) {
-                    return true;
-                } else {
-                    let foundSinger = singers.find(s => s.name === arr[idx].singer.name);
-                    if (isEmpty(foundSinger)) {
-                        return false;
-                    }
-                    let s1c = foundSinger?.songCount ?? 0;
-                    let value = nsc < s1c;
-                    return value;
-                }
+            let sorted = copy.sort((a: QueueItem, b: QueueItem) => {
+                return a.order - b.order;
             });
-        } else {
 
+            //update with new multiplier
+            let reordered = sorted.map((qi, index) => {
+                let order = index * orderMultiplier;
+                let item: QueueItem = {
+                    ...qi,
+                    order: order
+                };
+                return item;
+            });
+
+            console.log("doDeleteToQueue reordered", reordered);
+            await FirebaseService.deletePlayerQueue(queueItem);
+            await FirebaseService.setPlayerQueue(reordered);
+            return true;
+        } catch (error) {
+            return false;
         }
-        let final = (index * orderMultiplier) + 1;
-        // console.log(`-- getFairQueueIndex - RESULT - foundIndex: ${index} finalIndex: ${final} `);
-        // console.log(`**********************************************************`);
-        // console.log(`getFairQueueIndex end`);
-        // console.log(`**********************************************************`);
-        return final;
     };
+
+    //Private Functions
+    const getFairQueueOrder = useCallback((newSinger: Singer) => {
+        if (isEmpty(queue)) return 0;
+        console.log("getFairQueueOrder - current queue", queue);
+        console.log("getFairQueueOrder - newSinger", newSinger);
+        console.log("getFairQueueOrder - current singers", singers);
+        if (queue.length == 1) return orderMultiplier + 1;
+        let nsc = newSinger.songCount + 1; //add 1 since this hasn't been done yet
+        let index = queue.length;
+
+        //see if the singer exists, if not, put to the top of the queue since they would have a 0 count
+        if (isEmpty(queue.find(qi => qi.singer.name.toLowerCase() === newSinger.name.toLowerCase())) && newSinger.songCount < 1) {
+            index = 1;
+            //see if there is a singer with the same song count as the newsinger
+            //if so... set that as the index of where the singer should go
+            let sameSongCount = queue.map(qi => { if (qi.singer.songCount == nsc) { return qi; } });
+            if (!isEmpty(sameSongCount)) {
+                let lastQueueItem = sameSongCount[sameSongCount.length - 1];
+                if (lastQueueItem) {
+                    console.log(`newSinger ${newSinger.name}:${nsc} - queueItemFound ${lastQueueItem.singer.name}: ${lastQueueItem.singer.songCount}`)
+                    index = queue.lastIndexOf(lastQueueItem);
+                }
+            }
+        } else {
+            // get the index where they should go
+            // index = queue.findIndex(function (e, idx, arr) {
+            //     //if nothing has been found, return the last index
+            //     if (idx == arr.length - 1) {
+            //         return true;
+            //     } else {
+            //         //find the singer with the 
+            //         let foundSinger = singers.find(s => s.name === arr[idx].singer.name);
+            //         if (foundSinger) {
+            //             console.log(`newSinger ${newSinger.name}:${nsc} < foundSinger ${foundSinger.name}: ${foundSinger.songCount}`)
+            //             let s1c = foundSinger.songCount;
+            //             let value = nsc < s1c;
+            //             return value;    
+            //         } else {
+            //             return false;
+            //         }
+            //     }
+            // });
+            index = queue.length;
+        }
+        return (index * orderMultiplier) + 1;
+    }, [queue, singers]);
 
     return { queue, addToQueue, deleteFromQueue, reorderQueue }
 }

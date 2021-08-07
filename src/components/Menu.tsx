@@ -14,7 +14,8 @@ import { useLocation } from 'react-router-dom';
 import { stop, stopOutline, pause, pauseOutline ,play, playOutline, time, timeOutline, settings, settingsOutline, list, listOutline, musicalNotes, musicalNotesOutline, peopleOutline, people, peopleCircle, peopleCircleOutline, heartOutline, heartSharp, mailOutline, mailSharp, paperPlaneOutline, paperPlaneSharp, trashOutline, trashSharp, warningOutline, warningSharp, searchOutline, search, starOutline, star } from 'ionicons/icons';
 import { PlayerState } from "../models/Player";
 import { useSelector } from 'react-redux';
-import { selectAuthenticated, selectPlayerState } from '../store/store';
+import { selectPlayerState } from '../store/store';
+import { useAuthentication } from '../hooks/useAuthentication';
 
 function debugLog(container: string, label: string, value: any = null) {
   console.log(`debug - ${container} - ${label} `, value);
@@ -146,7 +147,7 @@ const Menu: React.FC = () => {
   const location = useLocation();
   const [adminState, setAdminState]  = useState<AdminState | undefined>(undefined);
   const currentPlayerState = useSelector(selectPlayerState);
-  const { authenticated, singer, isAdmin} = useSelector(selectAuthenticated);
+  const { authenticated, singer, isAdmin} = useAuthentication();
 
   useEffect(() => {
   

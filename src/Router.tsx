@@ -22,10 +22,8 @@ import { Song } from "./models/Song";
 import FirebaseReduxHandler from './components/FirebaseReduxHandler';
 import { useCallback } from 'react';
 import { useQueue } from './hooks/useQueue'
-import { QueueItem } from './models/QueueItem';
 import { useSingers } from './hooks/useSingers';
 import { useHistory } from './hooks/useHistory'
-import { isEmpty } from 'lodash';
 interface AuthCheckProps {
   isAuthenticated: boolean;
   fallback: React.ReactNode;
@@ -46,11 +44,11 @@ const Router: React.FC = () => {
   const dispatch = useAppDispatch();
   const isAuthenticated = useSelector(selectAuthenticated);
   const { queue, addToQueue } = useQueue();
-  const { singers } = useSingers();
+  const { singers, addSinger } = useSingers();
   const { addHistory } = useHistory();
   
   const onLogin = (controllerId: string, singerName: string): Promise<boolean> => {
-    return new Promise(function (resolve, reject) {
+    return new Promise(function (resolve) {
       let success: boolean = false;
       let promise = FirebaseService.controllerExists(controllerId);
       promise.then(snapshot => {
@@ -59,6 +57,7 @@ const Router: React.FC = () => {
         }
         resolve(success);
         if (success) {
+          addSinger(singerName);
           dispatch(authenticatedChange(true));
         }
       })
@@ -66,9 +65,9 @@ const Router: React.FC = () => {
   }
 
   const onSongPick = useCallback((song: Song) => {
-    let singer = singers.find(s => s.name === "Fred");
-    if (!isEmpty(singer)) {
-      addToQueue(singer!, song).then(s=>{
+    let singer = singers.find(s => s.name === "Sully");
+    if (singer) {
+      addToQueue(singer, song).then(s=>{
         addHistory(song);
       });
     }

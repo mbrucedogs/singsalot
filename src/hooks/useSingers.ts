@@ -1,7 +1,8 @@
-import { isEmpty, reject } from "lodash";
-import { useCallback } from "react";
+import { isEmpty, reject, trim } from "lodash";
+import { useCallback, useState } from "react";
 import { useSelector } from "react-redux";
 import { Singer } from "../models/Singer";
+import { convertToArray } from "../services/firebaseHelpers";
 import FirebaseService from "../services/FirebaseService";
 import queue from "../store/slices/queue";
 import { selectSingers } from "../store/store";
@@ -14,19 +15,28 @@ export function useSingers(): {
 } {
     const singers = useSelector(selectSingers);
 
-    const addSinger = useCallback((name: string): Promise<boolean> => {
+    const addSinger = useCallback(async (name: string): Promise<boolean> => {
+        let trimmed = name.trim().toLowerCase();
+        let cached = singers;
+        if (isEmpty(cached)) {
+            let fb = await FirebaseService.getPlayerSingers().get();
+            cached = await convertToArray<Singer>(fb);
+        }
+        let found = cached.filter(singer => {
+            console.log(`name compare singer ${singer.name.toLowerCase()} === ${trimmed}: `, singer.name.toLowerCase() === trimmed)
+            return singer.name.toLowerCase() === trimmed
+        });
+
         return new Promise((resolve, reject) => {
-            let trimmed = name.trim();
-            let found = singers.filter(singer => singer.name.toLowerCase() === trimmed.toLowerCase());
             if (isEmpty(found)) {
-                let singer = { key: singers.length.toString(), songCount:0, name: trimmed }
+                let singer = { songCount: 0, name: name.trim() }
                 FirebaseService
                     .addPlayerSinger(singer)
                     .then(_ => resolve(true))
                     .catch(error => reject(error));
 
             } else {
-                reject("Singer already exists");
+                resolve(true);
             }
         });
     }, [singers]);

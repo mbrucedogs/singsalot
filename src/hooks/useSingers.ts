@@ -1,4 +1,4 @@
-import { isEmpty, reject, trim } from "lodash";
+import { isEmpty, reject, trim, update } from "lodash";
 import { useCallback, useState } from "react";
 import { useSelector } from "react-redux";
 import { Singer } from "../models/Singer";
@@ -25,18 +25,28 @@ export function useSingers(): {
         let found = cached.filter(singer => {
             console.log(`name compare singer ${singer.name.toLowerCase()} === ${trimmed}: `, singer.name.toLowerCase() === trimmed)
             return singer.name.toLowerCase() === trimmed
-        });
+        })[0];
 
         return new Promise((resolve, reject) => {
-            if (isEmpty(found)) {
-                let singer = { songCount: 0, name: name.trim() }
+            if (found) {
+                let foundDate = new Date(found.lastLogin);
+                let yesterday = new Date(Math.round(new Date().getTime() / 1000) - (24 * 3600) * 1000);
+                let within24hrs = foundDate.getTime() > yesterday.getTime();
+                if (within24hrs) {
+                    resolve(true);
+                } else {
+                    let updated = { ...found, lastLogin: new Date().toUTCString(), songCount: 0 };
+                    FirebaseService
+                        .updatePlayerSinger(updated)
+                        .then(_ => resolve(true))
+                        .catch(error => reject(error));
+                }
+            } else {
+                let singer = { name: name.trim(), lastLogin: new Date().toUTCString(), songCount: 0 }
                 FirebaseService
                     .addPlayerSinger(singer)
                     .then(_ => resolve(true))
                     .catch(error => reject(error));
-
-            } else {
-                resolve(true);
             }
         });
     }, [singers]);

@@ -14,17 +14,20 @@ export function useHistory(): {
     
     const addHistory = useCallback((song: Song) => {
         let found = history.filter(history => history.path === song.path)[0];
-        let newSong: Song = {
-            ...song,
-            key: null,
-            date: new Date().toUTCString()
-        };
         if(isEmpty(found)){
-            newSong.count = 1;
+            let newSong: Song = {
+                ...song,
+                count: 1,
+                date: new Date().toUTCString()
+            };
             FirebaseService.addHistory(newSong);
         } else { 
-            newSong.count = found.count ? found.count + 1 : 1;
-            FirebaseService.updateHistory(newSong);
+            let updatedSong: Song = {
+                ...song,
+                count: found.count ? found.count + 1 : 1,
+                date: new Date().toUTCString()
+            };
+            FirebaseService.updateHistory(updatedSong);
         }
     }, [history]);
 

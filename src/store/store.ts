@@ -31,7 +31,7 @@ export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch
 
 export const selectArtists = (state: RootState) => state.artists.artists;
-export const selectAuthenticated = (state: RootState) => state.authenticated.authenticated;
+export const selectAuthenticated = (state: RootState) => state.authenticated;
 export const selectFavorites = (state: RootState) => state.favorites.favorites;
 export const selectHistory = (state: RootState) => state.history.songs;
 export const selectLatestSongs = (state: RootState) => state.latestSongs.latestSongs;

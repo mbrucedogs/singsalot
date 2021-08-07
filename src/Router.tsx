@@ -42,7 +42,7 @@ export const AuthCheck: React.FC<AuthCheckProps> = ({ isAuthenticated, fallback,
 
 const Router: React.FC = () => {
   const dispatch = useAppDispatch();
-  const isAuthenticated = useSelector(selectAuthenticated);
+  const { authenticated, singer, isAdmin} = useSelector(selectAuthenticated);
   const { queue, addToQueue } = useQueue();
   const { singers, addSinger } = useSingers();
   const { addHistory } = useHistory();
@@ -58,20 +58,19 @@ const Router: React.FC = () => {
         resolve(success);
         if (success) {
           addSinger(singerName);
-          dispatch(authenticatedChange(true));
+          dispatch(authenticatedChange({isAdmin: true, singer: singerName, authenticated: true}));
         }
       })
     });
   }
 
-  const onSongPick = useCallback((song: Song) => {
-    let singer = singers.find(s => s.name === "Sully");
-    if (singer) {
-      addToQueue(singer, song).then(s=>{
+  const onSongPick = useCallback(async (song: Song) => {
+    let foundSinger = singers.find(s => s.name === singer);
+    if (foundSinger) {
+      addToQueue(foundSinger, song).then(s=>{
         addHistory(song);
       });
     }
-
   }, [queue, addToQueue, singers]);
 
   const onSongInfo = useCallback((song: Song) => {
@@ -80,7 +79,7 @@ const Router: React.FC = () => {
 
   return (
     <IonReactRouter>
-      <AuthCheck isAuthenticated={isAuthenticated} fallback={<Login onLogin={onLogin} />}>
+      <AuthCheck isAuthenticated={authenticated} fallback={<Login onLogin={onLogin} />}>
         <IonSplitPane contentId="main">
           <Menu />
           <IonRouterOutlet id="main" animated={true}>

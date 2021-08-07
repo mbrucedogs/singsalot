@@ -1,19 +1,20 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { Authenication } from '../../models/Authenication';
 
-interface AuthenticatedSliceState {
-  authenticated: boolean;
-}
-
-const initialState: AuthenticatedSliceState = {
+const initialState: Authenication = {
   authenticated: false,
+  singer: '',
+  isAdmin: false
 }
 
 export const authenticatedSlice = createSlice({
   name: 'authenticated',
   initialState,
   reducers: {
-    authenticatedChange: (state, action: PayloadAction<boolean>) => {
-      state.authenticated = action.payload;
+    authenticatedChange: (state, action: PayloadAction<Authenication>) => {
+      state.authenticated = action.payload.authenticated;
+      state.isAdmin = action.payload.isAdmin;
+      state.singer = action.payload.singer;
     }
   }
 })

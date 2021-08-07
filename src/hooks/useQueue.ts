@@ -20,7 +20,7 @@ export function useQueue(): {
     const orderMultiplier = 10;
 
     const deleteFromQueue = useCallback((item: QueueItem): Promise<boolean> => {
-        console.log('deleteFromQueue', item)
+        //console.log('deleteFromQueue', item)
         return doDeleteToQueue(item);
     }, [queue]);
 
@@ -60,7 +60,7 @@ export function useQueue(): {
             singer: newSinger,
             song: song
         }
-        console.log("addToQueue: ", queueItem);
+        //console.log("addToQueue: ", queueItem);
         //return new Promise<boolean>(resolve => resolve(true))
         return doAddToQueue(queueItem);
     }, [queue, singers]);
@@ -107,11 +107,11 @@ export function useQueue(): {
     const doDeleteToQueue = async (queueItem: QueueItem): Promise<boolean> => {
         try {           
             //remove new queueItem
-            console.log("doDeleteToQueue queue", queue);
+            //console.log("doDeleteToQueue queue", queue);
             let copy = [...queue];
-            console.log("doDeleteToQueue copy orig", copy);
+            //console.log("doDeleteToQueue copy orig", copy);
             let delIdx = copy.findIndex(qi => qi === queueItem);
-            console.log("doDeleteToQueue delIndex", delIdx);
+            //console.log("doDeleteToQueue delIndex", delIdx);
             copy.splice(delIdx,1);
 
             let sorted = copy.sort((a: QueueItem, b: QueueItem) => {
@@ -128,7 +128,7 @@ export function useQueue(): {
                 return item;
             });
 
-            console.log("doDeleteToQueue reordered", reordered);
+            //console.log("doDeleteToQueue reordered", reordered);
             await FirebaseService.deletePlayerQueue(queueItem);
             await FirebaseService.setPlayerQueue(reordered);
             return true;
@@ -140,9 +140,9 @@ export function useQueue(): {
     //Private Functions
     const getFairQueueOrder = useCallback((newSinger: Singer) => {
         if (isEmpty(queue)) return 0;
-        console.log("getFairQueueOrder - current queue", queue);
-        console.log("getFairQueueOrder - newSinger", newSinger);
-        console.log("getFairQueueOrder - current singers", singers);
+        //console.log("getFairQueueOrder - current queue", queue);
+        //console.log("getFairQueueOrder - newSinger", newSinger);
+        //console.log("getFairQueueOrder - current singers", singers);
         if (queue.length == 1) return orderMultiplier + 1;
         let nsc = newSinger.songCount + 1; //add 1 since this hasn't been done yet
         let index = queue.length;

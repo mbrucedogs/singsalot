@@ -13,10 +13,6 @@ const Queue: React.FC = () => {
   const [listItems, setListItems] = useState<QueueItem[]>([]);
   const [shouldReorder, setShouldReorder] = useState<boolean>(false);
 
-  useEffect(() => {
-    console.log("onQueueChange", queue)
-  }, [queue]);
-
   const actionButton = () => {
     return (
       <IonButtons slot="end" style={{ paddingRight: '10px' }}>
@@ -33,7 +29,7 @@ const Queue: React.FC = () => {
   }
 
   useEffect(() => {
-    console.log("UI onQueueChange", queue);
+    //console.log("UI onQueueChange", queue);
     if (!isEmpty(queue)) {
       setListItems(queue.slice(1));
     }

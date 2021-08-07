@@ -37,6 +37,8 @@ const SongPickHandler: React.FC<ContainerProps> = ({onSongInfoComplete, onSongPi
     }, [addToQueue, selectedSong]);
 
     useEffect(() => {
+        //console.log("SongPickHandler - selectedSong", selectedSong)
+        //console.log("SongPickHandler - showModal", showModal)
         if (isAdmin && selectedSong) {
             setShowModal(true);
         } else {

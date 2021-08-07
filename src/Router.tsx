@@ -60,7 +60,7 @@ const Router: React.FC = () => {
   }
 
   const onSongPickComplete = useCallback(() => {
-    setSelectedSongInfo(undefined);
+    setSelectedSong(undefined);
   }, []);
 
   const onSongInfoComplete = useCallback(() => {

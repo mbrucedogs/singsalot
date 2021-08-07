@@ -25,7 +25,7 @@ const Queue: React.FC = () => {
 
   const doReorder = (event: CustomEvent<ItemReorderEventDetail>) => {
      event.detail.complete();
-    reorderQueue(event.detail.from + 1, event.detail.to + 1, queue);
+    reorderQueue(event.detail.from + 1, event.detail.to + 1);
   }
 
   useEffect(() => {

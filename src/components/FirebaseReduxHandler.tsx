@@ -138,7 +138,7 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
                     let artist = song.artist;
                     let title = song.title;
                     let key = `${artist.trim().toLowerCase()}-${title.trim().toLowerCase()}`.replace(/\W/g, '_');
-                    let songCount = song.count!;
+                    let songCount = song.count ? song.count : 1;
                     let found = results.filter(item => item.key === key)?.[0];
                     if (isEmpty(found)) {
                         found = { key: key, artist: artist, title: title, count: songCount, songs: [song] }
@@ -160,8 +160,16 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
                     return b.count - a.count || a.key!.localeCompare(b.key!);
                 });
 
+                let sortedHistory = history.sort((a: Song, b: Song) => {
+                    var yesterday = new Date();   
+                    yesterday.setDate(yesterday.getDate()-1);                                   
+                    let aDate = a.date ? new Date(a.date) : yesterday;
+                    let bDate = b.date ? new Date(b.date) : yesterday;
+                    return  bDate.valueOf() - aDate.valueOf();
+                });
+
                 let payload: History = {
-                    songs: history,
+                    songs: sortedHistory,
                     topPlayed: sorted.slice(0, amount)
                 }
 

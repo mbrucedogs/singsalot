@@ -31,15 +31,11 @@ export function useSearch(): {
             let results = allSongs.filter(song => {
                 let _artist = song.artist;
                 let _title = song.title;
-                if (!isEmpty(_artist)) {
-                    if (_artist.toLowerCase().indexOf(q) > -1) {
-                        return song;
-                    }
+                if (_artist?.toLowerCase().indexOf(q) > -1) {
+                    return song;
                 }
-                if (!isEmpty(_title)) {
-                    if (_title.toLowerCase().indexOf(q) > -1) {
-                        return song;
-                    }
+                if (_title?.toLowerCase().indexOf(q) > -1) {
+                    return song;
                 }
             });
             let sorted = results.sort((a: Song, b: Song) => {

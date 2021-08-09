@@ -4,13 +4,13 @@ import SongDiv from "../components/SongDiv";
 import Page from "../components/Page"
 import ScrollingGrid from "../components/ScrollingGrid";
 import { isEmpty } from "lodash";
-import { useHistory } from "../hooks/useHistory";
+import { useSongHistory } from "../hooks/useSongHistory";
 
 const History: React.FC = () => {
-  const { history } = useHistory();
+  const { songHistory } = useSongHistory();
   const pageName: string = "History";
 
-  if (isEmpty(history)) {
+  if (isEmpty(songHistory)) {
     return <Page name={pageName}><h2 style={{ padding: '10px' }}>Loading or there is no {pageName}...</h2></Page>
   }
 
@@ -19,7 +19,7 @@ const History: React.FC = () => {
       <ScrollingGrid
         pageCount={pageCount}
         pageName={pageName}
-        listItems={history}
+        listItems={songHistory}
         getRow={(song, index) => {return <SongDiv key={index} song={song} showPath={true} />}}
       />
     </Page>

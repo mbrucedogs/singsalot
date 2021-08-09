@@ -1,8 +1,8 @@
 import React, { ReactNode } from "react";
 import { Song } from "../models/Song";
-import { useHistory as useReactHistory } from "react-router";
+import { useHistory } from "react-router";
 import { useAuthentication } from "../hooks/useAuthentication";
-import { useHistory } from "../hooks/useHistory";
+import { useSongHistory } from "../hooks/useSongHistory";
 import { usePlayer } from "../hooks/usePlayer";
 
 interface SongContainerProps {
@@ -13,27 +13,27 @@ interface SongContainerProps {
 }
 
 const SongContainer: React.FC<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> & SongContainerProps> = ({ song, render }) => {
-    const reactHistory = useReactHistory();
+    const history = useHistory();
     const { isAdmin, singer } = useAuthentication();
-    const { addHistory } = useHistory();
+    const { addSongHistory } = useSongHistory();
     const { singers, setSelectedSong, setSelectedInfoSong, addToQueue } = usePlayer();
 
     const songPick = () => {
         console.log("SongContainer - songPick", song);
         if (isAdmin) {
             setSelectedSong(song);
-            reactHistory.push("/SingerPick");
+            history.push("/SingerPick");
         } else {
             let found = singers.find(s => s.name === singer)
             if(found){
                 addToQueue(found, song).then(s => {
-                    addHistory(song)
+                    addSongHistory(song)
                     setSelectedSong(undefined);
-                    reactHistory.push("/Queue");
+                    history.push("/Queue");
                 });
             } else { 
                 setSelectedSong(song);
-                reactHistory.push("/SingerPick");    
+                history.push("/SingerPick");    
             }
         }
     }

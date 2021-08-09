@@ -5,15 +5,15 @@ import { Song } from "../models/Song";
 import FirebaseService from "../services/FirebaseService";
 import { selectHistory } from "../store/store";
 
-export function useHistory(): {
-    history: Song[];
-    addHistory: (song: Song) => void;
-    deleteHistory: (song: Song) => void;
+export function useSongHistory(): {
+    songHistory: Song[];
+    addSongHistory: (song: Song) => void;
+    deleteSongHistory: (song: Song) => void;
 } {
-    const history = useSelector(selectHistory);
+    const songHistory = useSelector(selectHistory);
     
-    const addHistory = useCallback((song: Song) => {
-        let found = history.filter(history => history.path === song.path)[0];
+    const addSongHistory = useCallback((song: Song) => {
+        let found = songHistory.filter(phSong => phSong.path === song.path)[0];
         if(isEmpty(found)){
             let newSong: Song = {
                 ...song,
@@ -29,11 +29,11 @@ export function useHistory(): {
             };
             FirebaseService.updateHistory(updatedSong);
         }
-    }, [history]);
+    }, [songHistory]);
 
-    const deleteHistory = useCallback((song: Song) => {
+    const deleteSongHistory = useCallback((song: Song) => {
         FirebaseService.deleteHistory(song);      
-    }, [history]);
+    }, [songHistory]);
 
-    return { history, addHistory, deleteHistory }
+    return { songHistory, addSongHistory, deleteSongHistory }
 }

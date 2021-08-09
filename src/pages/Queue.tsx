@@ -5,11 +5,11 @@ import { isEmpty } from "lodash";
 import { IonIcon, IonReorder, IonReorderGroup, IonContent, IonItem, IonLabel, IonGrid, IonButtons, IonButton } from "@ionic/react";
 import { ItemReorderEventDetail } from "@ionic/core";
 import { close, closeOutline, reorderThree, reorderThreeOutline } from "ionicons/icons";
-import { useQueue } from "../hooks/useQueue";
+import { usePlayer } from "../hooks/usePlayer";
 
 const Queue: React.FC = () => {
   const pageName: string = "Queue";
-  const { queue, deleteFromQueue, reorderQueue } = useQueue();
+  const { queue, deleteFromQueue, reorderQueue } = usePlayer();
   const [listItems, setListItems] = useState<QueueItem[]>([]);
   const [shouldReorder, setShouldReorder] = useState<boolean>(false);
 

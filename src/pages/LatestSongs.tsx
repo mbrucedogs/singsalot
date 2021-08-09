@@ -6,7 +6,6 @@ import ScrollingGrid from "../components/ScrollingGrid";
 import { isEmpty } from "lodash";
 import { ArtistSongs } from "../models/ArtistSongs";
 import { useLatestSongs } from "../hooks/useLatestSongs";
-import { Songable } from "../models/Song";
 
 const LatestSongs: React.FC = () => {
   const pageName: string = "Latest Songs";

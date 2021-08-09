@@ -1,16 +1,14 @@
 import { useCallback } from 'react';
 import ScrollingGrid from '../components/ScrollingGrid';
-import { useQueue } from '../hooks/useQueue'
-import { useSingers } from '../hooks/useSingers';
 import { useHistory } from '../hooks/useHistory'
 import { Singer } from '../models/Singer';
 import { useHistory as useRouterHistory } from 'react-router-dom';
 import Page from '../components/Page';
+import { usePlayer } from '../hooks/usePlayer';
 
 const SongPickHandler = ({ }) => {
 
-    const { addToQueue, selectedSong, setSelectedSong } = useQueue();
-    const { singers } = useSingers();
+    const { singers, addToQueue, selectedSong, setSelectedSong } = usePlayer();
     const { addHistory } = useHistory();
     const routerHistory = useRouterHistory();
     const pageName = 'Singers';

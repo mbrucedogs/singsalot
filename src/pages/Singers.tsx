@@ -3,18 +3,18 @@ import { pageCount } from "../globalConfig";
 import Page from "../components/Page"
 import ScrollingGrid from "../components/ScrollingGrid";
 import { isEmpty } from "lodash";
-import { useSingers } from "../hooks/useSingers";
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { IonModal, IonHeader, IonToolbar, IonTitle, IonInput, IonButtons, IonButton, IonContent, IonItem, IonLabel, IonIcon, IonGrid, IonRow, IonCol } from "@ionic/react";
 import { add, addOutline, closeOutline, close } from "ionicons/icons";
 import { Singer } from "../models/Singer";
+import { usePlayer } from "../hooks/usePlayer";
 
 interface AddSingerForm {
   name: string;
 }
 
 const Singers: React.FC = () => {
-  const { singers, addSinger, deleteSinger } = useSingers();
+  const { singers, addSinger, deleteSinger } = usePlayer();
   const pageName: string = "Singers";
 
   //add singer

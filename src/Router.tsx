@@ -15,8 +15,8 @@ import SongLists from './pages/SongLists';
 import TopSongs from './pages/TopPlayed';
 import SingerPick from './pages/SingerPick'
 import FirebaseReduxHandler from './components/FirebaseReduxHandler';
-import { useSingers } from './hooks/useSingers';
 import { useAuthentication } from './hooks/useAuthentication';
+import { usePlayer } from './hooks/usePlayer';
 
 interface AuthCheckProps {
   isAuthenticated: boolean;
@@ -35,7 +35,7 @@ export const AuthCheck: React.FC<AuthCheckProps> = ({ isAuthenticated, fallback,
 }
 
 const Router: React.FC = () => {
-  const { addSinger } = useSingers();
+  const { addSinger } = usePlayer();
   const { authenticated, login } = useAuthentication();
   
   const onLogin = (isAdmin: boolean, controllerId: string, singerName: string): Promise<boolean> => {

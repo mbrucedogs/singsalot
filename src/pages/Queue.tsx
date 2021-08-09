@@ -7,6 +7,7 @@ import { ItemReorderEventDetail } from "@ionic/core";
 import { close, closeOutline, reorderThree, reorderThreeOutline } from "ionicons/icons";
 import { usePlayer } from "../hooks/usePlayer";
 import { useAuthentication } from "../hooks/useAuthentication"
+import { Song } from "../models/Song";
 const Queue: React.FC = () => {
   const pageName: string = "Queue";
   const { isAdmin, singer } = useAuthentication();
@@ -50,27 +51,33 @@ const Queue: React.FC = () => {
     return <Page name={pageName}><h2 style={{ padding: '10px' }}>There are no songs in the {pageName}...</h2></Page>
   }
 
+  const padLeft = {
+    paddingLeft: '20px'
+  }
+
   return (
     <Page name={pageName} endButtons={actionButton()}>
       <IonContent className="queue">
 
         <IonItem>
           <IonGrid style={{ paddingTop: '15px' }}>
-            <IonLabel className="title">{queue[0].singer.name} ({queue[0].singer.songCount})</IonLabel>
-            <IonLabel className="subtitle">{queue[0].song.title}</IonLabel>
+            <IonLabel className="title">1) {queue[0].singer.name}</IonLabel>
+            <IonLabel style={padLeft} className="title">{queue[0].song.title}</IonLabel>
+            <IonLabel style={padLeft} hidden={queue[0].song.artist == undefined} className="subtitle">{queue[0].song.artist}</IonLabel>
           </IonGrid>
         </IonItem>
 
         {/*-- The reorder gesture is disabled by default, enable it to drag and drop items --*/}
         <IonReorderGroup disabled={!shouldReorder} onIonItemReorder={doReorder}>
           {/*-- Default reorder icon, end aligned items --*/}
-          {listItems.map(item => {
+          {listItems.map((item, index) => {
             return (
               <IonReorder style={{ minHeight: '60px' }} key={item.key}>
                 <IonItem>
                   <IonGrid>
-                    <IonLabel className="title">{item.singer.name} ({item.singer.songCount})</IonLabel>
-                    <IonLabel className="subtitle">{item.song.title}</IonLabel>
+                    <IonLabel className="title">{index+2}) {item.singer.name}</IonLabel>
+                    <IonLabel style={padLeft} className="title">{item.song.title}</IonLabel>
+                    <IonLabel style={padLeft} hidden={queue[0].song.artist == undefined} className="subtitle">{item.song.artist}</IonLabel>
                   </IonGrid>
                   <IonIcon hidden={canDelete(item)} ios={closeOutline} md={close} slot="end" onClick={(e) => deleteFromQueue(item)} />
                   <IonIcon hidden={!shouldReorder} ios={reorderThreeOutline} md={reorderThree} slot="end" />

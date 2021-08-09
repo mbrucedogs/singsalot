@@ -40,7 +40,7 @@ const Router: React.FC = () => {
   const { authenticated, login } = useAuthentication();
   
   const onLogin = (isAdmin: boolean, controllerId: string, singerName: string): Promise<boolean> => {
-    return new Promise<boolean>((resolve, reject) => {
+    return new Promise<boolean>((resolve) => {
       login(isAdmin, controllerId, singerName).then(res => {
         if (res) {
           addSinger(singerName)

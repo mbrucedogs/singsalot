@@ -32,7 +32,6 @@ const SongDiv: React.FC<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElem
                                     <div className="subtitle">{song.title} {!showArtist ? `(${getType(song.path)})` : ''}</div>
                                     <div hidden={!showPath} className="path">{getPath(song.path)}</div>
                                 </div>
-                                )
                             </IonCol>
                             <IonCol size="1">
                                 <IonIcon ios={informationCircleOutline} md={informationCircle} onClick={(e) =>  {onSongInfo(); afterClick?.(song)}} />

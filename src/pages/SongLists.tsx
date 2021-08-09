@@ -90,7 +90,14 @@ const SongLists: React.FC = () => {
                     </div>
                     }>
                       {song.foundSongs?.map(s => {
-                        return <SongDiv key={getId()} style={{ paddingLeft: '50px' }} song={s} showPath={true} afterClick={() => { setShowModal(false); }} />
+                        return (
+                          <SongDiv
+                            key={getId()}
+                            style={{ paddingLeft: '50px' }}
+                            song={s}
+                            showPath={true}
+                            afterClick={() => { setShowModal(false); }} />
+                        )
                       })}
                     </Collapsible>
                   )

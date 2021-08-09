@@ -20,7 +20,7 @@ const History: React.FC = () => {
         pageCount={pageCount}
         pageName={pageName}
         listItems={songHistory}
-        getRow={(song, index) => {return <SongDiv key={index} song={song} showPath={true} />}}
+        getRow={(song, index) => {return <SongDiv key={index} song={song} />}}
       />
     </Page>
   );

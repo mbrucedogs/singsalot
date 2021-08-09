@@ -11,6 +11,7 @@ import Queue from './pages/Queue';
 import Search from './pages/Search';
 import Settings from './pages/Settings';
 import Singers from './pages/Singers';
+import SongInfo from './pages/SongInfo';
 import SongLists from './pages/SongLists';
 import TopSongs from './pages/TopPlayed';
 import SingerPick from './pages/SingerPick'
@@ -64,11 +65,13 @@ const Router: React.FC = () => {
             <Route path="/LatestSongs" exact={true} component={LatestSongs}/>
             <Route path="/Queue" component={Queue}/>
             <Route path="/Search" component={Search}/>
+            <Route path="/Search/:searchParam" component={Search}/>
             <Route path="/Settings" exact={true} component={Settings} />
             <Route path="/Singers" exact={true} component={Singers} />
+            <Route path="/SingerPick" exact={true} component={SingerPick} />
+            <Route path="/SongInfo" exact={true} component={SongInfo} />
             <Route path="/SongLists" exact={true} component={SongLists}/>
             <Route path="/TopPlayed" exact={true} component={TopSongs}/>
-            <Route path="/SingerPick" exact={true} component={SingerPick} />
             <Redirect to="/" />
           </IonRouterOutlet>
         </IonSplitPane>

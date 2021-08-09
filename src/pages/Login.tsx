@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { IonGrid, IonRow, IonCol } from '@ionic/react';
 import { micOutline } from "ionicons/icons";
 import { IonItem, IonLabel, IonInput, IonButton, IonIcon, IonAlert } from '@ionic/react';
-import { useLocation } from 'react-router';
+import { useQuery } from '../hooks/hooks';
 
 interface LoginProps {
     onLogin: (isAdmin: boolean, controllerId:string, singerName: string)=>Promise<boolean>;
@@ -16,9 +16,7 @@ const Login: React.FC<LoginProps> = ({onLogin}) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [message, setMessage] = useState<string>("");
     let query = useQuery();
-    function useQuery() {
-      return new URLSearchParams(useLocation().search);
-    }  
+
     const handleLogin = () => {
         if (!partyId) {
             setMessage("Please enter a valid Party Id");

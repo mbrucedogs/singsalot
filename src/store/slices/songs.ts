@@ -5,7 +5,7 @@ interface SongsSliceState {
 }
 
 const initialState: SongsSliceState = {
-  songs: [],
+  songs: []
 }
 
 export const songsSlice = createSlice({

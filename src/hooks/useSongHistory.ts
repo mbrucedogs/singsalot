@@ -7,12 +7,12 @@ import { selectHistory } from "../store/store";
 
 export function useSongHistory(): {
     songHistory: Song[];
-    addSongHistory: (song: Song) => void;
-    deleteSongHistory: (song: Song) => void;
+    addSongHistory: (song: Song) => Promise<boolean>;
+    deleteSongHistory: (song: Song) => Promise<boolean>;
 } {
     const songHistory = useSelector(selectHistory);
     
-    const addSongHistory = useCallback((song: Song) => {
+    const addSongHistory = useCallback((song: Song): Promise<boolean> => {
         let found = songHistory.filter(phSong => phSong.path === song.path)[0];
         if(isEmpty(found)){
             let newSong: Song = {
@@ -20,19 +20,19 @@ export function useSongHistory(): {
                 count: 1,
                 date: new Date().toUTCString()
             };
-            FirebaseService.addHistory(newSong);
+            return FirebaseService.addHistory(newSong);
         } else { 
             let updatedSong: Song = {
                 ...song,
                 count: found.count ? found.count + 1 : 1,
                 date: new Date().toUTCString()
             };
-            FirebaseService.updateHistory(updatedSong);
+            return FirebaseService.updateHistory(updatedSong);
         }
     }, [songHistory]);
 
-    const deleteSongHistory = useCallback((song: Song) => {
-        FirebaseService.deleteHistory(song);      
+    const deleteSongHistory = useCallback((song: Song): Promise<boolean> => {
+        return FirebaseService.deleteHistory(song);      
     }, [songHistory]);
 
     return { songHistory, addSongHistory, deleteSongHistory }

@@ -29,8 +29,8 @@ const SongDiv: React.FC<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElem
                         <IonRow className="row">
                             <IonCol size="11">
                                 <div style={style} onClick={ allowActions ? (e) => {onSongPick(); afterClick?.(song)} : ()=>{}}>
-                                    <div hidden={!showArtist} className="title"> {showCount && song.count ? `(${song.count!}) - ` : ''}{song.artist} ({getType(song.path)})</div>
-                                    <div className="subtitle">{song.title} {!showArtist ? `(${getType(song.path)})` : ''}</div>
+                                    <div className="title">{showCount && song.count ? `(${song.count!}) - ` : ''} {song.title} ({getType(song.path)})</div>
+                                    <div hidden={!showArtist} className="subtitle">{song.artist}</div>
                                     <div hidden={!showPath} className="path">{getPath(song.path)}</div>
                                 </div>
                             </IonCol>

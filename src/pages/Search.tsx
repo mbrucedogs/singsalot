@@ -6,11 +6,20 @@ import SongDiv from "../components/SongDiv";
 import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonToolbar, IonSearchbar } from '@ionic/react';
 import Page from "../components/Page"
 import { useSearch } from "../hooks/useSearch";
+import { useQuery } from "../hooks/hooks";
+import { useParams } from "react-router";
 
 const Search: React.FC = () => {
   const { songs, hasLoaded, searchSongs } = useSearch();
   const pageName: string = "Search";
   const [searchText, setSearchText] = useState<string>('');
+  const {searchParam}  = useParams<{searchParam: string}>();
+
+  useEffect(() => {
+    if(searchParam){
+      setSearchText(searchParam);
+    }
+  }, [searchParam])
 
   useEffect(() => {
     searchSongs(searchText)
@@ -27,7 +36,7 @@ const Search: React.FC = () => {
           <IonButtons slot="start">
             <IonMenuButton />
           </IonButtons>
-          <IonSearchbar onIonChange={(e) => setSearchText(e.detail.value!)} type="text" placeholder="Search for Artists or Songs"></IonSearchbar>
+          <IonSearchbar value={searchText} onIonChange={(e) => setSearchText(e.detail.value!)} type="text" placeholder="Search for Artists or Songs"></IonSearchbar>
         </IonToolbar>
       </IonHeader>
 

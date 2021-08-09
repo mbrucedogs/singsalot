@@ -15,8 +15,7 @@ interface SongContainerProps {
 const SongContainer: React.FC<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> & SongContainerProps> = ({ song, render }) => {
     const history = useHistory();
     const { isAdmin, singer } = useAuthentication();
-    const { addSongHistory } = useSongHistory();
-    const { singers, setSelectedSong, setSelectedInfoSong, addToQueue } = usePlayer();
+    const { singers, setSelectedSong, addToQueue } = usePlayer();
 
     const songPick = () => {
         console.log("SongContainer - songPick", song);
@@ -27,8 +26,6 @@ const SongContainer: React.FC<React.DetailedHTMLProps<React.HTMLAttributes<HTMLD
             let found = singers.find(s => s.name === singer)
             if(found){
                 addToQueue(found, song).then(s => {
-                    addSongHistory(song)
-                    setSelectedSong(undefined);
                     history.push("/Queue");
                 });
             } else { 
@@ -40,8 +37,8 @@ const SongContainer: React.FC<React.DetailedHTMLProps<React.HTMLAttributes<HTMLD
 
     const songInfoPick = () => {
         console.log("SongContainer - songInfoPick", song);
-        //setSelectedInfoSong(song);
-        //reactHistory.push("/SongInfo");
+        setSelectedSong(song);
+        history.push("/SongInfo");
     }
 
     return (

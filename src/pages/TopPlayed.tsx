@@ -25,8 +25,8 @@ const TopSongs: React.FC = () => {
           return (<Collapsible key={history.key} trigger={<div className="row-single">
             <div className="title" style={{ paddingTop: '0px', paddingLeft: '10px', paddingRight: '10px' }}>{idx! + 1})</div>
             <div style={{ flex: '1 1 auto' }}>
-              <div className="title">({history.count}) {history.artist}</div>
-              <div className="subtitle">{history.title}</div>
+              <div className="title">({history.count}) {history.title}</div>
+              <div className="subtitle">{history.artist}</div>
             </div>
           </div>
           }>

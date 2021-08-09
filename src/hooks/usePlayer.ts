@@ -11,6 +11,7 @@ import { selectedSongChange, selectedSongInfoChange } from "../store/slices/play
 import { convertToArray } from "../services/firebaseHelpers";
 import { PlayerState } from "../models/Player";
 import { Settings } from "../models/Settings";
+import { useSongHistory } from "./useSongHistory";
 
 export function usePlayer(): {
     //playerState
@@ -23,9 +24,7 @@ export function usePlayer(): {
 
     //helper
     selectedSong?: Song,
-    selectedSongInfo?: Song,
     setSelectedSong: (song?: Song) => void;
-    setSelectedInfoSong: (song?: Song) => void;
 
     //queue
     queue: QueueItem[];
@@ -43,6 +42,8 @@ export function usePlayer(): {
     //Properties */
     //***************************************************************************************************** */
     const {settings, playerState, singers, queue, selectedSong, selectedSongInfo} = useSelector(selectPlayer);
+    const { addSongHistory } = useSongHistory();
+
     const orderMultiplier = 10;
     const dispatch = useAppDispatch();
 
@@ -67,10 +68,6 @@ export function usePlayer(): {
     //***************************************************************************************************** */
     const setSelectedSong = (song?: Song) => {
         dispatch(selectedSongChange({song:song}));
-    };
-
-    const setSelectedInfoSong = (song?: Song) => {
-        dispatch(selectedSongInfoChange({song:song}));
     };
 
     const deleteFromQueue = useCallback((item: QueueItem): Promise<boolean> => {
@@ -151,8 +148,12 @@ export function usePlayer(): {
                 };
                 return item;
             });
+            
             await FirebaseService.setPlayerQueue(reordered);
+            await addSongHistory(queueItem.song);
+            setSelectedSong(undefined);
             return true;
+            
         } catch (error) {
             return false;
         }
@@ -302,7 +303,7 @@ export function usePlayer(): {
         settings,
         updateSettings, 
         //helper
-        selectedSong, selectedSongInfo, setSelectedSong, setSelectedInfoSong,
+        selectedSong, setSelectedSong,
         //queue
         queue, addToQueue, deleteFromQueue, reorderQueue,
         //singers

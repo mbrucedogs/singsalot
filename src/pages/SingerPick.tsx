@@ -10,15 +10,12 @@ import SongDiv from '../components/SongDiv';
 const SongPickHandler = ({ }) => {
 
     const { singers, addToQueue, selectedSong, setSelectedSong } = usePlayer();
-    const { addSongHistory } = useSongHistory();
     const history = useHistory();
     const pageName = 'Select Singer';
 
     const onSinger = useCallback((singer: Singer) => {
         if (selectedSong != undefined) {
             addToQueue(singer, selectedSong).then(s => {
-                addSongHistory(selectedSong)
-                setSelectedSong(undefined);
                 history.push("/Queue");
             });
         }

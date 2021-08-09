@@ -1,10 +1,9 @@
-import { isEmpty, reject, trim, update } from "lodash";
-import { useCallback, useState } from "react";
+import { isEmpty } from "lodash";
+import { useCallback } from "react";
 import { useSelector } from "react-redux";
 import { Singer } from "../models/Singer";
 import { convertToArray } from "../services/firebaseHelpers";
 import FirebaseService from "../services/FirebaseService";
-import queue from "../store/slices/queue";
 import { selectSingers } from "../store/store";
 
 export function useSingers(): {

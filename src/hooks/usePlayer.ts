@@ -7,7 +7,7 @@ import { QueueItem } from "../models/QueueItem";
 import { Singer } from "../models/Singer";
 import { Song } from "../models/Song";
 import { selectPlayer } from "../store/store";
-import { queueSelectedSongChange, queueSelectedSongInfoChange } from "../store/slices/player";
+import { selectedSongChange, selectedSongInfoChange } from "../store/slices/player";
 import { convertToArray } from "../services/firebaseHelpers";
 import { PlayerState } from "../models/Player";
 
@@ -52,11 +52,11 @@ export function usePlayer(): {
     //Queue */
     //***************************************************************************************************** */
     const setSelectedSong = (song?: Song) => {
-        dispatch(queueSelectedSongChange({song:song}));
+        dispatch(selectedSongChange({song:song}));
     };
 
     const setSelectedInfoSong = (song?: Song) => {
-        dispatch(queueSelectedSongInfoChange({song:song}));
+        dispatch(selectedSongInfoChange({song:song}));
     };
 
     const deleteFromQueue = useCallback((item: QueueItem): Promise<boolean> => {

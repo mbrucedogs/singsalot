@@ -4,10 +4,7 @@ import { artistsChange } from '../store/slices/artists';
 import { favoritesChange } from '../store/slices/favorites';
 import { historyChange } from '../store/slices/history';
 import { latestSongsChange } from '../store/slices/latestSongs';
-import { playerStateChange } from '../store/slices/playerState';
-import { queueChange } from '../store/slices/queue';
 import { settingsChange } from '../store/slices/settings';
-import { singersChange } from '../store/slices/singers';
 import { songListsChange } from '../store/slices/songLists';
 import { songsChange } from '../store/slices/songs';
 import { useAppDispatch } from '../hooks/hooks'
@@ -24,6 +21,7 @@ import FirebaseService from "../services/FirebaseService";
 import { useEffect } from "react";
 import { History } from "../models/History";
 import { convertToArray } from '../services/firebaseHelpers'
+import { playerStateChange, queueChange, singersChange } from "../store/slices/player";
 
 interface FirebaseReduxHandlerProps {
     isAuthenticated: boolean;

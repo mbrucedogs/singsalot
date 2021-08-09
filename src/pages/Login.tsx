@@ -4,7 +4,6 @@ import { IonGrid, IonRow, IonCol } from '@ionic/react';
 import { micOutline } from "ionicons/icons";
 import { IonItem, IonLabel, IonInput, IonButton, IonIcon, IonAlert } from '@ionic/react';
 import { useLocation } from 'react-router';
-import queue from '../store/slices/queue';
 
 interface LoginProps {
     onLogin: (isAdmin: boolean, controllerId:string, singerName: string)=>Promise<boolean>;

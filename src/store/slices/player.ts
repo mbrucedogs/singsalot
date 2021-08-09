@@ -24,15 +24,16 @@ export const playerSlice = createSlice({
   name: 'player',
   initialState,
   reducers: {
+    //helper
+    selectedSongChange: (state, action: PayloadAction<{song?: Song}>) => {
+      state.selectedSong = action.payload.song;
+    },
+    selectedSongInfoChange: (state, action: PayloadAction<{song?: Song}>) => {
+      state.selectedSongInfo = action?.payload.song;
+    },
     //queue
     queueChange: (state, action: PayloadAction<QueueItem[]>) => {
       state.queue = action.payload;
-    },
-    queueSelectedSongChange: (state, action: PayloadAction<{song?: Song}>) => {
-      state.selectedSong = action.payload.song;
-    },
-    queueSelectedSongInfoChange: (state, action: PayloadAction<{song?: Song}>) => {
-      state.selectedSongInfo = action?.payload.song;
     },
     //state
     playerStateChange: (state, action: PayloadAction<PlayerState>) => {
@@ -45,5 +46,10 @@ export const playerSlice = createSlice({
   }  
 })
 
-export const { queueChange, queueSelectedSongChange, queueSelectedSongInfoChange  } = playerSlice.actions
+export const { 
+  selectedSongChange, selectedSongInfoChange,
+  queueChange,  
+  playerStateChange, 
+  singersChange
+  } = playerSlice.actions
 export default playerSlice.reducer

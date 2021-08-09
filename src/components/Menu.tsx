@@ -11,11 +11,11 @@ import {
 } from '@ionic/react';
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { stop, stopOutline, pause, pauseOutline ,play, playOutline, time, timeOutline, settings, settingsOutline, list, listOutline, musicalNotes, musicalNotesOutline, peopleOutline, people, peopleCircle, peopleCircleOutline, heartOutline, heartSharp, mailOutline, mailSharp, paperPlaneOutline, paperPlaneSharp, trashOutline, trashSharp, warningOutline, warningSharp, searchOutline, search, starOutline, star } from 'ionicons/icons';
+import { stop, stopOutline, pause, pauseOutline, play, playOutline, time, timeOutline, settings, settingsOutline, list, listOutline, musicalNotes, musicalNotesOutline, peopleOutline, people, peopleCircle, peopleCircleOutline, heartOutline, heartSharp, mailOutline, mailSharp, paperPlaneOutline, paperPlaneSharp, trashOutline, trashSharp, warningOutline, warningSharp, searchOutline, search, starOutline, star } from 'ionicons/icons';
 import { PlayerState } from "../models/Player";
 import { useSelector } from 'react-redux';
-import { selectPlayerState } from '../store/store';
 import { useAuthentication } from '../hooks/useAuthentication';
+import { usePlayer } from '../hooks/usePlayer';
 
 function debugLog(container: string, label: string, value: any = null) {
   console.log(`debug - ${container} - ${label} `, value);
@@ -91,20 +91,20 @@ interface AppPage {
   title: string;
 }
 
-interface AdminAction { 
-  playerState: PlayerState ;
+interface AdminAction {
+  playerState: PlayerState;
   iosIcon: string;
   mdIcon: string;
   title: string;
 }
 
-interface AdminState { 
-  title: string; 
+interface AdminState {
+  title: string;
   actions: Array<AdminAction>;
 }
 
 const Menu: React.FC = () => {
-  
+
   const playActions: AdminAction[] = [
     {
       playerState: PlayerState.playing,
@@ -120,7 +120,7 @@ const Menu: React.FC = () => {
       iosIcon: pauseOutline,
       mdIcon: pause,
       title: "Pause"
-    }, 
+    },
     {
       playerState: PlayerState.stopped,
       iosIcon: stopOutline,
@@ -134,53 +134,55 @@ const Menu: React.FC = () => {
     actions: playActions
   }
 
-  const playAdminState: AdminState = { 
+  const playAdminState: AdminState = {
     title: "Currently Playing",
     actions: pauseActions
   }
 
-  const stopAdminState: AdminState = { 
+  const stopAdminState: AdminState = {
     title: "Currently Stopped",
     actions: playActions
   }
 
   const location = useLocation();
-  const [adminState, setAdminState]  = useState<AdminState | undefined>(undefined);
-  const currentPlayerState = useSelector(selectPlayerState);
-  const { authenticated, singer, isAdmin} = useAuthentication();
+  const [adminState, setAdminState] = useState<AdminState | undefined>(undefined);
+  const { playerState, setPlayerState } = usePlayer();
+  const { authenticated, singer, isAdmin } = useAuthentication();
 
   useEffect(() => {
-  
-    //debugLog('Menu', 'useEffect - currentPlayerState', currentPlayerState);
-    switch(currentPlayerState){
-      case PlayerState.stopped: {
-        setAdminState(stopAdminState);
-        break;
+
+    if (isAdmin) {
+      //debugLog('Menu', 'useEffect - currentPlayerState', currentPlayerState);
+      switch (playerState) {
+        case PlayerState.stopped: {
+          setAdminState(stopAdminState);
+          break;
+        }
+        case PlayerState.playing: {
+          setAdminState(playAdminState);
+          break;
+        }
+
+        case PlayerState.paused: {
+          setAdminState(pauseAdminState);
+          break;
+        }
+
+        default:
+          setAdminState(undefined);
+          break;
       }
-      case PlayerState.playing: {
-        setAdminState(playAdminState);
-        break;
-      }
-  
-      case PlayerState.paused: {
-        setAdminState(pauseAdminState);
-        break;
-      }
-  
-      default: 
-        isAdmin ? setAdminState(stopAdminState) : setAdminState(undefined);
-        break;
     }
-  
-  }, [currentPlayerState])
-  
+
+  }, [playerState])
+
 
   return (
     <IonMenu contentId="main" type="overlay">
       <IonContent>
         <IonList id="inbox-list">
           <IonListHeader>Karaoke</IonListHeader>
-           {authenticated && <IonNote>Singer: {singer}</IonNote>}
+          {authenticated && <IonNote>Singer: {singer}</IonNote>}
           {appPages.map((appPage, index) => {
             return (
               <IonMenuToggle key={index} autoHide={false}>
@@ -193,16 +195,16 @@ const Menu: React.FC = () => {
           })}
         </IonList>
 
-        {adminState !== undefined && 
-        <IonList id="labels-list">
-          <IonListHeader>{adminState.title}</IonListHeader>
-          {adminState.actions.map((action, index) => (
-            <IonItem lines="none" key={index} onClick={() => console.log("here")}>
+        {adminState !== undefined &&
+          <IonList id="labels-list">
+            <IonListHeader>{adminState.title}</IonListHeader>
+            {adminState.actions.map((action, index) => (
+              <IonItem lines="none" key={index} onClick={() => setPlayerState(action.playerState)}>
                 <IonIcon slot="start" ios={action.iosIcon} md={action.mdIcon} />
                 <IonLabel>{action.title}</IonLabel>
-            </IonItem>
-          ))}
-        </IonList>        
+              </IonItem>
+            ))}
+          </IonList>
         }
 
       </IonContent>

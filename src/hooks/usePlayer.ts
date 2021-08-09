@@ -1,25 +1,33 @@
 import { isEmpty, reject } from "lodash";
 import FirebaseService from "../services/FirebaseService";
+import { useAppDispatch } from "./hooks";
 import { useCallback } from "react";
 import { useSelector } from "react-redux";
 import { QueueItem } from "../models/QueueItem";
 import { Singer } from "../models/Singer";
 import { Song } from "../models/Song";
 import { selectPlayerState, selectQueue, selectSingers } from "../store/store";
-import { useAppDispatch } from "./hooks";
 import { queueSelectedSongChange, queueSelectedSongInfoChange } from "../store/slices/queue";
 import { convertToArray } from "../services/firebaseHelpers";
+import { PlayerState } from "../models/Player";
 
 export function usePlayer(): {
-    //queue
-    queue: QueueItem[];
+    //playerState
+    playerState: PlayerState,
+    setPlayerState: (playerState: PlayerState) => Promise<boolean>;
+    
+    //helper
     selectedSong?: Song,
     selectedSongInfo?: Song,
+    setSelectedSong: (song?: Song) => void;
+    setSelectedInfoSong: (song?: Song) => void;
+
+    //queue
+    queue: QueueItem[];
     addToQueue: (singer: Singer, song: Song) => Promise<boolean>;
     deleteFromQueue: (item: QueueItem) => Promise<boolean>;
     reorderQueue: (fromIndex: number, toIndex: number) => Promise<boolean>;
-    setSelectedSong: (song?: Song) => void;
-    setSelectedInfoSong: (song?: Song) => void;
+    
     //singers
     singers: Singer[];
     addSinger: (name: string) => Promise<boolean>;
@@ -34,6 +42,13 @@ export function usePlayer(): {
     const playerState = useSelector(selectPlayerState);
     const orderMultiplier = 10;
     const dispatch = useAppDispatch();
+
+    //***************************************************************************************************** */
+    //PlayerState */
+    //***************************************************************************************************** */
+    const setPlayerState = (playerState: PlayerState) => {
+        return FirebaseService.setPlayerState(playerState);
+    };
 
     //***************************************************************************************************** */
     //Queue */
@@ -269,6 +284,8 @@ export function usePlayer(): {
     }, [singers]);
 
     return { 
+        //state
+        playerState, setPlayerState,
         //helper
         selectedSong, selectedSongInfo, setSelectedSong, setSelectedInfoSong,
         //queue

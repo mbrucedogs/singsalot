@@ -9,10 +9,11 @@ export interface SongProps {
     showPath?: boolean;
     showArtist?: boolean;
     showCount?: boolean;
+    allowActions?: boolean;
     afterClick?: (song: Song) => void;
 }
 
-const SongDiv: React.FC<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> & SongProps> = ({afterClick,style, song, showCount = false, showPath = false, showArtist = true }) => {
+const SongDiv: React.FC<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> & SongProps> = ({allowActions = true, afterClick,style, song, showCount = false, showPath = false, showArtist = true }) => {
     const getType = (path: string) => {
         return path.substr(path.length - 3);
     }
@@ -27,14 +28,14 @@ const SongDiv: React.FC<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElem
                     <IonGrid>
                         <IonRow className="row">
                             <IonCol size="11">
-                                <div style={style} onClick={(e) => {onSongPick(); afterClick?.(song)}}>
+                                <div style={style} onClick={ allowActions ? (e) => {onSongPick(); afterClick?.(song)} : ()=>{}}>
                                     <div hidden={!showArtist} className="title"> {showCount && song.count ? `(${song.count!}) - ` : ''}{song.artist} ({getType(song.path)})</div>
                                     <div className="subtitle">{song.title} {!showArtist ? `(${getType(song.path)})` : ''}</div>
                                     <div hidden={!showPath} className="path">{getPath(song.path)}</div>
                                 </div>
                             </IonCol>
                             <IonCol size="1">
-                                <IonIcon ios={informationCircleOutline} md={informationCircle} onClick={(e) =>  {onSongInfo(); afterClick?.(song)}} />
+                                <IonIcon hidden={!allowActions} ios={informationCircleOutline} md={informationCircle} onClick={(e) =>  {onSongInfo(); afterClick?.(song)}} />
                             </IonCol>
                         </IonRow>
                     </IonGrid>

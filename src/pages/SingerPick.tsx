@@ -5,13 +5,14 @@ import { Singer } from '../models/Singer';
 import { useHistory } from 'react-router-dom';
 import Page from '../components/Page';
 import { usePlayer } from '../hooks/usePlayer';
+import SongDiv from '../components/SongDiv';
 
 const SongPickHandler = ({ }) => {
 
     const { singers, addToQueue, selectedSong, setSelectedSong } = usePlayer();
     const { addSongHistory } = useSongHistory();
     const history = useHistory();
-    const pageName = 'Singers';
+    const pageName = 'Select Singer';
 
     const onSinger = useCallback((singer: Singer) => {
         if (selectedSong != undefined) {
@@ -25,6 +26,8 @@ const SongPickHandler = ({ }) => {
 
     return (
         <Page name={pageName}>
+            <>
+            {selectedSong && <SongDiv song={selectedSong} showPath={true} allowActions={false}/>}
             <ScrollingGrid
                 pageCount={100}
                 pageName={pageName}
@@ -37,6 +40,7 @@ const SongPickHandler = ({ }) => {
                     )
                 }}
             />
+            </>
         </Page>
     );
 };

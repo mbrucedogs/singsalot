@@ -6,8 +6,8 @@ import { useSelector } from "react-redux";
 import { QueueItem } from "../models/QueueItem";
 import { Singer } from "../models/Singer";
 import { Song } from "../models/Song";
-import { selectPlayerState, selectQueue, selectSingers } from "../store/store";
-import { queueSelectedSongChange, queueSelectedSongInfoChange } from "../store/slices/queue";
+import { selectPlayer } from "../store/store";
+import { queueSelectedSongChange, queueSelectedSongInfoChange } from "../store/slices/player";
 import { convertToArray } from "../services/firebaseHelpers";
 import { PlayerState } from "../models/Player";
 
@@ -37,9 +37,7 @@ export function usePlayer(): {
     //***************************************************************************************************** */
     //Properties */
     //***************************************************************************************************** */
-    const {queue, selectedSong, selectedSongInfo} = useSelector(selectQueue);
-    const singers = useSelector(selectSingers);
-    const playerState = useSelector(selectPlayerState);
+    const {playerState, singers, queue, selectedSong, selectedSongInfo} = useSelector(selectPlayer);
     const orderMultiplier = 10;
     const dispatch = useAppDispatch();
 

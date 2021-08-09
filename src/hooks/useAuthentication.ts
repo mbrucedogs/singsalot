@@ -8,12 +8,12 @@ export function useAuthentication(): {
     authenticated: boolean;
     singer: string;
     isAdmin: boolean;
-    login:(controllerId: string, singerName: string)=> Promise<boolean>
+    login:(isAdmin: boolean, controllerId: string, singerName: string)=> Promise<boolean>
 } {
     const { authenticated, singer, isAdmin } = useSelector(selectAuthenticated);
     const dispatch = useAppDispatch();
 
-    const login = (controllerId: string, singerName: string): Promise<boolean> => {
+    const login = (isAdmin: boolean, controllerId: string, singerName: string): Promise<boolean> => {
         return new Promise(function (resolve) {
           let success: boolean = false;
           let promise = FirebaseService.controllerExists(controllerId);
@@ -23,7 +23,7 @@ export function useAuthentication(): {
             }
             resolve(success);
             if (success) {
-              dispatch(authenticatedChange({ isAdmin: false, singer: singerName, authenticated: true }));
+              dispatch(authenticatedChange({ isAdmin: isAdmin, singer: singerName, authenticated: true }));
             }
           })
         });

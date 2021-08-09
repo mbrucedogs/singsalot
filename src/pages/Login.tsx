@@ -1,11 +1,13 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import React, { useState } from 'react';
 import { IonGrid, IonRow, IonCol } from '@ionic/react';
-import { micCircle, micOutline, personCircle } from "ionicons/icons";
+import { micOutline } from "ionicons/icons";
 import { IonItem, IonLabel, IonInput, IonButton, IonIcon, IonAlert } from '@ionic/react';
+import { useLocation } from 'react-router';
+import queue from '../store/slices/queue';
 
 interface LoginProps {
-    onLogin: (controllerId:string, singerName: string)=>Promise<boolean>;
+    onLogin: (isAdmin: boolean, controllerId:string, singerName: string)=>Promise<boolean>;
 }
   
 const Login: React.FC<LoginProps> = ({onLogin}) => {
@@ -14,6 +16,10 @@ const Login: React.FC<LoginProps> = ({onLogin}) => {
     const [iserror, setIserror] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [message, setMessage] = useState<string>("");
+    let query = useQuery();
+    function useQuery() {
+      return new URLSearchParams(useLocation().search);
+    }  
     const handleLogin = () => {
         if (!partyId) {
             setMessage("Please enter a valid Party Id");
@@ -26,7 +32,9 @@ const Login: React.FC<LoginProps> = ({onLogin}) => {
             return;
         }
         setIsLoading(true);
-        let promise = onLogin(partyId, firstName);
+        let q = query.get("admin") ?? "";
+        let isAdmin: boolean = q ? q == "true" ? true : false : false;
+        let promise = onLogin(isAdmin, partyId, firstName);
         promise.then( success => {
             if(!success){
                 setMessage("Your Party Id wasn't found, please try again.");

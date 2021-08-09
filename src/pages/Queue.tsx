@@ -30,7 +30,6 @@ const Queue: React.FC = () => {
     if(isAdmin) {
       return shouldReorder
     } else {
-      console.log(`item singer: ${item.singer.name} logged in: ${singer}`)
       return !(item.singer.name === singer);
     }
   }

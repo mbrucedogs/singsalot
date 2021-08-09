@@ -72,7 +72,7 @@ const Singers: React.FC = () => {
                       <div style={{ flex: "1 1 auto" }}>{singer.name} ({singer.songCount})</div>
                     </div>
                   </IonCol>
-                  <IonCol size="1">
+                  <IonCol size="1" style={{textAlign:'center'}}>
                     <IonIcon ios={closeOutline} md={close} onClick={(e) => onDelete(singer)} />
                   </IonCol>
                 </IonRow>

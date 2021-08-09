@@ -6,7 +6,6 @@ import SongDiv from "../components/SongDiv";
 import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonToolbar, IonSearchbar } from '@ionic/react';
 import Page from "../components/Page"
 import { useSearch } from "../hooks/useSearch";
-import { Songable } from "../models/Song";
 
 const Search: React.FC = () => {
   const { songs, hasLoaded, searchSongs } = useSearch();

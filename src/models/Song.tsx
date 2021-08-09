@@ -8,8 +8,3 @@ export interface Song extends Fabricable {
     date?:string;
     path: string;
 }
-
-export interface Songable {
-    onSongPick: (song: Song) => void;
-    onSongInfo: (song: Song) => void;
-}

@@ -1,5 +1,5 @@
 import React from "react";
-import { Song, Songable } from "../models/Song";
+import { Song } from "../models/Song";
 import { IonCol, IonGrid, IonIcon, IonRow } from "@ionic/react";
 import { informationCircle, informationCircleOutline } from "ionicons/icons";
 import SongContainer from "./SongContainer";

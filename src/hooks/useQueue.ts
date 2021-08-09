@@ -6,18 +6,31 @@ import { Singer } from "../models/Singer";
 import FirebaseService from "../services/FirebaseService";
 import { selectQueue, selectSingers } from "../store/store";
 import { Song } from "../models/Song";
-import { resolve } from "dns";
-import { queries } from "@testing-library/react";
+import { useAppDispatch } from "./hooks";
+import { queueSelectedSongChange, queueSelectedSongInfoChange } from "../store/slices/queue";
 
 export function useQueue(): {
     queue: QueueItem[];
+    selectedSong?: Song,
+    selectedSongInfo?: Song,
     addToQueue: (singer: Singer, song: Song) => Promise<boolean>;
     deleteFromQueue: (item: QueueItem) => Promise<boolean>;
     reorderQueue: (fromIndex: number, toIndex: number) => Promise<boolean>;
+    setSelectedSong: (song?: Song) => void;
+    setSelectedInfoSong: (song?: Song) => void;
 } {
-    const queue = useSelector(selectQueue);
+    const {queue, selectedSong, selectedSongInfo} = useSelector(selectQueue);
     const singers = useSelector(selectSingers);
     const orderMultiplier = 10;
+    const dispatch = useAppDispatch();
+
+    const setSelectedSong = (song?: Song) => {
+        dispatch(queueSelectedSongChange({song:song}));
+    };
+
+    const setSelectedInfoSong = (song?: Song) => {
+        dispatch(queueSelectedSongInfoChange({song:song}));
+    };
 
     const deleteFromQueue = useCallback((item: QueueItem): Promise<boolean> => {
         //console.log('deleteFromQueue', item)
@@ -184,5 +197,5 @@ export function useQueue(): {
         return (index * orderMultiplier) + 1;
     }, [queue, singers]);
 
-    return { queue, addToQueue, deleteFromQueue, reorderQueue }
+    return { queue, selectedSong, selectedSongInfo, addToQueue, deleteFromQueue, reorderQueue, setSelectedSong, setSelectedInfoSong }
 }

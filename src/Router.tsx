@@ -1,6 +1,6 @@
 import { IonRouterOutlet, IonSplitPane } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { Redirect, Route } from 'react-router-dom';
+import { Redirect, Route, useHistory } from 'react-router-dom';
 import Menu from './components/Menu';
 import Artists from './pages/Artists';
 import Favorites from './pages/Favorites';
@@ -13,16 +13,13 @@ import Settings from './pages/Settings';
 import Singers from './pages/Singers';
 import SongLists from './pages/SongLists';
 import TopSongs from './pages/TopPlayed';
-import FirebaseService from './services/FirebaseService';
-import { authenticatedChange } from './store/slices/authenticated';
-import { useSelector } from 'react-redux';
-import { selectAuthenticated } from './store/store';
+import SingerPick from './pages/SingerPick'
 import { Song } from "./models/Song";
 import FirebaseReduxHandler from './components/FirebaseReduxHandler';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { useSingers } from './hooks/useSingers';
-import SongPickHandler from './components/SongPickHandler';
 import { useAuthentication } from './hooks/useAuthentication';
+import { useQueue } from './hooks/useQueue';
 
 interface AuthCheckProps {
   isAuthenticated: boolean;
@@ -41,38 +38,30 @@ export const AuthCheck: React.FC<AuthCheckProps> = ({ isAuthenticated, fallback,
 }
 
 const Router: React.FC = () => {
+  const { setSelectedInfoSong, setSelectedSong } = useQueue();
   const { addSinger } = useSingers();
-  const [selectedSong, setSelectedSong] = useState<Song | undefined>();
-  const [selectedSongInfo, setSelectedSongInfo] = useState<Song | undefined>();
-  const { authenticated, login} = useAuthentication();
+  const { authenticated, login } = useAuthentication();
 
   const onLogin = (controllerId: string, singerName: string): Promise<boolean> => {
     return new Promise<boolean>((resolve, reject) => {
-        login(controllerId, singerName).then( res => {
-          if (res) {
-            addSinger(singerName)
+      login(controllerId, singerName).then(res => {
+        if (res) {
+          addSinger(singerName)
             .then(res => resolve(res))
-          } else{
-            resolve(res);
-          }
-        })
+        } else {
+          resolve(res);
+        }
+      })
     });
   }
 
-  const onSongPickComplete = useCallback(() => {
-    setSelectedSong(undefined);
-  }, []);
-
-  const onSongInfoComplete = useCallback(() => {
-    setSelectedSongInfo(undefined);
-  }, []);
-
+  const history = useHistory();
   const onSongPick = useCallback((song: Song) => {
-    setSelectedSong(song);
+     setSelectedSong(song);
   }, []);
 
   const onSongInfo = useCallback((song: Song) => {
-    setSelectedSongInfo(song);
+    setSelectedInfoSong(song);   
   }, []);
 
   return (
@@ -83,72 +72,32 @@ const Router: React.FC = () => {
           <IonRouterOutlet id="main" animated={true}>
             <Route path="/" component={Queue} exact={true} />
             <Route path="/Artists" exact={true}>
-              <SongPickHandler 
-              onSongInfoComplete={onSongInfoComplete} 
-              onSongPickComplete={onSongPickComplete} 
-              selectedSongInfo={selectedSongInfo} 
-              selectedSong={selectedSong}>
-                <Artists onSongPick={onSongPick} onSongInfo={onSongInfo} />
-              </SongPickHandler>
+              <Artists onSongPick={onSongPick} onSongInfo={onSongInfo} />
             </Route>
             <Route path="/Favorites" exact={true}>
-            <SongPickHandler 
-              onSongInfoComplete={onSongInfoComplete} 
-              onSongPickComplete={onSongPickComplete} 
-              selectedSongInfo={selectedSongInfo} 
-              selectedSong={selectedSong}>             
-                 <Favorites onSongPick={onSongPick} onSongInfo={onSongInfo} />
-              </SongPickHandler>
+              <Favorites onSongPick={onSongPick} onSongInfo={onSongInfo} />
             </Route>
             <Route path="/History" exact={true}>
-            <SongPickHandler 
-              onSongInfoComplete={onSongInfoComplete} 
-              onSongPickComplete={onSongPickComplete} 
-              selectedSongInfo={selectedSongInfo} 
-              selectedSong={selectedSong}>
-                <History onSongPick={onSongPick} onSongInfo={onSongInfo} />
-              </SongPickHandler>
+              <History onSongPick={onSongPick} onSongInfo={onSongInfo} />
             </Route>
             <Route path="/LatestSongs" exact={true}>
-             <SongPickHandler 
-              onSongInfoComplete={onSongInfoComplete} 
-              onSongPickComplete={onSongPickComplete} 
-              selectedSongInfo={selectedSongInfo} 
-              selectedSong={selectedSong}><LatestSongs onSongPick={onSongPick} onSongInfo={onSongInfo} />
-              </SongPickHandler>
+              <LatestSongs onSongPick={onSongPick} onSongInfo={onSongInfo} />
             </Route>
             <Route path="/Queue">
               <Queue />
             </Route>
             <Route path="/Search">
-            <SongPickHandler 
-              onSongInfoComplete={onSongInfoComplete} 
-              onSongPickComplete={onSongPickComplete} 
-              selectedSongInfo={selectedSongInfo} 
-              selectedSong={selectedSong}>
-                <Search onSongPick={onSongPick} onSongInfo={onSongInfo} />
-              </SongPickHandler>
+              <Search onSongPick={onSongPick} onSongInfo={onSongInfo} />
             </Route>
             <Route path="/Settings" exact={true} component={Settings} />
             <Route path="/Singers" exact={true} component={Singers} />
             <Route path="/SongLists" exact={true}>
-            <SongPickHandler 
-              onSongInfoComplete={onSongInfoComplete} 
-              onSongPickComplete={onSongPickComplete} 
-              selectedSongInfo={selectedSongInfo} 
-              selectedSong={selectedSong}>
-                <SongLists onSongPick={onSongPick} onSongInfo={onSongInfo} />
-              </SongPickHandler>
+              <SongLists onSongPick={onSongPick} onSongInfo={onSongInfo} />
             </Route>
             <Route path="/TopPlayed" exact={true}>
-            <SongPickHandler 
-              onSongInfoComplete={onSongInfoComplete} 
-              onSongPickComplete={onSongPickComplete} 
-              selectedSongInfo={selectedSongInfo} 
-              selectedSong={selectedSong}>
-                <TopSongs onSongPick={onSongPick} onSongInfo={onSongInfo} />
-              </SongPickHandler>
+              <TopSongs onSongPick={onSongPick} onSongInfo={onSongInfo} />
             </Route>
+            <Route path="/SingerPick" exact={true} component={SingerPick} />
             <Redirect to="/" />
           </IonRouterOutlet>
         </IonSplitPane>

@@ -26,17 +26,17 @@ const SongContainer: React.FC<React.DetailedHTMLProps<React.HTMLAttributes<HTMLD
             setSelectedSong(song);
             reactHistory.push("/SingerPick");
         } else {
-            // let found = singers.find(s => s.name === singer)
-            // if(found){
-            //     addToQueue(found, song).then(s => {
-            //         addHistory(song)
-            //         setSelectedSong(undefined);
-            //         reactHistory.push("/Queue");
-            //     });
-            // } else { 
-            //     setSelectedSong(song);
-            //     reactHistory.push("/SingerPick");    
-            // }
+            let found = singers.find(s => s.name === singer)
+            if(found){
+                addToQueue(found, song).then(s => {
+                    addHistory(song)
+                    setSelectedSong(undefined);
+                    reactHistory.push("/Queue");
+                });
+            } else { 
+                setSelectedSong(song);
+                reactHistory.push("/SingerPick");    
+            }
         }
     }
 

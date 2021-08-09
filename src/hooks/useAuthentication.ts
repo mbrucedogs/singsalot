@@ -23,7 +23,7 @@ export function useAuthentication(): {
             }
             resolve(success);
             if (success) {
-              dispatch(authenticatedChange({ isAdmin: true, singer: singerName, authenticated: true }));
+              dispatch(authenticatedChange({ isAdmin: false, singer: singerName, authenticated: true }));
             }
           })
         });

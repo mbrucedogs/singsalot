@@ -62,32 +62,16 @@ const Router: React.FC = () => {
           <Menu />
           <IonRouterOutlet id="main" animated={true}>
             <Route path="/" component={Queue} exact={true} />
-            <Route path="/Artists" exact={true}>
-              <Artists />
-            </Route>
-            <Route path="/Favorites" exact={true}>
-              <Favorites />
-            </Route>
-            <Route path="/History" exact={true}>
-              <History />
-            </Route>
-            <Route path="/LatestSongs" exact={true}>
-              <LatestSongs />
-            </Route>
-            <Route path="/Queue">
-              <Queue />
-            </Route>
-            <Route path="/Search">
-              <Search />
-            </Route>
+            <Route path="/Artists" exact={true} component={Artists}/>
+            <Route path="/Favorites" exact={true} component={Favorites}/>
+            <Route path="/History" exact={true} component={History}/>
+            <Route path="/LatestSongs" exact={true} component={LatestSongs}/>
+            <Route path="/Queue" component={Queue}/>
+            <Route path="/Search" component={Search}/>
             <Route path="/Settings" exact={true} component={Settings} />
             <Route path="/Singers" exact={true} component={Singers} />
-            <Route path="/SongLists" exact={true}>
-              <SongLists />
-            </Route>
-            <Route path="/TopPlayed" exact={true}>
-              <TopSongs />
-            </Route>
+            <Route path="/SongLists" exact={true} component={SongLists}/>
+            <Route path="/TopPlayed" exact={true} component={TopSongs}/>
             <Route path="/SingerPick" exact={true} component={SingerPick} />
             <Redirect to="/" />
           </IonRouterOutlet>

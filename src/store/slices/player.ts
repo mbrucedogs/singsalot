@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { PlayerState } from '../../models/Player';
 import { QueueItem } from "../../models/QueueItem";
+import { Settings } from '../../models/Settings';
 import { Singer } from '../../models/Singer';
 import { Song } from "../../models/Song";
 
@@ -8,8 +9,9 @@ interface PlayerSliceHelper {
   playerState: PlayerState;
   singers: Singer[];
   queue: QueueItem[];
-  selectedSong?: Song,
-  selectedSongInfo?: Song
+  selectedSong?: Song;
+  selectedSongInfo?: Song;
+  settings: Settings;
 }
 
 const initialState: PlayerSliceHelper = {
@@ -17,7 +19,8 @@ const initialState: PlayerSliceHelper = {
   singers: [],
   selectedSong: undefined,
   selectedSongInfo: undefined,
-  playerState: PlayerState.stopped
+  playerState: PlayerState.stopped,
+  settings: {autoadvance:false, userpick:false}
 }
 
 export const playerSlice = createSlice({
@@ -30,6 +33,10 @@ export const playerSlice = createSlice({
     },
     selectedSongInfoChange: (state, action: PayloadAction<{song?: Song}>) => {
       state.selectedSongInfo = action?.payload.song;
+    },
+    //settings
+    settingsChange: (state, action: PayloadAction<Settings>) => {
+      state.settings = action.payload;
     },
     //queue
     queueChange: (state, action: PayloadAction<QueueItem[]>) => {
@@ -47,6 +54,7 @@ export const playerSlice = createSlice({
 })
 
 export const { 
+  settingsChange,
   selectedSongChange, selectedSongInfoChange,
   queueChange,  
   playerStateChange, 

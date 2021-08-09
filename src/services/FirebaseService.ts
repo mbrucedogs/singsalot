@@ -2,6 +2,7 @@ import { isEmpty } from 'lodash';
 import { Fabricable } from '../models/Fabricable';
 import { PlayerState } from '../models/Player';
 import { QueueItem } from '../models/QueueItem';
+import { Settings } from '../models/Settings';
 import { Singer } from '../models/Singer';
 import { Song } from '../models/Song';
 import localfirebase from './firebase';
@@ -62,6 +63,10 @@ class FirebaseService {
   ////////////////////////////////////////////////////////////////
   getPlayerSettings() {
     return this.get('player/settings');
+  }
+
+  setPlayerSettings(settings: Settings) {
+    return this.setValue('player/settings', settings);
   }
 
   ////////////////////////////////////////////////////////////////

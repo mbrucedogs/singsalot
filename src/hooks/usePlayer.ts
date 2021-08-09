@@ -10,12 +10,17 @@ import { selectPlayer } from "../store/store";
 import { selectedSongChange, selectedSongInfoChange } from "../store/slices/player";
 import { convertToArray } from "../services/firebaseHelpers";
 import { PlayerState } from "../models/Player";
+import { Settings } from "../models/Settings";
 
 export function usePlayer(): {
     //playerState
     playerState: PlayerState,
     setPlayerState: (playerState: PlayerState) => Promise<boolean>;
     
+    //settings
+    settings: Settings,
+    updateSettings: (autoAdvance: boolean) => void;
+
     //helper
     selectedSong?: Song,
     selectedSongInfo?: Song,
@@ -37,7 +42,7 @@ export function usePlayer(): {
     //***************************************************************************************************** */
     //Properties */
     //***************************************************************************************************** */
-    const {playerState, singers, queue, selectedSong, selectedSongInfo} = useSelector(selectPlayer);
+    const {settings, playerState, singers, queue, selectedSong, selectedSongInfo} = useSelector(selectPlayer);
     const orderMultiplier = 10;
     const dispatch = useAppDispatch();
 
@@ -48,6 +53,15 @@ export function usePlayer(): {
         return FirebaseService.setPlayerState(playerState);
     };
 
+    //***************************************************************************************************** */
+    //Queue */
+    //***************************************************************************************************** */
+    const updateSettings = (autoAdvance: boolean) => {
+        let updated: Settings = {...settings, autoadvance: autoAdvance}
+        console.log("update settings", updated);
+        return FirebaseService.setPlayerSettings(updated);
+    }
+    
     //***************************************************************************************************** */
     //Queue */
     //***************************************************************************************************** */
@@ -284,6 +298,9 @@ export function usePlayer(): {
     return { 
         //state
         playerState, setPlayerState,
+        //settings
+        settings,
+        updateSettings, 
         //helper
         selectedSong, selectedSongInfo, setSelectedSong, setSelectedInfoSong,
         //queue

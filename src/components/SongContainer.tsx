@@ -45,9 +45,9 @@ const SongContainer: React.FC<React.DetailedHTMLProps<React.HTMLAttributes<HTMLD
     }
 
     return (
-        <div>
+        <>
             {render(song, songPick, songInfoPick)}
-        </div>
+        </>
     );
 };
 

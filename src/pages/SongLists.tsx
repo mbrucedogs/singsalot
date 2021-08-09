@@ -9,9 +9,8 @@ import { IonButton, IonModal, IonContent, IonHeader, IonToolbar, IonTitle, IonBu
 import Collapsible from 'react-collapsible';
 import SongDiv from "../components/SongDiv";
 import { useSongLists } from "../hooks/useSongLists";
-import { Songable } from "../models/Song";
 
-const SongLists: React.FC<Songable> = ({ onSongPick, onSongInfo}) => {
+const SongLists: React.FC = () => {
   const pageName: string = "Song Lists";
   const { songLists } = useSongLists()
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -91,7 +90,7 @@ const SongLists: React.FC<Songable> = ({ onSongPick, onSongInfo}) => {
                     </div>
                     }>
                       {song.foundSongs?.map(s => {
-                        return <SongDiv key={getId()} style={{ paddingLeft: '50px' }} song={s} showPath={true} onSongInfo={onSongInfo} onSongPick={(song) => { onSongPick(s); setShowModal(false); }} />
+                        return <SongDiv key={getId()} style={{ paddingLeft: '50px' }} song={s} showPath={true} afterClick={() => { setShowModal(false); }} />
                       })}
                     </Collapsible>
                   )

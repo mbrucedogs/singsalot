@@ -5,9 +5,8 @@ import Page from "../components/Page";
 import ScrollingGrid from "../components/ScrollingGrid";
 import { isEmpty } from "lodash";
 import { useFavorites } from "../hooks/useFavorites";
-import { Songable } from "../models/Song";
 
-const Favorites: React.FC<Songable> = ({onSongPick, onSongInfo}) => {
+const Favorites: React.FC = () => {
   const pageName: string = "Favorites";
   const { favorites } = useFavorites();
 
@@ -21,7 +20,7 @@ const Favorites: React.FC<Songable> = ({onSongPick, onSongInfo}) => {
         pageCount={pageCount}
         pageName={pageName}
         listItems={favorites}
-        getRow={(song) => { return <SongDiv key={song.key} song={song} onSongPick={onSongPick} onSongInfo={onSongInfo}/> }}
+        getRow={(song) => { return <SongDiv key={song.key} song={song}/> }}
       />
     </Page>
   );

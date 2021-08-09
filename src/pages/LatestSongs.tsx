@@ -8,7 +8,7 @@ import { ArtistSongs } from "../models/ArtistSongs";
 import { useLatestSongs } from "../hooks/useLatestSongs";
 import { Songable } from "../models/Song";
 
-const LatestSongs: React.FC<Songable> = ({ onSongPick, onSongInfo }) => {
+const LatestSongs: React.FC = () => {
   const pageName: string = "Latest Songs";
   const { artistSongs } = useLatestSongs();
   const artistCollapse: boolean = false;
@@ -24,12 +24,12 @@ const LatestSongs: React.FC<Songable> = ({ onSongPick, onSongInfo }) => {
           <div className="row">
             <div style={{ flex: "1 1 auto" }} className="title">{item.artist}</div>
           </div>
-          {item.songs.map(song => { return <SongDiv key={song.key} onSongPick={onSongPick} onSongInfo={onSongInfo} song={song} style={{ paddingLeft: '50px' }} showArtist={item.artist === "None"} /> })}
+          {item.songs.map(song => { return <SongDiv key={song.key} song={song} style={{ paddingLeft: '50px' }} showArtist={item.artist === "None"} /> })}
         </div>
       );
     } else {
       return <div key={item.key}>
-        {item.songs.map(song => { return <SongDiv key={song.key} onSongPick={onSongPick} onSongInfo={onSongInfo} song={song}/> })}
+        {item.songs.map(song => { return <SongDiv key={song.key} song={song}/> })}
         </div>
     }
   }

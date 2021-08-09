@@ -55,15 +55,6 @@ const Router: React.FC = () => {
     });
   }
 
-  const history = useHistory();
-  const onSongPick = useCallback((song: Song) => {
-     setSelectedSong(song);
-  }, []);
-
-  const onSongInfo = useCallback((song: Song) => {
-    setSelectedInfoSong(song);   
-  }, []);
-
   return (
     <IonReactRouter>
       <AuthCheck isAuthenticated={authenticated} fallback={<Login onLogin={onLogin} />}>
@@ -72,30 +63,30 @@ const Router: React.FC = () => {
           <IonRouterOutlet id="main" animated={true}>
             <Route path="/" component={Queue} exact={true} />
             <Route path="/Artists" exact={true}>
-              <Artists onSongPick={onSongPick} onSongInfo={onSongInfo} />
+              <Artists />
             </Route>
             <Route path="/Favorites" exact={true}>
-              <Favorites onSongPick={onSongPick} onSongInfo={onSongInfo} />
+              <Favorites />
             </Route>
             <Route path="/History" exact={true}>
-              <History onSongPick={onSongPick} onSongInfo={onSongInfo} />
+              <History />
             </Route>
             <Route path="/LatestSongs" exact={true}>
-              <LatestSongs onSongPick={onSongPick} onSongInfo={onSongInfo} />
+              <LatestSongs />
             </Route>
             <Route path="/Queue">
               <Queue />
             </Route>
             <Route path="/Search">
-              <Search onSongPick={onSongPick} onSongInfo={onSongInfo} />
+              <Search />
             </Route>
             <Route path="/Settings" exact={true} component={Settings} />
             <Route path="/Singers" exact={true} component={Singers} />
             <Route path="/SongLists" exact={true}>
-              <SongLists onSongPick={onSongPick} onSongInfo={onSongInfo} />
+              <SongLists />
             </Route>
             <Route path="/TopPlayed" exact={true}>
-              <TopSongs onSongPick={onSongPick} onSongInfo={onSongInfo} />
+              <TopSongs />
             </Route>
             <Route path="/SingerPick" exact={true} component={SingerPick} />
             <Redirect to="/" />

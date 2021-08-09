@@ -8,7 +8,7 @@ import Page from "../components/Page"
 import { useSearch } from "../hooks/useSearch";
 import { Songable } from "../models/Song";
 
-const Search: React.FC<Songable> = ({ onSongPick, onSongInfo }) => {
+const Search: React.FC = () => {
   const { songs, hasLoaded, searchSongs } = useSearch();
   const pageName: string = "Search";
   const [searchText, setSearchText] = useState<string>('');
@@ -38,7 +38,7 @@ const Search: React.FC<Songable> = ({ onSongPick, onSongInfo }) => {
             pageCount={pageCount}
             pageName={pageName}
             listItems={songs}
-            getRow={(song) => { return <SongDiv key={song.key} song={song} onSongPick={onSongPick} onSongInfo={onSongInfo} showPath={true} /> }}
+            getRow={(song) => { return <SongDiv key={song.key} song={song} showPath={true} /> }}
           />
         }
         {isEmpty(songs) &&  <h4 style={{ padding: '10px' }}>No Artists or Songs found...</h4>}

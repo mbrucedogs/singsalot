@@ -8,9 +8,8 @@ import SongDiv from "../components/SongDiv";
 import { useArtists } from "../hooks/useArtists";
 import { useSearch } from "../hooks/useSearch";
 import { ArtistSongs } from "../models/ArtistSongs";
-import { Songable } from "../models/Song";
 
-const Artists: React.FC<Songable> = ({ onSongPick, onSongInfo }) => {
+const Artists: React.FC = () => {
   const pageName: string = "Artists";
   const { artists, hasLoaded, searchArtists } = useArtists();
   const { songs, searchSongs } = useSearch();
@@ -84,7 +83,7 @@ const Artists: React.FC<Songable> = ({ onSongPick, onSongInfo }) => {
                     pageCount={100}
                     pageName={modal?.artist || ''}
                     listItems={modal?.songs ?? []}
-                    getRow={(song) => { return <SongDiv key={song.key} song={song} onSongPick={onSongPick} onSongInfo={onSongInfo} showPath={true} /> }}
+                    getRow={(song, index) => <SongDiv key={index} song={song} showPath={true} afterClick={() => setShowModal(false)}/>}
                   />
                 </IonContent>
               </>

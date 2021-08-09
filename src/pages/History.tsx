@@ -5,10 +5,9 @@ import Page from "../components/Page"
 import ScrollingGrid from "../components/ScrollingGrid";
 import { isEmpty } from "lodash";
 import { useHistory } from "../hooks/useHistory";
-import { Songable } from "../models/Song";
 
-const History: React.FC<Songable> = ({ onSongPick, onSongInfo }) => {
-  const { history, addHistory, deleteHistory } = useHistory();
+const History: React.FC = () => {
+  const { history } = useHistory();
   const pageName: string = "History";
 
   if (isEmpty(history)) {
@@ -21,7 +20,7 @@ const History: React.FC<Songable> = ({ onSongPick, onSongInfo }) => {
         pageCount={pageCount}
         pageName={pageName}
         listItems={history}
-        getRow={(song, index) => {return <SongDiv key={index} song={song} onSongPick={onSongPick} onSongInfo={onSongInfo} showPath={true} />}}
+        getRow={(song, index) => {return <SongDiv key={index} song={song} showPath={true} />}}
       />
     </Page>
   );

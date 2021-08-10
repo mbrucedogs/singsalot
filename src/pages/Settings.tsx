@@ -1,7 +1,7 @@
 import { IonCheckbox, IonContent, IonItem, IonLabel, IonSegment, IonSegmentButton } from "@ionic/react";
-import React, { useState } from "react";
-import Page from "../components/Page"
+import React from "react";
 import { usePlayer } from "../hooks";
+import { Page } from "../components"
 
 const Settings: React.FC = () => {
   const { settings, updateSettings } = usePlayer();

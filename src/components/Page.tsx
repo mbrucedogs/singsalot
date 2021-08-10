@@ -7,7 +7,7 @@ interface ContainerProps {
   endButtons?: JSX.Element;
 }
 //
-const Page: React.FC<ContainerProps> = ({ name, children = null, endButtons = null }) => {
+export const Page: React.FC<ContainerProps> = ({ name, children = null, endButtons = null }) => {
   return (
     <IonPage>
       <IonHeader>

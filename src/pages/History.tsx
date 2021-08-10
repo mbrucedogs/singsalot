@@ -1,10 +1,8 @@
 import React from "react";
 import { pageCount } from "../globalConfig";
-import SongDiv from "../components/SongDiv";
-import Page from "../components/Page"
-import ScrollingGrid from "../components/ScrollingGrid";
 import { isEmpty } from "lodash";
 import { useSongHistory } from "../hooks";
+import { Page, ScrollingGrid, SongDiv } from "../components"
 
 const History: React.FC = () => {
   const { songHistory } = useSongHistory();

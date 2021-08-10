@@ -1,7 +1,6 @@
 import { IonRouterOutlet, IonSplitPane } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { Redirect, Route } from 'react-router-dom';
-import Menu from './components/Menu';
 import Artists from './pages/Artists';
 import Favorites from './pages/Favorites';
 import History from './pages/History';
@@ -15,7 +14,7 @@ import SongInfo from './pages/SongInfo';
 import SongLists from './pages/SongLists';
 import TopSongs from './pages/TopSongs';
 import SingerPick from './pages/SingerPick'
-import FirebaseReduxHandler from './components/FirebaseReduxHandler';
+import { Menu, FirebaseReduxHandler } from './components';
 import { useAuthentication, usePlayer } from './hooks';
 
 interface AuthCheckProps {

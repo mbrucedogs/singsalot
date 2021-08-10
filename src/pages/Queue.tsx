@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import Page from "../components/Page"
 import { isEmpty } from "lodash";
 import { IonIcon, IonReorder, IonReorderGroup, IonContent, IonItem, IonLabel, IonGrid, IonButtons, IonButton } from "@ionic/react";
 import { ItemReorderEventDetail } from "@ionic/core";
 import { close, closeOutline, reorderThree, reorderThreeOutline } from "ionicons/icons";
 import { useAuthentication, usePlayer } from "../hooks"
 import { QueueItem } from "../models";
+import { Page } from "../components"
 
 const Queue: React.FC = () => {
   const pageName: string = "Queue";

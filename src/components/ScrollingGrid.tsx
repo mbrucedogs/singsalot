@@ -10,7 +10,7 @@ export interface ScrollingGridProps<T> {
   getRow: (item: T, index?: number) => JSX.Element;
 }
 
-const ScrollingGrid = <T extends Fabricable>({ pageName, pageCount, listItems, getRow }: ScrollingGridProps<T>) => {
+export const ScrollingGrid = <T extends Fabricable>({ pageName, pageCount, listItems, getRow }: ScrollingGridProps<T>) => {
   const [page, setPage] = useState<number>(0);
   const [disableInfiniteScroll, setDisableInfiniteScroll] = useState<boolean>(false);
   const [items, setItems] = useState<T[]>([]);

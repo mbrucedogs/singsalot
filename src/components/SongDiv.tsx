@@ -13,7 +13,7 @@ export interface SongProps {
     afterClick?: (song: Song) => void;
 }
 
-const SongDiv: React.FC<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> & SongProps> = ({allowActions = true, afterClick,style, song, showCount = false, showPath = false, showArtist = true }) => {
+export const SongDiv: React.FC<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> & SongProps> = ({allowActions = true, afterClick,style, song, showCount = false, showPath = false, showArtist = true }) => {
     const getType = (path: string) => {
         return path.substr(path.length - 3);
     }

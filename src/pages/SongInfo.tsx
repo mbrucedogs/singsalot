@@ -1,9 +1,8 @@
-import Page from '../components/Page';
 import { useHistory } from 'react-router';
 import { IonButton, IonCol, IonGrid, IonRow } from '@ionic/react';
 import { Song } from '../models';
-import SongDiv from '../components/SongDiv';
 import { useAuthentication, usePlayer, useSongHistory, useFavorites } from '../hooks';
+import { Page, SongDiv } from "../components"
 
 const SongPickHandler = ({ }) => {
     const history = useHistory();

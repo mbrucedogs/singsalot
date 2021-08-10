@@ -1,9 +1,6 @@
 import { IonApp } from '@ionic/react';
 import Router from './Router';
-import { useEffect } from 'react';
-import { selectAuthenticated } from './store/store'
-import { useSelector } from 'react-redux'
-import FirebaseService from "./services/FirebaseService";
+import { ErrorBoundary } from './components';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -24,7 +21,6 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/style.css';
 import './theme/variables.css';
-import ErrorBoundary from './components/ErrorBoundary';
 
 const App: React.FC = () => {
   return (

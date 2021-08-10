@@ -10,7 +10,7 @@ interface SongContainerProps {
         onSongInfoPick: () => void) => ReactNode;
 }
 
-const SongContainer: React.FC<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> & SongContainerProps> = ({ song, render }) => {
+export const SongContainer: React.FC<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> & SongContainerProps> = ({ song, render }) => {
     const history = useHistory();
     const { isAdmin, singer } = useAuthentication();
     const { singers, setSelectedSong, addToQueue } = usePlayer();

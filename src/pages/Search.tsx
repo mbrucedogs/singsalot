@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { pageCount } from "../globalConfig";
 import { isEmpty } from "lodash";
-import ScrollingGrid from "../components/ScrollingGrid";
-import SongDiv from "../components/SongDiv";
 import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonToolbar, IonSearchbar } from '@ionic/react';
-import Page from "../components/Page"
 import { useSearch } from "../hooks";
 import { useParams } from "react-router";
+import { Page, ScrollingGrid, SongDiv } from "../components"
 
 const Search: React.FC = () => {
   const { songs, hasLoaded, searchSongs } = useSearch();

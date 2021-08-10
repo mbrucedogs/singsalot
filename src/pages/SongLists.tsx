@@ -3,11 +3,9 @@ import { pageCount } from "../globalConfig";
 import { isEmpty } from "lodash";
 import { IonButton, IonModal, IonContent, IonHeader, IonToolbar, IonTitle, IonButtons } from "@ionic/react";
 import Collapsible from 'react-collapsible';
-import Page from "../components/Page"
-import ScrollingGrid from "../components/ScrollingGrid";
-import SongDiv from "../components/SongDiv";
 import { useSongLists } from "../hooks";
 import { SongList, SongListSong } from "../models";
+import { Page, ScrollingGrid, SongDiv } from "../components"
 
 const SongLists: React.FC = () => {
   const pageName: string = "Song Lists";

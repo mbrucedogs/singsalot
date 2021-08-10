@@ -1,10 +1,8 @@
 import React from "react";
-import SongDiv from "../components/SongDiv";
-import Page from "../components/Page"
-import ScrollingGrid from "../components/ScrollingGrid";
 import { isEmpty } from "lodash";
 import Collapsible from "react-collapsible";
 import { useTopPlayed } from "../hooks";
+import { Page, ScrollingGrid, SongDiv } from "../components"
 
 const TopSongs: React.FC = () => {
   const { topPlayed } = useTopPlayed();

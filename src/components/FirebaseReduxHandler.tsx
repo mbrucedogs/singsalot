@@ -202,5 +202,3 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
 
     return <>{children}</>
 }
-
-export default FirebaseReduxHandler;

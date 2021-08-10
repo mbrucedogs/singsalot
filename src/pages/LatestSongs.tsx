@@ -1,11 +1,9 @@
 import React from "react";
 import { pageCount } from "../globalConfig";
-import SongDiv from "../components/SongDiv";
-import Page from "../components/Page"
-import ScrollingGrid from "../components/ScrollingGrid";
 import { isEmpty } from "lodash";
 import { ArtistSongs } from "../models";
 import { useLatestSongs } from "../hooks";
+import { Page, ScrollingGrid, SongDiv } from "../components"
 
 const LatestSongs: React.FC = () => {
   const pageName: string = "Latest Songs";

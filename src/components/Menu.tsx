@@ -101,7 +101,7 @@ interface AdminState {
   actions: Array<AdminAction>;
 }
 
-const Menu: React.FC = () => {
+export const Menu: React.FC = () => {
 
   const playActions: AdminAction[] = [
     {

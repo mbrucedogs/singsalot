@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { pageCount } from "../globalConfig";
-import Page from "../components/Page"
-import ScrollingGrid from "../components/ScrollingGrid";
 import { isEmpty } from "lodash";
 import { IonMenuButton, IonPage, IonSearchbar, IonButton, IonModal, IonContent, IonHeader, IonToolbar, IonTitle, IonButtons } from "@ionic/react";
-import SongDiv from "../components/SongDiv";
 import { useArtists, useSearch } from "../hooks";
 import { ArtistSongs } from "../models";
+import { Page, ScrollingGrid, SongDiv } from "../components"
 
 const Artists: React.FC = () => {
   const pageName: string = "Artists";

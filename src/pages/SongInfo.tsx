@@ -1,8 +1,8 @@
 import { useHistory } from 'react-router';
 import { IonButton, IonCol, IonGrid, IonRow } from '@ionic/react';
 import { Song } from '../models';
-import { useAuthentication, usePlayer, useSongHistory, useFavorites } from '../hooks';
 import { Page, SongDiv } from "../components"
+import { useAuthentication, usePlayer, useSongHistory, useFavorites } from '../hooks';
 
 export const SongInfo = ({ }) => {
     const history = useHistory();

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { pageCount } from "../globalConfig";
+import { useParams } from "react-router";
 import { isEmpty } from "lodash";
 import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonToolbar, IonSearchbar } from '@ionic/react';
+import { pageCount } from "../globalConfig";
 import { useSearch } from "../hooks";
-import { useParams } from "react-router";
 import { Page, ScrollingGrid, SongDiv } from "../components"
 
 export const Search: React.FC = () => {

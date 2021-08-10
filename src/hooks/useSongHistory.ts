@@ -2,7 +2,7 @@ import { isEmpty } from "lodash";
 import { useCallback } from "react";
 import { useSelector } from "react-redux";
 import { Song } from "../models";
-import FirebaseService from "../services/FirebaseService";
+import { FirebaseService } from "../services";
 import { selectHistory } from "../store/store";
 
 export const useSongHistory = (): {

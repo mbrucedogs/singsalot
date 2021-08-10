@@ -1,11 +1,10 @@
 import { isEmpty, reject } from "lodash";
-import FirebaseService from "../services/FirebaseService";
 import { useAppDispatch } from "./hooks";
 import { useCallback } from "react";
 import { useSelector } from "react-redux";
 import { selectPlayer } from "../store/store";
-import { selectedSongChange, selectedSongInfoChange } from "../store/slices/player";
-import { convertToArray } from "../services/firebaseHelpers";
+import { selectedSongChange } from "../store/slices/player";
+import { convertToArray, FirebaseService } from "../services";
 import { useSongHistory } from "./useSongHistory";
 import { PlayerState, QueueItem, Settings, Singer, Song } from "../models";
 

@@ -8,9 +8,8 @@ import { songListsChange } from '../store/slices/songLists';
 import { songsChange } from '../store/slices/songs';
 import { useAppDispatch } from '../hooks'
 import orderBy from 'lodash/orderBy'
-import FirebaseService from "../services/FirebaseService";
 import { useEffect } from "react";
-import { convertToArray } from '../services/firebaseHelpers'
+import { convertToArray, FirebaseService } from '../services'
 import { playerStateChange, queueChange, singersChange } from "../store/slices/player";
 import {
     Artist,

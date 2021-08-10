@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { useSelector } from "react-redux";
 import { Song } from "../models";
-import FirebaseService from "../services/FirebaseService";
+import { FirebaseService } from "../services";
 import { selectFavorites } from "../store/store";
 
 export const useFavorites = (): {

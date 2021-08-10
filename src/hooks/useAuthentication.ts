@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import FirebaseService from "../services/FirebaseService";
+import { FirebaseService } from "../services";
 import { authenticatedChange } from "../store/slices/authenticated";
 import { selectAuthenticated } from "../store/store";
 import { useAppDispatch } from "./hooks";

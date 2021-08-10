@@ -1,13 +1,15 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { artistsSlice } from './slices/artists';
-import { authenticatedSlice } from './slices/authenticated';
-import { favoritesSlice } from './slices/favorites';
-import { historySlice } from './slices/history';
-import { latestSongsSlice } from './slices/latestSongs';
-import { playerSlice } from './slices/player';
-import { settingsSlice } from './slices/settings';
-import { songListsSlice } from './slices/songLists';
-import { songsSlice } from './slices/songs';
+import {
+  artistsSlice,
+  authenticatedSlice,
+  favoritesSlice,
+  historySlice,
+  latestSongsSlice,
+  playerSlice,
+  settingsSlice,
+  songListsSlice,
+  songsSlice
+} from './slices';
 
 const store = configureStore({
   reducer: {

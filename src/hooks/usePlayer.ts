@@ -3,7 +3,7 @@ import { useAppDispatch } from "./hooks";
 import { useCallback } from "react";
 import { useSelector } from "react-redux";
 import { selectPlayer } from "../store/store";
-import { selectedSongChange } from "../store/slices/player";
+import { selectedSongChange } from "../store/slices";
 import { convertToArray, FirebaseService } from "../services";
 import { useSongHistory } from "./useSongHistory";
 import { PlayerState, QueueItem, Settings, Singer, Song } from "../models";

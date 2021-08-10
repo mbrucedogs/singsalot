@@ -1,16 +1,18 @@
 import firebase from "firebase"
 import { isEmpty, includes } from "lodash";
-import { artistsChange } from '../store/slices/artists';
-import { favoritesChange } from '../store/slices/favorites';
-import { historyChange } from '../store/slices/history';
-import { latestSongsChange } from '../store/slices/latestSongs';
-import { songListsChange } from '../store/slices/songLists';
-import { songsChange } from '../store/slices/songs';
 import { useAppDispatch } from '../hooks'
 import orderBy from 'lodash/orderBy'
 import { useEffect } from "react";
 import { convertToArray, FirebaseService } from '../services'
-import { playerStateChange, queueChange, singersChange } from "../store/slices/player";
+import { 
+    artistsChange,
+    favoritesChange,
+    historyChange, 
+    latestSongsChange,
+    playerStateChange, queueChange, singersChange,
+    songsChange,
+    songListsChange
+} from "../store/slices";
 import {
     Artist,
     ArtistSongs,

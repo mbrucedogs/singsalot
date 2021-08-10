@@ -4,11 +4,11 @@ import { useSelector } from "react-redux";
 import { Artist } from "../models/Artist";
 import { selectArtists } from "../store/store";
 
-export function useArtists(): {
+export const useArtists = (): {
     hasLoaded: boolean;
     artists: Artist[];
     searchArtists: (artist: string) => void;
-} {
+} => {
     const allArtists = useSelector(selectArtists);
     const [artists, setArtists] = useState<Artist[]>([]);
     const [hasLoaded, setHasLoaded] = useState<boolean>(false);

@@ -4,11 +4,11 @@ import { Song } from "../models/Song";
 import FirebaseService from "../services/FirebaseService";
 import { selectFavorites } from "../store/store";
 
-export function useFavorites(): {
+export const useFavorites = (): {
     favorites: Song[];
     addFavorite: (song: Song) => void;
     deleteFavorite: (song: Song) => void;
-} {
+} => {
     const favorites = useSelector(selectFavorites);
 
     const addFavorite = useCallback((song: Song) => {

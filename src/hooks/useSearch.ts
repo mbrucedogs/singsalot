@@ -4,11 +4,11 @@ import { useSelector } from "react-redux";
 import { Song } from "../models/Song";
 import { selectSongs } from "../store/store";
 
-export function useSearch(): {
+export const useSearch = (): {
     hasLoaded: boolean;
     songs: Song[];
     searchSongs: (query: string) => void;
-} {
+} => {
     const allSongs = useSelector(selectSongs);
     const [songs, setSongs] = useState<Song[]>([]);
     const [hasLoaded, setHasLoaded] = useState<boolean>(false);

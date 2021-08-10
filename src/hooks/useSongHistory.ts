@@ -5,11 +5,11 @@ import { Song } from "../models/Song";
 import FirebaseService from "../services/FirebaseService";
 import { selectHistory } from "../store/store";
 
-export function useSongHistory(): {
+export const useSongHistory = (): {
     songHistory: Song[];
     addSongHistory: (song: Song) => Promise<boolean>;
     deleteSongHistory: (song: Song) => Promise<boolean>;
-} {
+} => {
     const songHistory = useSelector(selectHistory);
     
     const addSongHistory = useCallback((song: Song): Promise<boolean> => {

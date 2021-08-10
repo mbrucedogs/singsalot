@@ -13,7 +13,7 @@ import { PlayerState } from "../models/Player";
 import { Settings } from "../models/Settings";
 import { useSongHistory } from "./useSongHistory";
 
-export function usePlayer(): {
+export const usePlayer = (): {
     //playerState
     playerState: PlayerState,
     setPlayerState: (playerState: PlayerState) => Promise<boolean>;
@@ -37,7 +37,7 @@ export function usePlayer(): {
     addSinger: (name: string) => Promise<boolean>;
     updateSinger: (singer: Singer) => Promise<boolean>;
     deleteSinger: (singer: Singer) => Promise<boolean>;
-} {
+} => {
     //***************************************************************************************************** */
     //Properties */
     //***************************************************************************************************** */

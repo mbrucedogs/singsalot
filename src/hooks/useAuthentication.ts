@@ -4,12 +4,12 @@ import { authenticatedChange } from "../store/slices/authenticated";
 import { selectAuthenticated } from "../store/store";
 import { useAppDispatch } from "./hooks";
 
-export function useAuthentication(): {
+export const useAuthentication = (): {
     authenticated: boolean;
     singer: string;
     isAdmin: boolean;
     login:(isAdmin: boolean, controllerId: string, singerName: string)=> Promise<boolean>
-} {
+} => {
     const { authenticated, singer, isAdmin } = useSelector(selectAuthenticated);
     const dispatch = useAppDispatch();
 

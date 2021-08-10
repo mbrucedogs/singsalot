@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
-import { usePlayer } from '../hooks/usePlayer';
+import { usePlayer } from '../hooks';
 import SongDiv from '../components/SongDiv';
 import Page from '../components/Page';
 import ScrollingGrid from '../components/ScrollingGrid';

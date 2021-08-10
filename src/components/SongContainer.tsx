@@ -1,8 +1,7 @@
 import React, { ReactNode } from "react";
 import { Song } from "../models";
 import { useHistory } from "react-router";
-import { useAuthentication } from "../hooks/useAuthentication";
-import { usePlayer } from "../hooks/usePlayer";
+import { useAuthentication, usePlayer } from "../hooks";
 
 interface SongContainerProps {
     song: Song;

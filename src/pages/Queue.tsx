@@ -4,8 +4,7 @@ import { isEmpty } from "lodash";
 import { IonIcon, IonReorder, IonReorderGroup, IonContent, IonItem, IonLabel, IonGrid, IonButtons, IonButton } from "@ionic/react";
 import { ItemReorderEventDetail } from "@ionic/core";
 import { close, closeOutline, reorderThree, reorderThreeOutline } from "ionicons/icons";
-import { usePlayer } from "../hooks/usePlayer";
-import { useAuthentication } from "../hooks/useAuthentication"
+import { useAuthentication, usePlayer } from "../hooks"
 import { QueueItem } from "../models";
 
 const Queue: React.FC = () => {

@@ -5,8 +5,7 @@ import ScrollingGrid from "../components/ScrollingGrid";
 import { isEmpty } from "lodash";
 import { IonMenuButton, IonPage, IonSearchbar, IonButton, IonModal, IonContent, IonHeader, IonToolbar, IonTitle, IonButtons } from "@ionic/react";
 import SongDiv from "../components/SongDiv";
-import { useArtists } from "../hooks/useArtists";
-import { useSearch } from "../hooks/useSearch";
+import { useArtists, useSearch } from "../hooks";
 import { ArtistSongs } from "../models";
 
 const Artists: React.FC = () => {

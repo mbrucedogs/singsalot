@@ -13,8 +13,7 @@ import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { stop, stopOutline, pause, pauseOutline, play, playOutline, time, timeOutline, settings, settingsOutline, list, listOutline, musicalNotes, musicalNotesOutline, peopleOutline, people, peopleCircle, peopleCircleOutline, heartOutline, heartSharp, mailOutline, mailSharp, paperPlaneOutline, paperPlaneSharp, trashOutline, trashSharp, warningOutline, warningSharp, searchOutline, search, starOutline, star } from 'ionicons/icons';
 import { PlayerState } from "../models";
-import { useAuthentication } from '../hooks/useAuthentication';
-import { usePlayer } from '../hooks/usePlayer';
+import { useAuthentication, usePlayer } from '../hooks';
 
 function debugLog(container: string, label: string, value: any = null) {
   console.log(`debug - ${container} - ${label} `, value);

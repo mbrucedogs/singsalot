@@ -7,7 +7,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { IonModal, IonHeader, IonToolbar, IonTitle, IonInput, IonButtons, IonButton, IonContent, IonItem, IonLabel, IonIcon, IonGrid, IonRow, IonCol } from "@ionic/react";
 import { add, addOutline, closeOutline, close } from "ionicons/icons";
 import { Singer } from "../models";
-import { usePlayer } from "../hooks/usePlayer";
+import { usePlayer } from "../hooks";
 
 interface AddSingerForm {
   name: string;

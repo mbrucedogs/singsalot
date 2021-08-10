@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { IonGrid, IonRow, IonCol } from '@ionic/react';
 import { micOutline } from "ionicons/icons";
 import { IonItem, IonLabel, IonInput, IonButton, IonIcon, IonAlert } from '@ionic/react';
-import { useQuery } from '../hooks/hooks';
+import { useQuery } from '../hooks';
 
 interface LoginProps {
     onLogin: (isAdmin: boolean, controllerId:string, singerName: string)=>Promise<boolean>;

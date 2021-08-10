@@ -16,8 +16,7 @@ import SongLists from './pages/SongLists';
 import TopSongs from './pages/TopSongs';
 import SingerPick from './pages/SingerPick'
 import FirebaseReduxHandler from './components/FirebaseReduxHandler';
-import { useAuthentication } from './hooks/useAuthentication';
-import { usePlayer } from './hooks/usePlayer';
+import { useAuthentication, usePlayer } from './hooks';
 
 interface AuthCheckProps {
   isAuthenticated: boolean;

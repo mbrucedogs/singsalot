@@ -2,11 +2,8 @@ import Page from '../components/Page';
 import { useHistory } from 'react-router';
 import { IonButton, IonCol, IonGrid, IonRow } from '@ionic/react';
 import { Song } from '../models';
-import { usePlayer } from '../hooks/usePlayer';
 import SongDiv from '../components/SongDiv';
-import { useAuthentication } from '../hooks/useAuthentication';
-import { useSongHistory } from "../hooks/useSongHistory";
-import { useFavorites } from '../hooks/useFavorites';
+import { useAuthentication, usePlayer, useSongHistory, useFavorites } from '../hooks';
 
 const SongPickHandler = ({ }) => {
     const history = useHistory();

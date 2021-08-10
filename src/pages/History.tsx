@@ -4,7 +4,7 @@ import SongDiv from "../components/SongDiv";
 import Page from "../components/Page"
 import ScrollingGrid from "../components/ScrollingGrid";
 import { isEmpty } from "lodash";
-import { useSongHistory } from "../hooks/useSongHistory";
+import { useSongHistory } from "../hooks";
 
 const History: React.FC = () => {
   const { songHistory } = useSongHistory();

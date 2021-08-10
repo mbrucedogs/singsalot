@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { SongList } from "../models/SongList";
-import { SongListSong } from "../models/SongListSong";
 import { pageCount } from "../globalConfig";
-import Page from "../components/Page"
-import ScrollingGrid from "../components/ScrollingGrid";
 import { isEmpty } from "lodash";
 import { IonButton, IonModal, IonContent, IonHeader, IonToolbar, IonTitle, IonButtons } from "@ionic/react";
 import Collapsible from 'react-collapsible';
+import Page from "../components/Page"
+import ScrollingGrid from "../components/ScrollingGrid";
 import SongDiv from "../components/SongDiv";
-import { useSongLists } from "../hooks/useSongLists";
+import { useSongLists } from "../hooks";
+import { SongList, SongListSong } from "../models";
 
 const SongLists: React.FC = () => {
   const pageName: string = "Song Lists";

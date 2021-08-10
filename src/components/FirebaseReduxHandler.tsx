@@ -4,10 +4,9 @@ import { artistsChange } from '../store/slices/artists';
 import { favoritesChange } from '../store/slices/favorites';
 import { historyChange } from '../store/slices/history';
 import { latestSongsChange } from '../store/slices/latestSongs';
-import { settingsChange } from '../store/slices/settings';
 import { songListsChange } from '../store/slices/songLists';
 import { songsChange } from '../store/slices/songs';
-import { useAppDispatch } from '../hooks/hooks'
+import { useAppDispatch } from '../hooks'
 import orderBy from 'lodash/orderBy'
 import FirebaseService from "../services/FirebaseService";
 import { useEffect } from "react";

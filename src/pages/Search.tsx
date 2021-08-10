@@ -5,8 +5,7 @@ import ScrollingGrid from "../components/ScrollingGrid";
 import SongDiv from "../components/SongDiv";
 import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonToolbar, IonSearchbar } from '@ionic/react';
 import Page from "../components/Page"
-import { useSearch } from "../hooks/useSearch";
-import { useQuery } from "../hooks/hooks";
+import { useSearch } from "../hooks";
 import { useParams } from "react-router";
 
 const Search: React.FC = () => {

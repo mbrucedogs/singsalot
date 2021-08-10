@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { QueueItem } from "../models/QueueItem";
 import Page from "../components/Page"
 import { isEmpty } from "lodash";
 import { IonIcon, IonReorder, IonReorderGroup, IonContent, IonItem, IonLabel, IonGrid, IonButtons, IonButton } from "@ionic/react";
@@ -7,7 +6,8 @@ import { ItemReorderEventDetail } from "@ionic/core";
 import { close, closeOutline, reorderThree, reorderThreeOutline } from "ionicons/icons";
 import { usePlayer } from "../hooks/usePlayer";
 import { useAuthentication } from "../hooks/useAuthentication"
-import { Song } from "../models/Song";
+import { QueueItem } from "../models";
+
 const Queue: React.FC = () => {
   const pageName: string = "Queue";
   const { isAdmin, singer } = useAuthentication();

@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { History } from '../../models/History';
+import { History } from '../../models';
 
 const initialState: History = {
   songs:[], 

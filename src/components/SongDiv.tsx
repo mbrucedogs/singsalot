@@ -1,8 +1,8 @@
 import React from "react";
-import { Song } from "../models/Song";
 import { IonCol, IonGrid, IonIcon, IonRow } from "@ionic/react";
 import { informationCircle, informationCircleOutline } from "ionicons/icons";
 import SongContainer from "./SongContainer";
+import { Song } from "../models";
 
 export interface SongProps {
     song: Song;

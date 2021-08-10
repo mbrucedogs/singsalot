@@ -7,7 +7,7 @@ import { IonMenuButton, IonPage, IonSearchbar, IonButton, IonModal, IonContent, 
 import SongDiv from "../components/SongDiv";
 import { useArtists } from "../hooks/useArtists";
 import { useSearch } from "../hooks/useSearch";
-import { ArtistSongs } from "../models/ArtistSongs";
+import { ArtistSongs } from "../models";
 
 const Artists: React.FC = () => {
   const pageName: string = "Artists";

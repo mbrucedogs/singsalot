@@ -9,20 +9,21 @@ import { songListsChange } from '../store/slices/songLists';
 import { songsChange } from '../store/slices/songs';
 import { useAppDispatch } from '../hooks/hooks'
 import orderBy from 'lodash/orderBy'
-import { SongList } from "../models/SongList";
-import { PlayerState } from "../models/Player";
-import { QueueItem } from "../models/QueueItem";
-import { Artist } from "../models/Artist";
-import { ArtistSongs } from "../models/ArtistSongs"
-import { Singer } from "../models/Singer";
-import { TopPlayed } from "../models/TopPlayed";
-import { Song } from "../models/Song";
 import FirebaseService from "../services/FirebaseService";
 import { useEffect } from "react";
-import { History } from "../models/History";
 import { convertToArray } from '../services/firebaseHelpers'
 import { playerStateChange, queueChange, singersChange } from "../store/slices/player";
-
+import {
+    Artist,
+    ArtistSongs,
+    History,
+    PlayerState,
+    QueueItem,
+    Singer,
+    Song,
+    SongList,
+    TopPlayed
+} from "../models";
 interface FirebaseReduxHandlerProps {
     isAuthenticated: boolean;
     children: React.ReactNode;
@@ -159,11 +160,11 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
                 });
 
                 let sortedHistory = history.sort((a: Song, b: Song) => {
-                    var yesterday = new Date();   
-                    yesterday.setDate(yesterday.getDate()-1);                                   
+                    var yesterday = new Date();
+                    yesterday.setDate(yesterday.getDate() - 1);
                     let aDate = a.date ? new Date(a.date) : yesterday;
                     let bDate = b.date ? new Date(b.date) : yesterday;
-                    return  bDate.valueOf() - aDate.valueOf();
+                    return bDate.valueOf() - aDate.valueOf();
                 });
 
                 let payload: History = {

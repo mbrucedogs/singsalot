@@ -1,7 +1,7 @@
 import { isEmpty } from "lodash";
 import { useCallback, useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Song } from "../models/Song";
+import { Song } from "../models";
 import { selectSongs } from "../store/store";
 
 export const useSearch = (): {

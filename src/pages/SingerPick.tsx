@@ -1,11 +1,10 @@
 import { useCallback } from 'react';
-import ScrollingGrid from '../components/ScrollingGrid';
-import { useSongHistory } from '../hooks/useSongHistory'
-import { Singer } from '../models/Singer';
 import { useHistory } from 'react-router-dom';
-import Page from '../components/Page';
 import { usePlayer } from '../hooks/usePlayer';
 import SongDiv from '../components/SongDiv';
+import Page from '../components/Page';
+import ScrollingGrid from '../components/ScrollingGrid';
+import { Singer } from '../models';
 
 const SongPickHandler = ({ }) => {
 

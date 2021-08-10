@@ -4,7 +4,7 @@ import SongDiv from "../components/SongDiv";
 import Page from "../components/Page"
 import ScrollingGrid from "../components/ScrollingGrid";
 import { isEmpty } from "lodash";
-import { ArtistSongs } from "../models/ArtistSongs";
+import { ArtistSongs } from "../models";
 import { useLatestSongs } from "../hooks/useLatestSongs";
 
 const LatestSongs: React.FC = () => {

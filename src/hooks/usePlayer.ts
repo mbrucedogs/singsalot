@@ -3,15 +3,11 @@ import FirebaseService from "../services/FirebaseService";
 import { useAppDispatch } from "./hooks";
 import { useCallback } from "react";
 import { useSelector } from "react-redux";
-import { QueueItem } from "../models/QueueItem";
-import { Singer } from "../models/Singer";
-import { Song } from "../models/Song";
 import { selectPlayer } from "../store/store";
 import { selectedSongChange, selectedSongInfoChange } from "../store/slices/player";
 import { convertToArray } from "../services/firebaseHelpers";
-import { PlayerState } from "../models/Player";
-import { Settings } from "../models/Settings";
 import { useSongHistory } from "./useSongHistory";
+import { PlayerState, QueueItem, Settings, Singer, Song } from "../models";
 
 export const usePlayer = (): {
     //playerState

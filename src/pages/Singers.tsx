@@ -12,7 +12,7 @@ interface AddSingerForm {
   name: string;
 }
 
-const Singers: React.FC = () => {
+export const Singers: React.FC = () => {
   const { singers, addSinger, deleteSinger } = usePlayer();
   const pageName: string = "Singers";
 

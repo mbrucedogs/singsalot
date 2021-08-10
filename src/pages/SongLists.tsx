@@ -7,7 +7,7 @@ import { useSongLists } from "../hooks";
 import { SongList, SongListSong } from "../models";
 import { Page, ScrollingGrid, SongDiv } from "../components"
 
-const SongLists: React.FC = () => {
+export const SongLists: React.FC = () => {
   const pageName: string = "Song Lists";
   const { songLists } = useSongLists()
   const [showModal, setShowModal] = useState<boolean>(false);

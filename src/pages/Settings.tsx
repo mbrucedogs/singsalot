@@ -3,7 +3,7 @@ import React from "react";
 import { usePlayer } from "../hooks";
 import { Page } from "../components"
 
-const Settings: React.FC = () => {
+export const Settings: React.FC = () => {
   const { settings, updateSettings } = usePlayer();
 
   return (

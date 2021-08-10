@@ -4,7 +4,7 @@ import { Song } from '../models';
 import { useAuthentication, usePlayer, useSongHistory, useFavorites } from '../hooks';
 import { Page, SongDiv } from "../components"
 
-const SongPickHandler = ({ }) => {
+export const SongInfo = ({ }) => {
     const history = useHistory();
     const { favorites } = useFavorites();
     const { isAdmin, singer } = useAuthentication();
@@ -68,4 +68,4 @@ const SongPickHandler = ({ }) => {
     );
 };
 
-export default SongPickHandler;
+export default SongInfo;

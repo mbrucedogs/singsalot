@@ -6,7 +6,7 @@ import { useArtists, useSearch } from "../hooks";
 import { ArtistSongs } from "../models";
 import { Page, ScrollingGrid, SongDiv } from "../components"
 
-const Artists: React.FC = () => {
+export const Artists: React.FC = () => {
   const pageName: string = "Artists";
   const { artists, hasLoaded, searchArtists } = useArtists();
   const { songs, searchSongs } = useSearch();

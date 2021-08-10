@@ -6,7 +6,7 @@ import { useSearch } from "../hooks";
 import { useParams } from "react-router";
 import { Page, ScrollingGrid, SongDiv } from "../components"
 
-const Search: React.FC = () => {
+export const Search: React.FC = () => {
   const { songs, hasLoaded, searchSongs } = useSearch();
   const pageName: string = "Search";
   const [searchText, setSearchText] = useState<string>('');

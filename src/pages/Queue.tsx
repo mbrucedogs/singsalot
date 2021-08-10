@@ -7,7 +7,7 @@ import { useAuthentication, usePlayer } from "../hooks"
 import { QueueItem } from "../models";
 import { Page } from "../components"
 
-const Queue: React.FC = () => {
+export const Queue: React.FC = () => {
   const pageName: string = "Queue";
   const { isAdmin, singer } = useAuthentication();
   const { queue, deleteFromQueue, reorderQueue } = usePlayer();

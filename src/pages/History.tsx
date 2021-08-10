@@ -4,7 +4,7 @@ import { isEmpty } from "lodash";
 import { useSongHistory } from "../hooks";
 import { Page, ScrollingGrid, SongDiv } from "../components"
 
-const History: React.FC = () => {
+export const History: React.FC = () => {
   const { songHistory } = useSongHistory();
   const pageName: string = "History";
 

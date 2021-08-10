@@ -4,7 +4,7 @@ import Collapsible from "react-collapsible";
 import { useTopPlayed } from "../hooks";
 import { Page, ScrollingGrid, SongDiv } from "../components"
 
-const TopSongs: React.FC = () => {
+export const TopSongs: React.FC = () => {
   const { topPlayed } = useTopPlayed();
   const amount: number = 100;
   const pageName: string = `Top ${amount} Played`;

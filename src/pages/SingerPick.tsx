@@ -4,7 +4,7 @@ import { usePlayer } from '../hooks';
 import { Singer } from '../models';
 import { Page, ScrollingGrid, SongDiv } from "../components"
 
-const SongPickHandler = ({ }) => {
+export const SingerPick = ({ }) => {
 
     const { singers, addToQueue, selectedSong, setSelectedSong } = usePlayer();
     const history = useHistory();
@@ -39,4 +39,4 @@ const SongPickHandler = ({ }) => {
     );
 };
 
-export default SongPickHandler;
+export default SingerPick;

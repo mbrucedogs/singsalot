@@ -5,7 +5,7 @@ import { ArtistSongs } from "../models";
 import { useLatestSongs } from "../hooks";
 import { Page, ScrollingGrid, SongDiv } from "../components"
 
-const LatestSongs: React.FC = () => {
+export const LatestSongs: React.FC = () => {
   const pageName: string = "Latest Songs";
   const { artistSongs } = useLatestSongs();
   const artistCollapse: boolean = false;

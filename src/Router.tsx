@@ -1,19 +1,21 @@
 import { IonRouterOutlet, IonSplitPane } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { Redirect, Route } from 'react-router-dom';
-import Artists from './pages/Artists';
-import Favorites from './pages/Favorites';
-import History from './pages/History';
-import LatestSongs from './pages/LatestSongs';
-import Login from './pages/Login';
-import Queue from './pages/Queue';
-import Search from './pages/Search';
-import Settings from './pages/Settings';
-import Singers from './pages/Singers';
-import SongInfo from './pages/SongInfo';
-import SongLists from './pages/SongLists';
-import TopSongs from './pages/TopSongs';
-import SingerPick from './pages/SingerPick'
+import { 
+  Artists,
+  Favorites,
+  History,
+  LatestSongs,
+  Login,
+  Queue,
+  Search,
+  Settings,
+  Singers,
+  SongInfo,
+  SongLists,
+  SingerPick, 
+  TopSongs
+} from './pages'
 import { Menu, FirebaseReduxHandler } from './components';
 import { useAuthentication, usePlayer } from './hooks';
 

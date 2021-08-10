@@ -4,7 +4,7 @@ import { isEmpty } from "lodash";
 import { useFavorites } from "../hooks";
 import { Page, ScrollingGrid, SongDiv } from "../components"
 
-const Favorites: React.FC = () => {
+export const Favorites: React.FC = () => {
   const pageName: string = "Favorites";
   const { favorites } = useFavorites();
 

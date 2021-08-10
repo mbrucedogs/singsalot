@@ -13,7 +13,7 @@ import Settings from './pages/Settings';
 import Singers from './pages/Singers';
 import SongInfo from './pages/SongInfo';
 import SongLists from './pages/SongLists';
-import TopSongs from './pages/TopPlayed';
+import TopSongs from './pages/TopSongs';
 import SingerPick from './pages/SingerPick'
 import FirebaseReduxHandler from './components/FirebaseReduxHandler';
 import { useAuthentication } from './hooks/useAuthentication';

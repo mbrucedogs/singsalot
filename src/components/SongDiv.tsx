@@ -1,5 +1,5 @@
 import React from "react";
-import { IonCol, IonGrid, IonIcon, IonRow } from "@ionic/react";
+import { IonIcon } from "@ionic/react";
 import { informationCircle, informationCircleOutline } from "ionicons/icons";
 import SongContainer from "./SongContainer";
 import { Song } from "../models";
@@ -10,10 +10,11 @@ export interface SongProps {
     showArtist?: boolean;
     showCount?: boolean;
     allowActions?: boolean;
+    paddingLeft?: number;
     afterClick?: (song: Song) => void;
 }
 
-export const SongDiv: React.FC<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> & SongProps> = ({allowActions = true, afterClick,style, song, showCount = false, showPath = false, showArtist = true }) => {
+export const SongDiv: React.FC<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> & SongProps> = ({ paddingLeft = 0, allowActions = true, afterClick, song, showCount = false, showPath = false, showArtist = true }) => {
     const getType = (path: string) => {
         return path.substr(path.length - 3);
     }
@@ -25,21 +26,19 @@ export const SongDiv: React.FC<React.DetailedHTMLProps<React.HTMLAttributes<HTML
             song={song}
             render={(song, onSongPick, onSongInfo) => {
                 return (
-                    <IonGrid>
-                        <IonRow className="row">
-                            <IonCol size="11">
-                                <div style={style} onClick={ allowActions ? (e) => {onSongPick(); afterClick?.(song)} : ()=>{}}>
-                                    <div className="title">{showCount && song.count ? `(${song.count!}) - ` : ''} {song.title} ({getType(song.path)})</div>
-                                    <div hidden={!showArtist} className="subtitle">{song.artist}</div>
-                                    <div hidden={!showPath} className="path">{getPath(song.path)}</div>
-                                </div>
-                            </IonCol>
-                            <IonCol size="1">
-                                <IonIcon hidden={!allowActions} ios={informationCircleOutline} md={informationCircle} onClick={(e) =>  {onSongInfo(); afterClick?.(song)}} />
-                            </IonCol>
-                        </IonRow>
-                    </IonGrid>
-                )}} />
+                    <div className="row" style={{padding:'10px', display: 'grid', gridTemplateColumns: 'auto 25px'}}>
+                        <div style={{ paddingLeft: `${paddingLeft}px` }} onClick={allowActions ? (e) => { onSongPick(); afterClick?.(song) } : () => { }}>
+                            <div className="title">{showCount && song.count ? `(${song.count!}) - ` : ''} {song.title} ({getType(song.path)})</div>
+                            <div hidden={!showArtist} className="subtitle">{song.artist}</div>
+                            <div hidden={!showPath} className="path">{getPath(song.path)}</div>
+                        </div>
+                        <div>
+                            <IonIcon hidden={!allowActions} ios={informationCircleOutline} md={informationCircle} onClick={(e) => { onSongInfo(); afterClick?.(song) }} />
+                        </div>
+                    </div>
+                )
+            }} 
+        />
     );
 };
 

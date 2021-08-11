@@ -51,13 +51,13 @@ export const Artists: React.FC = () => {
         {!isEmpty(artists) &&
           <>
             <ScrollingGrid
-              pageCount={pageCount}
+              pageCount={200}
               pageName={pageName}
               listItems={artists}
-              getRow={(item) => {
+              getRow={(item, index) => {
                 return (
                   <div key={item.key} className="row-single" onClick={(e) => { setDidSearch(true); searchSongs(item.name); }}>
-                    <div style={{ flex: "1 1 auto" }}>{item.name}</div>
+                    <div style={{ flex: "1 1 auto" }}>{index}) {item.name}</div>
                   </div>
                 );
               }}

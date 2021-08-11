@@ -33,7 +33,7 @@ export const Singers: React.FC = () => {
             setError('');
           }
         })
-        .catch(error =>{
+        .catch(error => {
           console.log("onAddSinger error:", error)
           setError(error)
         }
@@ -45,9 +45,9 @@ export const Singers: React.FC = () => {
     deleteSinger(singer)
       .catch(error => console.log("onDeleteSinger error:", error));
   };
-  
+
   useEffect(() => {
-    if(!showModal){
+    if (!showModal) {
       setSinger('');
       setError('');
     }
@@ -64,18 +64,14 @@ export const Singers: React.FC = () => {
           listItems={singers}
           getRow={(singer, index) => {
             return (
-              <IonGrid key={index}>
-                <IonRow className="row-single">
-                  <IonCol size="11">
-                    <div>
-                      <div style={{ flex: "1 1 auto" }}>{singer.name} ({singer.songCount})</div>
-                    </div>
-                  </IonCol>
-                  <IonCol size="1" style={{textAlign:'center'}}>
-                    <IonIcon ios={closeOutline} md={close} onClick={(e) => onDelete(singer)} />
-                  </IonCol>
-                </IonRow>
-              </IonGrid>
+              <div className="row-single" style={{ padding: '10px', display: 'grid', gridTemplateColumns: 'auto 25px' }}>
+                <div>
+                  <div>{singer.name} ({singer.songCount})</div>
+                </div>
+                <div>
+                  <IonIcon ios={closeOutline} md={close} onClick={(e) => onDelete(singer)} />
+                </div>
+              </div>
             )
           }}
         />
@@ -100,10 +96,10 @@ export const Singers: React.FC = () => {
               <form onSubmit={handleSubmit(onSubmit)}>
                 <IonItem>
                   <IonLabel position="floating">Name</IonLabel>
-                  <IonInput type="text" value={singer} {...register('name')}/>
+                  <IonInput type="text" value={singer} {...register('name')} />
                 </IonItem>
                 <IonItem>
-                  <IonLabel style={{color: 'red'}}>{error}</IonLabel>
+                  <IonLabel style={{ color: 'red' }}>{error}</IonLabel>
                 </IonItem>
                 <div style={{ padding: '10px' }}>
                   <IonButton expand="block" type="submit">Add Singer</IonButton>

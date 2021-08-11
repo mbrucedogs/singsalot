@@ -245,7 +245,7 @@ export const usePlayer = (): {
             cached = await convertToArray<Singer>(fb);
         }
         let found = cached.filter(singer => {
-            console.log(`name compare singer ${singer.name.toLowerCase()} === ${trimmed}: `, singer.name.toLowerCase() === trimmed)
+            //console.log(`name compare singer ${singer.name.toLowerCase()} === ${trimmed}: `, singer.name.toLowerCase() === trimmed)
             return singer.name.toLowerCase() === trimmed
         })[0];
 

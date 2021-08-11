@@ -26,18 +26,23 @@ export const SongDiv: React.FC<React.DetailedHTMLProps<React.HTMLAttributes<HTML
             song={song}
             render={(song, onSongPick, onSongInfo) => {
                 return (
-                    <div className="row" style={{padding:'10px', display: 'grid', gridTemplateColumns: 'auto 25px'}}>
-                        <div style={{ paddingLeft: `${paddingLeft}px` }} onClick={allowActions ? (e) => { onSongPick(); afterClick?.(song) } : () => { }}>
+                    <div className="row" style={{ padding: '10px', display: 'grid', gridTemplateColumns: allowActions ? 'auto 60px' : 'auto' }}>
+                        <div
+                            style={{ paddingRight: allowActions ? '10px' : '0px', paddingLeft: `${paddingLeft}px` }}
+                            onClick={allowActions ? (e) => { onSongPick(); afterClick?.(song) } : () => { }}>
                             <div className="title">{showCount && song.count ? `(${song.count!}) - ` : ''} {song.title} ({getType(song.path)})</div>
                             <div hidden={!showArtist} className="subtitle">{song.artist}</div>
                             <div hidden={!showPath} className="path">{getPath(song.path)}</div>
                         </div>
-                        <div>
-                            <IonIcon hidden={!allowActions} ios={informationCircleOutline} md={informationCircle} onClick={(e) => { onSongInfo(); afterClick?.(song) }} />
+                        <div
+                            hidden={!allowActions}
+                            style={{ textAlign: 'center'}}
+                            onClick={(e) => { onSongInfo(); afterClick?.(song) }}>
+                            <IonIcon ios={informationCircleOutline} md={informationCircle} />
                         </div>
                     </div>
                 )
-            }} 
+            }}
         />
     );
 };

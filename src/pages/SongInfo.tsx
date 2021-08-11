@@ -13,7 +13,7 @@ export const SongInfo = ({ }) => {
     const pageName = 'Song Info';
 
     const isFavorited = (song: Song): boolean => {
-        
+
         return false;
     }
 
@@ -51,20 +51,24 @@ export const SongInfo = ({ }) => {
                 {selectedSong &&
                     <>
                         <SongDiv song={selectedSong} showPath={true} allowActions={false} showCount={true} />
-                        <IonGrid>
-                            <IonRow>
-                                <IonCol size="3">
-                                    <IonButton expand="block" onClick={(e) => { onSongPick() }}>Queue Song</IonButton>
-                                    <IonButton expand="block" onClick={(e) => { onArtistSearch() }}>Artist Songs</IonButton>
-                                    <IonButton expand="block">{isFavorited(selectedSong) ? "Un-Favorite" : "Favorite"} Song</IonButton>
-                                    <IonButton expand="block">{isDisabled(selectedSong) ? "Enable" : "Disable"} Song</IonButton>
-                                </IonCol>
-                            </IonRow>
-                        </IonGrid>
+                        <div style={{width:'250px', padding: '10px'}}>
+                            <div style={{padding: '5px'}}>
+                                <IonButton expand="block" onClick={(e) => { onSongPick() }}>Queue Song</IonButton>
+                            </div>
+                            <div style={{padding: '5px'}}>
+                                <IonButton expand="block" onClick={(e) => { onArtistSearch() }}>Artist Songs</IonButton>
+                            </div>
+                            <div style={{padding: '5px'}}>
+                                <IonButton expand="block">{isFavorited(selectedSong) ? "Un-Favorite" : "Favorite"} Song</IonButton>
+                            </div>
+                            <div style={{padding: '5px'}}>
+                                <IonButton expand="block">{isDisabled(selectedSong) ? "Enable" : "Disable"} Song</IonButton>
+                            </div>
+                        </div>
                     </>
                 }
             </>
-        </Page>
+        </Page >
     );
 };
 

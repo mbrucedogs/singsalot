@@ -57,7 +57,7 @@ export const Artists: React.FC = () => {
               getRow={(item, index) => {
                 return (
                   <div key={item.key} className="row-single" onClick={(e) => { setDidSearch(true); searchSongs(item.name); }}>
-                    <div style={{ flex: "1 1 auto" }}>{index}) {item.name}</div>
+                    <div style={{ flex: "1 1 auto" }}>{item.name}</div>
                   </div>
                 );
               }}

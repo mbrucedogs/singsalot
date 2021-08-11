@@ -64,7 +64,7 @@ export const Singers: React.FC = () => {
           listItems={singers}
           getRow={(singer, index) => {
             return (
-              <div className="row-single" style={{ padding: '10px', display: 'grid', gridTemplateColumns: 'auto 25px' }}>
+              <div key={index} className="row-single" style={{ padding: '10px', display: 'grid', gridTemplateColumns: 'auto 25px' }}>
                 <div>
                   <div>{singer.name} ({singer.songCount})</div>
                 </div>

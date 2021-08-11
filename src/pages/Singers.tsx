@@ -18,7 +18,7 @@ export const Singers: React.FC = () => {
 
   //add singer
   const [showModal, setShowModal] = useState<boolean>(false);
-  const { register, handleSubmit, formState: { errors } } = useForm<AddSingerForm>();
+  const { register, handleSubmit } = useForm<AddSingerForm>();
   const [singer, setSinger] = useState<string>("");
   const [error, setError] = useState<string>("");
 

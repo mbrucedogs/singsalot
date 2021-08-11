@@ -22,7 +22,7 @@ export const TopSongs: React.FC = () => {
         getRow={(history, idx) => {
           return (<Collapsible key={history.key} trigger={
           <div className="row-single">
-            <div className="title" style={{ height: '48px', width: '52px', textAlign: 'end', verticalAlign: 'text-top', paddingTop: '0px', paddingLeft: '5px', paddingRight: '10px' }}>{idx! + 1})</div>
+            <div className="title" style={{ height: '48px', width: '53px', textAlign: 'end', verticalAlign: 'text-top', paddingTop: '0px', paddingLeft: '5px', paddingRight: '10px' }}>{idx! + 1})</div>
             <div style={{ flex: '1 1 auto' }}>
               <div className="title">{history.title} ({history.count}) </div>
               <div className="subtitle">{history.artist}</div>
@@ -33,7 +33,7 @@ export const TopSongs: React.FC = () => {
               return (
                 <SongDiv
                   key={song.key}
-                  style={{ paddingLeft: '50px' }}
+                  paddingLeft={50}
                   song={song}
                   showCount={true}
                   showPath={true} />

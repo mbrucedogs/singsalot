@@ -2,7 +2,7 @@ import React from "react";
 import { pageCount } from "../globalConfig";
 import { isEmpty } from "lodash";
 import { useDisabled } from "../hooks";
-import { Page, ScrollingGrid, SongDiv, SongDivItem } from "../components"
+import { Page, ScrollingGrid, SongActionDiv, SongDiv, SongDivItem } from "../components"
 import { IonIcon } from "@ionic/react";
 import { close, closeOutline } from "ionicons/icons";
 
@@ -28,11 +28,11 @@ export const Disabled: React.FC = () => {
                 showArtist={true}
                 showPath={true}
               />
-              <div
-                style={{ textAlign: 'center' }}
-                onClick={() => { deleteDisabled(song) }}>
-                <IonIcon ios={closeOutline} md={close} />
-              </div>
+               <SongActionDiv
+                image={close}
+                imageOutline={closeOutline}
+                onClick={() => { deleteDisabled(song) }}
+              />              
             </div>
           )
         }}

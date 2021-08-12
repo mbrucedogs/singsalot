@@ -3,6 +3,7 @@ import { IonIcon } from "@ionic/react";
 import { informationCircle, informationCircleOutline } from "ionicons/icons";
 import SongContainer from "./SongContainer";
 import { Song } from "../models";
+import { useWindowDimensions } from "../hooks";
 
 export interface SongProps {
     song: Song;
@@ -14,7 +15,7 @@ export interface SongProps {
     afterClick?: (song: Song) => void;
 }
 
-export const SongDivItem = ({ 
+export const SongDivItem = ({
     song,
     showArtist = true,
     showPath = false,
@@ -46,14 +47,38 @@ export const SongDivItem = ({
     )
 }
 
+export const SongActionDiv = ({
+    hidden = false,
+    imageOutline,
+    image,
+    onClick
+}: {
+    hidden?: boolean,
+    imageOutline: string,
+    image: string,
+    onClick: () => void
+}) => {
+    return (<div
+        hidden={hidden}
+        style={{ textAlign: 'center' }}
+        onClick={onClick ? (e) => { onClick?.() } : () => { }}>
+        <IonIcon ios={imageOutline} md={image} />
+    </div>
+    )
+}
+
 export const SongDiv: React.FC<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> & SongProps> = ({ paddingLeft = 0, allowActions = true, afterClick, song, showCount = false, showPath = false, showArtist = true }) => {
+    const { width } = useWindowDimensions();
+
+    const gridTemplateColumns = width > 400 ? 'auto 60px' : 'auto 60px'
+
     return (
         <SongContainer
             song={song}
             render={(song, onSongPick, onSongInfo) => {
                 return (
-                    <div className="row" style={{ padding: '10px', display: 'grid', gridTemplateColumns: allowActions ? 'auto 60px' : 'auto' }}>
-                        <SongDivItem 
+                    <div className="row" style={{ padding: '10px', display: 'grid', gridTemplateColumns: allowActions ? gridTemplateColumns : 'auto' }}>
+                        <SongDivItem
                             song={song}
                             paddingLeft={paddingLeft}
                             showArtist={showArtist}
@@ -61,12 +86,12 @@ export const SongDiv: React.FC<React.DetailedHTMLProps<React.HTMLAttributes<HTML
                             showPath={showPath}
                             onClick={allowActions ? () => { onSongPick(); afterClick?.(song) } : () => { }}
                         />
-                        <div
+                        <SongActionDiv 
                             hidden={!allowActions}
-                            style={{ textAlign: 'center' }}
-                            onClick={(e) => { onSongInfo(); afterClick?.(song) }}>
-                            <IonIcon ios={informationCircleOutline} md={informationCircle} />
-                        </div>
+                            image={informationCircle}
+                            imageOutline={informationCircleOutline}
+                            onClick={() => { onSongInfo(); afterClick?.(song) }}
+                        />
                     </div>
                 )
             }}

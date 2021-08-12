@@ -39,7 +39,7 @@ export const useSongs = (): {
         setSongs(allSongs);
         setHasLoaded(true);
     }, [allSongs]);
-    
+
     const searchSongs = useCallback((query: string) => {
         //console.log("useSongs - searchSongs", query);
 
@@ -47,24 +47,25 @@ export const useSongs = (): {
         if (isEmpty(allSongs)) { return; }
 
         if (isEmpty(query)) {
-            setSongs(allSongs);
+            setSongs(allSongs.filter(s=> s.disabled == false || s.disabled == undefined));
         } else {
             let q = query.toLowerCase();
             let results = allSongs.filter(song => {
-                let isDisabled = song.disabled ? song.disabled : false;
                 let _artist = song.artist;
                 let _title = song.title;
-                if (_artist?.toLowerCase().indexOf(q) > -1 && !isDisabled) {
+                if (_artist?.toLowerCase().indexOf(q) > -1) {
                     return song;
                 }
-                if (_title?.toLowerCase().indexOf(q) > -1 && !isDisabled) {
+                if (_title?.toLowerCase().indexOf(q) > -1) {
                     return song;
                 }
             });
             let sorted = results.sort((a: Song, b: Song) => {
                 return a.title.localeCompare(b.title)
             });
-            setSongs(sorted);
+            let enabled = sorted.filter(s=> s.disabled == false || s.disabled == undefined);
+            console.log("Search found:", enabled);
+            setSongs(enabled);
         }
     }, [allSongs]);
 
@@ -73,30 +74,30 @@ export const useSongs = (): {
     //***************************************************************************** */
     const addFavorite = useCallback((song: Song) => {
         console.log("useFavorites - addFavorite", song);
-        FirebaseService.addFavorite(song);      
+        FirebaseService.addFavorite(song);
     }, [favorites]);
 
     const deleteFavorite = useCallback((song: Song) => {
         console.log("useFavorites - deleteFavorite", song);
-        FirebaseService.deleteFavorite(song);      
+        FirebaseService.deleteFavorite(song);
     }, [favorites]);
 
     //***************************************************************************** */
     //Disabled */
     //***************************************************************************** */
     const addDisabled = useCallback((song: Song) => {
-        console.log("useDisabled - addFavorite", song);
-        FirebaseService.addDisabled(song);      
+        console.log("useDisabled - addDisabled", song);
+        FirebaseService.addDisabled(song);
     }, [disabled]);
 
     const deleteDisabled = useCallback((song: Song) => {
         console.log("useDisabled - deleteDisabled", song);
-        FirebaseService.deleteDisabled(song);      
+        FirebaseService.deleteDisabled(song);
     }, [disabled]);
 
-    return { 
+    return {
         songs, hasLoaded, searchSongs,
-        favorites, addFavorite, deleteFavorite, 
+        favorites, addFavorite, deleteFavorite,
         disabled, addDisabled, deleteDisabled
     }
 }

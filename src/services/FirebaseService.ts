@@ -6,10 +6,12 @@ import {
   QueueItem,
   Settings,
   Singer, 
-  Song
+  Song,
  } from '../models';
 
 const db = localfirebase.ref('/controllers');
+
+type FirebaseUpdate = {[key: string]: Fabricable}
 
 class FirebaseService {
   controllerId: string = ""
@@ -110,11 +112,23 @@ class FirebaseService {
   }
 
   addFavorite(song: Song) {
-    return this.setObject(`favorites`, song)
+    let updates:FirebaseUpdate = {};
+    let updatedSong: Song = {...song, favorite: true}
+  
+    updates[this.addPathFor(`songs/${song.key!}`)] = updatedSong;
+    updates[this.addPathFor(`favorites/${song.key!}`)] = updatedSong;
+    console.log("FirebaseService - addFavorite", updates);
+    return this.update(updates) ;  
   }
 
   deleteFavorite(song: Song) {
-    return this.delete('favorites', song);
+    let updates:FirebaseUpdate = {};
+    let updatedSong: Song = {...song, favorite: false}
+
+    updates[this.addPathFor(`songs/${song.key!}`)] = updatedSong;    
+    console.log("FirebaseService - deleteFavorite", updates);
+    return this.delete('favorites', song)
+      .then(_ => this.update(updates))
   }
 
   ////////////////////////////////////////////////////////////////
@@ -125,11 +139,23 @@ class FirebaseService {
   }
 
   addDisabled(song: Song) {
-    return this.setObject(`disabled`, song)
+    let updates:FirebaseUpdate = {};
+    let updatedSong: Song = {...song, disabled: true}
+
+    updates[this.addPathFor(`songs/${song.key!}`)] = updatedSong;
+    updates[this.addPathFor(`disabled/${song.key!}`)] = updatedSong;
+    console.log("FirebaseService - addDisabled", updates);
+    return this.update(updates) ;  
   }
 
   deleteDisabled(song: Song) {
-    return this.delete('disabled', song);
+    let updates:FirebaseUpdate = {};
+    let updatedSong: Song = {...song, disabled: false}
+    
+    updates[this.addPathFor(`songs/${song.key!}`)] = updatedSong;
+    console.log("FirebaseService - deleteDisabled", updates);
+    return this.delete('disabled', song)
+      .then(_ => this.update(updates))
   }
 
   ////////////////////////////////////////////////////////////////
@@ -185,6 +211,11 @@ class FirebaseService {
     console.log('FirebaseService - add value', obj);
     return db.child(p).set(obj);
   };
+
+  private update(updates:FirebaseUpdate){
+    console.log("FirebaseService - updates", updates);
+    return db.update(updates);
+  }
 
   private updateObject(path: string, obj: Fabricable) {
     let p = this.addPathFor(`${path}/${obj.key!}`);

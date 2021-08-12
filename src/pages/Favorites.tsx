@@ -19,9 +19,9 @@ export const Favorites: React.FC = () => {
         pageCount={pageCount}
         pageName={pageName}
         listItems={favorites}
-        getRow={(song) => {
+        getRow={(song, index) => {
           return (
-            <div className="row" style={{ padding: '10px', display: 'grid', gridTemplateColumns: 'auto 60px' }}>
+            <div key={index} className="row" style={{ padding: '10px', display: 'grid', gridTemplateColumns: 'auto 60px' }}>
               <SongDivItem
                 song={song}
                 showArtist={true}

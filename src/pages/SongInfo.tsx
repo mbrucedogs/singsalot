@@ -6,16 +6,17 @@ import { useAuthentication, usePlayer, useSongHistory, useFavorites } from '../h
 
 export const SongInfo = ({ }) => {
     const history = useHistory();
-    const { favorites } = useFavorites();
+    const { favorites, addFavorite, deleteFavorite } = useFavorites();
     const { isAdmin, singer } = useAuthentication();
-    const { addSongHistory } = useSongHistory();
-    const { singers, selectedSong, setSelectedSong, addToQueue } = usePlayer();
+    const { singers, selectedSong, addToQueue } = usePlayer();
     const pageName = 'Song Info';
 
     const isFavorited = (song: Song): boolean => {
-
-        return false;
+        let found = favorites.filter(favorite => favorite.path === song.path);
+        return found.length > 0;
     }
+
+    const isFavorite = selectedSong ? isFavorited(selectedSong) : false;
 
     const isDisabled = (song: Song): boolean => {
         return false;
@@ -59,7 +60,7 @@ export const SongInfo = ({ }) => {
                                 <IonButton expand="block" onClick={(e) => { onArtistSearch() }}>Artist Songs</IonButton>
                             </div>
                             <div style={{padding: '5px'}}>
-                                <IonButton expand="block">{isFavorited(selectedSong) ? "Un-Favorite" : "Favorite"} Song</IonButton>
+                                <IonButton expand="block" onClick={(e) => { isFavorite ? deleteFavorite(selectedSong) : addFavorite(selectedSong) }}>{ isFavorite ? "Un-Favorite" : "Favorite"} Song</IonButton>
                             </div>
                             <div style={{padding: '5px'}}>
                                 <IonButton expand="block">{isDisabled(selectedSong) ? "Enable" : "Disable"} Song</IonButton>

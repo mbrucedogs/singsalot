@@ -51,12 +51,13 @@ export const useSongs = (): {
         } else {
             let q = query.toLowerCase();
             let results = allSongs.filter(song => {
+                let isDisabled = song.disabled ? song.disabled : false;
                 let _artist = song.artist;
                 let _title = song.title;
-                if (_artist?.toLowerCase().indexOf(q) > -1) {
+                if (_artist?.toLowerCase().indexOf(q) > -1 && !isDisabled) {
                     return song;
                 }
-                if (_title?.toLowerCase().indexOf(q) > -1) {
+                if (_title?.toLowerCase().indexOf(q) > -1 && !isDisabled) {
                     return song;
                 }
             });

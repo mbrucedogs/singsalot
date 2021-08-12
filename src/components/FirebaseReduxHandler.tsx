@@ -196,8 +196,9 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
                 let names: string[] = [];
 
                 list.forEach(song => {
+                    let isDisabled = song.disabled ? song.disabled : false;
                     let name = song.artist;
-                    if (!isEmpty(name) && !includes(names, name.trim())) {
+                    if (!isEmpty(name) && !includes(names, name.trim()) && !isDisabled) {
                         names.push(name.trim());
                     }
                 });

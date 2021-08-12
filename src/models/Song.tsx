@@ -5,6 +5,7 @@ export interface Song extends Fabricable {
     title: string;
     count?: number;
     disabled?: boolean;
+    favorite?:boolean;
     date?:string;
     path: string;
 }

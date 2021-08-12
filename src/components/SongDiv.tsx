@@ -78,6 +78,8 @@ export const SongDiv: React.FC<React.DetailedHTMLProps<React.HTMLAttributes<HTML
         <SongContainer
             song={song}
             render={(song, onSongPick, onSongInfo, onToggleFavorite, onToggleDisabled) => {
+                const isFavorite = song.favorite ?? false;
+                const isDisabled = song.disabled ?? false;
                 return (
                     <div className="row" style={{ padding: '10px', display: 'grid', gridTemplateColumns: allowActions ? gridTemplateColumns : 'auto' }}>
                         <SongDivItem
@@ -97,8 +99,8 @@ export const SongDiv: React.FC<React.DetailedHTMLProps<React.HTMLAttributes<HTML
                         {showFavorite &&
                             <SongActionDiv
                                 hidden={!allowActions}
-                                image={heart}
-                                imageOutline={heartOutline}
+                                image={isFavorite ? heart : heartDislike}
+                                imageOutline={isFavorite ? heartOutline : heartDislikeOutline}
                                 onClick={() => { onToggleFavorite(); }}
                             />
                         }

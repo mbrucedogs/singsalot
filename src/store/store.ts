@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import {
   artistsSlice,
   authenticatedSlice,
+  disabledSlice,
   favoritesSlice,
   historySlice,
   latestSongsSlice,
@@ -15,6 +16,7 @@ const store = configureStore({
   reducer: {
     artists: artistsSlice.reducer,
     authenticated: authenticatedSlice.reducer,
+    disabled: disabledSlice.reducer,
     favorites: favoritesSlice.reducer,
     history: historySlice.reducer,
     latestSongs: latestSongsSlice.reducer,
@@ -30,6 +32,7 @@ export type AppDispatch = typeof store.dispatch
 
 export const selectArtists = (state: RootState) => state.artists.artists;
 export const selectAuthenticated = (state: RootState) => state.authenticated;
+export const selectDisabled = (state: RootState) => state.disabled.disabled;
 export const selectFavorites = (state: RootState) => state.favorites.favorites;
 export const selectHistory = (state: RootState) => state.history.songs;
 export const selectLatestSongs = (state: RootState) => state.latestSongs.latestSongs;

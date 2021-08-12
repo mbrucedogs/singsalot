@@ -3,6 +3,7 @@ import { IonReactRouter } from '@ionic/react-router';
 import { Redirect, Route } from 'react-router-dom';
 import { 
   Artists,
+  Disabled,
   Favorites,
   History,
   LatestSongs,
@@ -60,6 +61,7 @@ const Router: React.FC = () => {
           <IonRouterOutlet id="main" animated={true}>
             <Route path="/" component={Queue} exact={true} />
             <Route path="/Artists" exact={true} component={Artists}/>
+            <Route path="/Disabled" exact={true} component={Disabled}/>
             <Route path="/Favorites" exact={true} component={Favorites}/>
             <Route path="/History" exact={true} component={History}/>
             <Route path="/LatestSongs" exact={true} component={LatestSongs}/>

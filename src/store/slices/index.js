@@ -1,5 +1,6 @@
 export * from "./artists";
 export * from "./authenticated";
+export * from "./disabled";
 export * from "./favorites";
 export * from "./history";
 export * from "./latestSongs";

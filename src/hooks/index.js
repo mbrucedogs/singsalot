@@ -1,6 +1,7 @@
 export * from "./hooks";
 export * from "./useArtists"
 export * from "./useAuthentication"
+export * from "./useDisabled"
 export * from "./useFavorites"
 export * from "./useLatestSongs";
 export * from "./usePlayer";

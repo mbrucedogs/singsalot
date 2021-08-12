@@ -11,7 +11,8 @@ import {
     latestSongsChange,
     playerStateChange, queueChange, singersChange,
     songsChange,
-    songListsChange
+    songListsChange,
+    disabledChange
 } from "../store/slices";
 import {
     Artist,
@@ -42,6 +43,7 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
             FirebaseService.getNewSongs().on("value", onLatestSongsChange);
             FirebaseService.getHistory().on("value", onHistoryChange);
             FirebaseService.getFavorites().on("value", onFavoritesChange);
+            FirebaseService.getDisabled().on("value", onDisabledChange);
             FirebaseService.getSongs().on("value", onSongsChange);
         }
     }, [isAuthenticated])
@@ -180,6 +182,11 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
     const onFavoritesChange = async (items: firebase.database.DataSnapshot) => {
         convertToArray<Song>(items)
             .then(result => dispatch(favoritesChange(result)));
+    };
+
+    const onDisabledChange = async (items: firebase.database.DataSnapshot) => {
+        convertToArray<Song>(items)
+            .then(result => dispatch(disabledChange(result)));
     };
 
     const onSongsChange = async (items: firebase.database.DataSnapshot) => {

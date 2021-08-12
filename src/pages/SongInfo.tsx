@@ -2,11 +2,12 @@ import { useHistory } from 'react-router';
 import { IonButton, IonCol, IonGrid, IonRow } from '@ionic/react';
 import { Song } from '../models';
 import { Page, SongDiv } from "../components"
-import { useAuthentication, usePlayer, useSongHistory, useFavorites } from '../hooks';
+import { useAuthentication, usePlayer, useDisabled, useFavorites } from '../hooks';
 
 export const SongInfo = ({ }) => {
     const history = useHistory();
     const { favorites, addFavorite, deleteFavorite } = useFavorites();
+    const { disabled, addDisabled, deleteDisabled } = useDisabled();
     const { isAdmin, singer } = useAuthentication();
     const { singers, selectedSong, addToQueue } = usePlayer();
     const pageName = 'Song Info';
@@ -16,11 +17,13 @@ export const SongInfo = ({ }) => {
         return found.length > 0;
     }
 
-    const isFavorite = selectedSong ? isFavorited(selectedSong) : false;
-
     const isDisabled = (song: Song): boolean => {
-        return false;
+        let found = disabled.filter(disabled => disabled.path === song.path);
+        return found.length > 0;
     }
+
+    const isFavorite = selectedSong ? isFavorited(selectedSong) : false;
+    const isDisable = selectedSong ? isDisabled(selectedSong) : false;
 
     const onSongPick = () => {
         if (selectedSong) {
@@ -63,7 +66,7 @@ export const SongInfo = ({ }) => {
                                 <IonButton expand="block" onClick={(e) => { isFavorite ? deleteFavorite(selectedSong) : addFavorite(selectedSong) }}>{ isFavorite ? "Un-Favorite" : "Favorite"} Song</IonButton>
                             </div>
                             <div style={{padding: '5px'}}>
-                                <IonButton expand="block">{isDisabled(selectedSong) ? "Enable" : "Disable"} Song</IonButton>
+                                <IonButton expand="block" onClick={(e) => { isDisable ? deleteDisabled(selectedSong) : addDisabled(selectedSong) }}>{ isDisable ? "Enable" : "Disable"} Song</IonButton>
                             </div>
                         </div>
                     </>

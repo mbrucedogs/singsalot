@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 import { IonIcon } from "@ionic/react";
-import { informationCircle, informationCircleOutline } from "ionicons/icons";
+import { close, closeOutline, heart, heartDislike, heartDislikeOutline, heartOutline, informationCircle, informationCircleOutline } from "ionicons/icons";
 import SongContainer from "./SongContainer";
 import { Song } from "../models";
 import { useWindowDimensions } from "../hooks";
@@ -62,20 +62,22 @@ export const SongActionDiv = ({
         hidden={hidden}
         style={{ textAlign: 'center' }}
         onClick={onClick ? (e) => { onClick?.() } : () => { }}>
-        <IonIcon ios={imageOutline} md={image} />
+        <IonIcon size="large" ios={imageOutline} md={image} />
     </div>
     )
 }
 
 export const SongDiv: React.FC<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> & SongProps> = ({ paddingLeft = 0, allowActions = true, afterClick, song, showCount = false, showPath = false, showArtist = true }) => {
     const { width } = useWindowDimensions();
-
-    const gridTemplateColumns = width > 400 ? 'auto 60px' : 'auto 60px'
+    const wideWidth = 450;
+    const gridTemplateColumns = width > wideWidth ? 'auto 60px 60px 60px' : 'auto 60px';
+    const showFavorite = width > wideWidth;
+    const showDisable = width > wideWidth ;
 
     return (
         <SongContainer
             song={song}
-            render={(song, onSongPick, onSongInfo) => {
+            render={(song, onSongPick, onSongInfo, onToggleFavorite, onToggleDisabled) => {
                 return (
                     <div className="row" style={{ padding: '10px', display: 'grid', gridTemplateColumns: allowActions ? gridTemplateColumns : 'auto' }}>
                         <SongDivItem
@@ -86,12 +88,28 @@ export const SongDiv: React.FC<React.DetailedHTMLProps<React.HTMLAttributes<HTML
                             showPath={showPath}
                             onClick={allowActions ? () => { onSongPick(); afterClick?.(song) } : () => { }}
                         />
-                        <SongActionDiv 
+                        <SongActionDiv
                             hidden={!allowActions}
                             image={informationCircle}
                             imageOutline={informationCircleOutline}
                             onClick={() => { onSongInfo(); afterClick?.(song) }}
                         />
+                        {showFavorite &&
+                            <SongActionDiv
+                                hidden={!allowActions}
+                                image={heart}
+                                imageOutline={heartOutline}
+                                onClick={() => { onToggleFavorite(); }}
+                            />
+                        }
+                        {showDisable &&
+                            <SongActionDiv
+                                hidden={!allowActions}
+                                image={close}
+                                imageOutline={closeOutline}
+                                onClick={() => { onToggleDisabled();}}
+                            />
+                        }
                     </div>
                 )
             }}

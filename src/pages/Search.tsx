@@ -3,11 +3,11 @@ import { useParams } from "react-router";
 import { isEmpty } from "lodash";
 import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonToolbar, IonSearchbar } from '@ionic/react';
 import { pageCount } from "../globalConfig";
-import { useSearch } from "../hooks";
+import { useSongs } from "../hooks";
 import { Page, ScrollingGrid, SongDiv } from "../components"
 
 export const Search: React.FC = () => {
-  const { songs, hasLoaded, searchSongs } = useSearch();
+  const { songs, hasLoaded, searchSongs } = useSongs();
   const pageName: string = "Search";
   const [searchText, setSearchText] = useState<string>('');
   const {searchParam}  = useParams<{searchParam: string}>();

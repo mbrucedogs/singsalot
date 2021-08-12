@@ -5,7 +5,7 @@ export * from "./useDisabled"
 export * from "./useFavorites"
 export * from "./useLatestSongs";
 export * from "./usePlayer";
-export * from "./useSearch";
+export * from "./useSongs";
 export * from "./useSongHistory";
 export * from "./useSongLists";
 export * from "./useTopPlayed";

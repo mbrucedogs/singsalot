@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { pageCount } from "../globalConfig";
 import { isEmpty } from "lodash";
 import { IonMenuButton, IonPage, IonSearchbar, IonButton, IonModal, IonContent, IonHeader, IonToolbar, IonTitle, IonButtons } from "@ionic/react";
-import { useArtists, useSearch } from "../hooks";
+import { useArtists,  useSongs } from "../hooks";
 import { ArtistSongs } from "../models";
 import { Page, ScrollingGrid, SongDiv } from "../components"
 
 export const Artists: React.FC = () => {
   const pageName: string = "Artists";
   const { artists, hasLoaded, searchArtists } = useArtists();
-  const { songs, searchSongs } = useSearch();
+  const { songs, searchSongs } = useSongs();
   const [showModal, setShowModal] = useState<boolean>(false);
   const [didSearch, setDidSearch] = useState<boolean>(false);
   const [modal, setModal] = useState<ArtistSongs | null>(null);

@@ -1,14 +1,13 @@
 import React from "react";
 import { pageCount } from "../globalConfig";
 import { isEmpty } from "lodash";
-import { useDisabled } from "../hooks";
-import { Page, ScrollingGrid, SongActionDiv, SongDiv, SongDivItem } from "../components"
-import { IonIcon } from "@ionic/react";
+import { useSongs } from "../hooks";
+import { Page, ScrollingGrid, SongActionDiv, SongDivItem } from "../components"
 import { close, closeOutline } from "ionicons/icons";
 
 export const Disabled: React.FC = () => {
   const pageName: string = "Disabled";
-  const { disabled, deleteDisabled } = useDisabled();
+  const { disabled, deleteDisabled } = useSongs();
 
   if (isEmpty(disabled)) {
     return <Page name={pageName}><h2 style={{ padding: '10px' }}>Loading or there are no {pageName}...</h2></Page>

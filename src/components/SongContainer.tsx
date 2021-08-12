@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 import { useHistory } from "react-router";
 import { Song } from "../models";
-import { useAuthentication, useDisabled, useFavorites, usePlayer } from "../hooks";
+import { useAuthentication, useSongs, usePlayer } from "../hooks";
 
 interface SongContainerProps {
     song: Song;
@@ -16,10 +16,10 @@ export const SongContainer: React.FC<React.DetailedHTMLProps<React.HTMLAttribute
     const history = useHistory();
     const { isAdmin, singer } = useAuthentication();
     const { singers, setSelectedSong, addToQueue } = usePlayer();
-    const { favorites, addFavorite, deleteFavorite } = useFavorites();
-    const { disabled, addDisabled, deleteDisabled } = useDisabled();
+    const { favorites, addFavorite, deleteFavorite, 
+            disabled, addDisabled, deleteDisabled } = useSongs();
 
-    const songPick = () => {
+        const songPick = () => {
         console.log("SongContainer - songPick", song);
         if (isAdmin) {
             setSelectedSong(song);

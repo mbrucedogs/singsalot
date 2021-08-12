@@ -2,14 +2,15 @@ import { useHistory } from 'react-router';
 import { IonButton, IonCol, IonGrid, IonRow } from '@ionic/react';
 import { Song } from '../models';
 import { Page, SongDiv } from "../components"
-import { useAuthentication, usePlayer, useDisabled, useFavorites } from '../hooks';
+import { useAuthentication, usePlayer, useSongs } from '../hooks';
 
 export const SongInfo = ({ }) => {
     const history = useHistory();
-    const { favorites, addFavorite, deleteFavorite } = useFavorites();
-    const { disabled, addDisabled, deleteDisabled } = useDisabled();
     const { isAdmin, singer } = useAuthentication();
     const { singers, selectedSong, addToQueue } = usePlayer();
+    const { favorites, addFavorite, deleteFavorite,
+            disabled, addDisabled, deleteDisabled } = useSongs();
+
     const pageName = 'Song Info';
 
     const isFavorited = (song: Song): boolean => {

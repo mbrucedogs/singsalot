@@ -77,71 +77,83 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
     }
 
     const updateHistory = async (h: Song[], all: Song[]) => {
-        if (!isEmpty(h) && !(isEmpty(all))) {
-            let matched = await matchSongs(h, all);
-            let results: TopPlayed[] = [];
-
-            matched.map(song => {
-                let artist = song.artist;
-                let title = song.title;
-                let key = `${artist.trim().toLowerCase()}-${title.trim().toLowerCase()}`.replace(/\W/g, '_');
-                let songCount = song.count ? song.count : 1;
-                let found = results.filter(item => item.key === key)?.[0];
-                if (isEmpty(found)) {
-                    found = { key: key, artist: artist, title: title, count: songCount, songs: [song] }
-                    results.push(found);
-                } else {
-                    let foundSong = found.songs.filter(item => item.key === key)?.[0];
-                    if (isEmpty(foundSong)) {
-                        found.songs.push(song);
+        if (!(isEmpty(all))) {
+            if(!isEmpty(h)){
+                let matched = await matchSongs(h, all);
+                let results: TopPlayed[] = [];
+    
+                matched.map(song => {
+                    let artist = song.artist;
+                    let title = song.title;
+                    let key = `${artist.trim().toLowerCase()}-${title.trim().toLowerCase()}`.replace(/\W/g, '_');
+                    let songCount = song.count ? song.count : 1;
+                    let found = results.filter(item => item.key === key)?.[0];
+                    if (isEmpty(found)) {
+                        found = { key: key, artist: artist, title: title, count: songCount, songs: [song] }
+                        results.push(found);
+                    } else {
+                        let foundSong = found.songs.filter(item => item.key === key)?.[0];
+                        if (isEmpty(foundSong)) {
+                            found.songs.push(song);
+                        }
+                        let accumulator = 0;
+                        found.songs.map(song => {
+                            accumulator = accumulator + song.count!;
+                        });
+                        found.count = accumulator;
                     }
-                    let accumulator = 0;
-                    found.songs.map(song => {
-                        accumulator = accumulator + song.count!;
-                    });
-                    found.count = accumulator;
+                });
+    
+                let sorted = results.sort((a: TopPlayed, b: TopPlayed) => {
+                    return b.count - a.count || a.key!.localeCompare(b.key!);
+                });
+    
+                let sortedHistory = matched.sort((a: Song, b: Song) => {
+                    var yesterday = new Date();
+                    yesterday.setDate(yesterday.getDate() - 1);
+                    let aDate = a.date ? new Date(a.date) : yesterday;
+                    let bDate = b.date ? new Date(b.date) : yesterday;
+                    return bDate.valueOf() - aDate.valueOf();
+                });
+    
+                let payload: History = {
+                    songs: sortedHistory,
+                    topPlayed: sorted.slice(0, 100)
                 }
-            });
-
-            let sorted = results.sort((a: TopPlayed, b: TopPlayed) => {
-                return b.count - a.count || a.key!.localeCompare(b.key!);
-            });
-
-            let sortedHistory = matched.sort((a: Song, b: Song) => {
-                var yesterday = new Date();
-                yesterday.setDate(yesterday.getDate() - 1);
-                let aDate = a.date ? new Date(a.date) : yesterday;
-                let bDate = b.date ? new Date(b.date) : yesterday;
-                return bDate.valueOf() - aDate.valueOf();
-            });
-
-            let payload: History = {
-                songs: sortedHistory,
-                topPlayed: sorted.slice(0, 100)
+                dispatch(historyChange(payload));    
+            }else {
+                dispatch(historyChange({songs: [], topPlayed:[]}));    
             }
-            dispatch(historyChange(payload));
         }
     }
 
     const updateFavorites = async (f: Song[], all: Song[]) => {
-        if (!isEmpty(f) && !(isEmpty(all))) {
-            let matched = await matchSongs(f, all);
-            console.log("updateFavorites", matched);
-            let sorted = matched.sort((a: Song, b: Song) => {
-                return a.title.localeCompare(b.title)
-            });
-            dispatch(favoritesChange(sorted));
+        if (!(isEmpty(all))) {
+            if (!isEmpty(f)) {
+                let matched = await matchSongs(f, all);
+                console.log("updateFavorites", matched);
+                let sorted = matched.sort((a: Song, b: Song) => {
+                    return a.title.localeCompare(b.title)
+                });
+                dispatch(favoritesChange(sorted));
+            } else {
+                dispatch(favoritesChange([]));
+            }
         }
     }
 
     const updateDisabled = async (d: Song[], all: Song[]) => {
-        if (!isEmpty(d) && !(isEmpty(all))) {
-            let matched = await matchSongs(d, all);
-            console.log("updateDisabled", matched);
-            let sorted = matched.sort((a: Song, b: Song) => {
-                return a.title.localeCompare(b.title)
-            });
-            dispatch(disabledChange(sorted));
+        if (!isEmpty(all)) {
+            if (!isEmpty(d)) {
+                let matched = await matchSongs(d, all);
+                console.log("updateDisabled", matched);
+                let sorted = matched.sort((a: Song, b: Song) => {
+                    return a.title.localeCompare(b.title)
+                });
+                dispatch(disabledChange(sorted));
+            } else {
+                dispatch(disabledChange([]));
+            }
         }
     }
 

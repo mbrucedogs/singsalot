@@ -141,9 +141,10 @@ class FirebaseService {
   addDisabled(song: Song) {
     let updates:FirebaseUpdate = {};
     let updatedSong: Song = {...song, disabled: true}
+    let updatedSongBase: SongBase = {key: song.key, path: song.path};
 
     updates[this.addPathFor(`songs/${song.key!}`)] = updatedSong;
-    updates[this.addPathFor(`disabled/${song.key!}`)] = updatedSong;
+    updates[this.addPathFor(`disabled/${song.key!}`)] = updatedSongBase;
     console.log("FirebaseService - addDisabled", updates);
     return this.update(updates) ;  
   }

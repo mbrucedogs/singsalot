@@ -11,3 +11,4 @@ export * from "./Song";
 export * from "./SongList";
 export * from "./SongListSong";
 export * from "./TopPlayed";
+export * from "./modelHelpers";

@@ -2,7 +2,7 @@ import firebase from "firebase"
 import { isEmpty, includes } from "lodash";
 import { useAppDispatch } from '../hooks'
 import orderBy from 'lodash/orderBy'
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { convertToArray, FirebaseService } from '../services'
 import {
     artistsChange,
@@ -18,6 +18,7 @@ import {
     Artist,
     ArtistSongs,
     History,
+    matchSongs,
     PlayerState,
     QueueItem,
     Singer,
@@ -25,6 +26,8 @@ import {
     SongList,
     TopPlayed
 } from "../models";
+import { useSelector } from "react-redux";
+import { selectHistory, selectSongs } from "../store/store";
 interface FirebaseReduxHandlerProps {
     isAuthenticated: boolean;
     children: React.ReactNode;
@@ -33,9 +36,87 @@ interface FirebaseReduxHandlerProps {
 export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAuthenticated, children }) => {
 
     const dispatch = useAppDispatch()
+    const songs = useSelector(selectSongs);
+    const [history, setHistory] = useState<Song[]>([]);
+    const [loadedArtists, setLoadedArtists] = useState<boolean>(false);
+   
+    useEffect(() => {
+        addArtists();
+    }, [songs]);
+
+    useEffect(() => {
+       updateHistory(history, songs);
+    }, [history, songs]);
+
+
+    const addArtists = async () => {
+        if (!loadedArtists && !isEmpty(songs)) {
+            let artists: Artist[] = [];
+            let names: string[] = [];
+            songs.forEach(song => {
+                let isDisabled = song.disabled ? song.disabled : false;
+                let name = song.artist;
+                if (!isEmpty(name) && !includes(names, name.trim()) && !isDisabled) {
+                    names.push(name.trim());
+                }
+            });
+            artists = orderBy(names).map(name => { return { key: name, name: name } });
+            dispatch(artistsChange(artists));
+            setLoadedArtists(true);
+        }
+    }
+
+    const updateHistory = async (h: Song[], s: Song[]) =>{
+        if(!isEmpty(h) && !(isEmpty(s))){
+            let matched = await matchSongs(h, s);
+            let results: TopPlayed[] = [];
+            
+            matched.map(song => {
+                let artist = song.artist;
+                let title = song.title;
+                let key = `${artist.trim().toLowerCase()}-${title.trim().toLowerCase()}`.replace(/\W/g, '_');
+                let songCount = song.count ? song.count : 1;
+                let found = results.filter(item => item.key === key)?.[0];
+                if (isEmpty(found)) {
+                    found = { key: key, artist: artist, title: title, count: songCount, songs: [song] }
+                    results.push(found);
+                } else {
+                    let foundSong = found.songs.filter(item => item.key === key)?.[0];
+                    if (isEmpty(foundSong)) {
+                        found.songs.push(song);
+                    }
+                    let accumulator = 0;
+                    found.songs.map(song => {
+                        accumulator = accumulator + song.count!;
+                    });
+                    found.count = accumulator;
+                }
+            });
+    
+            let sorted = results.sort((a: TopPlayed, b: TopPlayed) => {
+                return b.count - a.count || a.key!.localeCompare(b.key!);
+            });
+    
+            let sortedHistory = matched.sort((a: Song, b: Song) => {
+                var yesterday = new Date();
+                yesterday.setDate(yesterday.getDate() - 1);
+                let aDate = a.date ? new Date(a.date) : yesterday;
+                let bDate = b.date ? new Date(b.date) : yesterday;
+                return bDate.valueOf() - aDate.valueOf();
+            });
+    
+            let payload: History = {
+                songs: sortedHistory,
+                topPlayed: sorted.slice(0, 100)
+            }
+            dispatch(historyChange(payload));
+        }
+    }
+    
 
     useEffect(() => {
         if (isAuthenticated) {
+            FirebaseService.getSongs().on("value", onSongsChange);
             FirebaseService.getSongLists().on("value", onSongListChange);
             FirebaseService.getPlayerSingers().on("value", onSingersChange);
             FirebaseService.getPlayerQueue().on("value", onQueueChange);
@@ -44,29 +125,8 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
             FirebaseService.getHistory().on("value", onHistoryChange);
             FirebaseService.getFavorites().on("value", onFavoritesChange);
             FirebaseService.getDisabled().on("value", onDisabledChange);
-            FirebaseService.getSongs().on("value", onSongsChange);
         }
     }, [isAuthenticated])
-
-    const refreshHistory = async (songHistory: Song[], allSongs: Song[]) => {
-        let needsUpdate: Song[] = [];
-
-        songHistory.map(s => {
-            let song = allSongs.find(f => f.path === s.path);
-            if (song && (s.disabled != song.disabled || s.favorite != song.favorite)) {
-                needsUpdate.push({
-                    ...s,
-                    disabled: song.disabled,
-                    favorite: song.favorite
-                });
-            }
-        });
-
-        if (!isEmpty(needsUpdate)) {
-            FirebaseService.updateAllHistory(needsUpdate);
-        }
-
-    }
 
     //helper functions
     const convertToAristSongs = (songs: Song[]): Promise<ArtistSongs[]> => {
@@ -150,53 +210,8 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
     };
 
     const onHistoryChange = async (items: firebase.database.DataSnapshot) => {
-
-        let amount = 100;
-        convertToArray<Song>(items)
-            .then(history => {
-                let results: TopPlayed[] = [];
-                history.map(song => {
-                    let artist = song.artist;
-                    let title = song.title;
-                    let key = `${artist.trim().toLowerCase()}-${title.trim().toLowerCase()}`.replace(/\W/g, '_');
-                    let songCount = song.count ? song.count : 1;
-                    let found = results.filter(item => item.key === key)?.[0];
-                    if (isEmpty(found)) {
-                        found = { key: key, artist: artist, title: title, count: songCount, songs: [song] }
-                        results.push(found);
-                    } else {
-                        let foundSong = found.songs.filter(item => item.key === key)?.[0];
-                        if (isEmpty(foundSong)) {
-                            found.songs.push(song);
-                        }
-                        let accumulator = 0;
-                        found.songs.map(song => {
-                            accumulator = accumulator + song.count!;
-                        });
-                        found.count = accumulator;
-                    }
-                });
-
-                let sorted = results.sort((a: TopPlayed, b: TopPlayed) => {
-                    return b.count - a.count || a.key!.localeCompare(b.key!);
-                });
-
-                let sortedHistory = history.sort((a: Song, b: Song) => {
-                    var yesterday = new Date();
-                    yesterday.setDate(yesterday.getDate() - 1);
-                    let aDate = a.date ? new Date(a.date) : yesterday;
-                    let bDate = b.date ? new Date(b.date) : yesterday;
-                    return bDate.valueOf() - aDate.valueOf();
-                });
-
-                let payload: History = {
-                    songs: sortedHistory,
-                    topPlayed: sorted.slice(0, amount)
-                }
-
-                dispatch(historyChange(payload));
-            });
-
+        let h = await convertToArray<Song>(items);
+        setHistory(h);       
     };
 
     const onFavoritesChange = async (items: firebase.database.DataSnapshot) => {
@@ -215,25 +230,9 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
     };
 
     const onSongsChange = async (items: firebase.database.DataSnapshot) => {
-        let songHistoyRef = await FirebaseService.getHistory().get();
-        let songHistory = await convertToArray<Song>(songHistoyRef);
         convertToArray<Song>(items)
             .then(list => {
-                let artists: Artist[] = [];
-                let names: string[] = [];
-
-                list.forEach(song => {
-                    let isDisabled = song.disabled ? song.disabled : false;
-                    let name = song.artist;
-                    if (!isEmpty(name) && !includes(names, name.trim()) && !isDisabled) {
-                        names.push(name.trim());
-                    }
-                });
-                artists = orderBy(names).map(name => { return { key: name, name: name } });
-
-                refreshHistory(songHistory, list);
                 dispatch(songsChange(list));
-                dispatch(artistsChange(artists));
             });
     };
 

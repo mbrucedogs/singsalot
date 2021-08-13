@@ -28,6 +28,7 @@ import {
 } from "../models";
 import { useSelector } from "react-redux";
 import { selectHistory, selectSongs } from "../store/store";
+import favorites from "../store/slices/favorites";
 interface FirebaseReduxHandlerProps {
     isAuthenticated: boolean;
     children: React.ReactNode;
@@ -38,16 +39,25 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
     const dispatch = useAppDispatch()
     const songs = useSelector(selectSongs);
     const [history, setHistory] = useState<Song[]>([]);
+    const [favorites, setFavorites] = useState<Song[]>([]);
+    const [disabled, setDisabled] = useState<Song[]>([]);
     const [loadedArtists, setLoadedArtists] = useState<boolean>(false);
-   
+
     useEffect(() => {
         addArtists();
     }, [songs]);
 
     useEffect(() => {
-       updateHistory(history, songs);
+        updateHistory(history, songs);
     }, [history, songs]);
 
+    useEffect(() => {
+        updateFavorites(favorites, songs);
+    }, [favorites, songs]);
+
+    useEffect(() => {
+        updateDisabled(disabled, songs);
+    }, [disabled, songs]);
 
     const addArtists = async () => {
         if (!loadedArtists && !isEmpty(songs)) {
@@ -66,11 +76,11 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
         }
     }
 
-    const updateHistory = async (h: Song[], s: Song[]) =>{
-        if(!isEmpty(h) && !(isEmpty(s))){
-            let matched = await matchSongs(h, s);
+    const updateHistory = async (h: Song[], all: Song[]) => {
+        if (!isEmpty(h) && !(isEmpty(all))) {
+            let matched = await matchSongs(h, all);
             let results: TopPlayed[] = [];
-            
+
             matched.map(song => {
                 let artist = song.artist;
                 let title = song.title;
@@ -92,11 +102,11 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
                     found.count = accumulator;
                 }
             });
-    
+
             let sorted = results.sort((a: TopPlayed, b: TopPlayed) => {
                 return b.count - a.count || a.key!.localeCompare(b.key!);
             });
-    
+
             let sortedHistory = matched.sort((a: Song, b: Song) => {
                 var yesterday = new Date();
                 yesterday.setDate(yesterday.getDate() - 1);
@@ -104,7 +114,7 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
                 let bDate = b.date ? new Date(b.date) : yesterday;
                 return bDate.valueOf() - aDate.valueOf();
             });
-    
+
             let payload: History = {
                 songs: sortedHistory,
                 topPlayed: sorted.slice(0, 100)
@@ -112,7 +122,28 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
             dispatch(historyChange(payload));
         }
     }
-    
+
+    const updateFavorites = async (f: Song[], all: Song[]) => {
+        if (!isEmpty(f) && !(isEmpty(all))) {
+            let matched = await matchSongs(f, all);
+            console.log("updateFavorites", matched);
+            let sorted = matched.sort((a: Song, b: Song) => {
+                return a.title.localeCompare(b.title)
+            });
+            dispatch(favoritesChange(sorted));
+        }
+    }
+
+    const updateDisabled = async (d: Song[], all: Song[]) => {
+        if (!isEmpty(d) && !(isEmpty(all))) {
+            let matched = await matchSongs(d, all);
+            console.log("updateDisabled", matched);
+            let sorted = matched.sort((a: Song, b: Song) => {
+                return a.title.localeCompare(b.title)
+            });
+            dispatch(disabledChange(sorted));
+        }
+    }
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -210,23 +241,18 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
     };
 
     const onHistoryChange = async (items: firebase.database.DataSnapshot) => {
-        let h = await convertToArray<Song>(items);
-        setHistory(h);       
+        convertToArray<Song>(items)
+            .then(result => setHistory(result));
     };
 
     const onFavoritesChange = async (items: firebase.database.DataSnapshot) => {
         convertToArray<Song>(items)
-            .then(result => {
-                let sorted = result.sort((a: Song, b: Song) => {
-                    return a.title.localeCompare(b.title)
-                });
-                dispatch(favoritesChange(sorted))
-            });
+            .then(result => setFavorites(result));
     };
 
     const onDisabledChange = async (items: firebase.database.DataSnapshot) => {
         convertToArray<Song>(items)
-            .then(result => dispatch(disabledChange(result)));
+            .then(result => setDisabled(result));
     };
 
     const onSongsChange = async (items: firebase.database.DataSnapshot) => {

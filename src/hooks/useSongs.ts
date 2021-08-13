@@ -64,7 +64,6 @@ export const useSongs = (): {
                 return a.title.localeCompare(b.title)
             });
             let enabled = sorted.filter(s=> s.disabled == false || s.disabled == undefined);
-            console.log("Search found:", enabled);
             setSongs(enabled);
         }
     }, [allSongs]);

@@ -7,12 +7,12 @@ import {
   Settings,
   Singer, 
   Song,
+  SongBase,
  } from '../models';
 
 const db = localfirebase.ref('/controllers');
 
 type FirebaseUpdate = {[key: string]: Fabricable}
-
 class FirebaseService {
   controllerId: string = ""
 
@@ -92,23 +92,15 @@ class FirebaseService {
     return this.get('history');
   }
 
-  addHistory(song: Song) {
+  addHistory(song: SongBase) {
     return this.setObject(`history`, song);
   }
 
-  updateHistory(song: Song) {
+  updateHistory(song: SongBase) {
     return this.updateObject('history', song);
   }
 
-  updateAllHistory(songs: Song[]) {
-    let updates:FirebaseUpdate = {};
-    songs.map( song=> {
-      updates[this.addPathFor(`history/${song.key!}`)] = song;
-    });
-    return this.update(updates) ;  
-  }
-
-  deleteHistory(song: Song) {
+  deleteHistory(song: SongBase) {
     return this.delete('history', song);
   }
 
@@ -122,9 +114,9 @@ class FirebaseService {
   addFavorite(song: Song) {
     let updates:FirebaseUpdate = {};
     let updatedSong: Song = {...song, favorite: true}
-  
+    let updatedSongBase: SongBase = {key: song.key, path: song.path};
     updates[this.addPathFor(`songs/${song.key!}`)] = updatedSong;
-    updates[this.addPathFor(`favorites/${song.key!}`)] = updatedSong;
+    updates[this.addPathFor(`favorites/${song.key!}`)] = updatedSongBase;
     console.log("FirebaseService - addFavorite", updates);
     return this.update(updates) ;  
   }

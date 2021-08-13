@@ -4,10 +4,10 @@ import { useAppDispatch } from '../hooks'
 import orderBy from 'lodash/orderBy'
 import { useEffect } from "react";
 import { convertToArray, FirebaseService } from '../services'
-import { 
+import {
     artistsChange,
     favoritesChange,
-    historyChange, 
+    historyChange,
     latestSongsChange,
     playerStateChange, queueChange, singersChange,
     songsChange,
@@ -47,6 +47,26 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
             FirebaseService.getSongs().on("value", onSongsChange);
         }
     }, [isAuthenticated])
+
+    const refreshHistory = async (songHistory: Song[], allSongs: Song[]) => {
+        let needsUpdate: Song[] = [];
+
+        songHistory.map(s => {
+            let song = allSongs.find(f => f.path === s.path);
+            if (song && (s.disabled != song.disabled || s.favorite != song.favorite)) {
+                needsUpdate.push({
+                    ...s,
+                    disabled: song.disabled,
+                    favorite: song.favorite
+                });
+            }
+        });
+
+        if (!isEmpty(needsUpdate)) {
+            FirebaseService.updateAllHistory(needsUpdate);
+        }
+
+    }
 
     //helper functions
     const convertToAristSongs = (songs: Song[]): Promise<ArtistSongs[]> => {
@@ -181,7 +201,12 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
 
     const onFavoritesChange = async (items: firebase.database.DataSnapshot) => {
         convertToArray<Song>(items)
-            .then(result => dispatch(favoritesChange(result)));
+            .then(result => {
+                let sorted = result.sort((a: Song, b: Song) => {
+                    return a.title.localeCompare(b.title)
+                });
+                dispatch(favoritesChange(sorted))
+            });
     };
 
     const onDisabledChange = async (items: firebase.database.DataSnapshot) => {
@@ -190,6 +215,8 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
     };
 
     const onSongsChange = async (items: firebase.database.DataSnapshot) => {
+        let songHistoyRef = await FirebaseService.getHistory().get();
+        let songHistory = await convertToArray<Song>(songHistoyRef);
         convertToArray<Song>(items)
             .then(list => {
                 let artists: Artist[] = [];
@@ -204,6 +231,7 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
                 });
                 artists = orderBy(names).map(name => { return { key: name, name: name } });
 
+                refreshHistory(songHistory, list);
                 dispatch(songsChange(list));
                 dispatch(artistsChange(artists));
             });

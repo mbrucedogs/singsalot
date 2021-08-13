@@ -100,6 +100,14 @@ class FirebaseService {
     return this.updateObject('history', song);
   }
 
+  updateAllHistory(songs: Song[]) {
+    let updates:FirebaseUpdate = {};
+    songs.map( song=> {
+      updates[this.addPathFor(`history/${song.key!}`)] = song;
+    });
+    return this.update(updates) ;  
+  }
+
   deleteHistory(song: Song) {
     return this.delete('history', song);
   }

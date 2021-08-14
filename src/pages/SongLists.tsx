@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { isEmpty } from "lodash";
-import { IonButton, IonModal, IonContent, IonHeader, IonToolbar, IonTitle, IonButtons } from "@ionic/react";
+import { IonButton, IonModal, IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonLabel, IonItem } from "@ionic/react";
 import Collapsible from 'react-collapsible';
 import { pageCount } from "../globalConfig";
 import { useSongLists } from "../hooks";
@@ -11,7 +11,7 @@ export const SongLists: React.FC = () => {
   const pageName: string = "Song Lists";
   const { songLists } = useSongLists()
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [selectedSongList, setSelectedSongList] = useState<SongList|null>(null)
+  const [selectedSongList, setSelectedSongList] = useState<SongList | null>(null)
 
   const modalTitle: string = selectedSongList?.title ?? ''
   const modalSongs: SongListSong[] = selectedSongList?.songs ?? []
@@ -20,13 +20,13 @@ export const SongLists: React.FC = () => {
     return Math.random().toString(16).slice(2)
   }
 
-  const onSongList = (songList: SongList) =>{
+  const onSongList = (songList: SongList) => {
     setSelectedSongList(songList);
     setShowModal(true);
   }
 
   useEffect(() => {
-    if(!showModal){
+    if (!showModal) {
       setSelectedSongList(null);
     }
   }, [showModal])
@@ -42,15 +42,14 @@ export const SongLists: React.FC = () => {
           pageCount={pageCount}
           pageName={pageName}
           listItems={songLists}
-          getRow={(item) => {
+          getRow={(item, index) => {
             return (
-              <div key={item.key} className="row-single" onClick={(e) => { onSongList(item); }}>
-                <div style={{ flex: "1 1 auto" }}>{item.title} ({item.songs.length})</div>
-              </div>
+              <IonItem key={index} onClick={() => { onSongList(item); }}>
+                <IonLabel className="title" style={{ padding: '15px' }}>{item.title} ({item.songs.length})</IonLabel>
+              </IonItem>
             )
           }}
         />
-
         <IonModal isOpen={showModal}
           swipeToClose={true}
           presentingElement={undefined}

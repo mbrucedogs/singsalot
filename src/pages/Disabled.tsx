@@ -4,6 +4,7 @@ import { isEmpty } from "lodash";
 import { useSongs } from "../hooks";
 import { Page, ScrollingGrid, SongActionDiv, SongDivItem } from "../components"
 import { close, closeOutline } from "ionicons/icons";
+import { IonButtons } from "@ionic/react";
 
 export const Disabled: React.FC = () => {
   const pageName: string = "Disabled";
@@ -27,11 +28,13 @@ export const Disabled: React.FC = () => {
                 showArtist={true}
                 showPath={true}
               />
-               <SongActionDiv
-                image={close}
-                imageOutline={closeOutline}
-                onClick={() => { deleteDisabled(song) }}
-              />              
+              <IonButtons slot="end">
+                <SongActionDiv
+                  image={close}
+                  imageOutline={closeOutline}
+                  onClick={() => { deleteDisabled(song) }}
+                />
+              </IonButtons>
             </div>
           )
         }}

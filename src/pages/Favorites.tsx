@@ -4,6 +4,7 @@ import { isEmpty } from "lodash";
 import { useSongs } from "../hooks";
 import { Page, ScrollingGrid, SongActionDiv, SongContainer, SongDivItem } from "../components"
 import { close, closeOutline, informationCircle, informationCircleOutline } from "ionicons/icons";
+import { IonButtons } from "@ionic/react";
 
 export const Favorites: React.FC = () => {
   const pageName: string = "Favorites";
@@ -33,16 +34,18 @@ export const Favorites: React.FC = () => {
                       showPath={true}
                       onClick={() => { onSongPick() }}
                     />
-                    <SongActionDiv
-                      image={informationCircle}
-                      imageOutline={informationCircleOutline}
-                      onClick={() => { onSongInfo(); }}
-                    />
-                    <SongActionDiv
-                      image={close}
-                      imageOutline={closeOutline}
-                      onClick={() => { deleteFavorite(song) }}
-                    />
+                    <IonButtons slot="end">
+                      <SongActionDiv
+                        image={informationCircle}
+                        imageOutline={informationCircleOutline}
+                        onClick={() => { onSongInfo(); }}
+                      />
+                      <SongActionDiv
+                        image={close}
+                        imageOutline={closeOutline}
+                        onClick={() => { deleteFavorite(song) }}
+                      />
+                    </IonButtons>
                   </div>
                 )
               }}

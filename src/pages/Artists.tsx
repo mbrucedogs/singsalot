@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { isEmpty } from "lodash";
-import { IonMenuButton, IonPage, IonSearchbar, IonButton, IonModal, IonContent, IonHeader, IonToolbar, IonTitle, IonButtons } from "@ionic/react";
+import { IonMenuButton, IonPage, IonSearchbar, IonButton, IonModal, IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonItem, IonLabel } from "@ionic/react";
 import { useArtists, useSongs } from "../hooks";
 import { ArtistSongs } from "../models";
 import { Page, ScrollingGrid, SongDiv } from "../components"
@@ -32,7 +32,7 @@ export const Artists: React.FC = () => {
   }, [modal]);
 
   useEffect(() => {
-    if(!showModal){
+    if (!showModal) {
       setSearchText('');
     }
   }, [showModal])
@@ -60,9 +60,9 @@ export const Artists: React.FC = () => {
               listItems={artists}
               getRow={(item, index) => {
                 return (
-                  <div key={item.key} className="row-single" onClick={(e) => { setSearchText(item.name); }}>
-                    <div style={{ flex: "1 1 auto" }}>{item.name}</div>
-                  </div>
+                  <IonItem key={index} onClick={(e) => { setSearchText(item.name); }}>
+                    <IonLabel className="title ion-text-wrap" style={{ padding: '15px' }}>{item.name}</IonLabel>
+                  </IonItem>
                 );
               }}
             />

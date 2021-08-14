@@ -62,9 +62,9 @@ export const SongContainer: React.FC<React.DetailedHTMLProps<React.HTMLAttribute
     }
 
     return (
-        <>
+        <div style={{paddingLeft:'10px', paddingRight:'10px'}}>
             {render(song, songPick, songInfoPick, toggleFavorite, toggleDisabled)}
-        </>
+        </div>
     );
 };
 

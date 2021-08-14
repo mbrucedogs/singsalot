@@ -46,7 +46,7 @@ export const Search: React.FC = () => {
             pageCount={pageCount}
             pageName={pageName}
             listItems={foundSongs}
-            getRow={(song) => { return <SongDiv key={song.key} song={song} showPath={true} /> }}
+            getRow={(song, index) => { return <SongDiv key={index} song={song} showPath={true} /> }}
           />
         }
         {isEmpty(foundSongs) && <h4 style={{ padding: '10px' }}>No Artists or Songs found...</h4>}

@@ -8,7 +8,7 @@ export interface ScrollingGridProps<T> {
   pageName: string;
   pageCount: number;
   listItems: T[];
-  getRow: (item: T, index?: number) => JSX.Element;
+  getRow: (item: T, index: number) => JSX.Element;
 }
 
 export const ScrollingGrid = <T extends Fabricable>({ pageName, pageCount, listItems, getRow }: ScrollingGridProps<T>) => {

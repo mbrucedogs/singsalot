@@ -14,10 +14,10 @@ export const LatestSongs: React.FC = () => {
     return <Page name={pageName}><h2 style={{ padding: '10px' }}>Loading {pageName}...</h2></Page>
   }
 
-  const buildRow = (item: ArtistSongs)=> {
-    if(artistCollapse){
-      return (            
-        <div key={item.key}>
+  const buildRow = (item: ArtistSongs, index: number) => {
+    if (artistCollapse) {
+      return (
+        <div key={index}>
           <div className="row">
             <div style={{ flex: "1 1 auto" }} className="title">{item.artist}</div>
           </div>
@@ -25,9 +25,11 @@ export const LatestSongs: React.FC = () => {
         </div>
       );
     } else {
-      return <div key={item.key}>
-        {item.songs.map(song => { return <SongDiv key={song.key} song={song}/> })}
+      return (
+        <div key={index} style={{paddingLeft:'10px', paddingRight:'10px'}}>
+          {item.songs.map((s,i) => { return <SongDiv key={i} song={s} /> })}
         </div>
+      )
     }
   }
 
@@ -37,7 +39,7 @@ export const LatestSongs: React.FC = () => {
         pageCount={pageCount}
         pageName={pageName}
         listItems={artistSongs}
-        getRow={(item) => { return buildRow(item)}}
+        getRow={(item, index) => { return buildRow(item, index) }}
       />
     </Page>
   );

@@ -16,10 +16,6 @@ export const SongLists: React.FC = () => {
   const modalTitle: string = selectedSongList?.title ?? ''
   const modalSongs: SongListSong[] = selectedSongList?.songs ?? []
 
-  const getId = (): string => {
-    return Math.random().toString(16).slice(2)
-  }
-
   const onSongList = (songList: SongList) => {
     setSelectedSongList(songList);
     setShowModal(true);
@@ -68,11 +64,11 @@ export const SongLists: React.FC = () => {
                 pageCount={100}
                 pageName={modalTitle}
                 listItems={modalSongs}
-                getRow={(song) => {
+                getRow={(song, index) => {
                   let hasFoundSongs: boolean = !isEmpty(song.foundSongs);
                   {
                     hasFoundSongs &&
-                      <div key={getId()} className={hasFoundSongs ? "row-single" : "row-single notavailable"} onClick={(e) => { setShowModal(false); }}>
+                      <div key={index} className={hasFoundSongs ? "row-single" : "row-single notavailable"} onClick={(e) => { setShowModal(false); }}>
                         <div style={{ paddingTop: '0px', paddingLeft: '10px', paddingRight: '10px' }}>({song.position})</div>
                         <div style={{ flex: '1 1 auto' }}>
                           <div className="title">{song.artist}</div>
@@ -81,7 +77,7 @@ export const SongLists: React.FC = () => {
                       </div>
                   }
                   return (
-                    <Collapsible key={getId()} trigger={<div className={hasFoundSongs ? "row-single" : "row-single notavailable"}>
+                    <Collapsible key={index} trigger={<div className={hasFoundSongs ? "row-single" : "row-single notavailable"}>
                       <div style={{ paddingTop: '0px', paddingLeft: '10px', paddingRight: '10px' }}>({song.position})</div>
                       <div style={{ flex: '1 1 auto' }}>
                         <div className="title">{song.artist}</div>
@@ -89,10 +85,10 @@ export const SongLists: React.FC = () => {
                       </div>
                     </div>
                     }>
-                      {song.foundSongs?.map(s => {
+                      {song.foundSongs?.map((s,index) => {
                         return (
                           <SongDiv
-                            key={getId()}
+                            key={index}
                             style={{ paddingLeft: '50px' }}
                             song={s}
                             showPath={true}

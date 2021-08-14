@@ -21,6 +21,7 @@ import {
     matchSongs,
     PlayerState,
     QueueItem,
+    reduce,
     Singer,
     Song,
     SongList,
@@ -30,7 +31,6 @@ import { useSelector } from "react-redux";
 import { selectHistory, selectSongs } from "../store/store";
 import favorites from "../store/slices/favorites";
 import latestSongs from "../store/slices/latestSongs";
-import { count } from "console";
 interface FirebaseReduxHandlerProps {
     isAuthenticated: boolean;
     children: React.ReactNode;
@@ -82,24 +82,30 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
             setLoadedArtists(true);
         }
     }
-
+    
     const updateHistory = async (h: Song[], all: Song[]) => {
         if (!(isEmpty(all))) {
             if (!isEmpty(h)) {
+
                 let results: TopPlayed[] = [];
-                let matched = h.map(hs => {
+                let matched = reduce<Song, Song[]>(h, (result, hs) => {
                     let found = all.find(as => as.path == hs.path);
-                    if(found){
-                        let count = hs.count ? hs.count : 1;
-                        return {
-                            ...found,
-                            count: count,
+                    let disabled = found?.disabled ?? false;
+                    if (found) {
+                        if (!disabled) {
+                            let count = hs.count ? hs.count : 1;
+                            let n = {
+                                ...found,
+                                count: count,
+                            }
+                            result.push(n);
                         }
                     } else {
-                        return hs;
+                        result.push(hs);
                     }
-                });
-
+                    return result;
+                }, []);
+              
                 matched.map(song => {
                     let artist = song.artist;
                     let title = song.title;

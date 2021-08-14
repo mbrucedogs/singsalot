@@ -25,3 +25,14 @@ export function matchSongs(filter: Song[], allSongs: Song[]): Promise<Song[]> {
     });
 }
 
+export function reduce<TElement, TResult>(
+    array: TElement[], 
+    reducer: (result: TResult, el: TElement) => TResult, 
+    initialResult: TResult
+): TResult {
+    let result = initialResult;
+    for (const element of array) {
+        result = reducer(result, element);
+    }
+    return result;
+}

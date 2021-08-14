@@ -29,6 +29,7 @@ import {
 import { useSelector } from "react-redux";
 import { selectHistory, selectSongs } from "../store/store";
 import favorites from "../store/slices/favorites";
+import latestSongs from "../store/slices/latestSongs";
 interface FirebaseReduxHandlerProps {
     isAuthenticated: boolean;
     children: React.ReactNode;
@@ -41,6 +42,7 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
     const [history, setHistory] = useState<Song[]>([]);
     const [favorites, setFavorites] = useState<Song[]>([]);
     const [disabled, setDisabled] = useState<Song[]>([]);
+    const [latestSongs, setLatestSongs] = useState<Song[]>([]);
     const [loadedArtists, setLoadedArtists] = useState<boolean>(false);
 
     useEffect(() => {
@@ -58,6 +60,10 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
     useEffect(() => {
         updateDisabled(disabled, songs);
     }, [disabled, songs]);
+
+    useEffect(() => {
+        updateLatestSongs(latestSongs, songs);
+    }, [latestSongs, songs]);
 
     const addArtists = async () => {
         if (!loadedArtists && !isEmpty(songs)) {
@@ -78,10 +84,10 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
 
     const updateHistory = async (h: Song[], all: Song[]) => {
         if (!(isEmpty(all))) {
-            if(!isEmpty(h)){
+            if (!isEmpty(h)) {
                 let matched = await matchSongs(h, all);
                 let results: TopPlayed[] = [];
-    
+
                 matched.map(song => {
                     let artist = song.artist;
                     let title = song.title;
@@ -103,11 +109,11 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
                         found.count = accumulator;
                     }
                 });
-    
+
                 let sorted = results.sort((a: TopPlayed, b: TopPlayed) => {
                     return b.count - a.count || a.key!.localeCompare(b.key!);
                 });
-    
+
                 let sortedHistory = matched.sort((a: Song, b: Song) => {
                     var yesterday = new Date();
                     yesterday.setDate(yesterday.getDate() - 1);
@@ -115,14 +121,14 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
                     let bDate = b.date ? new Date(b.date) : yesterday;
                     return bDate.valueOf() - aDate.valueOf();
                 });
-    
+
                 let payload: History = {
                     songs: sortedHistory,
                     topPlayed: sorted.slice(0, 100)
                 }
-                dispatch(historyChange(payload));    
-            }else {
-                dispatch(historyChange({songs: [], topPlayed:[]}));    
+                dispatch(historyChange(payload));
+            } else {
+                dispatch(historyChange({ songs: [], topPlayed: [] }));
             }
         }
     }
@@ -155,6 +161,14 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
                 dispatch(disabledChange([]));
             }
         }
+    }
+
+    const updateLatestSongs = async (l: Song[], all: Song[]) => {
+        let matched = await matchSongs(l, all)
+        convertToAristSongs(matched)
+            .then(artistSongs => {
+                dispatch(latestSongsChange({ latestSongs: matched, artistSongs: artistSongs }));
+            })
     }
 
     useEffect(() => {
@@ -244,12 +258,7 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
 
     const onLatestSongsChange = async (items: firebase.database.DataSnapshot) => {
         convertToArray<Song>(items)
-            .then(latestSongs => {
-                convertToAristSongs(latestSongs)
-                    .then(artistSongs => {
-                        dispatch(latestSongsChange({ latestSongs: latestSongs, artistSongs: artistSongs }));
-                    })
-            });
+            .then(latestSongs => setLatestSongs(latestSongs));
     };
 
     const onHistoryChange = async (items: firebase.database.DataSnapshot) => {

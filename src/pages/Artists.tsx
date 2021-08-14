@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { isEmpty } from "lodash";
 import { IonMenuButton, IonPage, IonSearchbar, IonButton, IonModal, IonContent, IonHeader, IonToolbar, IonTitle, IonButtons } from "@ionic/react";
 import { useArtists, useSongs } from "../hooks";
-import { ArtistSongs, Song } from "../models";
+import { ArtistSongs } from "../models";
 import { Page, ScrollingGrid, SongDiv } from "../components"
 
 export const Artists: React.FC = () => {
@@ -30,6 +30,12 @@ export const Artists: React.FC = () => {
       setShowModal(true);
     }
   }, [modal]);
+
+  useEffect(() => {
+    if(!showModal){
+      setSearchText('');
+    }
+  }, [showModal])
 
   if (!hasLoaded) {
     return <Page name={pageName}><h2 style={{ padding: '10px' }}>Loading {pageName}...</h2></Page>

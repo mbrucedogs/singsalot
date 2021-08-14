@@ -16,11 +16,11 @@ export const Queue: React.FC = () => {
   const canDeleteFirstItem = (playerState == PlayerState.stopped && isAdmin);
   const actionButton = () => {
     if (isAdmin) {
-      return <IonButtons slot="end" style={{ paddingRight: '10px' }}>
-        <IonButton onClick={(e) => setShouldReorder(!shouldReorder)}>
-          <IonIcon size="large" ios={!shouldReorder ? reorderThreeOutline : closeOutline} md={!shouldReorder ? reorderThree : close} slot="end" />
-        </IonButton>
-      </IonButtons>
+      return {
+        onClick: () => setShouldReorder(!shouldReorder),
+        ios: !shouldReorder ? reorderThreeOutline : closeOutline,
+        standard: !shouldReorder ? reorderThree : close,
+      }
     } else {
       return;
     }
@@ -59,7 +59,7 @@ export const Queue: React.FC = () => {
   }
 
   return (
-    <Page name={pageName} endButtons={actionButton()}>
+    <Page name={pageName} endButton={actionButton()}>
       <IonContent className="queue">
 
         <IonItem>
@@ -70,7 +70,7 @@ export const Queue: React.FC = () => {
           </IonGrid>
           <IonButtons hidden={!canDeleteFirstItem} slot="end">
             <IonButton onClick={(e) => deleteFromQueue(queue[0])}>
-              <IonIcon ios={closeOutline} md={close}/>
+              <IonIcon size="large" ios={closeOutline} md={close} />
             </IonButton>
           </IonButtons>
         </IonItem>
@@ -89,10 +89,10 @@ export const Queue: React.FC = () => {
                   </IonGrid>
                   <IonButtons slot="end">
                     <IonButton hidden={canDelete(item)} onClick={(e) => deleteFromQueue(item)}>
-                      <IonIcon ios={closeOutline} md={close} />
+                      <IonIcon size="large" ios={closeOutline} md={close} />
                     </IonButton>
                     <IonButton hidden={!shouldReorder} >
-                      <IonIcon ios={reorderThreeOutline} md={reorderThree} />
+                      <IonIcon size="large" ios={reorderThreeOutline} md={reorderThree} />
                     </IonButton>
                   </IonButtons>
                 </IonItem>

@@ -55,7 +55,14 @@ export const Singers: React.FC = () => {
   }, [showModal]);
 
   return (
-    <Page name={pageName} endButtons={<IonIcon style={{ paddingRight: '20px' }} ios={addOutline} md={add} slot="end" onClick={() => setShowModal(true)}>Add</IonIcon>}>
+    <Page name={pageName} endButton={
+      {
+        onClick: () => setShowModal(true),
+        ios: addOutline,
+        standard: add,
+        buttonText: "Add"
+      }
+    }>
       <>
         {isEmpty(singers) && <h2 style={{ padding: '10px' }}>Loading or there are no {pageName}...</h2>}
 
@@ -65,14 +72,26 @@ export const Singers: React.FC = () => {
           listItems={singers}
           getRow={(singer, index) => {
             return (
-              <div key={index} className="row-single" style={{ padding: '10px', display: 'grid', gridTemplateColumns: 'auto 25px' }}>
-                <div>
-                  <div>{singer.name} ({singer.songCount})</div>
-                </div>
-                <div>
-                  <IonIcon hidden={!isAdmin} ios={closeOutline} md={close} onClick={(e) => onDelete(singer)} />
-                </div>
-              </div>
+              <IonItem>
+                <IonLabel className="title" style={{ padding: '15px' }}>{singer.name} ({singer.songCount})</IonLabel>
+                <IonButtons hidden={!isAdmin} slot="end">
+                  <IonButton onClick={(e) => onDelete(singer)}>
+                    <IonIcon size="large" ios={closeOutline} md={close} />
+                  </IonButton>
+                </IonButtons>
+              </IonItem>
+              // <div key={index} className="row-single" style={{ padding: '10px', display: 'grid', gridTemplateColumns: 'auto 25px' }}>
+              //   <div>
+              //     <div>{singer.name} ({singer.songCount})</div>
+              //   </div>
+              //   <div>
+              //     <IonButtons hidden={!isAdmin} slot="end">
+              //       <IonButton onClick={(e) => onDelete(singer)}>
+              //         <IonIcon size="large" ios={closeOutline} md={close} />
+              //       </IonButton>
+              //     </IonButtons>
+              //   </div>
+              // </div>
             )
           }}
         />

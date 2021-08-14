@@ -27,8 +27,12 @@ export const useWindowDimensions = () => {
       setWindowDimensions(getWindowDimensions());
     }
 
+    window.addEventListener('orientationchange', handleResize);
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('orientationchange', handleResize);
+      window.removeEventListener('resize', handleResize);
+    }
   }, []);
 
   return windowDimensions;

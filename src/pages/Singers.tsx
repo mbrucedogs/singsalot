@@ -34,7 +34,7 @@ export const Singers: React.FC = () => {
           }
         })
         .catch(error => {
-          console.log("onAddSinger error:", error)
+          //console.log("onAddSinger error:", error)
           setError(error)
         }
         );

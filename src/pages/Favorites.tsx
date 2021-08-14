@@ -22,10 +22,11 @@ export const Favorites: React.FC = () => {
         getRow={(song, index) => {
           return (
             <SongContainer
+              key={index}
               song={song}
               render={(song, onSongPick, onSongInfo) => {
                 return (
-                  <div key={index} className="row" style={{ padding: '10px', display: 'grid', gridTemplateColumns: 'auto 60px 60px' }}>
+                  <div className="row" style={{ padding: '10px', display: 'grid', gridTemplateColumns: 'auto 60px 60px' }}>
                     <SongDivItem
                       song={song}
                       showArtist={true}
@@ -35,7 +36,7 @@ export const Favorites: React.FC = () => {
                     <SongActionDiv
                       image={informationCircle}
                       imageOutline={informationCircleOutline}
-                      onClick={() => { onSongInfo();}}
+                      onClick={() => { onSongInfo(); }}
                     />
                     <SongActionDiv
                       image={close}

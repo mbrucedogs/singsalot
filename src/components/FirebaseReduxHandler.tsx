@@ -30,6 +30,7 @@ import { useSelector } from "react-redux";
 import { selectHistory, selectSongs } from "../store/store";
 import favorites from "../store/slices/favorites";
 import latestSongs from "../store/slices/latestSongs";
+import { count } from "console";
 interface FirebaseReduxHandlerProps {
     isAuthenticated: boolean;
     children: React.ReactNode;
@@ -85,8 +86,19 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
     const updateHistory = async (h: Song[], all: Song[]) => {
         if (!(isEmpty(all))) {
             if (!isEmpty(h)) {
-                let matched = await matchSongs(h, all);
                 let results: TopPlayed[] = [];
+                let matched = h.map(hs => {
+                    let found = all.find(as => as.path == hs.path);
+                    if(found){
+                        let count = hs.count ? hs.count : 1;
+                        return {
+                            ...found,
+                            count: count,
+                        }
+                    } else {
+                        return hs;
+                    }
+                });
 
                 matched.map(song => {
                     let artist = song.artist;
@@ -137,7 +149,7 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
         if (!(isEmpty(all))) {
             if (!isEmpty(f)) {
                 let matched = await matchSongs(f, all);
-                console.log("updateFavorites", matched);
+                //console.log("updateFavorites", matched);
                 let sorted = matched.sort((a: Song, b: Song) => {
                     return a.title.localeCompare(b.title)
                 });
@@ -152,7 +164,7 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
         if (!isEmpty(all)) {
             if (!isEmpty(d)) {
                 let matched = await matchSongs(d, all);
-                console.log("updateDisabled", matched);
+                //console.log("updateDisabled", matched);
                 let sorted = matched.sort((a: Song, b: Song) => {
                     return a.title.localeCompare(b.title)
                 });

@@ -6,12 +6,13 @@ import { Page, ScrollingGrid, SongDiv } from "../components"
 
 export const SingerPick = ({ }) => {
 
-    const { singers, addToQueue, selectedSong, setSelectedSong } = usePlayer();
+    const { singers, addToQueue, selectedSong } = usePlayer();
     const history = useHistory();
     const pageName = 'Select Singer';
 
     const onSinger = useCallback((singer: Singer) => {
         if (selectedSong != undefined) {
+            //console.log("SingerPick - onSinger - addToQueue", selectedSong);
             addToQueue(singer, selectedSong).then(s => {
                 history.push("/Queue");
             });

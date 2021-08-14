@@ -24,7 +24,11 @@ const store = configureStore({
     settings: settingsSlice.reducer,
     songLists: songListsSlice.reducer,
     songs: songsSlice.reducer,
-  }
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false
+    }),
 })
 
 export type RootState = ReturnType<typeof store.getState>;

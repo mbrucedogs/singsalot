@@ -11,7 +11,7 @@ export const SongLists: React.FC = () => {
   const pageName: string = "Song Lists";
   const { songLists } = useSongLists()
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [selectedSongList, setSelectedSongList] = useState<SongList>()
+  const [selectedSongList, setSelectedSongList] = useState<SongList|null>(null)
 
   const modalTitle: string = selectedSongList?.title ?? ''
   const modalSongs: SongListSong[] = selectedSongList?.songs ?? []
@@ -20,16 +20,20 @@ export const SongLists: React.FC = () => {
     return Math.random().toString(16).slice(2)
   }
 
+  const onSongList = (songList: SongList) =>{
+    setSelectedSongList(songList);
+    setShowModal(true);
+  }
+
   useEffect(() => {
-    if (!isEmpty(selectedSongList)) {
-      setShowModal(true);
+    if(!showModal){
+      setSelectedSongList(null);
     }
-  }, [selectedSongList])
+  }, [showModal])
 
   if (isEmpty(songLists)) {
     return <Page name={pageName}><h2 style={{ padding: '10px' }}>Loading {pageName}...</h2></Page>
   }
-
 
   return (
     <Page name={pageName}>
@@ -40,7 +44,7 @@ export const SongLists: React.FC = () => {
           listItems={songLists}
           getRow={(item) => {
             return (
-              <div key={item.key} className="row-single" onClick={(e) => { setSelectedSongList(item); }}>
+              <div key={item.key} className="row-single" onClick={(e) => { onSongList(item); }}>
                 <div style={{ flex: "1 1 auto" }}>{item.title} ({item.songs.length})</div>
               </div>
             )

@@ -20,14 +20,16 @@ export const TopSongs: React.FC = () => {
         pageName={pageName}
         listItems={topPlayed}
         getRow={(history, idx) => {
-          return (<Collapsible key={history.key} trigger={
-          <div className="row-single">
-            <div className="title" style={{ height: '48px', width: '53px', textAlign: 'end', verticalAlign: 'text-top', paddingTop: '0px', paddingLeft: '5px', paddingRight: '10px' }}>{idx! + 1})</div>
-            <div style={{ flex: '1 1 auto' }}>
-              <div className="title">{history.title} ({history.count}) </div>
-              <div className="subtitle">{history.artist}</div>
+          return (<Collapsible key={idx} trigger={
+            <div style={{ paddingLeft: '10px', paddingRight: '10px' }}>
+              <div className="row-single">
+                <div className="title" style={{ height: '48px', width: '53px', textAlign: 'end', verticalAlign: 'text-top', paddingTop: '0px', paddingLeft: '5px', paddingRight: '10px' }}>{idx! + 1})</div>
+                <div style={{ flex: '1 1 auto' }}>
+                  <div className="title">{history.title} ({history.count}) </div>
+                  <div className="subtitle">{history.artist}</div>
+                </div>
+              </div>
             </div>
-          </div>
           }>
             {history.songs.map(song => {
               return (

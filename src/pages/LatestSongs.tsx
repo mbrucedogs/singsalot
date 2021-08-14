@@ -26,7 +26,7 @@ export const LatestSongs: React.FC = () => {
       );
     } else {
       return (
-        <div key={index} style={{paddingLeft:'10px', paddingRight:'10px'}}>
+        <div key={index}>
           {item.songs.map((s,i) => { return <SongDiv key={i} song={s} /> })}
         </div>
       )

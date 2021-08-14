@@ -5,26 +5,29 @@ import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonToolbar, 
 import { pageCount } from "../globalConfig";
 import { useSongs } from "../hooks";
 import { Page, ScrollingGrid, SongDiv } from "../components"
+import { Song } from "../models";
 
 export const Search: React.FC = () => {
-  const { songs, hasLoaded, searchSongs } = useSongs();
+  const { songs, searchSongs } = useSongs();
   const pageName: string = "Search";
   const [searchText, setSearchText] = useState<string>('');
-  const {searchParam}  = useParams<{searchParam: string}>();
+  const [foundSongs, setFoundSongs] = useState<Song[]>([]);
+  const { searchParam } = useParams<{ searchParam: string }>();
 
   useEffect(() => {
-    if(searchParam){
+    if (searchParam) {
       setSearchText(searchParam);
     }
   }, [searchParam])
 
   useEffect(() => {
-    searchSongs(searchText)
-  }, [searchText, searchSongs]);
-
-  if (!hasLoaded) {
-    return <Page name={pageName}><h2 style={{ padding: '10px' }}>Loading {pageName}...</h2></Page>
-  }
+    if (isEmpty(searchText)) {
+      setFoundSongs(songs);
+    } else {
+      searchSongs(searchText)
+        .then(found => setFoundSongs(found))
+    }
+  }, [songs, searchText, searchSongs]);
 
   return (
     <IonPage>
@@ -42,11 +45,11 @@ export const Search: React.FC = () => {
           <ScrollingGrid
             pageCount={pageCount}
             pageName={pageName}
-            listItems={songs}
+            listItems={foundSongs}
             getRow={(song) => { return <SongDiv key={song.key} song={song} showPath={true} /> }}
           />
         }
-        {isEmpty(songs) &&  <h4 style={{ padding: '10px' }}>No Artists or Songs found...</h4>}
+        {isEmpty(foundSongs) && <h4 style={{ padding: '10px' }}>No Artists or Songs found...</h4>}
       </IonContent>
     </IonPage>
   );

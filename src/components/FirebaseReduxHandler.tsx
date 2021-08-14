@@ -270,7 +270,10 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
     const onSongsChange = async (items: firebase.database.DataSnapshot) => {
         convertToArray<Song>(items)
             .then(list => {
-                dispatch(songsChange(list));
+                let sorted = list.sort((a: Song, b: Song) => {
+                    return a.title.localeCompare(b.title)
+                });
+                dispatch(songsChange(sorted));
             });
     };
 

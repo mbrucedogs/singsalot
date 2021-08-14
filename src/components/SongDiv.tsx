@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 import { IonIcon } from "@ionic/react";
-import { close, closeOutline, heart, heartDislike, heartDislikeOutline, heartOutline, informationCircle, informationCircleOutline } from "ionicons/icons";
+import { heart, heartDislike, heartDislikeOutline, heartOutline, informationCircle, informationCircleOutline, removeCircle, removeCircleOutline } from "ionicons/icons";
 import SongContainer from "./SongContainer";
 import { Song } from "../models";
 import { useWindowDimensions } from "../hooks";
@@ -107,8 +107,8 @@ export const SongDiv: React.FC<React.DetailedHTMLProps<React.HTMLAttributes<HTML
                         {showDisable &&
                             <SongActionDiv
                                 hidden={!allowActions}
-                                image={close}
-                                imageOutline={closeOutline}
+                                image={removeCircle}
+                                imageOutline={removeCircleOutline}
                                 onClick={() => { onToggleDisabled();}}
                             />
                         }

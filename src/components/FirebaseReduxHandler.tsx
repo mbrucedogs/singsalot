@@ -101,7 +101,8 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
                             result.push(n);
                         }
                     } else {
-                        result.push(hs);
+                        //song not found so skip it!
+                        //result.push(hs);
                     }
                     return result;
                 }, []);

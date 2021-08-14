@@ -2,9 +2,10 @@ import React from "react";
 import { pageCount } from "../globalConfig";
 import { isEmpty } from "lodash";
 import { useSongs } from "../hooks";
-import { Page, ScrollingGrid, SongActionDiv, SongDivItem } from "../components"
+import { Page, ScrollingGrid, SongDivItem } from "../components"
 import { close, closeOutline } from "ionicons/icons";
 import { IonButtons } from "@ionic/react";
+import { ActionButton } from "../components/ActionButton";
 
 export const Disabled: React.FC = () => {
   const pageName: string = "Disabled";
@@ -30,7 +31,7 @@ export const Disabled: React.FC = () => {
                 showPath={true}
               />
               <IonButtons slot="end">
-                <SongActionDiv
+                <ActionButton
                   image={close}
                   imageOutline={closeOutline}
                   onClick={() => { deleteDisabled(song) }}

@@ -1,9 +1,10 @@
-import React, { ReactNode } from "react";
-import { IonButton, IonButtons, IonIcon } from "@ionic/react";
+import React from "react";
+import { IonButtons } from "@ionic/react";
 import { heart, heartDislike, heartDislikeOutline, heartOutline, informationCircle, informationCircleOutline, removeCircle, removeCircleOutline } from "ionicons/icons";
 import SongContainer from "./SongContainer";
 import { Song } from "../models";
 import { useAuthentication, useWindowDimensions } from "../hooks";
+import { ActionButton } from "../components";
 
 export interface SongProps {
     song: Song;
@@ -47,24 +48,6 @@ export const SongDivItem = ({
     )
 }
 
-export const SongActionDiv = ({
-    hidden = false,
-    imageOutline,
-    image,
-    onClick
-}: {
-    hidden?: boolean,
-    imageOutline: string,
-    image: string,
-    onClick: () => void
-}) => {
-    return (
-        <IonButton hidden={hidden} onClick={onClick ? (e) => { onClick?.() } : () => { }}>
-            <IonIcon size="large" ios={imageOutline} md={image} />
-        </IonButton>
-    )
-}
-
 export const SongDiv: React.FC<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> & SongProps> = ({ paddingLeft = 0, allowActions = true, afterClick, song, showCount = false, showPath = false, showArtist = true }) => {
     const { width } = useWindowDimensions();
     const { isAdmin } = useAuthentication();
@@ -90,14 +73,14 @@ export const SongDiv: React.FC<React.DetailedHTMLProps<React.HTMLAttributes<HTML
                             onClick={allowActions ? () => { onSongPick(); afterClick?.(song) } : () => { }}
                         />
                         <IonButtons slot="end">
-                            <SongActionDiv
+                            <ActionButton
                                 hidden={!allowActions}
                                 image={informationCircle}
                                 imageOutline={informationCircleOutline}
                                 onClick={() => { onSongInfo(); afterClick?.(song) }}
                             />
                             {showFavorite &&
-                                <SongActionDiv
+                                <ActionButton
                                     hidden={!allowActions}
                                     image={isFavorite ? heart : heartDislike}
                                     imageOutline={isFavorite ? heartOutline : heartDislikeOutline}
@@ -105,7 +88,7 @@ export const SongDiv: React.FC<React.DetailedHTMLProps<React.HTMLAttributes<HTML
                                 />
                             }
                             {showDisable && isAdmin &&
-                                <SongActionDiv
+                                <ActionButton
                                     hidden={!allowActions}
                                     image={removeCircle}
                                     imageOutline={removeCircleOutline}

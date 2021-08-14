@@ -2,7 +2,7 @@ import React from "react";
 import { pageCount } from "../globalConfig";
 import { isEmpty } from "lodash";
 import { useSongs } from "../hooks";
-import { Page, ScrollingGrid, SongActionDiv, SongContainer, SongDivItem } from "../components"
+import { Page, ScrollingGrid, ActionButton, SongContainer, SongDivItem } from "../components"
 import { close, closeOutline, informationCircle, informationCircleOutline } from "ionicons/icons";
 import { IonButtons } from "@ionic/react";
 
@@ -35,12 +35,12 @@ export const Favorites: React.FC = () => {
                       onClick={() => { onSongPick() }}
                     />
                     <IonButtons slot="end">
-                      <SongActionDiv
+                      <ActionButton
                         image={informationCircle}
                         imageOutline={informationCircleOutline}
                         onClick={() => { onSongInfo(); }}
                       />
-                      <SongActionDiv
+                      <ActionButton
                         image={close}
                         imageOutline={closeOutline}
                         onClick={() => { deleteFavorite(song) }}

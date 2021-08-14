@@ -117,7 +117,6 @@ class FirebaseService {
     let updatedSongBase: SongBase = {key: song.key, path: song.path};
     updates[this.addPathFor(`songs/${song.key!}`)] = updatedSong;
     updates[this.addPathFor(`favorites/${song.key!}`)] = updatedSongBase;
-    console.log("FirebaseService - addFavorite", updates);
     return this.update(updates) ;  
   }
 
@@ -126,7 +125,6 @@ class FirebaseService {
     let updatedSong: Song = {...song, favorite: false}
 
     updates[this.addPathFor(`songs/${song.key!}`)] = updatedSong;    
-    console.log("FirebaseService - deleteFavorite", updates);
     return this.delete('favorites', song)
       .then(_ => this.update(updates))
   }
@@ -145,7 +143,6 @@ class FirebaseService {
 
     updates[this.addPathFor(`songs/${song.key!}`)] = updatedSong;
     updates[this.addPathFor(`disabled/${song.key!}`)] = updatedSongBase;
-    console.log("FirebaseService - addDisabled", updates);
     return this.update(updates) ;  
   }
 
@@ -154,7 +151,6 @@ class FirebaseService {
     let updatedSong: Song = {...song, disabled: false}
     
     updates[this.addPathFor(`songs/${song.key!}`)] = updatedSong;
-    console.log("FirebaseService - deleteDisabled", updates);
     return this.delete('disabled', song)
       .then(_ => this.update(updates))
   }

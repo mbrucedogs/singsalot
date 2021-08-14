@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { IonIcon } from "@ionic/react";
+import { IonButton, IonButtons, IonIcon } from "@ionic/react";
 import { heart, heartDislike, heartDislikeOutline, heartOutline, informationCircle, informationCircleOutline, removeCircle, removeCircleOutline } from "ionicons/icons";
 import SongContainer from "./SongContainer";
 import { Song } from "../models";
@@ -58,12 +58,10 @@ export const SongActionDiv = ({
     image: string,
     onClick: () => void
 }) => {
-    return (<div
-        hidden={hidden}
-        style={{ textAlign: 'center' }}
-        onClick={onClick ? (e) => { onClick?.() } : () => { }}>
-        <IonIcon size="large" ios={imageOutline} md={image} />
-    </div>
+    return (
+        <IonButton hidden={hidden} onClick={onClick ? (e) => { onClick?.() } : () => { }}>
+            <IonIcon size="large" ios={imageOutline} md={image} />
+        </IonButton>
     )
 }
 
@@ -71,9 +69,9 @@ export const SongDiv: React.FC<React.DetailedHTMLProps<React.HTMLAttributes<HTML
     const { width } = useWindowDimensions();
     const { isAdmin } = useAuthentication();
     const wideWidth = 450;
-    const gridTemplateColumns = width > wideWidth ? isAdmin ? 'auto 60px 60px 60px' : 'auto 60px 60px'  : 'auto 60px';
+    const gridTemplateColumns = width > wideWidth ? isAdmin ? 'auto 180px' : 'auto 120px' : 'auto 60px';
     const showFavorite = width > wideWidth;
-    const showDisable = width > wideWidth ;
+    const showDisable = width > wideWidth;
 
     return (
         <SongContainer
@@ -91,28 +89,30 @@ export const SongDiv: React.FC<React.DetailedHTMLProps<React.HTMLAttributes<HTML
                             showPath={showPath}
                             onClick={allowActions ? () => { onSongPick(); afterClick?.(song) } : () => { }}
                         />
-                        <SongActionDiv
-                            hidden={!allowActions}
-                            image={informationCircle}
-                            imageOutline={informationCircleOutline}
-                            onClick={() => { onSongInfo(); afterClick?.(song) }}
-                        />
-                        {showFavorite &&
+                        <IonButtons slot="end">
                             <SongActionDiv
                                 hidden={!allowActions}
-                                image={isFavorite ? heart : heartDislike}
-                                imageOutline={isFavorite ? heartOutline : heartDislikeOutline}
-                                onClick={() => { onToggleFavorite(); }}
+                                image={informationCircle}
+                                imageOutline={informationCircleOutline}
+                                onClick={() => { onSongInfo(); afterClick?.(song) }}
                             />
-                        }
-                        {showDisable && isAdmin &&
-                            <SongActionDiv
-                                hidden={!allowActions}
-                                image={removeCircle}
-                                imageOutline={removeCircleOutline}
-                                onClick={() => { onToggleDisabled();}}
-                            />
-                        }
+                            {showFavorite &&
+                                <SongActionDiv
+                                    hidden={!allowActions}
+                                    image={isFavorite ? heart : heartDislike}
+                                    imageOutline={isFavorite ? heartOutline : heartDislikeOutline}
+                                    onClick={() => { onToggleFavorite(); }}
+                                />
+                            }
+                            {showDisable && isAdmin &&
+                                <SongActionDiv
+                                    hidden={!allowActions}
+                                    image={removeCircle}
+                                    imageOutline={removeCircleOutline}
+                                    onClick={() => { onToggleDisabled(); }}
+                                />
+                            }
+                        </IonButtons>
                     </div>
                 )
             }}
@@ -120,4 +120,4 @@ export const SongDiv: React.FC<React.DetailedHTMLProps<React.HTMLAttributes<HTML
     );
 };
 
-export default SongDiv;
+export default SongDiv; 

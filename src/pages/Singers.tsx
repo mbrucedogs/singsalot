@@ -80,18 +80,6 @@ export const Singers: React.FC = () => {
                   </IonButton>
                 </IonButtons>
               </IonItem>
-              // <div key={index} className="row-single" style={{ padding: '10px', display: 'grid', gridTemplateColumns: 'auto 25px' }}>
-              //   <div>
-              //     <div>{singer.name} ({singer.songCount})</div>
-              //   </div>
-              //   <div>
-              //     <IonButtons hidden={!isAdmin} slot="end">
-              //       <IonButton onClick={(e) => onDelete(singer)}>
-              //         <IonIcon size="large" ios={closeOutline} md={close} />
-              //       </IonButton>
-              //     </IonButtons>
-              //   </div>
-              // </div>
             )
           }}
         />

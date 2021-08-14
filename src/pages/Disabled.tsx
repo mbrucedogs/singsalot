@@ -22,7 +22,8 @@ export const Disabled: React.FC = () => {
         listItems={disabled}
         getRow={(song, index) => {
           return (
-            <div key={index} className="row" style={{ padding: '10px', display: 'grid', gridTemplateColumns: 'auto 60px' }}>
+            <div key={index} style={{paddingLeft:'10px', paddingRight:'10px'}}>
+              <div className="row" style={{ padding: '10px', display: 'grid', gridTemplateColumns: 'auto 60px' }}>
               <SongDivItem
                 song={song}
                 showArtist={true}
@@ -35,6 +36,7 @@ export const Disabled: React.FC = () => {
                   onClick={() => { deleteDisabled(song) }}
                 />
               </IonButtons>
+            </div>
             </div>
           )
         }}

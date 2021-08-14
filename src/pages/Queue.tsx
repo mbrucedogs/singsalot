@@ -15,19 +15,19 @@ export const Queue: React.FC = () => {
   const [shouldReorder, setShouldReorder] = useState<boolean>(false);
   const canDeleteFirstItem = (playerState == PlayerState.stopped && isAdmin);
   const actionButton = () => {
-    if(isAdmin){
+    if (isAdmin) {
       return <IonButtons slot="end" style={{ paddingRight: '10px' }}>
-      <IonButton onClick={(e) => setShouldReorder(!shouldReorder)}>
-        <IonIcon size="large" ios={!shouldReorder ? reorderThreeOutline : closeOutline} md={!shouldReorder ? reorderThree : close} slot="end" />
-      </IonButton>
-    </IonButtons>
+        <IonButton onClick={(e) => setShouldReorder(!shouldReorder)}>
+          <IonIcon size="large" ios={!shouldReorder ? reorderThreeOutline : closeOutline} md={!shouldReorder ? reorderThree : close} slot="end" />
+        </IonButton>
+      </IonButtons>
     } else {
       return;
-    }    
+    }
   }
 
-  const canDelete = (item: QueueItem): boolean =>{
-    if(isAdmin) {
+  const canDelete = (item: QueueItem): boolean => {
+    if (isAdmin) {
       return shouldReorder
     } else {
       return !(item.singer.name === singer);
@@ -68,7 +68,11 @@ export const Queue: React.FC = () => {
             <IonLabel style={padLeft} className="title">{queue[0].song.title}</IonLabel>
             <IonLabel style={padLeft} hidden={queue[0].song.artist == undefined} className="subtitle">{queue[0].song.artist}</IonLabel>
           </IonGrid>
-          <IonIcon hidden={!canDeleteFirstItem} ios={closeOutline} md={close} slot="end" onClick={(e) => deleteFromQueue(queue[0])} />
+          <IonButtons hidden={!canDeleteFirstItem} slot="end">
+            <IonButton onClick={(e) => deleteFromQueue(queue[0])}>
+              <IonIcon ios={closeOutline} md={close}/>
+            </IonButton>
+          </IonButtons>
         </IonItem>
 
         {/*-- The reorder gesture is disabled by default, enable it to drag and drop items --*/}
@@ -79,17 +83,23 @@ export const Queue: React.FC = () => {
               <IonReorder style={{ minHeight: '60px' }} key={item.key}>
                 <IonItem>
                   <IonGrid>
-                    <IonLabel className="title">{index+2}) {item.singer.name}</IonLabel>
+                    <IonLabel className="title">{index + 2}) {item.singer.name}</IonLabel>
                     <IonLabel style={padLeft} className="title">{item.song.title}</IonLabel>
                     <IonLabel style={padLeft} hidden={queue[0].song.artist == undefined} className="subtitle">{item.song.artist}</IonLabel>
                   </IonGrid>
-                  <IonIcon hidden={canDelete(item)} ios={closeOutline} md={close} slot="end" onClick={(e) => deleteFromQueue(item)} />
-                  <IonIcon hidden={!shouldReorder} ios={reorderThreeOutline} md={reorderThree} slot="end" />
+                  <IonButtons slot="end">
+                    <IonButton hidden={canDelete(item)} onClick={(e) => deleteFromQueue(item)}>
+                      <IonIcon ios={closeOutline} md={close} />
+                    </IonButton>
+                    <IonButton hidden={!shouldReorder} >
+                      <IonIcon ios={reorderThreeOutline} md={reorderThree} />
+                    </IonButton>
+                  </IonButtons>
                 </IonItem>
               </IonReorder>
             )
           })}
-        </IonReorderGroup>        
+        </IonReorderGroup>
       </IonContent>
     </Page>
   );

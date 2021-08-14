@@ -1,34 +1,33 @@
 import React, { useState, useEffect } from "react";
 import { isEmpty } from "lodash";
 import { IonMenuButton, IonPage, IonSearchbar, IonButton, IonModal, IonContent, IonHeader, IonToolbar, IonTitle, IonButtons } from "@ionic/react";
-import { useArtists,  useSongs } from "../hooks";
-import { ArtistSongs } from "../models";
+import { useArtists, useSongs } from "../hooks";
+import { ArtistSongs, Song } from "../models";
 import { Page, ScrollingGrid, SongDiv } from "../components"
 
 export const Artists: React.FC = () => {
   const pageName: string = "Artists";
   const { artists, hasLoaded, searchArtists } = useArtists();
-  const { songs, searchSongs } = useSongs();
+  const { searchSongs } = useSongs();
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [didSearch, setDidSearch] = useState<boolean>(false);
   const [modal, setModal] = useState<ArtistSongs | null>(null);
+  const [artistSearchText, setArtistSearchText] = useState<string>('');
   const [searchText, setSearchText] = useState<string>('');
 
   useEffect(() => {
-    searchArtists(searchText)
-  }, [searchText, searchArtists]);
+    searchArtists(artistSearchText)
+  }, [artistSearchText, searchArtists]);
 
   useEffect(() => {
-    if (!isEmpty(songs) && didSearch) {
-      setModal({ artist: songs[0].artist, songs: songs });
+    if (!isEmpty(searchText)) {
+      searchSongs(searchText)
+        .then(found => setModal({ artist: found[0].artist, songs: found }));
     }
-  }, [songs])
+  }, [searchText, searchSongs]);
 
   useEffect(() => {
     if (!isEmpty(modal?.songs)) {
       setShowModal(true);
-    } else {
-      setDidSearch(false);
     }
   }, [modal]);
 
@@ -43,7 +42,7 @@ export const Artists: React.FC = () => {
           <IonButtons slot="start">
             <IonMenuButton />
           </IonButtons>
-          <IonSearchbar onIonChange={(e) => setSearchText(e.detail.value!)} type="text" placeholder="Search for Artists"></IonSearchbar>
+          <IonSearchbar onIonChange={(e) => setArtistSearchText(e.detail.value!)} value={artistSearchText} type="text" placeholder="Search for Artists"></IonSearchbar>
         </IonToolbar>
       </IonHeader>
       <IonContent>
@@ -55,7 +54,7 @@ export const Artists: React.FC = () => {
               listItems={artists}
               getRow={(item, index) => {
                 return (
-                  <div key={item.key} className="row-single" onClick={(e) => { setDidSearch(true); searchSongs(item.name); }}>
+                  <div key={item.key} className="row-single" onClick={(e) => { setSearchText(item.name); }}>
                     <div style={{ flex: "1 1 auto" }}>{item.name}</div>
                   </div>
                 );
@@ -79,7 +78,7 @@ export const Artists: React.FC = () => {
                     pageCount={100}
                     pageName={modal?.artist || ''}
                     listItems={modal?.songs ?? []}
-                    getRow={(song, index) => <SongDiv key={index} song={song} showArtist={false} showPath={true} afterClick={() => setShowModal(false)}/>}
+                    getRow={(song, index) => <SongDiv key={index} song={song} showArtist={false} showPath={true} afterClick={() => setShowModal(false)} />}
                   />
                 </IonContent>
               </>

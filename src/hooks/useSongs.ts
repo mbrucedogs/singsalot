@@ -7,9 +7,8 @@ import { selectDisabled, selectFavorites, selectSongs } from "../store/store";
 
 export const useSongs = (): {
     //songs
-    hasLoaded: boolean;
     songs: Song[];
-    searchSongs: (query: string) => void;
+    searchSongs: (query: string) => Promise<Song[]>;
 
     //favorites
     favorites: Song[];
@@ -22,9 +21,7 @@ export const useSongs = (): {
     deleteDisabled: (song: Song) => void;
 } => {
     //songs
-    const allSongs = useSelector(selectSongs);
-    const [songs, setSongs] = useState<Song[]>([]);
-    const [hasLoaded, setHasLoaded] = useState<boolean>(false);
+    const songs = useSelector(selectSongs);
 
     //favorites
     const favorites = useSelector(selectFavorites);
@@ -35,38 +32,35 @@ export const useSongs = (): {
     //***************************************************************************** */
     //Songs */
     //***************************************************************************** */
-    useEffect(() => {
-        setSongs(allSongs);
-        setHasLoaded(true);
-    }, [allSongs]);
-
-    const searchSongs = useCallback((query: string) => {
+    const searchSongs = useCallback((query: string): Promise<Song[]> => {
         //console.log("useSongs - searchSongs", query);
+        return new Promise<Song[]>((resolve) => {
+            //return no songs
+            if (isEmpty(songs)) { resolve([]); }
 
-        //return no songs
-        if (isEmpty(allSongs)) { return; }
+            if (isEmpty(query)) {
+                resolve(songs.filter(s => s.disabled == false || s.disabled == undefined));
+            } else {
+                let q = query.toLowerCase();
+                let results = songs.filter(song => {
+                    let _artist = song.artist;
+                    let _title = song.title;
+                    if (_artist?.toLowerCase().indexOf(q) > -1) {
+                        return song;
+                    }
+                    if (_title?.toLowerCase().indexOf(q) > -1) {
+                        return song;
+                    }
+                });
+                let sorted = results.sort((a: Song, b: Song) => {
+                    return a.title.localeCompare(b.title)
+                });
+                let enabled = sorted.filter(s => s.disabled == false || s.disabled == undefined);
+                resolve(enabled);
+            }
+        });
 
-        if (isEmpty(query)) {
-            setSongs(allSongs.filter(s=> s.disabled == false || s.disabled == undefined));
-        } else {
-            let q = query.toLowerCase();
-            let results = allSongs.filter(song => {
-                let _artist = song.artist;
-                let _title = song.title;
-                if (_artist?.toLowerCase().indexOf(q) > -1) {
-                    return song;
-                }
-                if (_title?.toLowerCase().indexOf(q) > -1) {
-                    return song;
-                }
-            });
-            let sorted = results.sort((a: Song, b: Song) => {
-                return a.title.localeCompare(b.title)
-            });
-            let enabled = sorted.filter(s=> s.disabled == false || s.disabled == undefined);
-            setSongs(enabled);
-        }
-    }, [allSongs]);
+    }, [songs]);
 
     //***************************************************************************** */
     //Favorites */
@@ -95,7 +89,7 @@ export const useSongs = (): {
     }, [disabled]);
 
     return {
-        songs, hasLoaded, searchSongs,
+        songs, searchSongs,
         favorites, addFavorite, deleteFavorite,
         disabled, addDisabled, deleteDisabled
     }

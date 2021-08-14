@@ -3,7 +3,7 @@ import { IonIcon } from "@ionic/react";
 import { heart, heartDislike, heartDislikeOutline, heartOutline, informationCircle, informationCircleOutline, removeCircle, removeCircleOutline } from "ionicons/icons";
 import SongContainer from "./SongContainer";
 import { Song } from "../models";
-import { useWindowDimensions } from "../hooks";
+import { useAuthentication, useWindowDimensions } from "../hooks";
 
 export interface SongProps {
     song: Song;
@@ -69,8 +69,9 @@ export const SongActionDiv = ({
 
 export const SongDiv: React.FC<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> & SongProps> = ({ paddingLeft = 0, allowActions = true, afterClick, song, showCount = false, showPath = false, showArtist = true }) => {
     const { width } = useWindowDimensions();
+    const { isAdmin } = useAuthentication();
     const wideWidth = 450;
-    const gridTemplateColumns = width > wideWidth ? 'auto 60px 60px 60px' : 'auto 60px';
+    const gridTemplateColumns = width > wideWidth ? isAdmin ? 'auto 60px 60px 60px' : 'auto 60px 60px'  : 'auto 60px';
     const showFavorite = width > wideWidth;
     const showDisable = width > wideWidth ;
 
@@ -104,7 +105,7 @@ export const SongDiv: React.FC<React.DetailedHTMLProps<React.HTMLAttributes<HTML
                                 onClick={() => { onToggleFavorite(); }}
                             />
                         }
-                        {showDisable &&
+                        {showDisable && isAdmin &&
                             <SongActionDiv
                                 hidden={!allowActions}
                                 image={removeCircle}

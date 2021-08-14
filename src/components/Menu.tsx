@@ -174,6 +174,10 @@ export const Menu: React.FC = () => {
 
   }, [playerState])
 
+  useEffect(() => {
+    if(!isAdmin){
+    }
+  }, []);
 
   return (
     <IonMenu contentId="main" type="overlay">
@@ -182,7 +186,9 @@ export const Menu: React.FC = () => {
           <IonListHeader>Karaoke</IonListHeader>
           {authenticated && <IonNote>Singer: {singer}</IonNote>}
           {appPages.map((appPage, index) => {
-            return (
+              if(!isAdmin && index == appPages.length -1){ return null;}
+
+              return (
               <IonMenuToggle key={index} autoHide={false}>
                 <IonItem className={location.pathname === appPage.url ? 'selected' : ''} routerLink={appPage.url} routerDirection="none" lines="none" detail={false}>
                   <IonIcon slot="start" ios={appPage.iosIcon} md={appPage.mdIcon} />

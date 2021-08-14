@@ -5,7 +5,7 @@ import { IonModal, IonHeader, IonToolbar, IonTitle, IonInput, IonButtons, IonBut
 import { add, addOutline, closeOutline, close } from "ionicons/icons";
 import { pageCount } from "../globalConfig";
 import { Singer } from "../models";
-import { usePlayer } from "../hooks";
+import { useAuthentication, usePlayer } from "../hooks";
 import { Page, ScrollingGrid } from "../components"
 
 interface AddSingerForm {
@@ -14,6 +14,7 @@ interface AddSingerForm {
 
 export const Singers: React.FC = () => {
   const { singers, addSinger, deleteSinger } = usePlayer();
+  const { isAdmin } = useAuthentication();
   const pageName: string = "Singers";
 
   //add singer
@@ -69,7 +70,7 @@ export const Singers: React.FC = () => {
                   <div>{singer.name} ({singer.songCount})</div>
                 </div>
                 <div>
-                  <IonIcon ios={closeOutline} md={close} onClick={(e) => onDelete(singer)} />
+                  <IonIcon hidden={!isAdmin} ios={closeOutline} md={close} onClick={(e) => onDelete(singer)} />
                 </div>
               </div>
             )

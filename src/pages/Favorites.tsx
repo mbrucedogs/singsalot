@@ -2,8 +2,8 @@ import React from "react";
 import { pageCount } from "../globalConfig";
 import { isEmpty } from "lodash";
 import { useSongs } from "../hooks";
-import { Page, ScrollingGrid, SongActionDiv, SongDivItem } from "../components"
-import { close, closeOutline } from "ionicons/icons";
+import { Page, ScrollingGrid, SongActionDiv, SongContainer, SongDivItem } from "../components"
+import { close, closeOutline, informationCircle, informationCircleOutline } from "ionicons/icons";
 
 export const Favorites: React.FC = () => {
   const pageName: string = "Favorites";
@@ -21,18 +21,31 @@ export const Favorites: React.FC = () => {
         listItems={favorites}
         getRow={(song, index) => {
           return (
-            <div key={index} className="row" style={{ padding: '10px', display: 'grid', gridTemplateColumns: 'auto 60px' }}>
-              <SongDivItem
-                song={song}
-                showArtist={true}
-                showPath={true}
-              />
-              <SongActionDiv
-                image={close}
-                imageOutline={closeOutline}
-                onClick={() => { deleteFavorite(song) }}
-              />
-            </div>
+            <SongContainer
+              song={song}
+              render={(song, onSongPick, onSongInfo) => {
+                return (
+                  <div key={index} className="row" style={{ padding: '10px', display: 'grid', gridTemplateColumns: 'auto 60px 60px' }}>
+                    <SongDivItem
+                      song={song}
+                      showArtist={true}
+                      showPath={true}
+                      onClick={() => { onSongPick() }}
+                    />
+                    <SongActionDiv
+                      image={informationCircle}
+                      imageOutline={informationCircleOutline}
+                      onClick={() => { onSongInfo();}}
+                    />
+                    <SongActionDiv
+                      image={close}
+                      imageOutline={closeOutline}
+                      onClick={() => { deleteFavorite(song) }}
+                    />
+                  </div>
+                )
+              }}
+            />
           )
         }}
       />

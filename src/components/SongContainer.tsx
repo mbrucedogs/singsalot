@@ -16,23 +16,23 @@ export const SongContainer: React.FC<React.DetailedHTMLProps<React.HTMLAttribute
     const history = useHistory();
     const { isAdmin, singer } = useAuthentication();
     const { singers, setSelectedSong, addToQueue } = usePlayer();
-    const { favorites, addFavorite, deleteFavorite, 
-            disabled, addDisabled, deleteDisabled } = useSongs();
+    const { favorites, addFavorite, deleteFavorite,
+        disabled, addDisabled, deleteDisabled } = useSongs();
 
-        const songPick = () => {
+    const songPick = () => {
         console.log("SongContainer - songPick", song);
         if (isAdmin) {
             setSelectedSong(song);
             history.push("/SingerPick");
         } else {
             let found = singers.find(s => s.name === singer)
-            if(found){
+            if (found) {
                 addToQueue(found, song).then(s => {
                     history.push("/Queue");
                 });
-            } else { 
+            } else {
                 setSelectedSong(song);
-                history.push("/SingerPick");    
+                history.push("/SingerPick");
             }
         }
     }
@@ -44,17 +44,17 @@ export const SongContainer: React.FC<React.DetailedHTMLProps<React.HTMLAttribute
     }
 
     const toggleFavorite = () => {
-        if(favorites.filter(s => s.path === song.path).length > 0){
+        if (favorites.filter(s => s.path === song.path).length > 0) {
             deleteFavorite(song);
-        } else { 
+        } else {
             addFavorite(song);
         }
     }
 
     const toggleDisabled = () => {
-        if(disabled.filter(s => s.path === song.path).length > 0){
+        if (disabled.filter(s => s.path === song.path).length > 0) {
             deleteDisabled(song);
-        } else { 
+        } else {
             addDisabled(song);
         }
     }

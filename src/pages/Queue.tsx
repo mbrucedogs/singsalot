@@ -4,16 +4,16 @@ import { IonIcon, IonReorder, IonReorderGroup, IonContent, IonItem, IonLabel, Io
 import { ItemReorderEventDetail } from "@ionic/core";
 import { close, closeOutline, reorderThree, reorderThreeOutline } from "ionicons/icons";
 import { useAuthentication, usePlayer } from "../hooks"
-import { QueueItem } from "../models";
+import { PlayerState, QueueItem } from "../models";
 import { Page } from "../components"
 
 export const Queue: React.FC = () => {
   const pageName: string = "Queue";
   const { isAdmin, singer } = useAuthentication();
-  const { queue, deleteFromQueue, reorderQueue } = usePlayer();
+  const { queue, playerState, deleteFromQueue, reorderQueue } = usePlayer();
   const [listItems, setListItems] = useState<QueueItem[]>([]);
   const [shouldReorder, setShouldReorder] = useState<boolean>(false);
-
+  const canDeleteFirstItem = (playerState == PlayerState.stopped && isAdmin);
   const actionButton = () => {
     if(isAdmin){
       return <IonButtons slot="end" style={{ paddingRight: '10px' }}>
@@ -40,6 +40,10 @@ export const Queue: React.FC = () => {
   }
 
   useEffect(() => {
+
+  }, [playerState])
+
+  useEffect(() => {
     //console.log("UI onQueueChange", queue);
     if (!isEmpty(queue)) {
       setListItems(queue.slice(1));
@@ -64,6 +68,7 @@ export const Queue: React.FC = () => {
             <IonLabel style={padLeft} className="title">{queue[0].song.title}</IonLabel>
             <IonLabel style={padLeft} hidden={queue[0].song.artist == undefined} className="subtitle">{queue[0].song.artist}</IonLabel>
           </IonGrid>
+          <IonIcon hidden={!canDeleteFirstItem} ios={closeOutline} md={close} slot="end" onClick={(e) => deleteFromQueue(queue[0])} />
         </IonItem>
 
         {/*-- The reorder gesture is disabled by default, enable it to drag and drop items --*/}

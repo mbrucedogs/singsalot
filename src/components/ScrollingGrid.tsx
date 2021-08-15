@@ -88,6 +88,18 @@ export const ActionRow = ({ columns, actionButtons, gridTemplateColumns }: { col
     </div >
   )
 }
+
+export const GridRow = ({ columns, gridTemplateColumns, onClick}: { columns: JSX.Element[], gridTemplateColumns: string, onClick?: () => void }) => {
+  const action = onClick ? {onClick:onClick} : {}
+  return (
+    <div className="row-container" {...action}>
+      <div className="row" style={{ display: 'grid', gridTemplateColumns: gridTemplateColumns }}>
+        {columns}
+      </div>
+    </div >
+  )
+}
+
 export const SingleRow = ({ title, onClick }: { title: string, onClick?: () => void }) => {
   return (
     <div className="row-container" onClick={(e) => { onClick?.() }}>

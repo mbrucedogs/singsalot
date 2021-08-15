@@ -67,22 +67,27 @@ export const SongLists: React.FC = () => {
                   let hasFoundSongs: boolean = !isEmpty(song.foundSongs);
                   {
                     hasFoundSongs &&
-                      <div key={index} className={hasFoundSongs ? "row-single" : "row-single notavailable"} onClick={(e) => { setShowModal(false); }}>
-                        <div style={{ paddingTop: '0px', paddingLeft: '10px', paddingRight: '10px' }}>({song.position})</div>
-                        <div style={{ flex: '1 1 auto' }}>
-                          <div className="title">{song.artist}</div>
-                          <div className="subtitle">{song.title}</div>
+                      <div key={index} className="row-container" onClick={(e) => { setShowModal(false); }}>
+                        <div className={hasFoundSongs ? "row" : "row notavailable"} style={{ display: 'grid', gridTemplateColumns: '30px auto' }}>
+                          <div className="title">({song.position})</div>
+                          <div>
+                            <div className="title">{song.artist}</div>
+                            <div className="subtitle">{song.title}</div>
+                          </div>
                         </div>
                       </div>
                   }
                   return (
-                    <Collapsible key={index} trigger={<div className={hasFoundSongs ? "row-single" : "row-single notavailable"}>
-                      <div style={{ paddingTop: '0px', paddingLeft: '10px', paddingRight: '10px' }}>({song.position})</div>
-                      <div style={{ flex: '1 1 auto' }}>
-                        <div className="title">{song.artist}</div>
-                        <div className="subtitle">{song.title}</div>
+                    <Collapsible key={index} trigger={
+                      <div key={index} className="row-container">
+                        <div className={hasFoundSongs ? "row" : "row notavailable"} style={{ display: 'grid', gridTemplateColumns: '30px auto' }}>
+                          <div>({song.position})</div>
+                          <div>
+                            <div className="title">{song.artist}</div>
+                            <div className="subtitle">{song.title}</div>
+                          </div>
+                        </div>
                       </div>
-                    </div>
                     }>
                       {song.foundSongs?.map((s, index) => {
                         return (

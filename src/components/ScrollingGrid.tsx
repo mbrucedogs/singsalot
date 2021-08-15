@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, ReactNode } from "react";
-import { IonContent } from '@ionic/react';
+import { IonButtons, IonContent } from '@ionic/react';
 import { IonInfiniteScroll, IonInfiniteScrollContent } from '@ionic/react';
 import { Fabricable } from "../models";
 import { render } from "@testing-library/react";
@@ -16,7 +16,7 @@ export const ScrollingGrid = <T extends Fabricable>({ pageName, pageCount, listI
   const [disableInfiniteScroll, setDisableInfiniteScroll] = useState<boolean>(false);
   const [items, setItems] = useState<T[]>([]);
   const [content, setContent] = useState<ReactNode[]>([]);
-  
+
   useEffect(() => {
     setDisableInfiniteScroll(false);
     setPage(0);
@@ -41,24 +41,26 @@ export const ScrollingGrid = <T extends Fabricable>({ pageName, pageCount, listI
     (event.target as HTMLIonInfiniteScrollElement).complete();
   };
 
-  const renderNodes = (objects: T[]):Promise<ReactNode[]> => {
+  const renderNodes = (objects: T[]): Promise<ReactNode[]> => {
     return new Promise<ReactNode[]>((resolve) => {
       let nodes: ReactNode[] = [];
-      {objects.map((item, index) => {
-        let node = getRow(item, index);
-        nodes.push(node);
-      })}
+      {
+        objects.map((item, index) => {
+          let node = getRow(item, index);
+          nodes.push(node);
+        })
+      }
       resolve(nodes);
-    });  
+    });
   }
 
   const contentRef = useRef<HTMLIonContentElement | null>(null);
-  const scrollToTop= () => {
-      contentRef.current && contentRef.current.scrollToTop();
+  const scrollToTop = () => {
+    contentRef.current && contentRef.current.scrollToTop();
   };
 
   return (
-    <IonContent className="grid" 
+    <IonContent className="grid"
       ref={contentRef}
       scrollEvents={true}>
       {content}
@@ -73,5 +75,27 @@ export const ScrollingGrid = <T extends Fabricable>({ pageName, pageCount, listI
     </IonContent>
   );
 };
+
+export const ActionRow = ({ index, columns, actionButtons, gridTemplateColumns }: { index: number, columns: JSX.Element[], gridTemplateColumns: string, actionButtons: JSX.Element[] }) => {
+  return (
+    <div className="row-container" key={index}>
+      <div className="row" style={{ display: 'grid', gridTemplateColumns: gridTemplateColumns }}>
+        {columns}
+        <IonButtons slot="end">
+          {actionButtons}
+        </IonButtons>
+      </div>
+    </div >
+  )
+}
+export const SingleRow = ({ index, title, onClick }: { index: number, title: string, onClick?: () => void }) => {
+  return (
+    <div className="row-container" key={index} onClick={(e) => { onClick?.() }}>
+      <div className="row">
+        <div className="title single">{title}</div>
+      </div>
+    </div>
+  )
+}
 
 export default ScrollingGrid;

@@ -21,11 +21,11 @@ export const TopSongs: React.FC = () => {
         listItems={topPlayed}
         getRow={(history, idx) => {
           return (<Collapsible key={idx} trigger={
-            <div style={{ paddingLeft: '10px', paddingRight: '10px' }}>
-              <div className="row-single">
-                <div className="title" style={{ height: '48px', width: '53px', textAlign: 'end', verticalAlign: 'text-top', paddingTop: '0px', paddingLeft: '5px', paddingRight: '10px' }}>{idx! + 1})</div>
-                <div style={{ flex: '1 1 auto' }}>
-                  <div className="title">{history.title} ({history.count}) </div>
+            <div className="row-container">
+              <div className="row" style={{ display: 'grid', gridTemplateColumns: '50px auto' }}>
+                <div className="title">{idx! + 1})</div>
+                <div>
+                  <div className="title multi">{history.title} ({history.count})</div>
                   <div className="subtitle">{history.artist}</div>
                 </div>
               </div>

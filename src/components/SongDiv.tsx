@@ -42,8 +42,8 @@ export const SongDivItem = ({
         <div
             style={{ paddingRight: onClick ? '10px' : '0px', paddingLeft: `${paddingLeft}px` }}
             onClick={onClick ? (e) => { onClick?.() } : () => { }}>
-            <div className="title">{showCount && song.count ? `(${song.count!}) - ` : ''} {song.title} ({getType(song.path)})</div>
-            <div hidden={!showArtist} className="subtitle">{song.artist}</div>
+            <div className="title multi">{showCount && song.count ? `(${song.count!}) - ` : ''} {song.title} ({getType(song.path)})</div>
+            <div hidden={!showArtist} className="subtitle multi">{song.artist}</div>
             <div hidden={!showPath} className="path">{getPath(song.path)}</div>
         </div>
     )

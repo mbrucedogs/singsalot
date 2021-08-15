@@ -71,7 +71,7 @@ export const SongLists: React.FC = () => {
                         <div className={hasFoundSongs ? "row" : "row notavailable"} style={{ display: 'grid', gridTemplateColumns: '30px auto' }}>
                           <div className="title">({song.position})</div>
                           <div>
-                            <div className="title">{song.artist}</div>
+                            <div className="title multi">{song.artist}</div>
                             <div className="subtitle">{song.title}</div>
                           </div>
                         </div>
@@ -83,7 +83,7 @@ export const SongLists: React.FC = () => {
                         <div className={hasFoundSongs ? "row" : "row notavailable"} style={{ display: 'grid', gridTemplateColumns: '30px auto' }}>
                           <div>({song.position})</div>
                           <div>
-                            <div className="title">{song.artist}</div>
+                            <div className="title multi">{song.artist}</div>
                             <div className="subtitle">{song.title}</div>
                           </div>
                         </div>

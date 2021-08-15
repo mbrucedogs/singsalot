@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { usePlayer } from '../hooks';
 import { Singer } from '../models';
-import { Page, ScrollingGrid, SongDiv } from "../components"
+import { Page, ScrollingGrid, SingleRow, SongDiv } from "../components"
 
 export const SingerPick = ({ }) => {
 
@@ -29,9 +29,10 @@ export const SingerPick = ({ }) => {
                 listItems={singers}
                 getRow={(singer, index) => {
                     return (
-                        <div key={index} className="row-single">
-                            <div style={{ flex: "1 1 auto" }} onClick={(e) => onSinger(singer)}>{singer.name} ({singer.songCount})</div>
-                        </div>
+                        <SingleRow 
+                        key={index}
+                        title={`${singer.name} (${singer.songCount})`}
+                        />
                     )
                 }}
             />

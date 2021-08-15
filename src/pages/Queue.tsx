@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import { isEmpty } from "lodash";
 import { IonIcon, IonReorder, IonReorderGroup, IonContent, IonItem, IonLabel, IonGrid, IonButtons, IonButton } from "@ionic/react";
 import { ItemReorderEventDetail } from "@ionic/core";
-import { close, closeOutline, reorderThree, reorderThreeOutline } from "ionicons/icons";
+import { close, closeOutline, reorderThree, reorderThreeOutline, returnDownBackSharp } from "ionicons/icons";
 import { useAuthentication, usePlayer } from "../hooks"
 import { PlayerState, QueueItem } from "../models";
-import { Page } from "../components"
+import { ActionButton, ActionRow, Page } from "../components"
 
 export const Queue: React.FC = () => {
   const pageName: string = "Queue";
@@ -58,44 +58,47 @@ export const Queue: React.FC = () => {
     paddingLeft: '20px'
   }
 
+  const buildRow = (index: number, queueItem: QueueItem, actionButtons: JSX.Element[]) => {
+    return (
+      <ActionRow
+        index={index}
+        gridTemplateColumns='30px auto 60px'
+        columns={[
+        <div className="title">{index})</div>,
+        <div>
+          <div className="title multi">{queueItem.singer.name}</div>
+          <div className="title multi">{queueItem.song.title}</div>
+          <div className="subtitle">{queueItem.song.artist}</div>
+        </div>]}
+        actionButtons={actionButtons}
+      />
+    );
+  }
+
   return (
     <Page name={pageName} endButton={actionButton()}>
       <IonContent className="queue">
 
-        <IonItem>
-          <IonGrid style={{ paddingTop: '15px' }}>
-            <IonLabel className="title">1) {queue[0].singer.name}</IonLabel>
-            <IonLabel style={padLeft} className="title">{queue[0].song.title}</IonLabel>
-            <IonLabel style={padLeft} hidden={queue[0].song.artist == undefined} className="subtitle">{queue[0].song.artist}</IonLabel>
-          </IonGrid>
-          <IonButtons hidden={!canDeleteFirstItem} slot="end">
-            <IonButton onClick={(e) => deleteFromQueue(queue[0])}>
-              <IonIcon size="large" ios={closeOutline} md={close} />
-            </IonButton>
-          </IonButtons>
-        </IonItem>
+        {buildRow(1, queue[0], [<ActionButton imageOutline={closeOutline} image={close} onClick={() => deleteFromQueue(queue[0])} />])}
 
         {/*-- The reorder gesture is disabled by default, enable it to drag and drop items --*/}
         <IonReorderGroup disabled={!shouldReorder} onIonItemReorder={doReorder}>
           {/*-- Default reorder icon, end aligned items --*/}
           {listItems.map((item, index) => {
             return (
-              <IonReorder style={{ minHeight: '60px' }} key={item.key}>
-                <IonItem>
-                  <IonGrid>
-                    <IonLabel className="title">{index + 2}) {item.singer.name}</IonLabel>
-                    <IonLabel style={padLeft} className="title">{item.song.title}</IonLabel>
-                    <IonLabel style={padLeft} hidden={queue[0].song.artist == undefined} className="subtitle">{item.song.artist}</IonLabel>
-                  </IonGrid>
-                  <IonButtons slot="end">
-                    <IonButton hidden={canDelete(item)} onClick={(e) => deleteFromQueue(item)}>
-                      <IonIcon size="large" ios={closeOutline} md={close} />
-                    </IonButton>
-                    <IonButton hidden={!shouldReorder} >
-                      <IonIcon size="large" ios={reorderThreeOutline} md={reorderThree} />
-                    </IonButton>
-                  </IonButtons>
-                </IonItem>
+              <IonReorder style={{ minHeight: '60px' }} key={index}>
+                {buildRow(index + 2, item, [
+                  <ActionButton
+                    hidden={canDelete(item)}
+                    imageOutline={closeOutline}
+                    image={close}
+                    onClick={() => deleteFromQueue(item)} />,
+                  <ActionButton
+                    hidden={!shouldReorder}
+                    imageOutline={reorderThreeOutline}
+                    image={reorderThree}
+                    onClick={() => { }} />,
+                ])}
               </IonReorder>
             )
           })}

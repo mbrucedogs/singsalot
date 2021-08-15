@@ -6,7 +6,7 @@ import { add, addOutline, closeOutline, close } from "ionicons/icons";
 import { pageCount } from "../globalConfig";
 import { Singer } from "../models";
 import { useAuthentication, usePlayer } from "../hooks";
-import { Page, ScrollingGrid } from "../components"
+import { ActionButton, ActionRow, Page, ScrollingGrid } from "../components"
 
 interface AddSingerForm {
   name: string;
@@ -59,8 +59,7 @@ export const Singers: React.FC = () => {
       {
         onClick: () => setShowModal(true),
         ios: addOutline,
-        standard: add,
-        buttonText: "Add"
+        standard: add
       }
     }>
       <>
@@ -71,16 +70,23 @@ export const Singers: React.FC = () => {
           pageName={pageName}
           listItems={singers}
           getRow={(singer, index) => {
+
             return (
-              <IonItem>
-                <IonLabel className="title" style={{ padding: '15px' }}>{singer.name} ({singer.songCount})</IonLabel>
-                <IonButtons hidden={!isAdmin} slot="end">
-                  <IonButton onClick={(e) => onDelete(singer)}>
-                    <IonIcon size="large" ios={closeOutline} md={close} />
-                  </IonButton>
-                </IonButtons>
-              </IonItem>
-            )
+              <ActionRow
+                index={index}
+                gridTemplateColumns='auto 60px'
+                columns={[
+                  <div>
+                    <div className="title single">{singer.name} ({singer.songCount})</div>
+                  </div>]}
+                actionButtons={[
+                  <ActionButton
+                    hidden={!isAdmin}
+                    onClick={() => onDelete(singer)}
+                    imageOutline={closeOutline} image={close} />
+                ]}
+              />
+            );
           }}
         />
         )

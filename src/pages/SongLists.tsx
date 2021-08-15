@@ -5,7 +5,7 @@ import Collapsible from 'react-collapsible';
 import { pageCount } from "../globalConfig";
 import { useSongLists } from "../hooks";
 import { SongList, SongListSong } from "../models";
-import { Page, ScrollingGrid, SongDiv } from "../components"
+import { Page, ScrollingGrid, SingleRow, SongDiv } from "../components"
 
 export const SongLists: React.FC = () => {
   const pageName: string = "Song Lists";
@@ -39,11 +39,10 @@ export const SongLists: React.FC = () => {
           pageName={pageName}
           listItems={songLists}
           getRow={(item, index) => {
-            return (
-              <IonItem key={index} onClick={() => { onSongList(item); }}>
-                <IonLabel className="title" style={{ padding: '15px' }}>{item.title} ({item.songs.length})</IonLabel>
-              </IonItem>
-            )
+            return <SingleRow
+              index={index}
+              title={`${item.title} (${item.songs.length})`}
+              onClick={() => onSongList(item)} />
           }}
         />
         <IonModal isOpen={showModal}
@@ -85,7 +84,7 @@ export const SongLists: React.FC = () => {
                       </div>
                     </div>
                     }>
-                      {song.foundSongs?.map((s,index) => {
+                      {song.foundSongs?.map((s, index) => {
                         return (
                           <SongDiv
                             key={index}

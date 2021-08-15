@@ -9,9 +9,8 @@ interface LoginProps {
 }
   
 export const Login: React.FC<LoginProps> = ({onLogin}) => {
-    const [partyId, setPartyId] = useState<string>("mbrucedogstest");
-    const [firstName, setFirstName] = useState<string>("Matt");
-    const isAdmin = true;
+    const [partyId, setPartyId] = useState<string>("");
+    const [firstName, setFirstName] = useState<string>("");
     const [iserror, setIserror] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [message, setMessage] = useState<string>("");
@@ -30,7 +29,7 @@ export const Login: React.FC<LoginProps> = ({onLogin}) => {
         }
         setIsLoading(true);
         let q = query.get("admin") ?? "";
-        //let isAdmin: boolean = q ? q == "true" ? true : false : false;
+        let isAdmin: boolean = q ? q == "true" ? true : false : false;
         let promise = onLogin(isAdmin, partyId, firstName);
         promise.then( success => {
             if(!success){

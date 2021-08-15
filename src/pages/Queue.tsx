@@ -40,10 +40,6 @@ export const Queue: React.FC = () => {
   }
 
   useEffect(() => {
-
-  }, [playerState])
-
-  useEffect(() => {
     //console.log("UI onQueueChange", queue);
     if (!isEmpty(queue)) {
       setListItems(queue.slice(1));
@@ -78,7 +74,7 @@ export const Queue: React.FC = () => {
     <Page name={pageName} endButton={actionButton()}>
       <IonContent className="queue">
 
-        {buildRow(1, queue[0], [<ActionButton imageOutline={closeOutline} image={close} onClick={() => deleteFromQueue(queue[0])} />])}
+        {buildRow(1, queue[0], [<ActionButton hidden={!canDeleteFirstItem} imageOutline={closeOutline} image={close} onClick={() => deleteFromQueue(queue[0])} />])}
 
         {/*-- The reorder gesture is disabled by default, enable it to drag and drop items --*/}
         <IonReorderGroup disabled={!shouldReorder} onIonItemReorder={doReorder}>

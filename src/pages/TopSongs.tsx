@@ -2,7 +2,7 @@ import React from "react";
 import { isEmpty } from "lodash";
 import Collapsible from "react-collapsible";
 import { useTopPlayed } from "../hooks";
-import { Page, ScrollingGrid, SongDiv } from "../components"
+import { GridRow, Page, ScrollingGrid, SongDiv } from "../components"
 
 export const TopSongs: React.FC = () => {
   const { topPlayed } = useTopPlayed();
@@ -21,15 +21,16 @@ export const TopSongs: React.FC = () => {
         listItems={topPlayed}
         getRow={(history, idx) => {
           return (<Collapsible key={idx} trigger={
-            <div className="row-container">
-              <div className="row" style={{ display: 'grid', gridTemplateColumns: '50px auto' }}>
-                <div className="title">{idx! + 1})</div>
+            <GridRow 
+              gridTemplateColumns='50px auto'
+              columns={[
+                <div className="title">{idx! + 1})</div>,
                 <div>
                   <div className="title multi">{history.title} ({history.count})</div>
                   <div className="subtitle">{history.artist}</div>
                 </div>
-              </div>
-            </div>
+              ]}
+            />            
           }>
             {history.songs.map(song => {
               return (

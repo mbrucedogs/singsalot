@@ -2,7 +2,7 @@ import React from "react";
 import { pageCount } from "../globalConfig";
 import { isEmpty } from "lodash";
 import { useSongs } from "../hooks";
-import { Page, ScrollingGrid, SongDivItem } from "../components"
+import { ActionRow, Page, ScrollingGrid, SongDivItem } from "../components"
 import { close, closeOutline } from "ionicons/icons";
 import { IonButtons } from "@ionic/react";
 import { ActionButton } from "../components/ActionButton";
@@ -23,22 +23,23 @@ export const Disabled: React.FC = () => {
         listItems={disabled}
         getRow={(song, index) => {
           return (
-            <div key={index} style={{paddingLeft:'10px', paddingRight:'10px'}}>
-              <div className="row" style={{ padding: '10px', display: 'grid', gridTemplateColumns: 'auto 60px' }}>
-              <SongDivItem
-                song={song}
-                showArtist={true}
-                showPath={true}
-              />
-              <IonButtons slot="end">
+            <ActionRow
+              key={index}
+              gridTemplateColumns='auto 60px'
+              columns={[
+                <SongDivItem
+                  song={song}
+                  showArtist={true}
+                  showPath={true}
+                />]}
+              actionButtons={[
                 <ActionButton
                   image={close}
                   imageOutline={closeOutline}
                   onClick={() => { deleteDisabled(song) }}
-                />
-              </IonButtons>
-            </div>
-            </div>
+                />]}
+            />
+
           )
         }}
       />

@@ -57,6 +57,7 @@ export const Queue: React.FC = () => {
   const buildRow = (index: number, queueItem: QueueItem, actionButtons: JSX.Element[]) => {
     return (
       <ActionRow
+        key={Number.toString()}
         gridTemplateColumns='30px auto 60px'
         columns={[
         <div className="title">{index})</div>,

@@ -1,17 +1,19 @@
-import { useHistory } from 'react-router';
-import { IonButton, IonCol, IonGrid, IonRow } from '@ionic/react';
-import { Song } from '../models';
+import { useHistory, useLocation } from 'react-router';
+import { IonButton } from '@ionic/react';
+import { PickedSong, Song } from '../models';
 import { Page, SongDiv } from "../components"
 import { useAuthentication, usePlayer, useSongs } from '../hooks';
 
 export const SongInfo = ({ }) => {
     const history = useHistory();
+    const location = useLocation();
     const { isAdmin, singer } = useAuthentication();
-    const { singers, selectedSong, addToQueue } = usePlayer();
+    const { singers, addToQueue } = usePlayer();
     const { favorites, addFavorite, deleteFavorite,
             disabled, addDisabled, deleteDisabled } = useSongs();
 
     const pageName = 'Song Info';
+    const pickedSong: PickedSong = location.state as PickedSong
 
     const isFavorited = (song: Song): boolean => {
         let found = favorites.filter(favorite => favorite.path === song.path);
@@ -23,18 +25,18 @@ export const SongInfo = ({ }) => {
         return found.length > 0;
     }
 
-    const isFavorite = selectedSong ? isFavorited(selectedSong) : false;
-    const isDisable = selectedSong ? isDisabled(selectedSong) : false;
+    const isFavorite = pickedSong ? isFavorited(pickedSong.song) : false;
+    const isDisable = pickedSong ? isDisabled(pickedSong.song) : false;
 
     const onSongPick = () => {
-        if (selectedSong) {
-            console.log("SongContainer - songPick", selectedSong);
+        if (pickedSong) {
+            console.log("SongContainer - songPick", pickedSong.song);
             if (isAdmin) {
                 history.push("/SingerPick");
             } else {
                 let found = singers.find(s => s.name === singer)
                 if (found) {
-                    addToQueue(found, selectedSong).then(s => {
+                    addToQueue(found, pickedSong.song).then(s => {
                         history.push("/Queue");
                     });
                 } else {
@@ -45,17 +47,17 @@ export const SongInfo = ({ }) => {
     }
 
     const onArtistSearch = () => {
-        if (selectedSong && selectedSong.artist) {
-            history.push(`/Search/${selectedSong.artist}`)
+        if (pickedSong.song.artist) {
+            history.push(`/Search/${pickedSong.song.artist}`)
         }
     }
 
     return (
         <Page name={pageName}>
             <>
-                {selectedSong &&
+                {pickedSong &&
                     <>
-                        <SongDiv song={selectedSong} showPath={true} allowActions={false} showCount={true} />
+                        <SongDiv song={pickedSong.song} showPath={true} allowActions={false} showCount={true} />
                         <div style={{width:'250px', padding: '10px'}}>
                             <div style={{padding: '5px'}}>
                                 <IonButton expand="block" onClick={(e) => { onSongPick() }}>Queue Song</IonButton>
@@ -64,10 +66,10 @@ export const SongInfo = ({ }) => {
                                 <IonButton expand="block" onClick={(e) => { onArtistSearch() }}>Artist Songs</IonButton>
                             </div>
                             <div style={{padding: '5px'}}>
-                                <IonButton expand="block" onClick={(e) => { isFavorite ? deleteFavorite(selectedSong) : addFavorite(selectedSong) }}>{ isFavorite ? "Un-Favorite" : "Favorite"} Song</IonButton>
+                                <IonButton expand="block" onClick={(e) => { isFavorite ? deleteFavorite(pickedSong.song) : addFavorite(pickedSong.song) }}>{ isFavorite ? "Un-Favorite" : "Favorite"} Song</IonButton>
                             </div>
                             <div style={{padding: '5px'}}>
-                                <IonButton expand="block" onClick={(e) => { isDisable ? deleteDisabled(selectedSong) : addDisabled(selectedSong) }}>{ isDisable ? "Enable" : "Disable"} Song</IonButton>
+                                <IonButton expand="block" onClick={(e) => { isDisable ? deleteDisabled(pickedSong.song) : addDisabled(pickedSong.song) }}>{ isDisable ? "Enable" : "Disable"} Song</IonButton>
                             </div>
                         </div>
                     </>

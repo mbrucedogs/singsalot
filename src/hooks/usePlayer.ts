@@ -17,10 +17,6 @@ export const usePlayer = (): {
     settings: Settings,
     updateSettings: (autoAdvance: boolean) => void;
 
-    //helper
-    selectedSong?: Song,
-    setSelectedSong: (song?: Song) => void;
-
     //queue
     queue: QueueItem[];
     addToQueue: (singer: Singer, song: Song) => Promise<boolean>;
@@ -36,7 +32,7 @@ export const usePlayer = (): {
     //***************************************************************************************************** */
     //Properties */
     //***************************************************************************************************** */
-    const {settings, playerState, singers, queue, selectedSong, selectedSongInfo} = useSelector(selectPlayer);
+    const {settings, playerState, singers, queue} = useSelector(selectPlayer);
     const { addSongHistory } = useSongHistory();
 
     const orderMultiplier = 10;
@@ -91,7 +87,7 @@ export const usePlayer = (): {
     }, [queue, singers]);
 
     const addToQueue = useCallback((singer: Singer, song: Song): Promise<boolean> => {
-        //get the index for the order
+                //get the index for the order
         let order = getFairQueueOrder(singer);
 
         //update for the singer songcount
@@ -106,7 +102,9 @@ export const usePlayer = (): {
             singer: newSinger,
             song: song
         }
-        //console.log("addToQueue: ", queueItem);
+        console.log("addToQueue: ", queueItem);
+        setSelectedSong(undefined);
+        console.log("addToQueue: ", queueItem);
         //return new Promise<boolean>(resolve => resolve(true))
         return doAddToQueue(queueItem);
     }, [queue, singers]);
@@ -146,7 +144,6 @@ export const usePlayer = (): {
             
             await FirebaseService.setPlayerQueue(reordered);
             await addSongHistory(queueItem.song);
-            setSelectedSong(undefined);
             return true;
             
         } catch (error) {
@@ -297,8 +294,6 @@ export const usePlayer = (): {
         //settings
         settings,
         updateSettings, 
-        //helper
-        selectedSong, setSelectedSong,
         //queue
         queue, addToQueue, deleteFromQueue, reorderQueue,
         //singers

@@ -12,3 +12,7 @@ export interface Song extends SongBase {
     favorite?:boolean;
     date?:string;
 }
+
+export type PickedSong = {
+    song: Song
+}

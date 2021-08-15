@@ -1,28 +1,28 @@
 import { useCallback } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { usePlayer } from '../hooks';
-import { Singer } from '../models';
+import { PickedSong, Singer } from '../models';
 import { Page, ScrollingGrid, SingleRow, SongDiv } from "../components"
 
 export const SingerPick = ({ }) => {
-
-    const { singers, addToQueue, selectedSong } = usePlayer();
+    const location = useLocation();
+    const { singers, addToQueue } = usePlayer();
     const history = useHistory();
     const pageName = 'Select Singer';
+    const pickedSong: PickedSong = location.state as PickedSong
 
     const onSinger = useCallback((singer: Singer) => {
-        if (selectedSong != undefined) {
-            //console.log("SingerPick - onSinger - addToQueue", selectedSong);
-            addToQueue(singer, selectedSong).then(s => {
+        if (pickedSong) {
+            addToQueue(singer, pickedSong.song).then(s => {
                 history.push("/Queue");
             });
         }
-    }, [addToQueue, selectedSong]);
+    }, [addToQueue]);
 
     return (
         <Page name={pageName}>
             <>
-            {selectedSong && <SongDiv song={selectedSong} showPath={true} allowActions={false}/>}
+            {pickedSong && <SongDiv song={pickedSong.song} showPath={true} allowActions={false}/>}
             <ScrollingGrid
                 pageCount={100}
                 pageName={pageName}
@@ -30,6 +30,7 @@ export const SingerPick = ({ }) => {
                 getRow={(singer, index) => {
                     return (
                         <SingleRow 
+                        onClick={()=>onSinger(singer)}
                         key={index}
                         title={`${singer.name} (${singer.songCount})`}
                         />

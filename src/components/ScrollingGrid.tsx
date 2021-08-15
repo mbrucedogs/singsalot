@@ -76,9 +76,9 @@ export const ScrollingGrid = <T extends Fabricable>({ pageName, pageCount, listI
   );
 };
 
-export const ActionRow = ({ index, columns, actionButtons, gridTemplateColumns }: { index: number, columns: JSX.Element[], gridTemplateColumns: string, actionButtons: JSX.Element[] }) => {
+export const ActionRow = ({ columns, actionButtons, gridTemplateColumns }: { columns: JSX.Element[], gridTemplateColumns: string, actionButtons: JSX.Element[] }) => {
   return (
-    <div className="row-container" key={index}>
+    <div className="row-container">
       <div className="row" style={{ display: 'grid', gridTemplateColumns: gridTemplateColumns }}>
         {columns}
         <IonButtons slot="end">
@@ -88,9 +88,9 @@ export const ActionRow = ({ index, columns, actionButtons, gridTemplateColumns }
     </div >
   )
 }
-export const SingleRow = ({ index, title, onClick }: { index: number, title: string, onClick?: () => void }) => {
+export const SingleRow = ({ title, onClick }: { title: string, onClick?: () => void }) => {
   return (
-    <div className="row-container" key={index} onClick={(e) => { onClick?.() }}>
+    <div className="row-container" onClick={(e) => { onClick?.() }}>
       <div className="row">
         <div className="title single">{title}</div>
       </div>

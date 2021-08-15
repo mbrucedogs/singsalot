@@ -73,7 +73,7 @@ export const Singers: React.FC = () => {
 
             return (
               <ActionRow
-                index={index}
+                key={index}
                 gridTemplateColumns='auto 60px'
                 columns={[
                   <div>

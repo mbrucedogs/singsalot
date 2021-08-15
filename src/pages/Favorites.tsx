@@ -2,7 +2,7 @@ import React from "react";
 import { pageCount } from "../globalConfig";
 import { isEmpty } from "lodash";
 import { useSongs } from "../hooks";
-import { Page, ScrollingGrid, ActionButton, SongContainer, SongDivItem } from "../components"
+import { Page, ScrollingGrid, ActionButton, SongContainer, SongDivItem, ActionRow } from "../components"
 import { close, closeOutline, informationCircle, informationCircleOutline } from "ionicons/icons";
 import { IonButtons } from "@ionic/react";
 
@@ -27,26 +27,29 @@ export const Favorites: React.FC = () => {
               song={song}
               render={(song, onSongPick, onSongInfo) => {
                 return (
-                  <div className="row" style={{ padding: '10px', display: 'grid', gridTemplateColumns: 'auto 60px 60px' }}>
-                    <SongDivItem
-                      song={song}
-                      showArtist={true}
-                      showPath={true}
-                      onClick={() => { onSongPick() }}
-                    />
-                    <IonButtons slot="end">
+                  <ActionRow
+                    gridTemplateColumns='auto 120px'
+                    columns={[
+                      <SongDivItem
+                        song={song}
+                        showArtist={true}
+                        showPath={true}
+                        onClick={() => { onSongPick() }}
+                      />
+                    ]}
+                    actionButtons={[
                       <ActionButton
                         image={informationCircle}
                         imageOutline={informationCircleOutline}
                         onClick={() => { onSongInfo(); }}
-                      />
+                      />,
                       <ActionButton
                         image={close}
                         imageOutline={closeOutline}
                         onClick={() => { deleteFavorite(song) }}
                       />
-                    </IonButtons>
-                  </div>
+                    ]}
+                  />
                 )
               }}
             />

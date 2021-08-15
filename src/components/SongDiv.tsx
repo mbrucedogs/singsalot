@@ -5,6 +5,7 @@ import SongContainer from "./SongContainer";
 import { Song } from "../models";
 import { useAuthentication, useWindowDimensions } from "../hooks";
 import { ActionButton } from "../components";
+import { ActionRow } from "./ScrollingGrid";
 
 export interface SongProps {
     song: Song;
@@ -52,9 +53,11 @@ export const SongDiv: React.FC<React.DetailedHTMLProps<React.HTMLAttributes<HTML
     const { width } = useWindowDimensions();
     const { isAdmin } = useAuthentication();
     const wideWidth = 450;
-    const gridTemplateColumns = width > wideWidth ? isAdmin ? 'auto 180px' : 'auto 120px' : 'auto 60px';
-    const showFavorite = width > wideWidth;
-    const showDisable = width > wideWidth;
+    const showInfo = allowActions;
+    const showFavorite = width > wideWidth && allowActions;
+    const showDisable = width > wideWidth && allowActions && isAdmin;
+    let buttons = (showInfo ? 1 : 0) + (showFavorite ? 1 : 0) + (showDisable ? 1 : 0);
+    const gridTemplateColumns = `auto ${buttons*60}px`;
 
     return (
         <SongContainer
@@ -63,44 +66,44 @@ export const SongDiv: React.FC<React.DetailedHTMLProps<React.HTMLAttributes<HTML
                 const isFavorite = song.favorite ?? false;
                 const isDisabled = song.disabled ?? false;
                 return (
-                    <div className="row" style={{ padding: '10px', display: 'grid', gridTemplateColumns: allowActions ? gridTemplateColumns : 'auto' }}>
-                        <SongDivItem
-                            song={song}
-                            paddingLeft={paddingLeft}
-                            showArtist={showArtist}
-                            showCount={showCount}
-                            showPath={showPath}
-                            onClick={allowActions ? () => { onSongPick(); afterClick?.(song) } : () => { }}
-                        />
-                        <IonButtons slot="end">
+                    <ActionRow
+                        gridTemplateColumns={gridTemplateColumns}
+                        columns={[
+                            <SongDivItem
+                                song={song}
+                                paddingLeft={paddingLeft}
+                                showArtist={showArtist}
+                                showCount={showCount}
+                                showPath={showPath}
+                                onClick={allowActions ? () => { onSongPick(); afterClick?.(song) } : () => { }}
+                            />
+                        ]}
+                        actionButtons={[
                             <ActionButton
-                                hidden={!allowActions}
+                                hidden={!showInfo}
                                 image={informationCircle}
                                 imageOutline={informationCircleOutline}
                                 onClick={() => { onSongInfo(); afterClick?.(song) }}
+                            />,
+                            <ActionButton
+                                hidden={!showFavorite}
+                                image={isFavorite ? heart : heartDislike}
+                                imageOutline={isFavorite ? heartOutline : heartDislikeOutline}
+                                onClick={() => { onToggleFavorite(); }}
                             />
-                            {showFavorite &&
-                                <ActionButton
-                                    hidden={!allowActions}
-                                    image={isFavorite ? heart : heartDislike}
-                                    imageOutline={isFavorite ? heartOutline : heartDislikeOutline}
-                                    onClick={() => { onToggleFavorite(); }}
-                                />
-                            }
-                            {showDisable && isAdmin &&
-                                <ActionButton
-                                    hidden={!allowActions}
-                                    image={removeCircle}
-                                    imageOutline={removeCircleOutline}
-                                    onClick={() => { onToggleDisabled(); }}
-                                />
-                            }
-                        </IonButtons>
-                    </div>
+                            ,
+                            <ActionButton
+                                hidden={!showDisable}
+                                image={removeCircle}
+                                imageOutline={removeCircleOutline}
+                                onClick={() => { onToggleDisabled(); }}
+                            />
+                        ]}
+                    />
                 )
             }}
         />
     );
 };
 
-export default SongDiv; 
+export default SongDiv;

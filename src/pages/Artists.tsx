@@ -60,7 +60,7 @@ export const Artists: React.FC = () => {
               listItems={artists}
               getRow={(item, index) => {
                 return <SingleRow
-                  index={index}
+                  key={index}
                   title={item.name}
                   onClick={() => setSearchText(item.name)} />
               }}

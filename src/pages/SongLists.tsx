@@ -40,7 +40,7 @@ export const SongLists: React.FC = () => {
           listItems={songLists}
           getRow={(item, index) => {
             return <SingleRow
-              index={index}
+              key={index}
               title={`${item.title} (${item.songs.length})`}
               onClick={() => onSongList(item)} />
           }}

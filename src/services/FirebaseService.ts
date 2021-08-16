@@ -32,16 +32,20 @@ class FirebaseService {
     return this.setValue('player/queue', queue);
   }
 
+  updatePlayerQueue(queue: QueueItem[]){
+    let updates:FirebaseUpdate = {};
+    queue.map(item=>{
+      updates[this.addPathFor(`player/queue/${item.key!}`)] = item;
+    })
+    return this.update(updates) ;  
+  }
+
   addPlayerQueue(queueItem: QueueItem) {
     return this.setObject('player/queue/', queueItem);
   }
 
   deletePlayerQueue(queueItem: QueueItem) {
     return this.delete(`player/queue`, queueItem);
-  }
-
-  updatePlayerQueue(queueItem: QueueItem) {
-    return this.updateObject('player/queue', queueItem);
   }
 
   ////////////////////////////////////////////////////////////////

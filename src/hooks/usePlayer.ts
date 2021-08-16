@@ -121,7 +121,7 @@ export const usePlayer = (): {
                 };
                 return item;
             });
-            console.log("doAddToQueue", reordered);
+            //console.log("doAddToQueue", reordered);
             await FirebaseService.setPlayerQueue(reordered);
             await addSongHistory(queueItem.song);
             return true;

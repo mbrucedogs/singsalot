@@ -79,7 +79,7 @@ export const Queue: React.FC = () => {
   return (
     <Page name={pageName} endButton={actionButton()}>
       <IonContent className="queue">
-        {buildRow(1, queue[0], [<ActionButton hidden={!canDeleteFirstItem} imageOutline={closeOutline} image={close} onClick={() => deleteFromQueue(queue[0])} />])}
+        {!isEmpty(queue) && buildRow(1, queue[0], [<ActionButton hidden={!canDeleteFirstItem} imageOutline={closeOutline} image={close} onClick={() => deleteFromQueue(queue[0])} />])}
 
         {/*-- The reorder gesture is disabled by default, enable it to drag and drop items --*/}
         <IonReorderGroup disabled={!shouldReorder} onIonItemReorder={doReorder}>

@@ -7,6 +7,8 @@ import { convertToArray, FirebaseService } from "../services";
 import { PlayerState, QueueItem, Settings, Singer, Song } from "../models";
 
 export const usePlayer = (): {
+    reset: ()=>void;
+
     //playerState
     playerState: PlayerState,
     setPlayerState: (playerState: PlayerState) => Promise<boolean>;
@@ -35,6 +37,9 @@ export const usePlayer = (): {
 
     const orderMultiplier = 10;
 
+    const reset = () =>{ 
+        FirebaseService.resetPlayer();
+    }
     //***************************************************************************************************** */
     //PlayerState */
     //***************************************************************************************************** */
@@ -264,6 +269,8 @@ export const usePlayer = (): {
     }, [singers]);
 
     return {
+        reset,
+
         //state
         playerState, setPlayerState,
         //settings

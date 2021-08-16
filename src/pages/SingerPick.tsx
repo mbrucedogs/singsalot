@@ -14,14 +14,14 @@ export const SingerPick = ({ }) => {
 
     useEffect(() => {
         if(state && state.song){
-            console.log("useEffect setPickedSong", state.song);
+            //console.log("useEffect setPickedSong", state.song);
             setPickedSong(state.song);
         }
     }, [state])
 
     const onSinger = useCallback((singer: Singer) => {
         if (pickedSong) {
-            console.log("onSinger pickedSong", pickedSong);
+            //console.log("onSinger pickedSong", pickedSong);
             addToQueue(singer, pickedSong).then(s => {
                 setPickedSong(undefined);
                 history.push("/Queue");

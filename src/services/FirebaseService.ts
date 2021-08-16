@@ -48,6 +48,11 @@ class FirebaseService {
     return this.delete(`player/queue`, queueItem);
   }
 
+  resetPlayer() {
+    db.child(this.addPathFor(`player/queue`)).remove();
+    db.child(this.addPathFor(`player/singers`)).remove();
+  }
+
   ////////////////////////////////////////////////////////////////
   ///Player Singers
   ////////////////////////////////////////////////////////////////

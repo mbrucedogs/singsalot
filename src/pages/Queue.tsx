@@ -63,7 +63,6 @@ export const Queue: React.FC = () => {
   const buildRow = (index: number, queueItem: QueueItem, actionButtons: JSX.Element[]) => {
     return (
       <ActionRow
-        key={Number.toString()}
         gridTemplateColumns='30px auto 60px'
         columns={[
           <div className="title">{index})</div>,
@@ -88,7 +87,7 @@ export const Queue: React.FC = () => {
           {listItems?.map((item, index) => {
             return (
               <IonReorder style={{ minHeight: '60px' }} key={index}>
-                {buildRow(item.order, item, [
+                {buildRow((index+2), item, [
                   <ActionButton
                     hidden={canDelete(item)}
                     imageOutline={closeOutline}

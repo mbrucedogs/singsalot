@@ -22,6 +22,7 @@ export const TopSongs: React.FC = () => {
         getRow={(history, idx) => {
           return (<Collapsible key={idx} trigger={
             <GridRow 
+              key={idx}
               gridTemplateColumns='50px auto'
               columns={[
                 <div className="title">{idx! + 1})</div>,
@@ -32,10 +33,10 @@ export const TopSongs: React.FC = () => {
               ]}
             />            
           }>
-            {history.songs.map(song => {
+            {history.songs.map((song, index) => {
               return (
                 <SongDiv
-                  key={song.key}
+                  key={index}
                   paddingLeft={50}
                   song={song}
                   showCount={true}

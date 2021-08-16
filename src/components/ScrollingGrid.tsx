@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, ReactNode } from "react";
 import { IonButtons, IonContent } from '@ionic/react';
 import { IonInfiniteScroll, IonInfiniteScrollContent } from '@ionic/react';
 import { Fabricable } from "../models";
-import { render } from "@testing-library/react";
+import { key } from "ionicons/icons";
 
 export interface ScrollingGridProps<T> {
   pageName: string;
@@ -16,7 +16,7 @@ export const ScrollingGrid = <T extends Fabricable>({ pageName, pageCount, listI
   const [disableInfiniteScroll, setDisableInfiniteScroll] = useState<boolean>(false);
   const [items, setItems] = useState<T[]>([]);
   const [content, setContent] = useState<ReactNode[]>([]);
-
+  
   useEffect(() => {
     setDisableInfiniteScroll(false);
     setPage(0);
@@ -80,9 +80,9 @@ export const ActionRow = ({ columns, actionButtons, gridTemplateColumns }: { col
   return (
     <div className="row-container">
       <div className="row" style={{ display: 'grid', gridTemplateColumns: gridTemplateColumns }}>
-        {columns}
+        {columns.map((c,index) => <div key={index}>{c}</div>)}
         <IonButtons slot="end">
-          {actionButtons}
+        {actionButtons.map((c,index) => <div key={index}>{c}</div>)}
         </IonButtons>
       </div>
     </div >
@@ -94,7 +94,7 @@ export const GridRow = ({ columns, gridTemplateColumns, onClick}: { columns: JSX
   return (
     <div className="row-container" {...action}>
       <div className="row" style={{ display: 'grid', gridTemplateColumns: gridTemplateColumns }}>
-        {columns}
+      {columns.map((c,index) => <div key={index}>{c}</div>)}
       </div>
     </div >
   )

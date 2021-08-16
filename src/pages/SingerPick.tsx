@@ -24,6 +24,7 @@ export const SingerPick = ({ }) => {
             console.log("onSinger pickedSong", pickedSong);
             addToQueue(singer, pickedSong).then(s => {
                 setPickedSong(undefined);
+                history.push("/Queue");
             });
         }
     }, [queue, singers, addToQueue, pickedSong]);

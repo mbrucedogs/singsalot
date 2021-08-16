@@ -3,8 +3,6 @@ import { useCallback } from "react";
 import { useSelector } from "react-redux";
 import { useSongHistory } from "./useSongHistory";
 import { selectPlayer } from "../store/store";
-import { selectedSongChange } from "../store/slices";
-import { useAppDispatch } from "./hooks";
 import { convertToArray, FirebaseService } from "../services";
 import { PlayerState, QueueItem, Settings, Singer, Song } from "../models";
 
@@ -12,7 +10,7 @@ export const usePlayer = (): {
     //playerState
     playerState: PlayerState,
     setPlayerState: (playerState: PlayerState) => Promise<boolean>;
-    
+
     //settings
     settings: Settings,
     updateSettings: (autoAdvance: boolean) => void;
@@ -21,8 +19,8 @@ export const usePlayer = (): {
     queue: QueueItem[];
     addToQueue: (singer: Singer, song: Song) => Promise<boolean>;
     deleteFromQueue: (item: QueueItem) => Promise<boolean>;
-    reorderQueue: (fromIndex: number, toIndex: number) => Promise<boolean>;
-    
+    updateQueue: (items:QueueItem[])=> Promise<boolean>;
+
     //singers
     singers: Singer[];
     addSinger: (name: string) => Promise<boolean>;
@@ -32,11 +30,10 @@ export const usePlayer = (): {
     //***************************************************************************************************** */
     //Properties */
     //***************************************************************************************************** */
-    const {settings, playerState, singers, queue} = useSelector(selectPlayer);
+    const { settings, playerState, singers, queue } = useSelector(selectPlayer);
     const { addSongHistory } = useSongHistory();
 
     const orderMultiplier = 10;
-    const dispatch = useAppDispatch();
 
     //***************************************************************************************************** */
     //PlayerState */
@@ -49,45 +46,38 @@ export const usePlayer = (): {
     //Queue */
     //***************************************************************************************************** */
     const updateSettings = (autoAdvance: boolean) => {
-        let updated: Settings = {...settings, autoadvance: autoAdvance}
+        let updated: Settings = { ...settings, autoadvance: autoAdvance }
         console.log("update settings", updated);
         return FirebaseService.setPlayerSettings(updated);
     }
-    
+
     //***************************************************************************************************** */
     //Queue */
     //***************************************************************************************************** */
-    const setSelectedSong = (song?: Song) => {
-        dispatch(selectedSongChange({song:song}));
-    };
-
     const deleteFromQueue = useCallback((item: QueueItem): Promise<boolean> => {
         //console.log('deleteFromQueue', item)
         return doDeleteToQueue(item);
     }, [queue]);
 
-    const reorderQueue = useCallback((fromIndex: number, toIndex: number): Promise<boolean> => {
-        let ordered = [...queue];
-        const itemToMove = ordered.splice(fromIndex, 1)[0];
-        const updateditemToMove = {
-            ...itemToMove,
-            order: toIndex * orderMultiplier + 1,
-        };
-        ordered.splice(toIndex, 0, updateditemToMove);
-        let reordered = ordered.map((qi, index) => {
-            let order = index * orderMultiplier;
+    const updateQueue = useCallback((items: QueueItem[]): Promise<boolean> => {
+        let reordered = items.map((qi, index) => {
+            let order = (index + 1) * orderMultiplier;
             let item: QueueItem = {
                 ...qi,
                 order: order,
             };
             return item;
         });
-        return FirebaseService.updatePlayerQueue(updateditemToMove)
-            .then( _ => FirebaseService.setPlayerQueue(reordered).then(resolve => resolve(true)).catch(e => reject(e)));
+        let sorted = reordered.sort((a: QueueItem, b: QueueItem) => {
+            return a.order - b.order;
+        });
+        //console.log("reorderQueue", sorted);
+        //return new Promise<boolean>(resolve => resolve(true))
+        return FirebaseService.updatePlayerQueue(sorted).then(resolve => resolve(true)).catch(e => reject(e));
     }, [queue, singers]);
 
     const addToQueue = useCallback((singer: Singer, song: Song): Promise<boolean> => {
-                //get the index for the order
+        //get the index for the order
         let order = getFairQueueOrder(singer);
 
         //update for the singer songcount
@@ -102,33 +92,17 @@ export const usePlayer = (): {
             singer: newSinger,
             song: song
         }
-        console.log("addToQueue: ", queueItem);
-        setSelectedSong(undefined);
-        console.log("addToQueue: ", queueItem);
+        //console.log("addToQueue: ", queueItem);
         //return new Promise<boolean>(resolve => resolve(true))
         return doAddToQueue(queueItem);
     }, [queue, singers]);
 
-    const doAddToQueue = async (queueItem: QueueItem): Promise<boolean> => {
+    const doAddToQueue = useCallback(async (queueItem: QueueItem): Promise<boolean> => {
         try {
             await FirebaseService.updatePlayerSinger(queueItem.singer);
-
-            //update the singers for the queue so you get the latest counts
-            let queueWithSingersUpdate = queue.map(qi => {
-                let foundSinger = singers.find(s => s.name === qi.singer.name);
-                if (foundSinger) {
-                    let nqi: QueueItem = {
-                        ...qi,
-                        singer: foundSinger.name === queueItem.singer.name ? queueItem.singer : foundSinger,
-                    };
-                    return nqi;
-                } else {
-                    return qi;
-                }
-            });
-
+            
             //add new queueItem
-            let sorted = [queueItem, ...queueWithSingersUpdate].sort((a: QueueItem, b: QueueItem) => {
+            let sorted = [queueItem, ...queue].sort((a: QueueItem, b: QueueItem) => {
                 return a.order - b.order;
             });
 
@@ -137,29 +111,30 @@ export const usePlayer = (): {
                 let order = index * orderMultiplier;
                 let item: QueueItem = {
                     ...qi,
+                    key: index.toString(),
                     order: order
                 };
                 return item;
             });
-            
+            console.log("doAddToQueue", reordered);
             await FirebaseService.setPlayerQueue(reordered);
             await addSongHistory(queueItem.song);
             return true;
-            
+
         } catch (error) {
             return false;
         }
-    };
+    }, [queue, singers]);
 
-    const doDeleteToQueue = async (queueItem: QueueItem): Promise<boolean> => {
-        try {           
+    const doDeleteToQueue = useCallback(async (queueItem: QueueItem): Promise<boolean> => {
+        try {
             //remove new queueItem
             //console.log("doDeleteToQueue queue", queue);
             let copy = [...queue];
             //console.log("doDeleteToQueue copy orig", copy);
             let delIdx = copy.findIndex(qi => qi === queueItem);
             //console.log("doDeleteToQueue delIndex", delIdx);
-            copy.splice(delIdx,1);
+            copy.splice(delIdx, 1);
 
             let sorted = copy.sort((a: QueueItem, b: QueueItem) => {
                 return a.order - b.order;
@@ -182,7 +157,7 @@ export const usePlayer = (): {
         } catch (error) {
             return false;
         }
-    };
+    }, [queue]);
 
     //Private Functions
     const getFairQueueOrder = useCallback((newSinger: Singer) => {
@@ -288,14 +263,15 @@ export const usePlayer = (): {
         });
     }, [singers]);
 
-    return { 
+    return {
         //state
         playerState, setPlayerState,
         //settings
         settings,
-        updateSettings, 
+        updateSettings,
         //queue
-        queue, addToQueue, deleteFromQueue, reorderQueue,
+        queue, addToQueue, deleteFromQueue, updateQueue,
         //singers
-        singers, addSinger, updateSinger, deleteSinger }
+        singers, addSinger, updateSinger, deleteSinger
+    }
 }

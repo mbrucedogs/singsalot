@@ -12,7 +12,8 @@ import {
     playerStateChange, queueChange, singersChange,
     songsChange,
     songListsChange,
-    disabledChange
+    disabledChange,
+    settingsChange
 } from "../store/slices";
 import {
     Artist,
@@ -22,15 +23,14 @@ import {
     PlayerState,
     QueueItem,
     reduce,
+    Settings,
     Singer,
     Song,
     SongList,
     TopPlayed
 } from "../models";
 import { useSelector } from "react-redux";
-import { selectHistory, selectSongs } from "../store/store";
-import favorites from "../store/slices/favorites";
-import latestSongs from "../store/slices/latestSongs";
+import { selectSongs } from "../store/store";
 interface FirebaseReduxHandlerProps {
     isAuthenticated: boolean;
     children: React.ReactNode;
@@ -45,7 +45,7 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
     const [disabled, setDisabled] = useState<Song[]>([]);
     const [latestSongs, setLatestSongs] = useState<Song[]>([]);
     const [loadedArtists, setLoadedArtists] = useState<boolean>(false);
-
+    
     useEffect(() => {
         addArtists();
     }, [songs]);
@@ -194,6 +194,7 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
         if (isAuthenticated) {
             FirebaseService.getSongs().on("value", onSongsChange);
             FirebaseService.getSongLists().on("value", onSongListChange);
+            FirebaseService.getPlayerSettings().on("value", onSettingsChange);
             FirebaseService.getPlayerSingers().on("value", onSingersChange);
             FirebaseService.getPlayerQueue().on("value", onQueueChange);
             FirebaseService.getPlayerState().on("value", onPlayerStateChange);
@@ -295,6 +296,15 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
             .then(result => setDisabled(result));
     };
 
+    const onSettingsChange = async (items: firebase.database.DataSnapshot) => {
+        let s = items.val() as Settings;
+        if(s){
+            dispatch(settingsChange(s));
+        } else { 
+            dispatch(settingsChange({autoadvance:false, userpick: false }))
+        }
+    };
+
     const onSongsChange = async (items: firebase.database.DataSnapshot) => {
         convertToArray<Song>(items)
             .then(list => {
@@ -304,6 +314,7 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
                 dispatch(songsChange(sorted));
             });
     };
+
 
     return <>{children}</>
 }

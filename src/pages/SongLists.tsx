@@ -80,7 +80,7 @@ export const SongLists: React.FC = () => {
                   return (
                     <Collapsible key={index} trigger={
                       <div key={index} className="row-container">
-                        <div className={hasFoundSongs ? "row" : "row notavailable"} style={{ display: 'grid', gridTemplateColumns: '30px auto' }}>
+                        <div className={hasFoundSongs ? "row" : "row notavailable"} style={{ display: 'grid', gridTemplateColumns: '45px auto' }}>
                           <div>({song.position})</div>
                           <div>
                             <div className="title multi">{song.artist}</div>

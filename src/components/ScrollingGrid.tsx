@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, ReactNode } from "react";
 import { IonButtons, IonContent } from '@ionic/react';
 import { IonInfiniteScroll, IonInfiniteScrollContent } from '@ionic/react';
-import { Fabricable } from "../models";
+import { Fabricable } from "../models/models";
 import { key } from "ionicons/icons";
 
 export interface ScrollingGridProps<T> {

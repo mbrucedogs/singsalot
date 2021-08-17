@@ -4,7 +4,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { IonModal, IonHeader, IonToolbar, IonTitle, IonInput, IonButtons, IonButton, IonContent, IonItem, IonLabel, IonIcon, IonGrid, IonRow, IonCol } from "@ionic/react";
 import { add, addOutline, closeOutline, close } from "ionicons/icons";
 import { pageCount } from "../globalConfig";
-import { Singer } from "../models";
+import { Singer } from "../models/models";
 import { useAuthentication, usePlayer } from "../hooks";
 import { ActionButton, ActionRow, Page, ScrollingGrid } from "../components"
 

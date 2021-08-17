@@ -19,16 +19,14 @@ import {
     Artist,
     ArtistSongs,
     History,
-    matchSongs,
-    PlayerState,
     QueueItem,
-    reduce,
     Settings,
     Singer,
     Song,
     SongList,
     TopPlayed
-} from "../models";
+} from "../models/models";
+import { matchSongs, PlayerState, reduce } from "../models"
 import { useSelector } from "react-redux";
 import { selectSongs } from "../store/store";
 interface FirebaseReduxHandlerProps {

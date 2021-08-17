@@ -1,7 +1,7 @@
 import { isEmpty } from "lodash";
 import { useCallback, useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Artist } from "../models";
+import { Artist } from "../models/models";
 import { selectArtists } from "../store/store";
 
 export const useArtists = (): {

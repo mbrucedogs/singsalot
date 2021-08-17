@@ -2,13 +2,14 @@ import { isEmpty } from 'lodash';
 import localfirebase from './firebase';
 import { 
   Fabricable,
-  PlayerState,
   QueueItem,
   Settings,
   Singer, 
   Song,
   SongBase,
- } from '../models';
+ } from '../models/models';
+
+ import { PlayerState  } from '../models';
 
 const db = localfirebase.ref('/controllers');
 

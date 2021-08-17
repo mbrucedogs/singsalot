@@ -3,7 +3,3 @@ export enum PlayerState {
     paused = "Paused",
     stopped = "Stopped"
 }
-
-export interface Player {
-    state: PlayerState;
-}

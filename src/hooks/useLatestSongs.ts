@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { ArtistSongs, Song } from "../models";
+import { ArtistSongs, Song } from "../models/models";
 import { selectLatestArtistSongs, selectLatestSongs } from "../store/store";
 
 export const useLatestSongs = (): {

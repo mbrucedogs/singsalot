@@ -1,7 +1,7 @@
 import { isEmpty } from "lodash";
 import { useCallback, useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Song } from "../models";
+import { Song } from "../models/models";
 import { FirebaseService } from "../services";
 import { selectDisabled, selectFavorites, selectSongs } from "../store/store";
 

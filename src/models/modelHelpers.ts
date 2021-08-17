@@ -1,4 +1,4 @@
-import { Song } from "./Song";
+import { Song } from "./models";
 
 export function matchPath(path: String, allSongs: Song[]): Promise<Song|undefined> {
     return new Promise<Song|undefined>((resolve) => {

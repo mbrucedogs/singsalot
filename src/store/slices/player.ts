@@ -1,11 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { 
-  PlayerState, 
   QueueItem, 
   Settings, 
   Singer, 
   Song
-} from '../../models';
+} from '../../models/models';
+import { PlayerState } from '../../models';
 
 interface PlayerSliceHelper {
   playerState: PlayerState;

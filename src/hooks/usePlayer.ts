@@ -4,7 +4,8 @@ import { useSelector } from "react-redux";
 import { useSongHistory } from "./useSongHistory";
 import { selectPlayer } from "../store/store";
 import { convertToArray, FirebaseService } from "../services";
-import { PlayerState, QueueItem, Settings, Singer, Song } from "../models";
+import { QueueItem, Settings, Singer, Song } from "../models/models";
+import { PlayerState } from "../models";
 
 export const usePlayer = (): {
     reset: ()=>void;

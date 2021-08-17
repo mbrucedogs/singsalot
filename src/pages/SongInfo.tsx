@@ -1,6 +1,6 @@
 import { useHistory, useLocation } from 'react-router';
 import { IonButton } from '@ionic/react';
-import { PickedSong, Song } from '../models';
+import { PickedSong, Song } from '../models/models';
 import { Page, SongDiv } from "../components"
 import { useAuthentication, usePlayer, useSongs } from '../hooks';
 

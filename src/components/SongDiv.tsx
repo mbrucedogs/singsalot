@@ -2,7 +2,7 @@ import React from "react";
 import { IonButtons } from "@ionic/react";
 import { heart, heartDislike, heartDislikeOutline, heartOutline, informationCircle, informationCircleOutline, removeCircle, removeCircleOutline } from "ionicons/icons";
 import SongContainer from "./SongContainer";
-import { Song } from "../models";
+import { Song } from "../models/models";
 import { useAuthentication, useWindowDimensions } from "../hooks";
 import { ActionButton } from "../components";
 import { ActionRow } from "./ScrollingGrid";

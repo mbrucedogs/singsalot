@@ -1,7 +1,7 @@
 import { useCallback, useState, useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { usePlayer } from '../hooks';
-import { PickedSong, Singer, Song } from '../models';
+import { PickedSong, Singer, Song } from '../models/models';
 import { Page, ScrollingGrid, SingleRow, SongDiv } from "../components"
 import { isEmpty } from 'lodash';
 

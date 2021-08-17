@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, ReactNode } from "react";
-import { IonButtons, IonContent } from '@ionic/react';
+import { IonContent } from '@ionic/react';
 import { IonInfiniteScroll, IonInfiniteScrollContent } from '@ionic/react';
 import { Keyable } from "../models/types";
 import { key } from "ionicons/icons";
@@ -75,39 +75,5 @@ export const ScrollingGrid = <T extends Keyable>({ pageName, pageCount, listItem
     </IonContent>
   );
 };
-
-export const ActionRow = ({ columns, actionButtons, gridTemplateColumns }: { columns: JSX.Element[], gridTemplateColumns: string, actionButtons: JSX.Element[] }) => {
-  return (
-    <div className="row-container">
-      <div className="row" style={{ display: 'grid', gridTemplateColumns: gridTemplateColumns }}>
-        {columns.map((c,index) => <div key={index}>{c}</div>)}
-        <IonButtons slot="end">
-        {actionButtons.map((c,index) => <div key={index}>{c}</div>)}
-        </IonButtons>
-      </div>
-    </div >
-  )
-}
-
-export const GridRow = ({ columns, gridTemplateColumns, onClick}: { columns: JSX.Element[], gridTemplateColumns: string, onClick?: () => void }) => {
-  const action = onClick ? {onClick:onClick} : {}
-  return (
-    <div className="row-container" {...action}>
-      <div className="row" style={{ display: 'grid', gridTemplateColumns: gridTemplateColumns }}>
-      {columns.map((c,index) => <div key={index}>{c}</div>)}
-      </div>
-    </div >
-  )
-}
-
-export const SingleRow = ({ title, onClick }: { title: string, onClick?: () => void }) => {
-  return (
-    <div className="row-container" onClick={(e) => { onClick?.() }}>
-      <div className="row">
-        <div className="title single">{title}</div>
-      </div>
-    </div>
-  )
-}
 
 export default ScrollingGrid;

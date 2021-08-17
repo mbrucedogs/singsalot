@@ -1,5 +1,5 @@
 export interface Keyable {
-    key?: string | null;
+    key?: string;
 }
 
 export interface Artist extends Keyable {
@@ -41,7 +41,7 @@ export interface Singer extends Keyable {
     songCount: number;
     name: string;
     lastLogin: string;
-}
+} 
 
 export interface SongBase extends Keyable {
     path: string;

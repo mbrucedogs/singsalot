@@ -2,7 +2,8 @@ import React from "react";
 import { isEmpty } from "lodash";
 import Collapsible from "react-collapsible";
 import { useTopPlayed } from "../hooks";
-import { GridRow, Page, ScrollingGrid, SongDiv } from "../components"
+import { ActionButton, ActionRow, Page, ScrollingGrid, SongDiv } from "../components"
+import { chevronForward, chevronForwardOutline } from "ionicons/icons";
 
 export const TopSongs: React.FC = () => {
   const { topPlayed } = useTopPlayed();
@@ -21,17 +22,22 @@ export const TopSongs: React.FC = () => {
         listItems={topPlayed}
         getRow={(history, idx) => {
           return (<Collapsible key={idx} trigger={
-            <GridRow 
-              key={idx}
-              gridTemplateColumns='50px auto'
-              columns={[
-                <div className="title">{idx! + 1})</div>,
-                <div>
-                  <div className="title multi">{history.title} ({history.count})</div>
-                  <div className="subtitle">{history.artist}</div>
-                </div>
-              ]}
-            />            
+            <ActionRow
+            gridTemplateColumns='50px auto 60px'
+            columns={[
+              <div className="title">{idx! + 1})</div>,
+              <div>
+                <div className="title multi">{history.title} ({history.count})</div>
+                <div className="subtitle">{history.artist}</div>
+              </div>
+            ]}
+            actionButtons={[
+              <ActionButton
+                onClick={() => { }}
+                imageOutline={chevronForwardOutline}
+                image={chevronForward} />
+            ]}
+          />
           }>
             {history.songs.map((song, index) => {
               return (

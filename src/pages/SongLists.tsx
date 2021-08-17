@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { isEmpty } from "lodash";
-import { IonButton, IonModal, IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonLabel, IonItem } from "@ionic/react";
+import { IonButton, IonModal, IonContent, IonHeader, IonToolbar, IonTitle, IonButtons } from "@ionic/react";
 import Collapsible from 'react-collapsible';
 import { pageCount } from "../globalConfig";
 import { useSongLists } from "../hooks";
 import { SongList, SongListSong } from "../models/types";
-import { Page, ScrollingGrid, SingleRow, SongDiv } from "../components"
+import { ActionButton, ActionRow, Page, ScrollingGrid, SongDiv } from "../components"
+import { chevronForward, chevronForwardOutline, open, openOutline } from "ionicons/icons";
 
 export const SongLists: React.FC = () => {
   const pageName: string = "Song Lists";
@@ -31,6 +32,7 @@ export const SongLists: React.FC = () => {
     return <Page name={pageName}><h2 style={{ padding: '10px' }}>There are no {pageName}...</h2></Page>
   }
 
+
   return (
     <Page name={pageName}>
       <>
@@ -39,11 +41,25 @@ export const SongLists: React.FC = () => {
           pageName={pageName}
           listItems={songLists}
           getRow={(item, index) => {
-            return <SingleRow
-              key={index}
-              title={`${item.title} (${item.songs.length})`}
-              onClick={() => onSongList(item)} />
-          }}
+            return (
+              <ActionRow
+                key={index}
+                gridTemplateColumns='auto 60px'
+                columns={[
+                  <div onClick={() => onSongList(item)}>
+                    <div className="title single">{`${item.title} (${item.songs.length})`}</div>
+                  </div>
+                ]}
+                actionButtons={[
+                  <ActionButton
+                    onClick={() => { }}
+                    imageOutline={openOutline}
+                    image={open} />
+                ]}
+              />
+            )
+          }
+          }
         />
         <IonModal isOpen={showModal}
           swipeToClose={true}
@@ -78,17 +94,28 @@ export const SongLists: React.FC = () => {
                       </div>
                   }
                   return (
-                    <Collapsible key={index} trigger={
-                      <div key={index} className="row-container">
-                        <div className={hasFoundSongs ? "row" : "row notavailable"} style={{ display: 'grid', gridTemplateColumns: '45px auto' }}>
-                          <div>({song.position})</div>
-                          <div>
-                            <div className="title multi">{song.artist}</div>
-                            <div className="subtitle">{song.title}</div>
-                          </div>
-                        </div>
-                      </div>
-                    }>
+                    <Collapsible key={index}
+                      trigger={
+                        <ActionRow
+                          key={index}
+                          gridTemplateColumns='45px auto 60px'
+                          rowStyle={hasFoundSongs ? "row" : "row notavailable"}
+                          columns={[
+                            <div>({song.position})</div>,
+                            <div>
+                              <div className="title multi">{song.artist}</div>
+                              <div className="subtitle">{song.title}</div>
+                            </div>
+                          ]}
+                          actionButtons={[
+                            <ActionButton
+                              hidden={!hasFoundSongs}
+                              onClick={() => { }}
+                              imageOutline={chevronForwardOutline}
+                              image={chevronForward} />
+                          ]}
+                        />
+                      }>
                       {song.foundSongs?.map((s, index) => {
                         return (
                           <SongDiv

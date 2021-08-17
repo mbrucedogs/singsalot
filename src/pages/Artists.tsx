@@ -3,7 +3,8 @@ import { isEmpty } from "lodash";
 import { IonMenuButton, IonPage, IonSearchbar, IonButton, IonModal, IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonItem, IonLabel } from "@ionic/react";
 import { useArtists, useSongs } from "../hooks";
 import { ArtistSongs } from "../models/types";
-import { Page, ScrollingGrid, SingleRow, SongDiv } from "../components"
+import { ActionButton, ActionRow, Page, ScrollingGrid, SongDiv } from "../components"
+import { open, openOutline } from "ionicons/icons";
 
 export const Artists: React.FC = () => {
   const pageName: string = "Artists";
@@ -59,10 +60,23 @@ export const Artists: React.FC = () => {
               pageName={pageName}
               listItems={artists}
               getRow={(item, index) => {
-                return <SingleRow
-                  key={index}
-                  title={item.name}
-                  onClick={() => setSearchText(item.name)} />
+                return (
+                  <ActionRow
+                    key={index}
+                    gridTemplateColumns='auto 60px'
+                    columns={[
+                      <div onClick={() => setSearchText(item.name)}>
+                        <div className="title single">{item.name}</div>
+                      </div>
+                    ]}
+                    actionButtons={[
+                      <ActionButton
+                        onClick={() => { }}
+                        imageOutline={openOutline}
+                        image={open} />
+                    ]}
+                  />
+                )
               }}
             />
             <IonModal isOpen={showModal}

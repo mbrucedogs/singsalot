@@ -5,7 +5,7 @@ import SongContainer from "./SongContainer";
 import { Song } from "../models/types";
 import { useAuthentication, useWindowDimensions } from "../hooks";
 import { ActionButton } from "../components";
-import { ActionRow } from "./ScrollingGrid";
+import { ActionRow } from "./ActionRow";
 
 export interface SongProps {
     song: Song;

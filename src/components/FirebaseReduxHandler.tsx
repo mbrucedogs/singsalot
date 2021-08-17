@@ -70,11 +70,13 @@ export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAu
         if (!loadedArtists && !isEmpty(songs)) {
             let artists: Artist[] = [];
             let names: string[] = [];
+            let lnames: string[] = [];
             songs.forEach(song => {
                 let isDisabled = song.disabled ? song.disabled : false;
                 let name = song.artist;
-                if (!isEmpty(name) && !includes(names, name.trim()) && !isDisabled) {
+                if (!isEmpty(name) && !includes(lnames, name.trim().toLowerCase()) && !isDisabled) {
                     names.push(name.trim());
+                    lnames.push(name.trim().toLowerCase());
                 }
             });
             artists = orderBy(names).map(name => { return { key: name, name: name } });

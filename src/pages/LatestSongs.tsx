@@ -9,7 +9,7 @@ export const LatestSongs: React.FC = () => {
   const pageName: string = "Latest Songs";
   const { artistSongs } = useLatestSongs();
   if (isEmpty(artistSongs)) {
-    return <Page name={pageName}><h2 style={{ padding: '10px' }}>Loading {pageName}...</h2></Page>
+    return <Page name={pageName}><h2 style={{ padding: '10px' }}>There are no {pageName}...</h2></Page>
   }
 
   const buildRow = (item: ArtistSongs, index: number) => {

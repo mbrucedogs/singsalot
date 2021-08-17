@@ -28,7 +28,7 @@ export const SongLists: React.FC = () => {
   }, [showModal])
 
   if (isEmpty(songLists)) {
-    return <Page name={pageName}><h2 style={{ padding: '10px' }}>Loading {pageName}...</h2></Page>
+    return <Page name={pageName}><h2 style={{ padding: '10px' }}>There are no {pageName}...</h2></Page>
   }
 
   return (

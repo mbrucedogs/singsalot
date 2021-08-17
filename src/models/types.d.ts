@@ -1,12 +1,12 @@
-export interface Fabricable {
+export interface Keyable {
     key?: string | null;
 }
 
-export interface Artist extends Fabricable {
+export interface Artist extends Keyable {
     name: string;
 }
 
-export interface ArtistSongs extends Fabricable {
+export interface ArtistSongs extends Keyable {
     artist: string; songs: Song[];
 }
 
@@ -26,7 +26,7 @@ export interface Player {
     state: PlayerState;
 }
 
-export interface QueueItem extends Fabricable {
+export interface QueueItem extends Keyable {
     order: number,
     singer: Singer;
     song: Song;
@@ -37,13 +37,13 @@ export interface Settings {
     userpick: boolean;
 }
 
-export interface Singer extends Fabricable {
+export interface Singer extends Keyable {
     songCount: number;
     name: string;
     lastLogin: string;
 }
 
-export interface SongBase extends Fabricable {
+export interface SongBase extends Keyable {
     path: string;
 }
 
@@ -60,19 +60,19 @@ export type PickedSong = {
     song: Song
 }
 
-export interface SongList extends Fabricable {
+export interface SongList extends Keyable {
     title: string;
     songs: SongListSong[];
 }
 
-export interface SongListSong extends Fabricable {
+export interface SongListSong extends Keyable {
     artist: string;
     position: number;
     title: string;
     foundSongs?: Song[];
 }
 
-export interface TopPlayed extends Fabricable {
+export interface TopPlayed extends Keyable {
     artist: string;
     title: string;
     count: number;

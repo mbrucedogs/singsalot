@@ -1,7 +1,7 @@
 import { isEmpty } from 'lodash';
 import localfirebase from './firebase';
 import { 
-  Fabricable,
+  Keyable,
   QueueItem,
   Settings,
   Singer, 
@@ -13,7 +13,7 @@ import {
 
 const db = localfirebase.ref('/controllers');
 
-type FirebaseUpdate = {[key: string]: Fabricable}
+type FirebaseUpdate = {[key: string]: Keyable}
 class FirebaseService {
   controllerId: string = ""
 
@@ -195,7 +195,7 @@ class FirebaseService {
     return db.child(this.addPathFor(key));
   }
 
-  private add = (path: string, value: Fabricable) => {
+  private add = (path: string, value: Keyable) => {
     let p = this.addPathFor(`${path}`);
     console.log('FirebaseService - add path', p);
     console.log('FirebaseService - add value', value);    
@@ -209,7 +209,7 @@ class FirebaseService {
     return db.child(p).set(value);
   };
 
-  private setObject = (path: string, obj: Fabricable) => {
+  private setObject = (path: string, obj: Keyable) => {
     if(isEmpty(obj.key)){
       obj.key = Math.random().toString(36).substr(2, 9);
     }
@@ -224,7 +224,7 @@ class FirebaseService {
     return db.update(updates);
   }
 
-  private updateObject(path: string, obj: Fabricable) {
+  private updateObject(path: string, obj: Keyable) {
     let p = this.addPathFor(`${path}/${obj.key!}`);
     console.log('FirebaseService - update path', p);
     console.log('FirebaseService - update value', obj);
@@ -238,7 +238,7 @@ class FirebaseService {
     return db.child(p).update(value);
   }
 
-  private delete(path: string, obj: Fabricable) {
+  private delete(path: string, obj: Keyable) {
     let p = this.addPathFor(`${path}/${obj.key!}`);
     //console.log('FirebaseService - delete', p);
     return db.child(p).remove();

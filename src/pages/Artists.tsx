@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { isEmpty } from "lodash";
 import { IonMenuButton, IonPage, IonSearchbar, IonButton, IonModal, IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonItem, IonLabel } from "@ionic/react";
 import { useArtists, useSongs } from "../hooks";
-import { ArtistSongs } from "../models/models";
+import { ArtistSongs } from "../models/types";
 import { Page, ScrollingGrid, SingleRow, SongDiv } from "../components"
 
 export const Artists: React.FC = () => {

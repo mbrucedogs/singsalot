@@ -7,7 +7,7 @@ import {
   Singer, 
   Song,
   SongBase,
- } from '../models/models';
+ } from '../models/types';
 
  import { PlayerState  } from '../models';
 

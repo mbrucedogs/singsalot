@@ -1,7 +1,7 @@
 import React from "react";
 import { pageCount } from "../globalConfig";
 import { isEmpty } from "lodash";
-import { ArtistSongs } from "../models/models";
+import { ArtistSongs } from "../models/types";
 import { useLatestSongs } from "../hooks";
 import { Page, ScrollingGrid, SongDiv } from "../components"
 

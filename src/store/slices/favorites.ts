@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { Song } from "../../models/models";
+import { Song } from "../../models/types";
 
 interface FavoritesSliceState {
   favorites: Song[];

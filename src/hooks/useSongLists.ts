@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { SongList } from "../models/models";
+import { SongList } from "../models/types";
 import { selectSongLists } from "../store/store";
 
 export const useSongLists = (): {

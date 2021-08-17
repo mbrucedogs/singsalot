@@ -1,6 +1,6 @@
 import React, { ReactNode, useCallback } from "react";
 import { useHistory } from "react-router";
-import { PickedSong, Song } from "../models/models";
+import { PickedSong, Song } from "../models/types";
 import {useSongs } from "../hooks";
 
 interface SongContainerProps {

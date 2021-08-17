@@ -5,7 +5,7 @@ import { ItemReorderEventDetail } from "@ionic/core";
 import { close, closeOutline, reorderThree, reorderThreeOutline } from "ionicons/icons";
 import { useAuthentication, usePlayer } from "../hooks"
 import { PlayerState } from "../models";
-import { QueueItem } from "../models/models";
+import { QueueItem } from "../models/types";
 import { ActionButton, ActionRow, Page } from "../components"
 
 export const Queue: React.FC = () => {

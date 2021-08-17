@@ -5,7 +5,7 @@ import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonToolbar, 
 import { pageCount } from "../globalConfig";
 import { useSongs } from "../hooks";
 import { Page, ScrollingGrid, SongDiv } from "../components"
-import { Song } from "../models/models";
+import { Song } from "../models/types";
 
 export const Search: React.FC = () => {
   const { songs, searchSongs } = useSongs();

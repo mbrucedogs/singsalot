@@ -25,7 +25,7 @@ import {
     Song,
     SongList,
     TopPlayed
-} from "../models/models";
+} from "../models/types";
 import { matchSongs, PlayerState, reduce } from "../models"
 import { useSelector } from "react-redux";
 import { selectSongs } from "../store/store";

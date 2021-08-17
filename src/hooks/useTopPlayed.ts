@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { TopPlayed } from "../models/models";
+import { TopPlayed } from "../models/types";
 import { selectTopPlayed } from "../store/store";
 
 export const useTopPlayed = (): {

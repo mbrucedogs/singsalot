@@ -1,7 +1,7 @@
 import { isEmpty } from "lodash";
 import { useCallback } from "react";
 import { useSelector } from "react-redux";
-import { Song } from "../models/models";
+import { Song } from "../models/types";
 import { FirebaseService } from "../services";
 import { selectHistory } from "../store/store";
 

@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { Settings } from "../../models/models";
+import { Settings } from "../../models/types";
 
 interface SettingsSliceState {
   settings: Settings;

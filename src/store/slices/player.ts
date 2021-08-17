@@ -4,7 +4,7 @@ import {
   Settings, 
   Singer, 
   Song
-} from '../../models/models';
+} from '../../models/types';
 import { PlayerState } from '../../models';
 
 interface PlayerSliceHelper {

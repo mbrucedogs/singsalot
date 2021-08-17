@@ -4,7 +4,7 @@ import { IonButton, IonModal, IonContent, IonHeader, IonToolbar, IonTitle, IonBu
 import Collapsible from 'react-collapsible';
 import { pageCount } from "../globalConfig";
 import { useSongLists } from "../hooks";
-import { SongList, SongListSong } from "../models/models";
+import { SongList, SongListSong } from "../models/types";
 import { Page, ScrollingGrid, SingleRow, SongDiv } from "../components"
 
 export const SongLists: React.FC = () => {

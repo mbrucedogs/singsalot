@@ -7,7 +7,7 @@ import { useSongs } from "../hooks";
 import { Page, InfiniteList, SongDiv } from "../components"
 import { Song } from "../models/types";
 
-export const Search: React.FC = () => {
+export const Search = () => {
   const { songs, searchSongs } = useSongs();
   const pageName: string = "Search";
   const [searchText, setSearchText] = useState<string>('');

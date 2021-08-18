@@ -1,5 +1,4 @@
 import { IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import React from 'react';
 import { ActionButton } from './ActionButton';
 
 interface EndButton {

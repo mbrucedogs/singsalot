@@ -4,7 +4,7 @@ import { usePlayer } from "../hooks";
 import { Page } from "../components"
 import { useHistory } from "react-router";
 
-export const Settings: React.FC = () => {
+export const Settings = () => {
   const { settings, updateSettings, reset } = usePlayer();
   const history = useHistory();
   let hasFocus = false;

@@ -7,7 +7,7 @@ import { close, closeOutline } from "ionicons/icons";
 import { IonButtons } from "@ionic/react";
 import { ActionButton } from "../components/ActionButton";
 
-export const Disabled: React.FC = () => {
+export const Disabled = () => {
   const pageName: string = "Disabled";
   const { disabled, deleteDisabled } = useSongs();
 

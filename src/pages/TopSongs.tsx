@@ -5,7 +5,7 @@ import { useTopPlayed } from "../hooks";
 import { ActionButton, ActionRow, Page, InfiniteList, SongDiv } from "../components"
 import { chevronForward, chevronForwardOutline } from "ionicons/icons";
 
-export const TopSongs: React.FC = () => {
+export const TopSongs = () => {
   const { topPlayed } = useTopPlayed();
   const amount: number = 100;
   const pageName: string = `Top ${amount} Played`;

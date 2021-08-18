@@ -8,7 +8,7 @@ import { PlayerState } from "../models";
 import { QueueItem } from "../models/types";
 import { ActionButton, ActionRow, Page } from "../components"
 
-export const Queue: React.FC = () => {
+export const Queue = () => {
   const pageName: string = "Queue";
   const { isAdmin, singer } = useAuthentication();
   const { queue, playerState, deleteFromQueue, updateQueue } = usePlayer();

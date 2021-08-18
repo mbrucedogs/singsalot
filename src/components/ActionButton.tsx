@@ -7,7 +7,7 @@ interface ActionButtonProps{
     onClick: () => void
 }
 
-export const ActionButton: React.FC<ActionButtonProps> = ({hidden = false, imageOutline, image, onClick}) => {
+export const ActionButton = ({hidden = false, imageOutline, image, onClick}: ActionButtonProps) => {
     return (
         <IonButton hidden={hidden} onClick={onClick ? (e) => { onClick?.() } : () => { }}>
             <IonIcon size="large" ios={imageOutline} md={image}/>

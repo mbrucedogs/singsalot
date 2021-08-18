@@ -6,7 +6,7 @@ import { Page, InfiniteList, ActionButton, SongContainer, SongDivItem, ActionRow
 import { close, closeOutline, informationCircle, informationCircleOutline } from "ionicons/icons";
 import { IonButtons } from "@ionic/react";
 
-export const Favorites: React.FC = () => {
+export const Favorites = () => {
   const pageName: string = "Favorites";
   const { favorites, deleteFavorite } = useSongs();
 

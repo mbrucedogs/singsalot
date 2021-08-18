@@ -5,7 +5,7 @@ import { ArtistSongs } from "../models/types";
 import { useLatestSongs } from "../hooks";
 import { Page, InfiniteList, SongDiv } from "../components"
 
-export const LatestSongs: React.FC = () => {
+export const LatestSongs = () => {
   const pageName: string = "Latest Songs";
   const { artistSongs } = useLatestSongs();
   if (isEmpty(artistSongs)) {

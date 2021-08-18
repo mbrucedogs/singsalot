@@ -8,7 +8,7 @@ import { SongList, SongListSong } from "../models/types";
 import { ActionButton, ActionRow, Page, InfiniteList, SongDiv } from "../components"
 import { chevronForward, chevronForwardOutline, open, openOutline } from "ionicons/icons";
 
-export const SongLists: React.FC = () => {
+export const SongLists = () => {
   const pageName: string = "Song Lists";
   const { songLists } = useSongLists()
   const [showModal, setShowModal] = useState<boolean>(false);

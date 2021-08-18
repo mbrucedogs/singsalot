@@ -22,7 +22,7 @@ import '@ionic/react/css/display.css';
 import './theme/style.css';
 import './theme/variables.css';
 
-const App: React.FC = () => {
+const App = () => {
   return (
     <IonApp>
       <ErrorBoundary>

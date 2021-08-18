@@ -6,7 +6,7 @@ import { ArtistSongs } from "../models/types";
 import { ActionButton, ActionRow, Page, InfiniteList, SongDiv } from "../components"
 import { open, openOutline } from "ionicons/icons";
 
-export const Artists: React.FC = () => {
+export const Artists = () => {
   const pageName: string = "Artists";
   const { artists, hasLoaded, searchArtists } = useArtists();
   const { searchSongs } = useSongs();

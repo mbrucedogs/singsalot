@@ -2,7 +2,7 @@ import React from "react";
 import { pageCount } from "../globalConfig";
 import { isEmpty } from "lodash";
 import { useSongHistory } from "../hooks";
-import { Page, ScrollingGrid, SongDiv } from "../components"
+import { Page, InfiniteList, SongDiv } from "../components"
 
 export const History: React.FC = () => {
   const { songHistory } = useSongHistory();
@@ -14,7 +14,7 @@ export const History: React.FC = () => {
 
   return (
     <Page name={pageName}>
-      <ScrollingGrid
+      <InfiniteList
         pageCount={pageCount}
         pageName={pageName}
         listItems={songHistory}

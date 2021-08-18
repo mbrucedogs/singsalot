@@ -2,7 +2,7 @@ import React from "react";
 import { isEmpty } from "lodash";
 import Collapsible from "react-collapsible";
 import { useTopPlayed } from "../hooks";
-import { ActionButton, ActionRow, Page, ScrollingGrid, SongDiv } from "../components"
+import { ActionButton, ActionRow, Page, InfiniteList, SongDiv } from "../components"
 import { chevronForward, chevronForwardOutline } from "ionicons/icons";
 
 export const TopSongs: React.FC = () => {
@@ -16,7 +16,7 @@ export const TopSongs: React.FC = () => {
 
   return (
     <Page name={pageName}>
-      <ScrollingGrid
+      <InfiniteList
         pageCount={topPlayed.length}
         pageName={pageName}
         listItems={topPlayed}

@@ -2,7 +2,7 @@ import React from "react";
 import { pageCount } from "../globalConfig";
 import { isEmpty } from "lodash";
 import { useSongs } from "../hooks";
-import { Page, ScrollingGrid, ActionButton, SongContainer, SongDivItem, ActionRow } from "../components"
+import { Page, InfiniteList, ActionButton, SongContainer, SongDivItem, ActionRow } from "../components"
 import { close, closeOutline, informationCircle, informationCircleOutline } from "ionicons/icons";
 import { IonButtons } from "@ionic/react";
 
@@ -16,7 +16,7 @@ export const Favorites: React.FC = () => {
 
   return (
     <Page name={pageName}>
-      <ScrollingGrid
+      <InfiniteList
         pageCount={pageCount}
         pageName={pageName}
         listItems={favorites}

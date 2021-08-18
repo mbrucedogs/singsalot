@@ -6,7 +6,7 @@ import { add, addOutline, closeOutline, close } from "ionicons/icons";
 import { pageCount } from "../globalConfig";
 import { Singer } from "../models/types";
 import { useAuthentication, usePlayer } from "../hooks";
-import { ActionButton, ActionRow, Page, ScrollingGrid } from "../components"
+import { ActionButton, ActionRow, Page, InfiniteList } from "../components"
 
 interface AddSingerForm {
   name: string;
@@ -65,7 +65,7 @@ export const Singers: React.FC = () => {
       <>
         {isEmpty(singers) && <h2 style={{ padding: '10px' }}>Loading or there are no {pageName}...</h2>}
 
-        {!isEmpty(singers) && (<ScrollingGrid
+        {!isEmpty(singers) && (<InfiniteList
           pageCount={pageCount}
           pageName={pageName}
           listItems={singers}

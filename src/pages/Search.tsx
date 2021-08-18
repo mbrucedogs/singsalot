@@ -4,7 +4,7 @@ import { isEmpty } from "lodash";
 import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonToolbar, IonSearchbar } from '@ionic/react';
 import { pageCount } from "../globalConfig";
 import { useSongs } from "../hooks";
-import { Page, ScrollingGrid, SongDiv } from "../components"
+import { Page, InfiniteList, SongDiv } from "../components"
 import { Song } from "../models/types";
 
 export const Search: React.FC = () => {
@@ -42,7 +42,7 @@ export const Search: React.FC = () => {
 
       <IonContent>
         {!isEmpty(songs) &&
-          <ScrollingGrid
+          <InfiniteList
             pageCount={pageCount}
             pageName={pageName}
             listItems={foundSongs}

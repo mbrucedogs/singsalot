@@ -4,14 +4,14 @@ import { IonInfiniteScroll, IonInfiniteScrollContent } from '@ionic/react';
 import { Keyable } from "../models/types";
 import { key } from "ionicons/icons";
 
-export interface ScrollingGridProps<T> {
+export interface InfiniteListProps<T> {
   pageName: string;
   pageCount: number;
   listItems: T[];
   getRow: (item: T, index: number) => JSX.Element;
 }
 
-export const ScrollingGrid = <T extends Keyable>({ pageName, pageCount, listItems, getRow }: ScrollingGridProps<T>) => {
+export const InfiniteList = <T extends Keyable>({ pageName, pageCount, listItems, getRow }: InfiniteListProps<T>) => {
   const [page, setPage] = useState<number>(0);
   const [disableInfiniteScroll, setDisableInfiniteScroll] = useState<boolean>(false);
   const [items, setItems] = useState<T[]>([]);
@@ -76,4 +76,4 @@ export const ScrollingGrid = <T extends Keyable>({ pageName, pageCount, listItem
   );
 };
 
-export default ScrollingGrid;
+export default InfiniteList;

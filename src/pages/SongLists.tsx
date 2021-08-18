@@ -5,7 +5,7 @@ import Collapsible from 'react-collapsible';
 import { pageCount } from "../globalConfig";
 import { useSongLists } from "../hooks";
 import { SongList, SongListSong } from "../models/types";
-import { ActionButton, ActionRow, Page, ScrollingGrid, SongDiv } from "../components"
+import { ActionButton, ActionRow, Page, InfiniteList, SongDiv } from "../components"
 import { chevronForward, chevronForwardOutline, open, openOutline } from "ionicons/icons";
 
 export const SongLists: React.FC = () => {
@@ -36,7 +36,7 @@ export const SongLists: React.FC = () => {
   return (
     <Page name={pageName}>
       <>
-        <ScrollingGrid
+        <InfiniteList
           pageCount={pageCount}
           pageName={pageName}
           listItems={songLists}
@@ -75,7 +75,7 @@ export const SongLists: React.FC = () => {
               </IonToolbar>
             </IonHeader>
             <IonContent>
-              <ScrollingGrid
+              <InfiniteList
                 pageCount={100}
                 pageName={modalTitle}
                 listItems={modalSongs}

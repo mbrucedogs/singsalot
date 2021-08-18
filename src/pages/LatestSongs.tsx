@@ -3,7 +3,7 @@ import { pageCount } from "../globalConfig";
 import { isEmpty } from "lodash";
 import { ArtistSongs } from "../models/types";
 import { useLatestSongs } from "../hooks";
-import { Page, ScrollingGrid, SongDiv } from "../components"
+import { Page, InfiniteList, SongDiv } from "../components"
 
 export const LatestSongs: React.FC = () => {
   const pageName: string = "Latest Songs";
@@ -22,7 +22,7 @@ export const LatestSongs: React.FC = () => {
 
   return (
     <Page name={pageName}>
-      <ScrollingGrid
+      <InfiniteList
         pageCount={pageCount}
         pageName={pageName}
         listItems={artistSongs}

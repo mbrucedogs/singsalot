@@ -3,7 +3,7 @@ import { isEmpty } from "lodash";
 import { IonMenuButton, IonPage, IonSearchbar, IonButton, IonModal, IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonItem, IonLabel } from "@ionic/react";
 import { useArtists, useSongs } from "../hooks";
 import { ArtistSongs } from "../models/types";
-import { ActionButton, ActionRow, Page, ScrollingGrid, SongDiv } from "../components"
+import { ActionButton, ActionRow, Page, InfiniteList, SongDiv } from "../components"
 import { open, openOutline } from "ionicons/icons";
 
 export const Artists: React.FC = () => {
@@ -55,7 +55,7 @@ export const Artists: React.FC = () => {
       <IonContent>
         {!isEmpty(artists) &&
           <>
-            <ScrollingGrid
+            <InfiniteList
               pageCount={200}
               pageName={pageName}
               listItems={artists}
@@ -93,7 +93,7 @@ export const Artists: React.FC = () => {
                   </IonToolbar>
                 </IonHeader>
                 <IonContent>
-                  <ScrollingGrid
+                  <InfiniteList
                     pageCount={100}
                     pageName={modal?.artist || ''}
                     listItems={modal?.songs ?? []}

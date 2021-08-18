@@ -2,7 +2,7 @@ import { useCallback, useState, useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { usePlayer } from '../hooks';
 import { PickedSong, Singer, Song } from '../models/types';
-import { Page, ScrollingGrid, SingleRow, SongDiv } from "../components"
+import { Page, InfiniteList, SingleRow, SongDiv } from "../components"
 import { isEmpty } from 'lodash';
 
 export const SingerPick = ({ }) => {
@@ -36,7 +36,7 @@ export const SingerPick = ({ }) => {
     return (
         <Page name={pageName}>
             {pickedSong && <><SongDiv song={pickedSong} showPath={true} allowActions={false} />
-                <ScrollingGrid
+                <InfiniteList
                     pageCount={100}
                     pageName={pageName}
                     listItems={singers}

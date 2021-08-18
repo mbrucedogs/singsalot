@@ -1,11 +1,11 @@
 import { isEmpty, reject } from "lodash";
 import { useCallback } from "react";
-import { useSelector } from "react-redux";
 import { useSongHistory } from "./useSongHistory";
 import { selectPlayer } from "../store/store";
 import { convertToArray, FirebaseService } from "../services";
 import { QueueItem, Settings, Singer, Song } from "../models/types";
 import { PlayerState } from "../models";
+import { useAppSelector } from "./hooks";
 
 export const usePlayer = (): {
     reset: ()=>void;
@@ -33,7 +33,7 @@ export const usePlayer = (): {
     //***************************************************************************************************** */
     //Properties */
     //***************************************************************************************************** */
-    const { settings, playerState, singers, queue } = useSelector(selectPlayer);
+    const { settings, playerState, singers, queue } = useAppSelector(selectPlayer);
     const { addSongHistory } = useSongHistory();
 
     const orderMultiplier = 10;

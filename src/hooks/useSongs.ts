@@ -1,9 +1,9 @@
 import { isEmpty } from "lodash";
-import { useCallback, useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useCallback } from "react";
 import { Song } from "../models/types";
 import { FirebaseService } from "../services";
 import { selectDisabled, selectFavorites, selectSongs } from "../store/store";
+import { useAppSelector } from "./hooks";
 
 export const useSongs = (): {
     //songs
@@ -21,13 +21,13 @@ export const useSongs = (): {
     deleteDisabled: (song: Song) => void;
 } => {
     //songs
-    const songs = useSelector(selectSongs);
+    const songs = useAppSelector(selectSongs);
 
     //favorites
-    const favorites = useSelector(selectFavorites);
+    const favorites = useAppSelector(selectFavorites);
 
     //disabled
-    const disabled = useSelector(selectDisabled);
+    const disabled = useAppSelector(selectDisabled);
 
     //***************************************************************************** */
     //Songs */

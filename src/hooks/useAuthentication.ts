@@ -1,8 +1,7 @@
-import { useSelector } from "react-redux";
 import { FirebaseService } from "../services";
 import { authenticatedChange } from "../store/slices";
 import { selectAuthenticated } from "../store/store";
-import { useAppDispatch } from "./hooks";
+import { useAppDispatch, useAppSelector } from "./hooks";
 
 export const useAuthentication = (): {
     authenticated: boolean;
@@ -10,7 +9,7 @@ export const useAuthentication = (): {
     isAdmin: boolean;
     login:(isAdmin: boolean, controllerId: string, singerName: string)=> Promise<boolean>
 } => {
-    const { authenticated, singer, isAdmin } = useSelector(selectAuthenticated);
+    const { authenticated, singer, isAdmin } = useAppSelector(selectAuthenticated);
     const dispatch = useAppDispatch();
 
     const login = (isAdmin: boolean, controller: string, singerName: string): Promise<boolean> => {

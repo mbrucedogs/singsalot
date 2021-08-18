@@ -1,6 +1,6 @@
 import firebase from "firebase"
 import { isEmpty, includes } from "lodash";
-import { useAppDispatch } from '../hooks'
+import { useAppDispatch, useAppSelector } from '../hooks'
 import orderBy from 'lodash/orderBy'
 import { useEffect, useState } from "react";
 import { convertToArray, FirebaseService } from '../services'
@@ -27,7 +27,6 @@ import {
     TopPlayed
 } from "../models/types";
 import { matchSongs, PlayerState, reduce } from "../models"
-import { useSelector } from "react-redux";
 import { selectSongs } from "../store/store";
 interface FirebaseReduxHandlerProps {
     isAuthenticated: boolean;
@@ -37,7 +36,7 @@ interface FirebaseReduxHandlerProps {
 export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAuthenticated, children }) => {
 
     const dispatch = useAppDispatch()
-    const songs = useSelector(selectSongs);
+    const songs = useAppSelector(selectSongs);
     const [history, setHistory] = useState<Song[]>([]);
     const [favorites, setFavorites] = useState<Song[]>([]);
     const [disabled, setDisabled] = useState<Song[]>([]);

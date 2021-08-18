@@ -1,15 +1,15 @@
 import { isEmpty } from "lodash";
 import { useCallback, useState, useEffect } from "react";
-import { useSelector } from "react-redux";
 import { Artist } from "../models/types";
 import { selectArtists } from "../store/store";
+import { useAppSelector } from "./hooks";
 
 export const useArtists = (): {
     hasLoaded: boolean;
     artists: Artist[];
     searchArtists: (artist: string) => void;
 } => {
-    const allArtists = useSelector(selectArtists);
+    const allArtists = useAppSelector(selectArtists);
     const [artists, setArtists] = useState<Artist[]>([]);
     const [hasLoaded, setHasLoaded] = useState<boolean>(false);
 

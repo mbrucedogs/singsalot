@@ -8,13 +8,13 @@ interface EndButton {
   standard: string
 }
 
-interface ContainerProps {
+interface PageProps {
   name: String,
   children?: JSX.Element;
   endButton?: EndButton;
 }
 
-export const Page: React.FC<ContainerProps> = ({ name, children = null, endButton = null }) => {
+export const Page: React.FC<PageProps> = ({ name, children = null, endButton = null }) => {
   return (
     <IonPage>
       <IonHeader>

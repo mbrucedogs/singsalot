@@ -5,7 +5,7 @@ import { Song } from "../models/types";
 import { useAuthentication, useWindowDimensions } from "../hooks";
 import { ActionRow, ActionButton } from "../components";
 
-export interface SongProps {
+interface SongProps extends React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
     song: Song;
     showPath?: boolean;
     showArtist?: boolean;
@@ -15,21 +15,17 @@ export interface SongProps {
     afterClick?: (song: Song) => void;
 }
 
-export const SongDivItem = ({
-    song,
-    showArtist = true,
-    showPath = false,
-    paddingLeft = 0,
-    showCount = false,
-    onClick,
-}: {
+interface SongDivItemProps extends React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
     song: Song,
     showArtist?: boolean,
     showPath?: boolean,
     paddingLeft?: number,
     showCount?: boolean,
     onClick?: () => void
-}) => {
+}
+
+export const SongDivItem: React.FC<SongDivItemProps> = ({ song, showArtist = true, showPath = false, paddingLeft = 0, showCount = false, onClick }) => {
+    
     const getType = (path: string) => {
         return path.substr(path.length - 3);
     }
@@ -47,7 +43,7 @@ export const SongDivItem = ({
     )
 }
 
-export const SongDiv: React.FC<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> & SongProps> = ({ paddingLeft = 0, allowActions = true, afterClick, song, showCount = false, showPath = false, showArtist = true }) => {
+export const SongDiv: React.FC<SongProps> = ({ paddingLeft = 0, allowActions = true, afterClick, song, showCount = false, showPath = false, showArtist = true }) => {
     const { width } = useWindowDimensions();
     const { isAdmin } = useAuthentication();
     const wideWidth = 450;

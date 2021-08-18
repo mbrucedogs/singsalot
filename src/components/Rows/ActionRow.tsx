@@ -1,17 +1,13 @@
 import { IonButtons } from '@ionic/react';
 
-export const ActionRow = (
-    {
-        columns,
-        actionButtons,
-        gridTemplateColumns,
-        rowStyle = "row" }
-        : {
-            columns: JSX.Element[];
-            gridTemplateColumns: string;
-            actionButtons: JSX.Element[];
-            rowStyle?: string;
-        }) => {
+interface ActionRowProps{
+    columns: JSX.Element[];
+    gridTemplateColumns: string;
+    actionButtons: JSX.Element[];
+    rowStyle?: string;
+}
+
+export const ActionRow: React.FC<ActionRowProps> = ({ columns, actionButtons, gridTemplateColumns, rowStyle = "row" } ) => {
     return (
         <div className="row-container">
             <div className={rowStyle} style={{ display: 'grid', gridTemplateColumns: gridTemplateColumns }}>

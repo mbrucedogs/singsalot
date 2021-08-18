@@ -2,9 +2,8 @@ import { useState, useEffect, useRef, ReactNode } from "react";
 import { IonContent } from '@ionic/react';
 import { IonInfiniteScroll, IonInfiniteScrollContent } from '@ionic/react';
 import { Keyable } from "../models/types";
-import { key } from "ionicons/icons";
 
-export interface InfiniteListProps<T> {
+interface InfiniteListProps<T> {
   pageName: string;
   pageCount: number;
   listItems: T[];

@@ -4,6 +4,7 @@ import { Artist } from "../models/types";
 import { selectArtists } from "../store/store";
 import { useAppSelector } from "./hooks";
 
+
 export const useArtists = (): {
     hasLoaded: boolean;
     artists: Artist[];

@@ -3,7 +3,7 @@ interface SingleRowProps {
   onClick?: () => void; 
 }
 
-export const SingleRow: React.FC<SingleRowProps> = ({ title, onClick }) => {
+export const SingleRow = ({ title, onClick }: SingleRowProps) => {
   return (
     <div className="row-container" onClick={(e) => { onClick?.(); }}>
       <div className="row">

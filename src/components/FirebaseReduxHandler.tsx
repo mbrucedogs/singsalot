@@ -34,7 +34,7 @@ interface FirebaseReduxHandlerProps {
     children: React.ReactNode;
 }
 
-export const FirebaseReduxHandler: React.FC<FirebaseReduxHandlerProps> = ({ isAuthenticated, children }) => {
+export const FirebaseReduxHandler = ({ isAuthenticated, children }: FirebaseReduxHandlerProps) => {
 
     const dispatch = useAppDispatch()
     const songs = useAppSelector(selectSongs);

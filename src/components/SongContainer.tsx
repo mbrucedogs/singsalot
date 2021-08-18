@@ -12,7 +12,7 @@ interface SongContainerProps extends React.DetailedHTMLProps<React.HTMLAttribute
         onToggleDisabled: () => void) => ReactNode;
 }
 
-export const SongContainer: React.FC<SongContainerProps> = ({ song, render }) => {
+export const SongContainer = ({ song, render }: SongContainerProps) => {
     const history = useHistory();
     const { favorites, addFavorite, deleteFavorite,
         disabled, addDisabled, deleteDisabled } = useSongs();

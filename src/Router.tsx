@@ -26,7 +26,7 @@ interface AuthCheckProps {
   children: React.ReactNode;
 }
 
-export const AuthCheck: React.FC<AuthCheckProps> = ({ isAuthenticated, fallback, children }) => {
+export const AuthCheck = ({ isAuthenticated, fallback, children }: AuthCheckProps) => {
   if (isAuthenticated) {
     return <FirebaseReduxHandler isAuthenticated={isAuthenticated}>
       {children}
@@ -36,7 +36,7 @@ export const AuthCheck: React.FC<AuthCheckProps> = ({ isAuthenticated, fallback,
   }
 }
 
-const Router: React.FC = () => {
+const Router = () => {
   const { addSinger } = usePlayer();
   const { authenticated, login } = useAuthentication();
   

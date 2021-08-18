@@ -4,7 +4,7 @@ interface GridRowProps {
   onClick?: () => void; 
 }
 
-export const GridRow: React.FC<GridRowProps> = ({ columns, gridTemplateColumns, onClick }) => {
+export const GridRow = ({ columns, gridTemplateColumns, onClick }: GridRowProps) => {
   const action = onClick ? { onClick: onClick } : {};
   return (
     <div className="row-container" {...action}>

@@ -24,7 +24,7 @@ interface SongDivItemProps extends React.DetailedHTMLProps<React.HTMLAttributes<
     onClick?: () => void
 }
 
-export const SongDivItem: React.FC<SongDivItemProps> = ({ song, showArtist = true, showPath = false, paddingLeft = 0, showCount = false, onClick }) => {
+export const SongDivItem = ({ song, showArtist = true, showPath = false, paddingLeft = 0, showCount = false, onClick }: SongDivItemProps) => {
     
     const getType = (path: string) => {
         return path.substr(path.length - 3);
@@ -43,7 +43,7 @@ export const SongDivItem: React.FC<SongDivItemProps> = ({ song, showArtist = tru
     )
 }
 
-export const SongDiv: React.FC<SongProps> = ({ paddingLeft = 0, allowActions = true, afterClick, song, showCount = false, showPath = false, showArtist = true }) => {
+export const SongDiv = ({ paddingLeft = 0, allowActions = true, afterClick, song, showCount = false, showPath = false, showArtist = true }: SongProps) => {
     const { width } = useWindowDimensions();
     const { isAdmin } = useAuthentication();
     const wideWidth = 450;

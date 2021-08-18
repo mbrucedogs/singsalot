@@ -14,7 +14,7 @@ interface PageProps {
   endButton?: EndButton;
 }
 
-export const Page: React.FC<PageProps> = ({ name, children = null, endButton = null }) => {
+export const Page = ({ name, children, endButton }: PageProps) => {
   return (
     <IonPage>
       <IonHeader>

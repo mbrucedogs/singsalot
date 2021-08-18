@@ -7,7 +7,7 @@ interface ActionRowProps{
     rowStyle?: string;
 }
 
-export const ActionRow: React.FC<ActionRowProps> = ({ columns, actionButtons, gridTemplateColumns, rowStyle = "row" } ) => {
+export const ActionRow = ({ columns, actionButtons, gridTemplateColumns, rowStyle = "row" }: ActionRowProps) => {
     return (
         <div className="row-container">
             <div className={rowStyle} style={{ display: 'grid', gridTemplateColumns: gridTemplateColumns }}>

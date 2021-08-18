@@ -8,7 +8,7 @@ interface LoginProps {
     onLogin: (isAdmin: boolean, controllerId:string, singerName: string)=>Promise<boolean>;
 }
   
-export const Login: React.FC<LoginProps> = ({onLogin}) => {
+export const Login = ({onLogin}: LoginProps) => {
     const [partyId, setPartyId] = useState<string>("");
     const [firstName, setFirstName] = useState<string>("");
     const [iserror, setIserror] = useState<boolean>(false);

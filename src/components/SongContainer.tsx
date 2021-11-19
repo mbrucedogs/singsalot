@@ -21,13 +21,13 @@ export const SongContainer = ({ song, render }: SongContainerProps) => {
     const songPick = useCallback(() => {
         let picked: PickedSong = { song: song }
         history.push("/SingerPick", picked);
-    }, []);
+    }, [history, song]);
 
 
     const songInfoPick = useCallback(() => {
         let picked: PickedSong = { song: song }
         history.push("/SongInfo", picked);
-    }, []);
+    }, [history, song]);
 
     const toggleFavorite = () => {
         if (favorites.filter(s => s.path === song.path).length > 0) {

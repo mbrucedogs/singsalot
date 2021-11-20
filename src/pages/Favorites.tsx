@@ -4,7 +4,6 @@ import { isEmpty } from "lodash";
 import { useSongs } from "../hooks";
 import { Page, InfiniteList, ActionButton, SongContainer, SongDivItem, ActionRow } from "../components"
 import { close, closeOutline, informationCircle, informationCircleOutline } from "ionicons/icons";
-import { IonButtons } from "@ionic/react";
 
 export const Favorites = () => {
   const pageName: string = "Favorites";

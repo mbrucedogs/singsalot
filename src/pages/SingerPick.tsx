@@ -7,7 +7,7 @@ import { isEmpty } from 'lodash';
 
 export const SingerPick = ({ }) => {
     const { state } = useLocation<PickedSong>();
-    const { queue, singers, addToQueue } = usePlayer();
+    const { singers, addToQueue } = usePlayer();
     const history = useHistory();
     const pageName = 'Select Singer';
     const [pickedSong, setPickedSong]= useState<Song>();
@@ -27,7 +27,7 @@ export const SingerPick = ({ }) => {
                 history.push("/Queue");
             });
         }
-    }, [queue, singers, addToQueue, pickedSong]);
+    }, [pickedSong, addToQueue, history]);
 
     if (isEmpty(pickedSong)) {
         return <Page name={pageName}><h2 style={{ padding: '10px' }}>There was an error in picking the song, go back and try again.</h2></Page>

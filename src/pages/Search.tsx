@@ -4,7 +4,7 @@ import { isEmpty } from "lodash";
 import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonToolbar, IonSearchbar } from '@ionic/react';
 import { pageCount } from "../globalConfig";
 import { useSongs } from "../hooks";
-import { Page, InfiniteList, SongDiv } from "../components"
+import { InfiniteList, SongDiv } from "../components"
 import { Song } from "../models/types";
 
 export const Search = () => {

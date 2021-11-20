@@ -68,12 +68,12 @@ export const useSongs = (): {
     const addFavorite = useCallback((song: Song) => {
         console.log("useFavorites - addFavorite", song);
         FirebaseService.addFavorite(song);
-    }, [favorites]);
+    }, []);
 
     const deleteFavorite = useCallback((song: Song) => {
         console.log("useFavorites - deleteFavorite", song);
         FirebaseService.deleteFavorite(song);
-    }, [favorites]);
+    }, []);
 
     //***************************************************************************** */
     //Disabled */
@@ -81,12 +81,12 @@ export const useSongs = (): {
     const addDisabled = useCallback((song: Song) => {
         console.log("useDisabled - addDisabled", song);
         FirebaseService.addDisabled(song);
-    }, [disabled]);
+    }, []);
 
     const deleteDisabled = useCallback((song: Song) => {
         console.log("useDisabled - deleteDisabled", song);
         FirebaseService.deleteDisabled(song);
-    }, [disabled]);
+    }, []);
 
     return {
         songs, searchSongs,

@@ -33,7 +33,7 @@ export const useSongHistory = (): {
 
     const deleteSongHistory = useCallback((song: Song): Promise<boolean> => {
         return FirebaseService.deleteHistory(song);      
-    }, [songHistory]);
+    }, []);
 
     return { songHistory, addSongHistory, deleteSongHistory }
 }

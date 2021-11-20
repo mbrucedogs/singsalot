@@ -83,7 +83,7 @@ export const SongLists = () => {
                   let hasFoundSongs: boolean = !isEmpty(song.foundSongs);
                   {
                     hasFoundSongs &&
-                      <div key={index} className="row-container" onClick={(e) => { setShowModal(false); }}>
+                      <div key={index} className="row-container" onClick={() => { setShowModal(false); }}>
                         <div className={hasFoundSongs ? "row" : "row notavailable"} style={{ display: 'grid', gridTemplateColumns: '30px auto' }}>
                           <div className="title">({song.position})</div>
                           <div>

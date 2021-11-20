@@ -14,7 +14,7 @@ export const Queue = () => {
   const { queue, playerState, deleteFromQueue, updateQueue } = usePlayer();
   const [listItems, setListItems] = useState<QueueItem[] | undefined>([]);
   const [shouldReorder, setShouldReorder] = useState<boolean>(false);
-  const canDeleteFirstItem = (playerState == PlayerState.stopped && isAdmin);
+  const canDeleteFirstItem = (playerState === PlayerState.stopped && isAdmin);
 
   const actionButton = () => {
     if (isAdmin) {

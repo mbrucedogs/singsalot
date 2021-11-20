@@ -45,7 +45,7 @@ export const SingerPick = ({ }) => {
                             <SingleRow
                                 onClick={() => onSinger(singer)}
                                 key={index}
-                                title={`${singer.name} (${singer.songCount})`}
+                                title={`${singer.name}`}
                             />
                         )
                     }}

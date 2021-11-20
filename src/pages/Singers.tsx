@@ -77,7 +77,7 @@ export const Singers = () => {
                 gridTemplateColumns='auto 60px'
                 columns={[
                   <div>
-                    <div className="title single">{singer.name} ({singer.songCount})</div>
+                    <div className="title single">{singer.name}</div>
                   </div>]}
                 actionButtons={[
                   <ActionButton

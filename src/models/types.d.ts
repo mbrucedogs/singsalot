@@ -38,7 +38,6 @@ export interface Settings {
 }
 
 export interface Singer extends Keyable {
-    songCount: number;
     name: string;
     lastLogin: string;
 } 

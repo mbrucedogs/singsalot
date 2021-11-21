@@ -5,7 +5,7 @@ import { PickedSong, Singer, Song } from '../models/types';
 import { Page, InfiniteList, SingleRow, SongDiv } from "../components"
 import { isEmpty } from 'lodash';
 
-export const SingerPick = ({ }) => {
+export const SingerPick = () => {
     const { state } = useLocation<PickedSong>();
     const { singers, addToQueue } = usePlayer();
     const history = useHistory();

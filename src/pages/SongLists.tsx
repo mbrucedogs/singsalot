@@ -81,18 +81,17 @@ export const SongLists = () => {
                 listItems={modalSongs}
                 getRow={(song, index) => {
                   let hasFoundSongs: boolean = !isEmpty(song.foundSongs);
-                  {
-                    hasFoundSongs &&
-                      <div key={index} className="row-container" onClick={() => { setShowModal(false); }}>
-                        <div className={hasFoundSongs ? "row" : "row notavailable"} style={{ display: 'grid', gridTemplateColumns: '30px auto' }}>
-                          <div className="title">({song.position})</div>
-                          <div>
-                            <div className="title multi">{song.artist}</div>
-                            <div className="subtitle">{song.title}</div>
-                          </div>
+                  hasFoundSongs &&
+                    <div key={index} className="row-container" onClick={() => { setShowModal(false); }}>
+                      <div className={hasFoundSongs ? "row" : "row notavailable"} style={{ display: 'grid', gridTemplateColumns: '30px auto' }}>
+                        <div className="title">({song.position})</div>
+                        <div>
+                          <div className="title multi">{song.artist}</div>
+                          <div className="subtitle">{song.title}</div>
                         </div>
                       </div>
-                  }
+                    </div>
+                  
                   return (
                     <Collapsible key={index}
                       trigger={
@@ -123,6 +122,7 @@ export const SongLists = () => {
                             style={{ paddingLeft: '50px' }}
                             song={s}
                             showPath={true}
+                            allowFavorites={false}
                             afterClick={() => { setShowModal(false); }} />
                         )
                       })}

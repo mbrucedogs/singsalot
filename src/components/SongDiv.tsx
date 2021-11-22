@@ -11,6 +11,7 @@ interface SongProps extends React.DetailedHTMLProps<React.HTMLAttributes<HTMLDiv
     showArtist?: boolean;
     showCount?: boolean;
     allowActions?: boolean;
+    allowFavorites?: boolean;
     paddingLeft?: number;
     afterClick?: (song: Song) => void;
 }
@@ -43,12 +44,12 @@ export const SongDivItem = ({ song, showArtist = true, showPath = false, padding
     )
 }
 
-export const SongDiv = ({ paddingLeft = 0, allowActions = true, afterClick, song, showCount = false, showPath = false, showArtist = true }: SongProps) => {
+export const SongDiv = ({ paddingLeft = 0, allowFavorites = true, allowActions = true, afterClick, song, showCount = false, showPath = false, showArtist = true }: SongProps) => {
     const { width } = useWindowDimensions();
     const { isAdmin } = useAuthentication();
     const wideWidth = 450;
     const showInfo = allowActions;
-    const showFavorite = width > wideWidth && allowActions;
+    const showFavorite = width > wideWidth && allowActions && (allowFavorites || isAdmin);
     const showDisable = width > wideWidth && allowActions && isAdmin;
     let buttons = (showInfo ? 1 : 0) + (showFavorite ? 1 : 0) + (showDisable ? 1 : 0);
     const gridTemplateColumns = `auto ${buttons*60}px`;

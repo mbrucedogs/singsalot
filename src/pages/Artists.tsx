@@ -97,7 +97,7 @@ export const Artists = () => {
                     pageCount={100}
                     pageName={modal?.artist || ''}
                     listItems={modal?.songs ?? []}
-                    getRow={(song, index) => <SongDiv key={index} song={song} showArtist={false} showPath={true} afterClick={() => setShowModal(false)} />}
+                    getRow={(song, index) => <SongDiv key={index} song={song} allowFavorites={false} showArtist={false} showPath={true} afterClick={() => setShowModal(false)} />}
                   />
                 </IonContent>
               </>

@@ -15,7 +15,7 @@ export const LatestSongs = () => {
   const buildRow = (item: ArtistSongs, index: number) => {
       return (
         <div key={index}>
-          {item.songs.map((s,i) => { return <SongDiv key={i} song={s} /> })}
+          {item.songs.map((s,i) => { return <SongDiv key={i} song={s} allowFavorites={false}/> })}
         </div>
       )
   }

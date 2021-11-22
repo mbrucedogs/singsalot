@@ -1,22 +1,34 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useHistory, useLocation } from 'react-router';
 import { IonButton } from '@ionic/react';
 import { PickedSong, Song } from '../models/types';
 import { Page, SongDiv } from "../components"
 import { useAuthentication, usePlayer, useSongs } from '../hooks';
-
+import { matchSong } from '../models';
 export const SongInfo = ({ }) => {
     const history = useHistory();
     const location = useLocation();
     const { isAdmin, singer } = useAuthentication();
     const { singers, addToQueue } = usePlayer();
-    const { favorites, addFavorite, deleteFavorite,
+    const { favorites, addFavorite, deleteFavorite, songs,
             disabled, addDisabled, deleteDisabled } = useSongs();
 
     const pageName = 'Song Info';
-    const pickedSong: PickedSong = location.state as PickedSong
+    const _pickedSong: PickedSong = location.state as PickedSong
+    const  [pickedSong, setPickedSong] = useState<PickedSong>(_pickedSong);
 
-    console.log("pickedSong", pickedSong);
+
+    useEffect(() => {
+        (async () => {
+            if(_pickedSong && _pickedSong.song && _pickedSong.song.key === undefined) {    
+                let found = await matchSong(_pickedSong.song, songs);
+                setPickedSong({song: found ?? _pickedSong.song});
+            } else {
+                setPickedSong(_pickedSong);
+            }
+        })()      
+    }, [_pickedSong, songs]);
+
     const isFavorited = (song: Song): boolean => {
         let found = favorites.filter(favorite => favorite.path === song.path);
         return found.length > 0;

@@ -29,21 +29,21 @@ export const SongContainer = ({ song, render }: SongContainerProps) => {
         history.push("/SongInfo", picked);
     }, [history, song]);
 
-    const toggleFavorite = () => {
+    const toggleFavorite = useCallback(() => {
         if (favorites.filter(s => s.path === song.path).length > 0) {
             deleteFavorite(song);
         } else {
             addFavorite(song);
         }
-    }
+    }, [favorites, song, addFavorite, deleteFavorite]);
 
-    const toggleDisabled = () => {
+    const toggleDisabled = useCallback(() => {
         if (disabled.filter(s => s.path === song.path).length > 0) {
             deleteDisabled(song);
         } else {
             addDisabled(song);
         }
-    }
+    }, [disabled, song, addDisabled, deleteDisabled]);
 
     return (
         <>

@@ -1,3 +1,4 @@
+import React, { useCallback } from "react";
 import { useHistory, useLocation } from 'react-router';
 import { IonButton } from '@ionic/react';
 import { PickedSong, Song } from '../models/types';
@@ -15,6 +16,7 @@ export const SongInfo = ({ }) => {
     const pageName = 'Song Info';
     const pickedSong: PickedSong = location.state as PickedSong
 
+    console.log("pickedSong", pickedSong);
     const isFavorited = (song: Song): boolean => {
         let found = favorites.filter(favorite => favorite.path === song.path);
         return found.length > 0;
@@ -28,11 +30,11 @@ export const SongInfo = ({ }) => {
     const isFavorite = pickedSong ? isFavorited(pickedSong.song) : false;
     const isDisable = pickedSong ? isDisabled(pickedSong.song) : false;
 
-    const onSongPick = () => {
+    const onSongPick = useCallback(() => {
         if (pickedSong) {
             console.log("SongContainer - songPick", pickedSong.song);
             if (isAdmin) {
-                history.push("/SingerPick");
+                history.push("/SingerPick", pickedSong);
             } else {
                 let found = singers.find(s => s.name === singer)
                 if (found) {
@@ -40,17 +42,17 @@ export const SongInfo = ({ }) => {
                         history.push("/Queue");
                     });
                 } else {
-                    history.push("/SingerPick");
+                    history.push("/SingerPick", pickedSong);
                 }
             }
         }
-    }
+    }, [history, pickedSong, singers, singer, addToQueue, isAdmin]);
 
-    const onArtistSearch = () => {
+    const onArtistSearch = useCallback(() => {
         if (pickedSong.song.artist) {
             history.push(`/Search/${pickedSong.song.artist}`)
         }
-    }
+    }, [history, pickedSong]);
 
     return (
         <Page name={pageName}>

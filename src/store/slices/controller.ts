@@ -176,7 +176,7 @@ export const historyChange = createAsyncThunk<History, firebase.database.DataSna
       if (!isEmpty(history)) {
           let results: TopPlayed[] = [];
           let matched = reduce<Song, Song[]>(history, (result, hs) => {
-              let found = all.find(as => as.path == hs.path);
+              let found = all.find(as => as.path === hs.path);
               let disabled = found?.disabled ?? false;
               if (found) {
                   if (!disabled) {

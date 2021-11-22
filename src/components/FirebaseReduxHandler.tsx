@@ -43,7 +43,9 @@ export const FirebaseReduxHandler = ({ isAuthenticated, children }: FirebaseRedu
         }
     }, [isAuthenticated])
 
-    //player
+    ////////////////////////////////
+    //Player 
+    ////////////////////////////////
     const onPlayerStateChange = async (items: firebase.database.DataSnapshot) => {
         let state: PlayerState = PlayerState.stopped;
         let s = items.val();
@@ -101,7 +103,6 @@ export const FirebaseReduxHandler = ({ isAuthenticated, children }: FirebaseRedu
     const onSongListChange = async (items: firebase.database.DataSnapshot) => {
         dispatch(songListChange(items));
     };
-
 
     return <>{children}</>
 }

@@ -6,7 +6,7 @@ import { convertToArray } from '../../services'
 import { matchSongs } from "../../models"
 import { isEmpty, includes, orderBy, reduce } from "lodash";
 
-interface SongsSliceState {
+interface ControllerSliceState {
   songs: Song[];
   history:History, 
   artists: Artist[];
@@ -20,7 +20,7 @@ interface LatestSongs {
   artistSongs: ArtistSongs[];
 }
 
-const initialState: SongsSliceState = {
+const initialState: ControllerSliceState = {
   songs: [], 
   history: { songs:[], topPlayed: [] },
   artists: [],
@@ -86,11 +86,10 @@ interface SongChangeValue{
 export const songsChange = createAsyncThunk<SongChangeValue, firebase.database.DataSnapshot>(
   'songs/change',
   async (snapshot: firebase.database.DataSnapshot, { getState }) => {
-    const { songs } = getState() as { songs: SongsSliceState };
-
+    const { controller } = getState() as { controller: ControllerSliceState };
     let list = await convertToArray<Song>(snapshot)
     let artists: Artist[] = [];
-    if(songs.artists.length === 0){
+    if(controller.artists.length === 0){
       let names: string[] = [];
       let lower: string[] = [];
       list.forEach(song => {
@@ -110,8 +109,8 @@ export const songsChange = createAsyncThunk<SongChangeValue, firebase.database.D
 export const favoritesChange = createAsyncThunk<Song[], firebase.database.DataSnapshot>(
   'favorites/change',
   async (snapshot: firebase.database.DataSnapshot, { getState }) => {
-    const { songs } = getState() as { songs: SongsSliceState };
-    let all = songs.songs;
+    const { controller } = getState() as { controller: ControllerSliceState };
+    let all = controller.songs;
     let favorites = await convertToArray<Song>(snapshot)
     if (!(isEmpty(all))) {
       if (!isEmpty(favorites)) {
@@ -130,8 +129,8 @@ export const disabledChange = createAsyncThunk<Song[], firebase.database.DataSna
   'disabled/change',
   async (snapshot: firebase.database.DataSnapshot, { getState }) => {
     
-    const { songs } = getState() as { songs: SongsSliceState };
-    let all = songs.songs;
+    const { controller } = getState() as { controller: ControllerSliceState };
+    let all = controller.songs;
     let disabled = await convertToArray<Song>(snapshot)
 
     if (!isEmpty(all)) {
@@ -150,8 +149,8 @@ export const disabledChange = createAsyncThunk<Song[], firebase.database.DataSna
 export const latestSongsChange = createAsyncThunk<LatestSongs, firebase.database.DataSnapshot>(
   'latestSongs/change',
   async (snapshot: firebase.database.DataSnapshot, { getState }) => {
-    const { songs } = getState() as { songs: SongsSliceState };
-    let all = songs.songs;
+    const { controller } = getState() as { controller: ControllerSliceState };
+    let all = controller.songs;
     let latestSongs = await convertToArray<Song>(snapshot);
     let matched = await matchSongs(latestSongs, all);
     let artistSongs = await convertToArtistSongs(matched);
@@ -169,8 +168,8 @@ export const songListChange = createAsyncThunk<SongList[], firebase.database.Dat
 export const historyChange = createAsyncThunk<History, firebase.database.DataSnapshot>(
   'history/change',
   async (snapshot: firebase.database.DataSnapshot, { getState }) => {
-    const { songs } = getState() as { songs: SongsSliceState };
-    let all = songs.songs;
+    const { controller } = getState() as { controller: ControllerSliceState };
+    let all = controller.songs;
     let history = await convertToArray<Song>(snapshot)
 
     if (!(isEmpty(all))) {

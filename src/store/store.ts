@@ -1,19 +1,15 @@
 import { configureStore } from '@reduxjs/toolkit'
 import {
   authenticatedSlice,
-  historySlice,
   playerSlice,
-  settingsSlice,
-  songsSlice
+  controllerSlice
 } from './slices';
 
 const store = configureStore({
   reducer: {
     authenticated: authenticatedSlice.reducer,
-    history: historySlice.reducer,
     player: playerSlice.reducer,
-    settings: settingsSlice.reducer,
-    songs: songsSlice.reducer,
+    controller: controllerSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -24,17 +20,18 @@ const store = configureStore({
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch
 
-export const selectArtists = (state: RootState) => state.songs.artists;
+export const selectArtists = (state: RootState) => state.controller.artists;
+export const selectDisabled = (state: RootState) => state.controller.disabled;
+export const selectFavorites = (state: RootState) => state.controller.favorites;
+export const selectHistory = (state: RootState) => state.controller.history.songs;
+export const selectLatestSongs = (state: RootState) => state.controller.latestSongs.songs;
+export const selectLatestArtistSongs = (state: RootState) => state.controller.latestSongs.artistSongs;
+export const selectSongLists = (state: RootState) => state.controller.songLists;
+export const selectSongs = (state: RootState) => state.controller.songs;
+export const selectTopPlayed = (state: RootState) => state.controller.history.topPlayed;
+
 export const selectAuthenticated = (state: RootState) => state.authenticated;
-export const selectDisabled = (state: RootState) => state.songs.disabled;
-export const selectFavorites = (state: RootState) => state.songs.favorites;
-export const selectHistory = (state: RootState) => state.history.songs;
-export const selectLatestSongs = (state: RootState) => state.songs.latestSongs.songs;
-export const selectLatestArtistSongs = (state: RootState) => state.songs.latestSongs.artistSongs;
 export const selectPlayer = (state: RootState) => state.player;
-export const selectSettings = (state: RootState) => state.settings.settings;
-export const selectSongLists = (state: RootState) => state.songs.songLists;
-export const selectSongs = (state: RootState) => state.songs.songs;
-export const selectTopPlayed = (state: RootState) => state.history.topPlayed;
+export const selectSettings = (state: RootState) => state.player.settings;
 
 export default store;

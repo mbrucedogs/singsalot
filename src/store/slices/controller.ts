@@ -1,10 +1,10 @@
 import firebase from "firebase"
 
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { Song, Artist, ArtistSongs, History, SongList} from '../../models/types';
+import { Song, Artist, ArtistSongs, History, SongList, TopPlayed} from '../../models/types';
 import { convertToArray } from '../../services'
 import { matchSongs } from "../../models"
-import { isEmpty, includes, orderBy } from "lodash";
+import { isEmpty, includes, orderBy, reduce } from "lodash";
 
 interface SongsSliceState {
   songs: Song[];
@@ -83,7 +83,7 @@ interface SongChangeValue{
   artists: Artist[];
 }
 
-export const songsChange = createAsyncThunk<SongChangeValue,firebase.database.DataSnapshot>(
+export const songsChange = createAsyncThunk<SongChangeValue, firebase.database.DataSnapshot>(
   'songs/change',
   async (snapshot: firebase.database.DataSnapshot, { getState }) => {
     const { songs } = getState() as { songs: SongsSliceState };
@@ -107,7 +107,7 @@ export const songsChange = createAsyncThunk<SongChangeValue,firebase.database.Da
   }
 ) 
 
-export const favoritesChange = createAsyncThunk<Song[],firebase.database.DataSnapshot>(
+export const favoritesChange = createAsyncThunk<Song[], firebase.database.DataSnapshot>(
   'favorites/change',
   async (snapshot: firebase.database.DataSnapshot, { getState }) => {
     const { songs } = getState() as { songs: SongsSliceState };
@@ -126,7 +126,7 @@ export const favoritesChange = createAsyncThunk<Song[],firebase.database.DataSna
   }
 )
 
-export const disabledChange = createAsyncThunk<Song[],firebase.database.DataSnapshot>(
+export const disabledChange = createAsyncThunk<Song[], firebase.database.DataSnapshot>(
   'disabled/change',
   async (snapshot: firebase.database.DataSnapshot, { getState }) => {
     
@@ -147,7 +147,7 @@ export const disabledChange = createAsyncThunk<Song[],firebase.database.DataSnap
   }
 )
 
-export const latestSongsChange = createAsyncThunk<LatestSongs,firebase.database.DataSnapshot>(
+export const latestSongsChange = createAsyncThunk<LatestSongs, firebase.database.DataSnapshot>(
   'latestSongs/change',
   async (snapshot: firebase.database.DataSnapshot, { getState }) => {
     const { songs } = getState() as { songs: SongsSliceState };
@@ -159,15 +159,90 @@ export const latestSongsChange = createAsyncThunk<LatestSongs,firebase.database.
   }
 )
 
-export const songListChange = createAsyncThunk<SongList[],firebase.database.DataSnapshot>(
+export const songListChange = createAsyncThunk<SongList[], firebase.database.DataSnapshot>(
   'songList/change',
   async (snapshot: firebase.database.DataSnapshot) => {
     return await convertToArray<SongList>(snapshot)
   }
 )
 
-export const songsSlice = createSlice({
-  name: 'songs',
+export const historyChange = createAsyncThunk<History, firebase.database.DataSnapshot>(
+  'history/change',
+  async (snapshot: firebase.database.DataSnapshot, { getState }) => {
+    const { songs } = getState() as { songs: SongsSliceState };
+    let all = songs.songs;
+    let history = await convertToArray<Song>(snapshot)
+
+    if (!(isEmpty(all))) {
+      if (!isEmpty(history)) {
+          let results: TopPlayed[] = [];
+          let matched = reduce<Song, Song[]>(history, (result, hs) => {
+              let found = all.find(as => as.path == hs.path);
+              let disabled = found?.disabled ?? false;
+              if (found) {
+                  if (!disabled) {
+                      let count = hs.count ? hs.count : 1;
+                      let n = {
+                          ...found,
+                          count: count,
+                      }
+                      result.push(n);
+                  }
+              } else {
+                  //song not found so skip it!
+                  //result.push(hs);
+              }
+              return result;
+          }, []);
+        
+          matched.map(song => {
+              let artist = song.artist;
+              let title = song.title;
+              let key = `${artist.trim().toLowerCase()}-${title.trim().toLowerCase()}`.replace(/\W/g, '_');
+              let songCount = song.count ? song.count : 1;
+              let found = results.filter(item => item.key === key)?.[0];
+              if (isEmpty(found)) {
+                  found = { key: key, artist: artist, title: title, count: songCount, songs: [song] }
+                  results.push(found);
+              } else {
+                  let foundSong = found.songs.filter(item => item.key === key)?.[0];
+                  if (isEmpty(foundSong)) {
+                      found.songs.push(song);
+                  }
+                  let accumulator = 0;
+                  found.songs.map(song => {
+                      accumulator = accumulator + song.count!;
+                  });
+                  found.count = accumulator;
+              }
+          });
+
+          let sorted = results.sort((a: TopPlayed, b: TopPlayed) => {
+              return b.count - a.count || a.key!.localeCompare(b.key!);
+          });
+
+          let sortedHistory = matched.sort((a: Song, b: Song) => {
+              var yesterday = new Date();
+              yesterday.setDate(yesterday.getDate() - 1);
+              let aDate = a.date ? new Date(a.date) : yesterday;
+              let bDate = b.date ? new Date(b.date) : yesterday;
+              return bDate.valueOf() - aDate.valueOf();
+          });
+
+         return {songs: sortedHistory, topPlayed: sorted.slice(0, 100)};
+
+      } else {
+        return { songs: [], topPlayed: [] }
+      }
+  } else {
+      return { songs: [], topPlayed: [] }
+  }
+}
+)
+
+
+export const controllerSlice = createSlice({
+  name: 'controller',
   initialState,
   reducers: {}, 
   extraReducers: (builder) => {
@@ -193,7 +268,11 @@ export const songsSlice = createSlice({
     builder.addCase(songListChange.fulfilled, (state, action) => {
       state.songLists = action.payload;
     })
+
+    builder.addCase(historyChange.fulfilled, (state, action) => {
+      state.history = action.payload;
+    })
   }
 })
 
-export default songsSlice.reducer
+export default controllerSlice.reducer

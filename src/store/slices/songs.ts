@@ -1,11 +1,9 @@
 import firebase from "firebase"
 
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { Song, Artist, ArtistSongs, History} from '../../models/types';
-import { convertToArray, FirebaseService } from '../../services'
-import { matchSongs, PlayerState, reduce } from "../../models"
-import { useAppSelector } from '../../hooks'
-import { selectSongs } from "../store";
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { Song, Artist, ArtistSongs, History, SongList} from '../../models/types';
+import { convertToArray } from '../../services'
+import { matchSongs } from "../../models"
 import { isEmpty, includes, orderBy } from "lodash";
 
 interface SongsSliceState {
@@ -14,30 +12,24 @@ interface SongsSliceState {
   artists: Artist[];
   disabled: Song[];
   favorites: Song[];
-  latestSongs: Song[];
-  artistSongs: ArtistSongs[];
+  latestSongs: LatestSongs;
+  songLists: SongList[];
 }
-
-const historyInitialState: History = {
-  songs:[], 
-  topPlayed: []
-}
-
-interface LatestSongsSliceState {
-  latestSongs: Song[];
+interface LatestSongs {
+  songs: Song[];
   artistSongs: ArtistSongs[];
 }
 
 const initialState: SongsSliceState = {
   songs: [], 
-  history: historyInitialState,
+  history: { songs:[], topPlayed: [] },
   artists: [],
   disabled: [],
   favorites: [],
-  latestSongs: [],
-  artistSongs: [] 
+  latestSongs: { songs: [], artistSongs: [] },
+  songLists: []
 }
-
+//helpers
 const sortSongs = (songs: Song[]) => {
   let sorted = songs.sort((a: Song, b: Song) => {
     return a.title.localeCompare(b.title)
@@ -45,6 +37,47 @@ const sortSongs = (songs: Song[]) => {
   return sorted; 
 }
 
+const convertToArtistSongs = (songs: Song[]): Promise<ArtistSongs[]> => {
+  return new Promise((resolve) => {
+
+      let noArtist: ArtistSongs = { artist: "None", songs: [] };
+      let results: ArtistSongs[] = [];
+      songs.map(song => {
+          let artist = song.artist;
+          let key = artist.trim().toLowerCase();
+          if (isEmpty(artist)) {
+              noArtist.songs.push(song);
+          } else {
+              let found = results.filter(item => item.key === key)?.[0];
+              if (isEmpty(found)) {
+                  found = { key: key, artist: song.artist, songs: [song] }
+                  results.push(found);
+              } else {
+                  found.songs.push(song);
+              }
+          }
+      });
+
+      let sorted = results.sort((a: ArtistSongs, b: ArtistSongs) => {
+          return a.artist.localeCompare(b.artist);
+      });
+
+      sorted.forEach(item => {
+          if (item.songs.length > 1) {
+              let sorted = item.songs.sort((a: Song, b: Song) => {
+                  return a.title.localeCompare(b.title)
+              });
+              item.songs = sorted;
+          }
+      })
+
+      if (!isEmpty(noArtist.songs)) {
+          sorted.push(noArtist, ...sorted);
+      }
+
+      resolve(sorted);
+  });
+}
 interface SongChangeValue{
   songs: Song[];
   artists: Artist[];
@@ -93,6 +126,46 @@ export const favoritesChange = createAsyncThunk<Song[],firebase.database.DataSna
   }
 )
 
+export const disabledChange = createAsyncThunk<Song[],firebase.database.DataSnapshot>(
+  'disabled/change',
+  async (snapshot: firebase.database.DataSnapshot, { getState }) => {
+    
+    const { songs } = getState() as { songs: SongsSliceState };
+    let all = songs.songs;
+    let disabled = await convertToArray<Song>(snapshot)
+
+    if (!isEmpty(all)) {
+        if (!isEmpty(disabled)) {
+            let matched = await matchSongs(disabled, all);
+            return sortSongs(matched);
+          } else {
+          return [];
+        }
+    } else { 
+      return [];
+    }
+  }
+)
+
+export const latestSongsChange = createAsyncThunk<LatestSongs,firebase.database.DataSnapshot>(
+  'latestSongs/change',
+  async (snapshot: firebase.database.DataSnapshot, { getState }) => {
+    const { songs } = getState() as { songs: SongsSliceState };
+    let all = songs.songs;
+    let latestSongs = await convertToArray<Song>(snapshot);
+    let matched = await matchSongs(latestSongs, all);
+    let artistSongs = await convertToArtistSongs(matched);
+    return {songs: sortSongs(matched), artistSongs: artistSongs};   
+  }
+)
+
+export const songListChange = createAsyncThunk<SongList[],firebase.database.DataSnapshot>(
+  'songList/change',
+  async (snapshot: firebase.database.DataSnapshot) => {
+    return await convertToArray<SongList>(snapshot)
+  }
+)
+
 export const songsSlice = createSlice({
   name: 'songs',
   initialState,
@@ -104,8 +177,21 @@ export const songsSlice = createSlice({
         state.artists = action.payload.artists;
       }
     })
+
     builder.addCase(favoritesChange.fulfilled, (state, action) => {
       state.favorites = action.payload;
+    })
+
+    builder.addCase(disabledChange.fulfilled, (state, action) => {
+      state.disabled = action.payload;
+    })
+
+    builder.addCase(latestSongsChange.fulfilled, (state, action) => {
+      state.latestSongs = action.payload;
+    })
+
+    builder.addCase(songListChange.fulfilled, (state, action) => {
+      state.songLists = action.payload;
     })
   }
 })

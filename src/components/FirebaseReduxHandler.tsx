@@ -9,21 +9,19 @@ import {
     latestSongsChange,
     playerStateChange, queueChange, singersChange,
     songsChange,
-    songListsChange,
+    songListChange,
     disabledChange,
     settingsChange
 } from "../store/slices";
 import {
-    ArtistSongs,
     History,
     QueueItem,
     Settings,
     Singer,
     Song,
-    SongList,
     TopPlayed
 } from "../models/types";
-import { matchSongs, PlayerState, reduce } from "../models"
+import { PlayerState, reduce } from "../models"
 import { selectSongs } from "../store/store";
 
 interface FirebaseReduxHandlerProps {
@@ -36,20 +34,10 @@ export const FirebaseReduxHandler = ({ isAuthenticated, children }: FirebaseRedu
     const dispatch = useAppDispatch()
     const songs = useAppSelector(selectSongs);
     const [history, setHistory] = useState<Song[]>([]);
-    const [disabled, setDisabled] = useState<Song[]>([]);
-    const [latestSongs, setLatestSongs] = useState<Song[]>([]);
    
     useEffect(() => {
         updateHistory(history, songs);
     }, [history, songs]);
-
-    useEffect(() => {
-        updateDisabled(disabled, songs);
-    }, [disabled, songs]);
-
-    useEffect(() => {
-        updateLatestSongs(latestSongs, songs);
-    }, [latestSongs, songs]);
     
     const updateHistory = async (h: Song[], all: Song[]) => {
         if (!(isEmpty(all))) {
@@ -120,29 +108,6 @@ export const FirebaseReduxHandler = ({ isAuthenticated, children }: FirebaseRedu
         }
     }
 
-    const updateDisabled = async (d: Song[], all: Song[]) => {
-        if (!isEmpty(all)) {
-            if (!isEmpty(d)) {
-                let matched = await matchSongs(d, all);
-                //console.log("updateDisabled", matched);
-                let sorted = matched.sort((a: Song, b: Song) => {
-                    return a.title.localeCompare(b.title)
-                });
-                dispatch(disabledChange(sorted));
-            } else {
-                dispatch(disabledChange([]));
-            }
-        }
-    }
-
-    const updateLatestSongs = async (l: Song[], all: Song[]) => {
-        let matched = await matchSongs(l, all)
-        convertToAristSongs(matched)
-            .then(artistSongs => {
-                dispatch(latestSongsChange({ latestSongs: matched, artistSongs: artistSongs }));
-            })
-    }
-
     useEffect(() => {
         if (isAuthenticated) {
             FirebaseService.getSongs().on("value", onSongsChange);
@@ -158,60 +123,12 @@ export const FirebaseReduxHandler = ({ isAuthenticated, children }: FirebaseRedu
         }
     }, [isAuthenticated])
 
-    //helper functions
-    const convertToAristSongs = (songs: Song[]): Promise<ArtistSongs[]> => {
-        return new Promise((resolve) => {
-
-            let noArtist: ArtistSongs = { artist: "None", songs: [] };
-            let results: ArtistSongs[] = [];
-            songs.map(song => {
-                let artist = song.artist;
-                let key = artist.trim().toLowerCase();
-                if (isEmpty(artist)) {
-                    noArtist.songs.push(song);
-                } else {
-                    let found = results.filter(item => item.key === key)?.[0];
-                    if (isEmpty(found)) {
-                        found = { key: key, artist: song.artist, songs: [song] }
-                        results.push(found);
-                    } else {
-                        found.songs.push(song);
-                    }
-                }
-            });
-
-            let sorted = results.sort((a: ArtistSongs, b: ArtistSongs) => {
-                return a.artist.localeCompare(b.artist);
-            });
-
-            sorted.forEach(item => {
-                if (item.songs.length > 1) {
-                    let sorted = item.songs.sort((a: Song, b: Song) => {
-                        return a.title.localeCompare(b.title)
-                    });
-                    item.songs = sorted;
-                }
-            })
-
-            if (!isEmpty(noArtist.songs)) {
-                sorted.push(noArtist, ...sorted);
-            }
-
-            resolve(sorted);
-        });
-    }
-
-    //datachanges
+    //player
     const onPlayerStateChange = async (items: firebase.database.DataSnapshot) => {
         let state: PlayerState = PlayerState.stopped;
         let s = items.val();
         if (!isEmpty(s)) { state = s; }
         dispatch(playerStateChange(state));
-    };
-
-    const onSongListChange = async (items: firebase.database.DataSnapshot) => {
-        convertToArray<SongList>(items)
-            .then(result => dispatch(songListsChange(result)));
     };
 
     const onSingersChange = async (items: firebase.database.DataSnapshot) => {
@@ -229,9 +146,20 @@ export const FirebaseReduxHandler = ({ isAuthenticated, children }: FirebaseRedu
             });
     };
 
+    const onSettingsChange = async (items: firebase.database.DataSnapshot) => {
+        let s = items.val() as Settings;
+        if(s){
+            dispatch(settingsChange(s));
+        } else { 
+            dispatch(settingsChange({autoadvance:false, userpick: false }))
+        }
+    };
+
+    ////////////////////////////////
+    //Controller 
+    ////////////////////////////////
     const onLatestSongsChange = async (items: firebase.database.DataSnapshot) => {
-        convertToArray<Song>(items)
-            .then(latestSongs => setLatestSongs(latestSongs));
+        dispatch(latestSongsChange(items));
     };
 
     const onHistoryChange = async (items: firebase.database.DataSnapshot) => {
@@ -244,21 +172,15 @@ export const FirebaseReduxHandler = ({ isAuthenticated, children }: FirebaseRedu
     };
 
     const onDisabledChange = async (items: firebase.database.DataSnapshot) => {
-        convertToArray<Song>(items)
-            .then(result => setDisabled(result));
-    };
-
-    const onSettingsChange = async (items: firebase.database.DataSnapshot) => {
-        let s = items.val() as Settings;
-        if(s){
-            dispatch(settingsChange(s));
-        } else { 
-            dispatch(settingsChange({autoadvance:false, userpick: false }))
-        }
+        dispatch(disabledChange(items));
     };
 
     const onSongsChange = async (items: firebase.database.DataSnapshot) => {
         dispatch(songsChange(items));
+    };
+
+    const onSongListChange = async (items: firebase.database.DataSnapshot) => {
+        dispatch(songListChange(items));
     };
 
 

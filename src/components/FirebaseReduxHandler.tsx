@@ -1,11 +1,9 @@
 import firebase from "firebase"
-import { isEmpty, includes } from "lodash";
+import { isEmpty } from "lodash";
 import { useAppDispatch, useAppSelector } from '../hooks'
-import orderBy from 'lodash/orderBy'
 import { useEffect, useState } from "react";
 import { convertToArray, FirebaseService } from '../services'
 import {
-    artistsChange,
     favoritesChange,
     historyChange,
     latestSongsChange,
@@ -16,7 +14,6 @@ import {
     settingsChange
 } from "../store/slices";
 import {
-    Artist,
     ArtistSongs,
     History,
     QueueItem,
@@ -39,22 +36,12 @@ export const FirebaseReduxHandler = ({ isAuthenticated, children }: FirebaseRedu
     const dispatch = useAppDispatch()
     const songs = useAppSelector(selectSongs);
     const [history, setHistory] = useState<Song[]>([]);
-    const [favorites, setFavorites] = useState<Song[]>([]);
     const [disabled, setDisabled] = useState<Song[]>([]);
     const [latestSongs, setLatestSongs] = useState<Song[]>([]);
-    const [loadedArtists, setLoadedArtists] = useState<boolean>(false);
-    
-    useEffect(() => {
-        addArtists();
-    }, [songs]);
-
+   
     useEffect(() => {
         updateHistory(history, songs);
     }, [history, songs]);
-
-    useEffect(() => {
-        updateFavorites(favorites, songs);
-    }, [favorites, songs]);
 
     useEffect(() => {
         updateDisabled(disabled, songs);
@@ -63,25 +50,6 @@ export const FirebaseReduxHandler = ({ isAuthenticated, children }: FirebaseRedu
     useEffect(() => {
         updateLatestSongs(latestSongs, songs);
     }, [latestSongs, songs]);
-
-    const addArtists = async () => {
-        if (!loadedArtists && !isEmpty(songs)) {
-            let artists: Artist[] = [];
-            let names: string[] = [];
-            let lnames: string[] = [];
-            songs.forEach(song => {
-                let isDisabled = song.disabled ? song.disabled : false;
-                let name = song.artist;
-                if (!isEmpty(name) && !includes(lnames, name.trim().toLowerCase()) && !isDisabled) {
-                    names.push(name.trim());
-                    lnames.push(name.trim().toLowerCase());
-                }
-            });
-            artists = orderBy(names).map(name => { return { key: name, name: name } });
-            dispatch(artistsChange(artists));
-            setLoadedArtists(true);
-        }
-    }
     
     const updateHistory = async (h: Song[], all: Song[]) => {
         if (!(isEmpty(all))) {
@@ -148,21 +116,6 @@ export const FirebaseReduxHandler = ({ isAuthenticated, children }: FirebaseRedu
                 dispatch(historyChange(payload));
             } else {
                 dispatch(historyChange({ songs: [], topPlayed: [] }));
-            }
-        }
-    }
-
-    const updateFavorites = async (f: Song[], all: Song[]) => {
-        if (!(isEmpty(all))) {
-            if (!isEmpty(f)) {
-                let matched = await matchSongs(f, all);
-                //console.log("updateFavorites", matched);
-                let sorted = matched.sort((a: Song, b: Song) => {
-                    return a.title.localeCompare(b.title)
-                });
-                dispatch(favoritesChange(sorted));
-            } else {
-                dispatch(favoritesChange([]));
             }
         }
     }
@@ -287,8 +240,7 @@ export const FirebaseReduxHandler = ({ isAuthenticated, children }: FirebaseRedu
     };
 
     const onFavoritesChange = async (items: firebase.database.DataSnapshot) => {
-        convertToArray<Song>(items)
-            .then(result => setFavorites(result));
+        dispatch(favoritesChange(items));
     };
 
     const onDisabledChange = async (items: firebase.database.DataSnapshot) => {
@@ -306,13 +258,7 @@ export const FirebaseReduxHandler = ({ isAuthenticated, children }: FirebaseRedu
     };
 
     const onSongsChange = async (items: firebase.database.DataSnapshot) => {
-        convertToArray<Song>(items)
-            .then(list => {
-                let sorted = list.sort((a: Song, b: Song) => {
-                    return a.title.localeCompare(b.title)
-                });
-                dispatch(songsChange(sorted));
-            });
+        dispatch(songsChange(items));
     };
 
 

@@ -172,12 +172,7 @@ export const Menu = () => {
       }
     }
 
-  }, [playerState])
-
-  useEffect(() => {
-    if(!isAdmin){
-    }
-  }, []);
+  }, [isAdmin, pauseAdminState, playAdminState, playerState, stopAdminState])
 
   return (
     <IonMenu contentId="main" type="overlay">

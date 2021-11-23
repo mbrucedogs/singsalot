@@ -59,7 +59,6 @@ export const SongDiv = ({ paddingLeft = 0, allowFavorites = true, allowActions =
             song={song}
             render={(song, onSongPick, onSongInfo, onToggleFavorite, onToggleDisabled) => {
                 const isFavorite = song.favorite ?? false;
-                const isDisabled = song.disabled ?? false;
                 return (
                     <ActionRow
                         gridTemplateColumns={gridTemplateColumns}

@@ -2,9 +2,13 @@ import React, { useState, useEffect } from "react";
 import { isEmpty } from "lodash";
 import { IonMenuButton, IonPage, IonSearchbar, IonButton, IonModal, IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonItem, IonLabel } from "@ionic/react";
 import { useArtists, useSongs } from "../hooks";
-import { ArtistSongs } from "../models/types";
 import { ActionButton, ActionRow, Page, InfiniteList, SongDiv } from "../components"
 import { open, openOutline } from "ionicons/icons";
+import { Song } from "../models/types";
+
+interface ArtistSongs {
+    artist: string; songs: Song[];
+}
 
 export const Artists = () => {
   const pageName: string = "Artists";

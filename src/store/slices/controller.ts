@@ -1,7 +1,7 @@
 import firebase from "firebase"
 
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { Song, ArtistSongs, History, SongList, TopPlayed} from '../../models/types';
+import { Song, History, SongList, TopPlayed} from '../../models/types';
 import { convertToArray } from '../../services'
 import { matchSongs } from "../../models"
 import { isEmpty, includes, orderBy, reduce } from "lodash";
@@ -12,21 +12,16 @@ interface ControllerSliceState {
   artists: string[];
   disabled: Song[];
   favorites: Song[];
-  latestSongs: LatestSongs;
+  latestSongs: Song[];
   songLists: SongList[];
 }
-interface LatestSongs {
-  songs: Song[];
-  artistSongs: ArtistSongs[];
-}
-
 const initialState: ControllerSliceState = {
   songs: [], 
   history: { songs:[], topPlayed: [] },
   artists: [],
   disabled: [],
   favorites: [],
-  latestSongs: { songs: [], artistSongs: [] },
+  latestSongs: [],
   songLists: []
 }
 //helpers
@@ -37,47 +32,6 @@ const sortSongs = (songs: Song[]) => {
   return sorted; 
 }
 
-const convertToArtistSongs = (songs: Song[]): Promise<ArtistSongs[]> => {
-  return new Promise((resolve) => {
-
-      let noArtist: ArtistSongs = { artist: "None", songs: [] };
-      let results: ArtistSongs[] = [];
-      songs.map(song => {
-          let artist = song.artist;
-          let key = artist.trim().toLowerCase();
-          if (isEmpty(artist)) {
-              noArtist.songs.push(song);
-          } else {
-              let found = results.filter(item => item.key === key)?.[0];
-              if (isEmpty(found)) {
-                  found = { key: key, artist: song.artist, songs: [song] }
-                  results.push(found);
-              } else {
-                  found.songs.push(song);
-              }
-          }
-      });
-
-      let sorted = results.sort((a: ArtistSongs, b: ArtistSongs) => {
-          return a.artist.localeCompare(b.artist);
-      });
-
-      sorted.forEach(item => {
-          if (item.songs.length > 1) {
-              let sorted = item.songs.sort((a: Song, b: Song) => {
-                  return a.title.localeCompare(b.title)
-              });
-              item.songs = sorted;
-          }
-      })
-
-      if (!isEmpty(noArtist.songs)) {
-          sorted.push(noArtist, ...sorted);
-      }
-
-      resolve(sorted);
-  });
-}
 interface SongChangeValue{
   songs: Song[];
   artists: string[];
@@ -146,15 +100,14 @@ export const disabledChange = createAsyncThunk<Song[], firebase.database.DataSna
   }
 )
 
-export const latestSongsChange = createAsyncThunk<LatestSongs, firebase.database.DataSnapshot>(
+export const latestSongsChange = createAsyncThunk<Song[], firebase.database.DataSnapshot>(
   'latestSongs/change',
   async (snapshot: firebase.database.DataSnapshot, { getState }) => {
     const { controller } = getState() as { controller: ControllerSliceState };
     let all = controller.songs;
     let latestSongs = await convertToArray<Song>(snapshot);
     let matched = await matchSongs(latestSongs, all);
-    let artistSongs = await convertToArtistSongs(matched);
-    return {songs: sortSongs(matched), artistSongs: artistSongs};   
+    return sortSongs(matched);   
   }
 )
 

@@ -9,15 +9,11 @@ import {
   IonMenuToggle,
   IonNote,
 } from '@ionic/react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { stop, stopOutline, pause, pauseOutline, play, playOutline, time, timeOutline, settings, settingsOutline, list, listOutline, musicalNotes, musicalNotesOutline, peopleOutline, people, peopleCircle, peopleCircleOutline, heartOutline, heartSharp, mailOutline, mailSharp, paperPlaneOutline, paperPlaneSharp, trashOutline, trashSharp, warningOutline, warningSharp, searchOutline, search, starOutline, star } from 'ionicons/icons';
 import { PlayerState } from "../models";
 import { useAuthentication, usePlayer } from '../hooks';
-
-function debugLog(container: string, label: string, value: any = null) {
-  console.log(`debug - ${container} - ${label} `, value);
-}
 
 const appPages: AppPage[] = [
   {
@@ -103,44 +99,56 @@ interface AdminState {
 
 export const Menu = () => {
 
-  const playActions: AdminAction[] = [
-    {
-      playerState: PlayerState.playing,
-      iosIcon: playOutline,
-      mdIcon: play,
-      title: "Play"
-    }
-  ];
+  const playActions = useMemo(() => {
+    return  [  
+      {
+        playerState: PlayerState.playing,
+        iosIcon: playOutline,
+        mdIcon: play,
+        title: "Play"
+      }
+    ]
+  }
+  , []);
 
-  const pauseActions: AdminAction[] = [
-    {
-      playerState: PlayerState.paused,
-      iosIcon: pauseOutline,
-      mdIcon: pause,
-      title: "Pause"
-    },
-    {
-      playerState: PlayerState.stopped,
-      iosIcon: stopOutline,
-      mdIcon: stop,
-      title: "Stop"
-    }
-  ];
+  const pauseActions = useMemo(() => {
+    return  [
+      {
+        playerState: PlayerState.paused,
+        iosIcon: pauseOutline,
+        mdIcon: pause,
+        title: "Pause"
+      },
+      {
+        playerState: PlayerState.stopped,
+        iosIcon: stopOutline,
+        mdIcon: stop,
+        title: "Stop"
+      }
+    ]
+  }
+  , []);
 
-  const pauseAdminState: AdminState = {
+  const pauseAdminState = useMemo(() => {
+  return  {
     title: "Currently Paused",
     actions: playActions
-  }
+  }}, [playActions]);
 
-  const playAdminState: AdminState = {
-    title: "Currently Playing",
+  const playAdminState = useMemo(() => {
+    return  {
+      title: "Currently Playing",
     actions: pauseActions
-  }
+  } }
+  , [pauseActions])
 
-  const stopAdminState: AdminState = {
-    title: "Currently Stopped",
-    actions: playActions
-  }
+  const stopAdminState = useMemo(() => {
+    return  {
+      title: "Currently Stopped",
+      actions: playActions
+    }
+   }
+  , [playActions])
 
   const location = useLocation();
   const [adminState, setAdminState] = useState<AdminState | undefined>(undefined);

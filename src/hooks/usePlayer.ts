@@ -96,7 +96,7 @@ export const usePlayer = (): {
             });
             //console.log("doAddToQueue", reordered);
             await FirebaseService.setPlayerQueue(reordered);
-            addSongHistory(queueItem.song);
+            setTimeout(() => addSongHistory(queueItem.song), 30000);
             return true;
 
         } catch (error) {

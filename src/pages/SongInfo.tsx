@@ -44,7 +44,7 @@ export const SongInfo = ({ }) => {
 
     const onSongPick = useCallback(() => {
         if (pickedSong) {
-            console.log("SongContainer - songPick", pickedSong.song);
+            //console.log("SongContainer - songPick", pickedSong.song);
             if (isAdmin) {
                 history.push("/SingerPick", pickedSong);
             } else {

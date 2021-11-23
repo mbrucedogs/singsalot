@@ -14,7 +14,7 @@ export const Settings = () => {
     updateSettings(checked);
   },[settings]);
 
-  console.log("settings.autoadvance", settings.autoadvance);
+  //console.log("settings.autoadvance", settings.autoadvance);
   
   return (
     <Page name="Settings">

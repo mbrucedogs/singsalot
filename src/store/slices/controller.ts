@@ -137,6 +137,7 @@ export const historyChange = createAsyncThunk<History, firebase.database.DataSna
                       let n = {
                           ...found,
                           count: count,
+                          date: hs.date
                       }
                       result.push(n);
                   }

@@ -65,8 +65,8 @@ export const Artists = () => {
                     key={index}
                     gridTemplateColumns='auto 60px'
                     columns={[
-                      <div onClick={() => setSearchText(item.name)}>
-                        <div className="title single">{item.name}</div>
+                      <div onClick={() => setSearchText(item)}>
+                        <div className="title single">{item}</div>
                       </div>
                     ]}
                     actionButtons={[

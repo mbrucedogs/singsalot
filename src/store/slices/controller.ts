@@ -1,7 +1,7 @@
 import firebase from "firebase"
 
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { Song, Artist, ArtistSongs, History, SongList, TopPlayed} from '../../models/types';
+import { Song, ArtistSongs, History, SongList, TopPlayed} from '../../models/types';
 import { convertToArray } from '../../services'
 import { matchSongs } from "../../models"
 import { isEmpty, includes, orderBy, reduce } from "lodash";
@@ -9,7 +9,7 @@ import { isEmpty, includes, orderBy, reduce } from "lodash";
 interface ControllerSliceState {
   songs: Song[];
   history:History, 
-  artists: Artist[];
+  artists: string[];
   disabled: Song[];
   favorites: Song[];
   latestSongs: LatestSongs;
@@ -80,7 +80,7 @@ const convertToArtistSongs = (songs: Song[]): Promise<ArtistSongs[]> => {
 }
 interface SongChangeValue{
   songs: Song[];
-  artists: Artist[];
+  artists: string[];
 }
 
 export const songsChange = createAsyncThunk<SongChangeValue, firebase.database.DataSnapshot>(
@@ -88,7 +88,7 @@ export const songsChange = createAsyncThunk<SongChangeValue, firebase.database.D
   async (snapshot: firebase.database.DataSnapshot, { getState }) => {
     const { controller } = getState() as { controller: ControllerSliceState };
     let list = await convertToArray<Song>(snapshot)
-    let artists: Artist[] = [];
+    let artists: string[] = [];
     if(controller.artists.length === 0){
       let names: string[] = [];
       let lower: string[] = [];
@@ -100,7 +100,7 @@ export const songsChange = createAsyncThunk<SongChangeValue, firebase.database.D
               lower.push(name.trim().toLowerCase());
           }
       });
-      artists = orderBy(names).map(name => { return { key: name, name: name } });
+      artists = orderBy(names);
     }
     return {songs: sortSongs(list), artists: artists};       
   }

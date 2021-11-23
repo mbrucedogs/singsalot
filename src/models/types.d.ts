@@ -2,10 +2,6 @@ export interface Keyable {
     key?: string;
 }
 
-export interface Artist extends Keyable {
-    name: string;
-}
-
 export interface ArtistSongs extends Keyable {
     artist: string; songs: Song[];
 }

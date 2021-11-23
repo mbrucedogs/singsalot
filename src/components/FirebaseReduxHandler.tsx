@@ -11,7 +11,8 @@ import {
     playerStateChange, 
     queueChange, 
     singersChange, 
-    settingsChange
+    settingsChange,
+    historyQueueProcess
 } from "../store/slices";
 
 interface FirebaseReduxHandlerProps {
@@ -37,6 +38,16 @@ export const FirebaseReduxHandler = ({ isAuthenticated, children }: FirebaseRedu
             FirebaseService.getPlayerState().on("value", async (snapshot) => { dispatch(playerStateChange(snapshot))});
         }
     }, [isAuthenticated, dispatch])
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            dispatch(historyQueueProcess());        
+        }, 60000);
+      
+        return () => {
+          clearInterval(interval);
+        };
+    }, [dispatch]); 
 
     return <>{children}</>
 }

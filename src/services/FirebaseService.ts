@@ -102,12 +102,12 @@ class FirebaseService {
     return this.get('history');
   }
 
-  addHistory(song: SongBase) {
-    return this.setObject(`history`, song);
-  }
-
-  updateHistory(song: SongBase) {
-    return this.updateObject('history', song);
+  addHistory(songs: SongBase[]) {
+    let updates:FirebaseUpdate = {};
+    songs.forEach(song => {
+      updates[this.addPathFor(`history/${song.key!}`)] = song;      
+    });
+    return this.update(updates) ;  
   }
 
   deleteHistory(song: SongBase) {

@@ -1,13 +1,14 @@
 import firebase from "firebase"
 
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { Song, History, SongList, TopPlayed} from '../../models/types';
-import { convertToArray } from '../../services'
+import { convertToArray, FirebaseService } from '../../services'
 import { matchSongs } from "../../models"
 import { isEmpty, includes, orderBy, reduce } from "lodash";
 
 interface ControllerSliceState {
   songs: Song[];
+  historyQueue: Song[];
   history:History, 
   artists: string[];
   disabled: Song[];
@@ -16,7 +17,8 @@ interface ControllerSliceState {
   songLists: SongList[];
 }
 const initialState: ControllerSliceState = {
-  songs: [], 
+  songs: [],
+  historyQueue: [], 
   history: { songs:[], topPlayed: [] },
   artists: [],
   disabled: [],
@@ -193,11 +195,28 @@ export const historyChange = createAsyncThunk<History, firebase.database.DataSna
 }
 )
 
+export const historyQueueProcess = createAsyncThunk<Song[], void>(
+  'historyQueue/process',
+  async (_, { getState }) => {
+    const { controller } = getState() as { controller: ControllerSliceState };
+    let historyQueue = controller.historyQueue;
+    await FirebaseService.addHistory(historyQueue)
+    return [];
+  }
+)
+
 
 export const controllerSlice = createSlice({
   name: 'controller',
   initialState,
-  reducers: {}, 
+  reducers: {
+    historyQueueAdd: (state, action: PayloadAction<Song>) => {
+      state.historyQueue = [action.payload, ...state.historyQueue];
+    },
+    historyQueueClear: (state) => {
+      state.historyQueue = [];
+    }
+  },
   extraReducers: (builder) => {
     builder.addCase(songsChange.fulfilled, (state, action) => {
       state.songs = action.payload.songs;
@@ -225,7 +244,11 @@ export const controllerSlice = createSlice({
     builder.addCase(historyChange.fulfilled, (state, action) => {
       state.history = action.payload;
     })
+
+    builder.addCase(historyQueueProcess.fulfilled, (state, action) => {
+      state.historyQueue = [];
+    })
   }
 })
-
+export const { historyQueueAdd, historyQueueClear } = controllerSlice.actions
 export default controllerSlice.reducer

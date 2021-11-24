@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef, ReactNode, useCallback } from "react";
 import { IonContent } from '@ionic/react';
 import { IonInfiniteScroll, IonInfiniteScrollContent } from '@ionic/react';
-import { Keyable } from "../models/types";
 
 interface InfiniteListProps<T> {
   pageName: string;
@@ -19,9 +18,9 @@ export const InfiniteList = <T extends unknown>({ pageName, pageCount, listItems
   useEffect(() => {
     setDisableInfiniteScroll(false);
     setPage(0);
-    setItems(listItems.slice(page * pageCount, (page * pageCount) + pageCount));
+    setItems(listItems.slice(0, pageCount));
     scrollToTop();
-  }, [listItems, page, pageCount])
+  }, [listItems, pageCount])
 
   const searchNext = (event: CustomEvent<void>) => {
     let currentPage: number = page + 1;

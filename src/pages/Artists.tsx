@@ -5,6 +5,7 @@ import { useArtists, useSongs } from "../hooks";
 import { ActionButton, ActionRow, Page, InfiniteList, SongDiv } from "../components"
 import { open, openOutline } from "ionicons/icons";
 import { Song } from "../models/types";
+import { pageCount } from "../globalConfig";
 
 interface ArtistSongs {
     artist: string; songs: Song[];
@@ -60,7 +61,7 @@ export const Artists = () => {
         {!isEmpty(artists) &&
           <>
             <InfiniteList
-              pageCount={200}
+              pageCount={pageCount}
               pageName={pageName}
               listItems={artists}
               getRow={(item, index) => {

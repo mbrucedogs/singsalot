@@ -1,1 +1,1 @@
-export const pageCount: number = 100;
+export const pageCount: number = 20;

@@ -7,6 +7,8 @@ import { useHistory } from "react-router";
 export const Settings = () => {
   const { settings, updateSettings, reset } = usePlayer();
   const history = useHistory();
+  const pj = require("../../package.json");
+  
   let hasFocus = false;
 
   const submit = useCallback((checked: boolean) => {
@@ -26,6 +28,9 @@ export const Settings = () => {
         <IonItem>
         <IonButton onClick={() => { history.push("/Disabled") }}>Disabled Songs</IonButton>
         <IonButton onClick={() => { reset() }}>Reset Player</IonButton>
+        </IonItem>
+        <IonItem>
+          <IonLabel>Version: {pj.version}</IonLabel>
         </IonItem>
       </IonContent>
     </Page>

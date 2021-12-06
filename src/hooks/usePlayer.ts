@@ -145,32 +145,8 @@ export const usePlayer = (): {
     //Private Functions
     const getFairQueueOrder = useCallback((newSinger: Singer) => {
         if (isEmpty(queue)) return 0;
-        //console.log("getFairQueueOrder - current queue", queue);
-        //console.log("getFairQueueOrder - newSinger", newSinger);
-        //console.log("getFairQueueOrder - current singers", singers);
         if (queue.length === 1) return orderMultiplier + 1;
-        let index = queue.length;
-
-        // get the index where they should go
-        // index = queue.findIndex(function (e, idx, arr) {
-        //     //if nothing has been found, return the last index
-        //     if (idx == arr.length - 1) {
-        //         return true;
-        //     } else {
-        //         //find the singer with the 
-        //         let foundSinger = singers.find(s => s.name === arr[idx].singer.name);
-        //         if (foundSinger) {
-        //             console.log(`newSinger ${newSinger.name}:${nsc} < foundSinger ${foundSinger.name}: ${foundSinger.songCount}`)
-        //             let s1c = foundSinger.songCount;
-        //             let value = nsc < s1c;
-        //             return value;    
-        //         } else {
-        //             return false;
-        //         }
-        //     }
-        // });
-        index = queue.length;
-        return (index * orderMultiplier) + 1;
+        return (queue.length * orderMultiplier) + 1;
     }, [queue]);
 
     const addToQueue = useCallback((singer: Singer, song: Song): Promise<boolean> => {

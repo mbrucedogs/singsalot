@@ -194,7 +194,8 @@ export const usePlayer = (): {
                         .catch(error => reject(error));
                 }
             } else {
-                let singer = { name: name.trim(), lastLogin: new Date().toUTCString(), songCount: 0 }
+                let key = cached.length === 0 ? 0 : cached.length;
+                let singer = { name: name.trim(), lastLogin: new Date().toUTCString(), songCount: 0, key: key.toString() };
                 FirebaseService
                     .addPlayerSinger(singer)
                     .then(_ => resolve(true))

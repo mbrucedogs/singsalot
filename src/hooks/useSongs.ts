@@ -39,7 +39,7 @@ export const useSongs = (): {
             if (isEmpty(songs)) { resolve([]); }
 
             if (isEmpty(query)) {
-                resolve(songs.filter(s => s.disabled == false || s.disabled == undefined));
+                resolve(songs.filter(s => !disabled.includes(s)));
             } else {
                 let q = query.toLowerCase();
                 let results = songs.filter(song => {
@@ -55,12 +55,12 @@ export const useSongs = (): {
                 let sorted = results.sort((a: Song, b: Song) => {
                     return a.title.localeCompare(b.title)
                 });
-                let enabled = sorted.filter(s => s.disabled == false || s.disabled == undefined);
+                let enabled = sorted.filter(s => !disabled.includes(s));
                 resolve(enabled);
             }
         });
 
-    }, [songs]);
+    }, [disabled, songs]);
 
     //***************************************************************************** */
     //Favorites */

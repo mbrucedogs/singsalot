@@ -13,9 +13,13 @@ export const SingerPick = () => {
 
     const onSinger = useCallback((singer: Singer) => {
         if (state.song) {
-            //console.log("onSinger pickedSong", pickedSong);
-            addToQueue(singer, state.song).then(s => {
-                history.push("/Queue");
+            console.log("onSinger pickedSong", state.song);
+            addToQueue(singer, state.song).then(didAddSong => {
+                if (didAddSong) {
+                    history.push("/Queue");
+                } else { //
+                    console.log("onSinger pickedSong error:", state.song);
+                }
             });
         }
     }, [state, addToQueue, history]);

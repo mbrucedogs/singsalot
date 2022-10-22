@@ -36,7 +36,7 @@ export const usePlayer = (): {
     const { settings, playerState, singers, queue } = useAppSelector(selectPlayer);
     const { addSongHistory } = useSongHistory();
 
-    const orderMultiplier = 10;
+    const orderMultiplier = 100;
 
     const reset = () =>{ 
         FirebaseService.resetPlayer();
@@ -79,30 +79,15 @@ export const usePlayer = (): {
 
     const doAddToQueue = useCallback(async (queueItem: QueueItem): Promise<boolean> => {
         try {            
-            //add new queueItem
-            let sorted = [queueItem, ...queue].sort((a: QueueItem, b: QueueItem) => {
-                return a.order - b.order;
-            });
-
-            //update with new multiplier
-            let reordered = sorted.map((qi, index) => {
-                let order = index * orderMultiplier;
-                let item: QueueItem = {
-                    ...qi,
-                    key: index.toString(),
-                    order: order
-                };
-                return item;
-            });
-            //console.log("doAddToQueue", reordered);
-            await FirebaseService.setPlayerQueue(reordered);
+            await FirebaseService.addPlayerQueue(queueItem);
             addSongHistory(queueItem.song);
             return true;
 
         } catch (error) {
+            console.log("doAddToQueue error", error);
             return false;
         }
-    }, [addSongHistory, queue]);
+    }, [addSongHistory]);
 
     const doDeleteToQueue = useCallback(async (queueItem: QueueItem): Promise<boolean> => {
         try {
@@ -144,20 +129,24 @@ export const usePlayer = (): {
 
     //Private Functions
     const getFairQueueOrder = useCallback((newSinger: Singer) => {
-        if (isEmpty(queue)) return 0;
-        if (queue.length === 1) return orderMultiplier + 1;
-        return (queue.length * orderMultiplier) + 1;
+        let length = queue.length > 0 ? queue.length : 1;
+        return (orderMultiplier * length) + 1;
     }, [queue]);
 
     const addToQueue = useCallback((singer: Singer, song: Song): Promise<boolean> => {
         //get the index for the order
         let order = getFairQueueOrder(singer);
+        
+        let updatedSong: Song = {
+            ...song,
+            date: new Date().toUTCString()
+        };
 
         //create the queue item 
         let queueItem: QueueItem = {
             order: order,
             singer: singer,
-            song: song
+            song: updatedSong
         }
         //console.log("addToQueue: ", queueItem);
         //return new Promise<boolean>(resolve => resolve(true))

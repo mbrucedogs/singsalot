@@ -144,6 +144,7 @@ export const usePlayer = (): {
 
         //create the queue item 
         let queueItem: QueueItem = {
+            key: order.toString(),
             order: order,
             singer: singer,
             song: updatedSong

@@ -36,7 +36,7 @@ export const usePlayer = (): {
     const { settings, playerState, singers, queue } = useAppSelector(selectPlayer);
     const { addSongHistory } = useSongHistory();
 
-    const orderMultiplier = 100;
+    const orderMultiplier = 10;
 
     const reset = () =>{ 
         FirebaseService.resetPlayer();
@@ -129,6 +129,7 @@ export const usePlayer = (): {
 
     //Private Functions
     const getFairQueueOrder = useCallback((newSinger: Singer) => {
+        if (isEmpty(queue)) return 0;
         let length = queue.length > 0 ? queue.length : 1;
         return (orderMultiplier * length) + 1;
     }, [queue]);

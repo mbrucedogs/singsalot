@@ -65,6 +65,7 @@ export const usePlayer = (): {
             let order = (index + 1) * orderMultiplier;
             let item: QueueItem = {
                 ...qi,
+                key: (index + 1).toString(),
                 order: order,
             };
             return item;
@@ -76,9 +77,9 @@ export const usePlayer = (): {
         //return new Promise<boolean>(resolve => resolve(true))
         return FirebaseService.updatePlayerQueue(sorted).then(resolve => resolve(true)).catch(e => reject(e));
     }, []);
-
+ 
     const doAddToQueue = useCallback(async (queueItem: QueueItem): Promise<boolean> => {
-        try {            
+        try {              
             await FirebaseService.addPlayerQueue(queueItem);
             addSongHistory(queueItem.song);
             return true;
@@ -108,6 +109,7 @@ export const usePlayer = (): {
                 let order = index * orderMultiplier;
                 let item: QueueItem = {
                     ...qi,
+                    key: index.toString(),
                     order: order
                 };
                 return item;
@@ -145,15 +147,13 @@ export const usePlayer = (): {
 
         //create the queue item 
         let queueItem: QueueItem = {
-            key: order.toString(),
+            key: order === 0 ? order.toString() : queue.length.toString() + 1,
             order: order,
             singer: singer,
             song: updatedSong
         }
-        //console.log("addToQueue: ", queueItem);
-        //return new Promise<boolean>(resolve => resolve(true))
         return doAddToQueue(queueItem);
-    }, [doAddToQueue, getFairQueueOrder]);
+    }, [doAddToQueue, getFairQueueOrder, queue]);
 
     //***************************************************************************************************** */
     //Singers */

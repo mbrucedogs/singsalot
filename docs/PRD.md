@@ -126,7 +126,11 @@ controllers: {
 - Toast notifications for user actions like add/remove/favorite.  
 - Playback controls only visible to Admin.  
 - Common song list item with dynamic action panel based on context (search, queue, history).  
+- Match the design is show in images within the design folder.
+- Design needs to have light/dark mode as well as be responsive to work in all devices.
 
+Defined externally in:
+> ['design'](./design/)
 ---
 
 ## 8️⃣ Codebase Organization  

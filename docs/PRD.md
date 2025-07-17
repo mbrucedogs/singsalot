@@ -355,36 +355,382 @@ controllers: {
 
 ---
 
-## 9️⃣ Codebase Organization  
+## 9️⃣ Codebase Organization & File Structure  
 
-| Folder | Purpose | Key Files |
-|--------|---------|-----------|
-| `/components/common` | Shared UI components | `ActionButton.tsx`, `EmptyState.tsx`, `SongItem.tsx`, `InfiniteScrollList.tsx` |
-| `/components/Auth` | Authentication components | `AuthInitializer.tsx`, `LoginPrompt.tsx` |
-| `/components/Layout` | Layout and navigation | `Layout.tsx`, `Navigation.tsx` |
-| `/features` | Feature-specific components | `Search.tsx`, `Queue.tsx`, `History.tsx`, `Artists.tsx`, `SongLists.tsx` |
-| `/hooks` | Business logic hooks | `useQueue.ts`, `useSearch.ts`, `useSongOperations.ts` |
-| `/redux` | State management | `controllerSlice.ts`, `authSlice.ts`, `selectors.ts` |
-| `/firebase` | Firebase services | `services.ts`, `FirebaseProvider.tsx` |
-| `/types` | TypeScript definitions | `index.ts` (extends docs/types.ts) |
-| `/utils` | Utility functions | `dataProcessing.ts` |
+### **Folder Structure & Purpose:**
 
-**Architecture Principles:**
-- **Single Responsibility:** Each file has one clear purpose
-- **Separation of Concerns:** UI components separate from business logic
-- **Reusable Hooks:** Business logic extracted into custom hooks
-- **Type Safety:** Full TypeScript coverage with strict typing
-- **Performance:** Memoized selectors and optimized re-renders
+| Folder | Purpose | Key Files | Import Pattern |
+|--------|---------|-----------|----------------|
+| `/components/common` | Shared UI components | `ActionButton.tsx`, `EmptyState.tsx`, `SongItem.tsx`, `InfiniteScrollList.tsx` | `import { ComponentName } from '../components/common'` |
+| `/components/Auth` | Authentication components | `AuthInitializer.tsx`, `LoginPrompt.tsx` | `import { AuthInitializer } from '../components/Auth'` |
+| `/components/Layout` | Layout and navigation | `Layout.tsx`, `Navigation.tsx` | `import Layout from '../components/Layout/Layout'` |
+| `/features` | Feature-specific components | `Search.tsx`, `Queue.tsx`, `History.tsx`, `Artists.tsx`, `SongLists.tsx` | `import { Search, Queue } from '../features'` |
+| `/hooks` | Business logic hooks | `useQueue.ts`, `useSearch.ts`, `useSongOperations.ts` | `import { useQueue, useSearch } from '../hooks'` |
+| `/redux` | State management | `controllerSlice.ts`, `authSlice.ts`, `selectors.ts` | `import { useAppDispatch, selectQueue } from '../redux'` |
+| `/firebase` | Firebase services | `services.ts`, `FirebaseProvider.tsx` | `import { queueService } from '../firebase/services'` |
+| `/types` | TypeScript definitions | `index.ts` (extends docs/types.ts) | `import type { Song, QueueItem } from '../types'` |
+| `/utils` | Utility functions | `dataProcessing.ts` | `import { filterSongs } from '../utils/dataProcessing'` |
+| `/constants` | App constants | `index.ts` | `import { UI_CONSTANTS } from '../constants'` |
 
-**List Component Standards:**
-- **Mandatory InfiniteScrollList Usage:** All list displays MUST use the `InfiniteScrollList` component
-- **Consistent Pagination:** All lists implement 20-item pagination with infinite scroll
-- **Hook-Based Logic:** All list logic extracted into custom hooks (useSearch, useHistory, etc.)
-- **Context-Aware Actions:** Song items display different actions based on context
-- **Loading State Consistency:** All lists show consistent loading and empty states
-- **Performance Monitoring:** All list components include performance logging
-- **Error Boundary Protection:** All lists wrapped in error boundaries
-- **Accessibility Compliance:** All lists support keyboard navigation and screen readers
+### **Index File Pattern:**
+Each folder uses an `index.ts` file to export all public APIs:
+
+```typescript
+// src/hooks/index.ts
+export { useFirebaseSync } from './useFirebaseSync';
+export { useSongOperations } from './useSongOperations';
+export { useToast } from './useToast';
+export { useSearch } from './useSearch';
+export { useQueue } from './useQueue';
+// ... all other hooks
+
+// src/components/common/index.ts
+export { default as ActionButton } from './ActionButton';
+export { default as EmptyState } from './EmptyState';
+export { default as Toast } from './Toast';
+// ... all other components
+
+// src/features/index.ts
+export { default as Search } from './Search/Search';
+export { default as Queue } from './Queue/Queue';
+export { default as History } from './History/History';
+// ... all other features
+```
+
+### **Import Organization Patterns:**
+
+#### **1. Redux Imports:**
+```typescript
+// Always import from the main redux index
+import { useAppDispatch, useAppSelector } from '../redux';
+import { selectQueue, selectSongs } from '../redux';
+import { setController, updateQueue } from '../redux';
+
+// Never import directly from slice files
+// ❌ import { selectQueue } from '../redux/controllerSlice';
+// ✅ import { selectQueue } from '../redux';
+```
+
+#### **2. Hook Imports:**
+```typescript
+// Import hooks from the main hooks index
+import { useQueue, useSearch, useSongOperations } from '../hooks';
+
+// Import specific hooks when needed
+import { useToast } from '../hooks/useToast';
+```
+
+#### **3. Component Imports:**
+```typescript
+// Import from feature index for feature components
+import { Search, Queue, History } from '../features';
+
+// Import from common index for shared components
+import { ActionButton, EmptyState, SongItem } from '../components/common';
+
+// Import layout components directly
+import Layout from '../components/Layout/Layout';
+```
+
+#### **4. Type Imports:**
+```typescript
+// Always use type imports for TypeScript interfaces
+import type { Song, QueueItem } from '../types';
+
+// Import specific types when needed
+import type { RootState } from '../types';
+```
+
+#### **5. Service Imports:**
+```typescript
+// Import Firebase services directly
+import { queueService, favoritesService } from '../firebase/services';
+
+// Import Firebase configuration
+import { database } from '../firebase/config';
+```
+
+#### **6. Utility Imports:**
+```typescript
+// Import utility functions directly
+import { filterSongs, objectToArray } from '../utils/dataProcessing';
+```
+
+#### **7. Constant Imports:**
+```typescript
+// Import constants from the main constants index
+import { UI_CONSTANTS, FEATURES } from '../constants';
+```
+
+### **File Organization Principles:**
+
+#### **Single Responsibility Principle:**
+- **Each file has one clear purpose**
+- **Hooks handle business logic only**
+- **Components handle UI rendering only**
+- **Services handle external API calls only**
+- **Types define data structures only**
+
+#### **Separation of Concerns:**
+- **UI Components:** Only handle presentation and user interaction
+- **Business Logic:** Extracted into custom hooks
+- **State Management:** Centralized in Redux slices
+- **Data Access:** Abstracted in Firebase services
+- **Type Definitions:** Centralized in types folder
+
+#### **Dependency Direction:**
+```
+Components → Hooks → Redux → Services → Firebase
+     ↓         ↓       ↓        ↓         ↓
+   Types ← Types ← Types ← Types ← Types
+```
+
+### **Redux Architecture Pattern:**
+
+#### **Slice Organization:**
+```typescript
+// src/redux/controllerSlice.ts
+export const controllerSlice = createSlice({
+  name: 'controller',
+  initialState,
+  reducers: {
+    setController: (state, action) => { /* ... */ },
+    updateQueue: (state, action) => { /* ... */ },
+    // ... other reducers
+  },
+});
+
+// Export actions and selectors
+export const { setController, updateQueue } = controllerSlice.actions;
+export const selectController = (state: RootState) => state.controller.data;
+```
+
+#### **Selector Pattern:**
+```typescript
+// src/redux/selectors.ts
+export const selectSongsArray = createSelector(
+  [selectSongs],
+  (songs) => sortSongsByArtistAndTitle(objectToArray(songs))
+);
+
+export const selectQueueWithUserInfo = createSelector(
+  [selectQueue, selectCurrentSinger],
+  (queue, currentSinger) => addUserInfoToQueue(queue, currentSinger)
+);
+```
+
+#### **Hook Integration:**
+```typescript
+// src/hooks/useQueue.ts
+export const useQueue = () => {
+  const queueItems = useAppSelector(selectQueueWithUserInfo);
+  const dispatch = useAppDispatch();
+  
+  const handleRemoveFromQueue = useCallback(async (queueItemKey: string) => {
+    try {
+      await queueService.removeFromQueue(controllerName, queueItemKey);
+    } catch (error) {
+      showError('Failed to remove song from queue');
+    }
+  }, [controllerName, showError]);
+
+  return { queueItems, handleRemoveFromQueue };
+};
+```
+
+### **Hook Architecture Pattern:**
+
+#### **Hook Composition:**
+```typescript
+// Base operations hook
+export const useSongOperations = () => {
+  // Common song operations (add to queue, toggle favorite)
+};
+
+// Feature-specific hooks compose base hooks
+export const useQueue = () => {
+  const { removeFromQueue, toggleFavorite } = useSongOperations();
+  const { showSuccess, showError } = useToast();
+  // Queue-specific logic
+};
+
+export const useSearch = () => {
+  const { addToQueue, toggleFavorite } = useSongOperations();
+  const { showSuccess, showError } = useToast();
+  // Search-specific logic
+};
+```
+
+#### **Hook Dependencies:**
+```typescript
+// Hooks depend on Redux state and services
+export const useQueue = () => {
+  const queueItems = useAppSelector(selectQueueWithUserInfo);
+  const { removeFromQueue } = useSongOperations();
+  const { showError } = useToast();
+  
+  // Hook logic here
+};
+```
+
+### **Component Architecture Pattern:**
+
+#### **Component Structure:**
+```typescript
+// Feature components are simple and focused
+export const Queue = () => {
+  const { queueItems, handleRemoveFromQueue } = useQueue();
+  
+  return (
+    <div>
+      <InfiniteScrollList
+        items={queueItems}
+        context="queue"
+        onRemove={handleRemoveFromQueue}
+      />
+    </div>
+  );
+};
+```
+
+#### **Component Dependencies:**
+```typescript
+// Components only depend on hooks and UI components
+import { useQueue } from '../hooks';
+import { InfiniteScrollList, SongItem } from '../components/common';
+import type { QueueItem } from '../types';
+```
+
+### **Type Organization Pattern:**
+
+#### **Type Definitions:**
+```typescript
+// src/types/index.ts
+export interface Song {
+  artist: string;
+  title: string;
+  path: string;
+  favorite?: boolean;
+}
+
+export interface QueueItem {
+  key?: string;
+  order: number;
+  singer: Singer;
+  song: Song;
+}
+
+export interface RootState {
+  controller: ControllerState;
+  auth: AuthState;
+}
+```
+
+#### **Type Usage:**
+```typescript
+// Always use type imports
+import type { Song, QueueItem } from '../types';
+
+// Use in function parameters and return types
+const addToQueue = async (song: Song): Promise<void> => {
+  // Implementation
+};
+```
+
+### **Service Architecture Pattern:**
+
+#### **Service Organization:**
+```typescript
+// src/firebase/services.ts
+export const queueService = {
+  addToQueue: async (controllerName: string, queueItem: Omit<QueueItem, 'key'>) => {
+    // Implementation
+  },
+  removeFromQueue: async (controllerName: string, queueItemKey: string) => {
+    // Implementation
+  },
+  subscribeToQueue: (controllerName: string, callback: (data: Record<string, QueueItem>) => void) => {
+    // Implementation
+  },
+};
+```
+
+#### **Service Usage:**
+```typescript
+// Import services directly
+import { queueService, favoritesService } from '../firebase/services';
+
+// Use in hooks
+const handleAddToQueue = useCallback(async (song: Song) => {
+  await queueService.addToQueue(controllerName, queueItem);
+}, [controllerName]);
+```
+
+### **Constants Organization Pattern:**
+
+#### **Constants Structure:**
+```typescript
+// src/constants/index.ts
+export const UI_CONSTANTS = {
+  TOAST_DURATION: {
+    SUCCESS: 3000,
+    ERROR: 5000,
+    INFO: 3000,
+  },
+  SEARCH: {
+    DEBOUNCE_DELAY: 300,
+    MIN_SEARCH_LENGTH: 2,
+  },
+} as const;
+
+export const FEATURES = {
+  ENABLE_SEARCH: true,
+  ENABLE_QUEUE_REORDER: true,
+} as const;
+```
+
+#### **Constants Usage:**
+```typescript
+// Import constants from main index
+import { UI_CONSTANTS, FEATURES } from '../constants';
+
+// Use in components and hooks
+const debounceDelay = UI_CONSTANTS.SEARCH.DEBOUNCE_DELAY;
+```
+
+### **Import Order Convention:**
+```typescript
+// 1. React imports
+import { useState, useCallback, useEffect } from 'react';
+
+// 2. Third-party library imports
+import { useAppSelector, useAppDispatch } from '../redux';
+
+// 3. Internal imports (alphabetical by folder)
+import { useSongOperations } from '../hooks';
+import { queueService } from '../firebase/services';
+import { UI_CONSTANTS } from '../constants';
+import { filterSongs } from '../utils/dataProcessing';
+
+// 4. Type imports
+import type { Song, QueueItem } from '../types';
+```
+
+### **File Naming Conventions:**
+- **Components:** PascalCase (e.g., `SongItem.tsx`, `InfiniteScrollList.tsx`)
+- **Hooks:** camelCase with `use` prefix (e.g., `useQueue.ts`, `useSongOperations.ts`)
+- **Services:** camelCase with `Service` suffix (e.g., `queueService`, `favoritesService`)
+- **Types:** PascalCase (e.g., `Song`, `QueueItem`, `Controller`)
+- **Constants:** UPPER_SNAKE_CASE (e.g., `UI_CONSTANTS`, `FEATURES`)
+- **Utilities:** camelCase (e.g., `dataProcessing.ts`, `filterSongs`)
+
+### **Critical Import Rules:**
+- **Never import directly from slice files** - always use the main redux index
+- **Always use type imports** for TypeScript interfaces
+- **Import from index files** for organized modules (hooks, components, features)
+- **Import services directly** from their service files
+- **Import utilities directly** from their utility files
+- **Import constants** from the main constants index
 
 ---
 

@@ -159,7 +159,19 @@ export const selectHistory = (state: { controller: ControllerState }) => state.c
 export const selectTopPlayed = (state: { controller: ControllerState }) => state.controller.data?.topPlayed || {};
 export const selectNewSongs = (state: { controller: ControllerState }) => state.controller.data?.newSongs || {};
 export const selectSongList = (state: { controller: ControllerState }) => state.controller.data?.songList || {};
-export const selectPlayerState = (state: { controller: ControllerState }) => state.controller.data?.player?.state;
+export const selectPlayerState = (state: { controller: ControllerState }) => {
+  const playerState = state.controller.data?.player?.state;
+  
+  // Handle both structures:
+  // 1. player.state: "Playing" (direct string - what's actually in Firebase)
+  // 2. player.state: { state: "Playing" } (nested object - what types expect)
+  
+  if (typeof playerState === 'string') {
+    return { state: playerState };
+  }
+  
+  return playerState;
+};
 export const selectSettings = (state: { controller: ControllerState }) => state.controller.data?.player?.settings;
 export const selectSingers = (state: { controller: ControllerState }) => state.controller.data?.player?.singers || {};
 

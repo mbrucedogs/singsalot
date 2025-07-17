@@ -49,7 +49,24 @@ export const queueService = {
   // Add song to queue
   addToQueue: async (controllerName: string, queueItem: Omit<QueueItem, 'key'>) => {
     const queueRef = ref(database, `controllers/${controllerName}/player/queue`);
-    return await push(queueRef, queueItem);
+    
+    // Get current queue to find the next sequential key
+    const snapshot = await get(queueRef);
+    const currentQueue = snapshot.exists() ? snapshot.val() : {};
+    
+    // Find the next available numerical key
+    const existingKeys = Object.keys(currentQueue)
+      .filter(key => /^\d+$/.test(key)) // Only consider numerical keys
+      .map(key => parseInt(key, 10))
+      .sort((a, b) => a - b);
+    
+    const nextKey = existingKeys.length > 0 ? Math.max(...existingKeys) + 1 : 0;
+    
+    // Add the item with the sequential key
+    const newItemRef = ref(database, `controllers/${controllerName}/player/queue/${nextKey}`);
+    await set(newItemRef, queueItem);
+    
+    return { key: nextKey.toString() };
   },
 
   // Remove song from queue
@@ -62,6 +79,46 @@ export const queueService = {
   updateQueueItem: async (controllerName: string, queueItemKey: string, updates: Partial<QueueItem>) => {
     const queueItemRef = ref(database, `controllers/${controllerName}/player/queue/${queueItemKey}`);
     await update(queueItemRef, updates);
+  },
+
+  // Clean up queue with inconsistent keys (migrate push ID keys to sequential numerical keys)
+  cleanupQueueKeys: async (controllerName: string) => {
+    const queueRef = ref(database, `controllers/${controllerName}/player/queue`);
+    const snapshot = await get(queueRef);
+    
+    if (!snapshot.exists()) return;
+    
+    const queue = snapshot.val();
+    const updates: Record<string, QueueItem | null> = {};
+    let hasChanges = false;
+    
+    // Find all push ID keys (non-numerical keys)
+    const pushIdKeys = Object.keys(queue).filter(key => !/^\d+$/.test(key));
+    
+    if (pushIdKeys.length === 0) return; // No cleanup needed
+    
+    // Get existing numerical keys to find the next available key
+    const existingNumericalKeys = Object.keys(queue)
+      .filter(key => /^\d+$/.test(key))
+      .map(key => parseInt(key, 10))
+      .sort((a, b) => a - b);
+    
+    let nextKey = existingNumericalKeys.length > 0 ? Math.max(...existingNumericalKeys) + 1 : 0;
+    
+    // Migrate push ID items to sequential numerical keys
+    pushIdKeys.forEach(pushIdKey => {
+      const item = queue[pushIdKey];
+      // Remove the old item with push ID
+      updates[pushIdKey] = null;
+      // Add the item with sequential numerical key
+      updates[nextKey.toString()] = item;
+      nextKey++;
+      hasChanges = true;
+    });
+    
+    if (hasChanges) {
+      await update(queueRef, updates);
+    }
   },
 
   // Listen to queue changes
@@ -81,6 +138,12 @@ export const playerService = {
   updatePlayerState: async (controllerName: string, state: Partial<Controller['player']>) => {
     const playerRef = ref(database, `controllers/${controllerName}/player`);
     await update(playerRef, state);
+  },
+
+  // Update just the player state value
+  updatePlayerStateValue: async (controllerName: string, stateValue: string) => {
+    const stateRef = ref(database, `controllers/${controllerName}/player/state`);
+    await set(stateRef, stateValue);
   },
 
   // Listen to player state changes

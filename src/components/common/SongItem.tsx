@@ -37,9 +37,9 @@ const SongItem: React.FC<SongItemProps> = ({
       case 'queue':
         return (
           <div className="flex gap-2">
-            {isAdmin && (
+            {isAdmin && onRemoveFromQueue && (
               <ActionButton
-                onClick={onRemoveFromQueue || (() => {})}
+                onClick={onRemoveFromQueue}
                 variant="danger"
                 size="sm"
               >

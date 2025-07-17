@@ -1,16 +1,19 @@
-import React, { useState } from 'react';
-import { InfiniteScrollList, ActionButton } from '../../components/common';
+import React, { useState, useEffect, useRef } from 'react';
+import { ActionButton } from '../../components/common';
 import { useArtists } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectSongs } from '../../redux';
 
-
 const Artists: React.FC = () => {
   const {
     artists,
+    allArtists,
     searchTerm,
+    hasMore,
+    loadMore,
     handleSearchChange,
     getSongsByArtist,
+    getSongCountByArtist,
     handleAddToQueue,
     handleToggleFavorite,
   } = useArtists();
@@ -18,10 +21,40 @@ const Artists: React.FC = () => {
   const songs = useAppSelector(selectSongs);
   const songsCount = Object.keys(songs).length;
   const [selectedArtist, setSelectedArtist] = useState<string | null>(null);
+  const observerRef = useRef<HTMLDivElement>(null);
+
+  // Intersection Observer for infinite scrolling
+  useEffect(() => {
+    console.log('Artists - Setting up observer:', { hasMore, songsCount, itemsLength: artists.length });
+    
+    const observer = new IntersectionObserver(
+      (entries) => {
+        console.log('Artists - Intersection detected:', { 
+          isIntersecting: entries[0].isIntersecting, 
+          hasMore, 
+          songsCount 
+        });
+        
+        if (entries[0].isIntersecting && hasMore && songsCount > 0) {
+          console.log('Artists - Loading more items');
+          loadMore();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (observerRef.current) {
+      observer.observe(observerRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [loadMore, hasMore, songsCount, artists.length]);
 
   // Debug logging
-  console.log('Artists component - artists count:', artists.length);
-  console.log('Artists component - selected artist:', selectedArtist);
+  useEffect(() => {
+    console.log('Artists component - artists count:', artists.length);
+    console.log('Artists component - selected artist:', selectedArtist);
+  }, [artists.length, selectedArtist]);
 
   const handleArtistClick = (artist: string) => {
     setSelectedArtist(artist);
@@ -56,7 +89,7 @@ const Artists: React.FC = () => {
 
         {/* Debug info */}
         <div className="mt-2 text-sm text-gray-500">
-          Total songs loaded: {songsCount} | Showing: {artists.length} artists | Search term: "{searchTerm}"
+          Total songs loaded: {songsCount} | Showing: {artists.length} of {allArtists.length} artists | Search term: "{searchTerm}"
         </div>
       </div>
 
@@ -95,7 +128,7 @@ const Artists: React.FC = () => {
                     {artist}
                   </h3>
                   <p className="text-sm text-gray-500">
-                    {getSongsByArtist(artist).length} song{getSongsByArtist(artist).length !== 1 ? 's' : ''}
+                    {getSongCountByArtist(artist)} song{getSongCountByArtist(artist) !== 1 ? 's' : ''}
                   </p>
                 </div>
                 <div className="flex-shrink-0 ml-4">
@@ -109,14 +142,30 @@ const Artists: React.FC = () => {
                 </div>
               </div>
             ))}
+            
+            {/* Infinite scroll trigger */}
+            {hasMore && (
+              <div 
+                ref={observerRef}
+                className="py-4 text-center text-gray-500"
+              >
+                <div className="inline-flex items-center">
+                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Loading more artists...
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
 
       {/* Artist Songs Modal */}
       {selectedArtist && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full mx-4 max-h-[80vh] overflow-hidden">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999]" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}>
+          <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full mx-4 max-h-[80vh] overflow-hidden" style={{ backgroundColor: 'white', zIndex: 10000 }}>
             <div className="p-6 border-b border-gray-200">
               <div className="flex items-center justify-between">
                 <h2 className="text-xl font-bold text-gray-900">
@@ -133,19 +182,38 @@ const Artists: React.FC = () => {
             </div>
             
             <div className="overflow-y-auto max-h-[60vh]">
-              <InfiniteScrollList
-                items={selectedArtistSongs}
-                isLoading={false}
-                hasMore={false}
-                onLoadMore={() => {}}
-                onAddToQueue={handleAddToQueue}
-                onToggleFavorite={handleToggleFavorite}
-                context="search"
-                title=""
-                emptyTitle="No songs found"
-                emptyMessage="No songs found for this artist"
-                debugInfo=""
-              />
+              <div className="divide-y divide-gray-200">
+                {selectedArtistSongs.map((song) => (
+                  <div key={song.key} className="p-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1">
+                        <h3 className="text-sm font-medium text-gray-900">
+                          {song.title}
+                        </h3>
+                        <p className="text-sm text-gray-500">
+                          {song.artist}
+                        </p>
+                      </div>
+                      <div className="flex-shrink-0 ml-4 flex items-center space-x-2">
+                        <ActionButton
+                          onClick={() => handleAddToQueue(song)}
+                          variant="primary"
+                          size="sm"
+                        >
+                          Add to Queue
+                        </ActionButton>
+                        <ActionButton
+                          onClick={() => handleToggleFavorite(song)}
+                          variant="secondary"
+                          size="sm"
+                        >
+                          {song.favorite ? 'Remove from Favorites' : 'Add to Favorites'}
+                        </ActionButton>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>

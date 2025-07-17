@@ -15,7 +15,12 @@ export const useSongOperations = () => {
     }
 
     try {
-      const nextOrder = Object.keys(currentQueue).length + 1;
+      // Calculate the next order by finding the highest order value and adding 1
+      const queueItems = Object.values(currentQueue);
+      const maxOrder = queueItems.length > 0 
+        ? Math.max(...queueItems.map(item => item.order || 0))
+        : 0;
+      const nextOrder = maxOrder + 1;
 
       const queueItem: Omit<QueueItem, 'key'> = {
         order: nextOrder,

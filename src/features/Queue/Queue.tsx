@@ -1,8 +1,9 @@
 import React from 'react';
-import { SongItem, EmptyState, ActionButton } from '../../components/common';
+import { SongItem, EmptyState, ActionButton, PlayerControls } from '../../components/common';
 import { useQueue } from '../../hooks';
 import { useAppSelector } from '../../redux';
-import { selectQueue } from '../../redux';
+import { selectQueue, selectPlayerState } from '../../redux';
+import { PlayerState } from '../../types';
 
 const Queue: React.FC = () => {
   const {
@@ -16,11 +17,19 @@ const Queue: React.FC = () => {
   } = useQueue();
 
   const queue = useAppSelector(selectQueue);
+  const playerState = useAppSelector(selectPlayerState);
   const queueCount = Object.keys(queue).length;
 
   // Debug logging
   console.log('Queue component - queue count:', queueCount);
   console.log('Queue component - queue items:', queueItems);
+  console.log('Queue component - player state:', playerState);
+
+  // Check if first item can be deleted (only when stopped or paused)
+  const canDeleteFirstItem = playerState?.state === PlayerState.stopped || playerState?.state === PlayerState.paused;
+  
+  console.log('Queue component - canDeleteFirstItem:', canDeleteFirstItem);
+  console.log('Queue component - canReorder:', canReorder);
 
   return (
     <div className="max-w-4xl mx-auto p-6">
@@ -34,6 +43,11 @@ const Queue: React.FC = () => {
         <div className="mt-2 text-sm text-gray-500">
           Queue items loaded: {queueCount}
         </div>
+      </div>
+
+      {/* Player Controls - Only visible to admin users */}
+      <div className="mb-6">
+        <PlayerControls />
       </div>
 
       {/* Queue List */}
@@ -60,7 +74,9 @@ const Queue: React.FC = () => {
           />
         ) : (
           <div className="divide-y divide-gray-200">
-            {queueItems.map((queueItem, index) => (
+            {queueItems.map((queueItem, index) => {
+              console.log(`Queue item ${index}: order=${queueItem.order}, key=${queueItem.key}`);
+              return (
               <div key={queueItem.key} className="flex items-center">
                 {/* Order Number */}
                 <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center bg-gray-100 text-gray-600 font-medium">
@@ -72,7 +88,12 @@ const Queue: React.FC = () => {
                   <SongItem
                     song={queueItem.song}
                     context="queue"
-                    onRemoveFromQueue={() => handleRemoveFromQueue(queueItem)}
+                    onRemoveFromQueue={
+                      // Only allow removal of first item when stopped or paused
+                      index === 0 && !canDeleteFirstItem 
+                        ? undefined 
+                        : () => handleRemoveFromQueue(queueItem)
+                    }
                     onToggleFavorite={() => handleToggleFavorite(queueItem.song)}
                     isAdmin={canReorder}
                   />
@@ -89,26 +110,29 @@ const Queue: React.FC = () => {
                 {/* Admin Controls */}
                 {canReorder && (
                   <div className="flex-shrink-0 px-4 py-2 flex flex-col gap-1">
-                    <ActionButton
-                      onClick={() => handleMoveUp(queueItem)}
-                      variant="secondary"
-                      size="sm"
-                      disabled={index === 0}
-                    >
-                      ↑
-                    </ActionButton>
-                    <ActionButton
-                      onClick={() => handleMoveDown(queueItem)}
-                      variant="secondary"
-                      size="sm"
-                      disabled={index === queueItems.length - 1}
-                    >
-                      ↓
-                    </ActionButton>
+                    {queueItem.order > 2 && (
+                      <ActionButton
+                        onClick={() => handleMoveUp(queueItem)}
+                        variant="secondary"
+                        size="sm"
+                      >
+                        ↑
+                      </ActionButton>
+                    )}
+                    {queueItem.order > 1 && queueItem.order < queueItems.length && (
+                      <ActionButton
+                        onClick={() => handleMoveDown(queueItem)}
+                        variant="secondary"
+                        size="sm"
+                      >
+                        ↓
+                      </ActionButton>
+                    )}
                   </div>
                 )}
               </div>
-            ))}
+            );
+            })}
           </div>
         )}
       </div>

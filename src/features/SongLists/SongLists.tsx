@@ -178,7 +178,7 @@ const SongLists: React.FC = () => {
             <div className="p-6 border-b border-gray-200">
               <div className="flex items-center justify-between">
                 <h2 className="text-xl font-bold text-gray-900">
-                  TEST MODAL - {finalSelectedList.title}
+                  {finalSelectedList.title}
                 </h2>
                 <ActionButton
                   onClick={handleCloseSongList}

@@ -1175,33 +1175,37 @@ const validateFirebaseConfig = () => {
 
 ---
 
-## 20️⃣ Third-Party UI Libraries & Responsive Design  
+## 20️⃣ Third-Party UI Library - Ionic React  
 
 ### **Current UI Implementation:**
 The application currently uses **Tailwind CSS** for styling with custom components. While functional, this approach requires significant custom development for responsive design and native platform feel.
 
-### **Recommended UI Library Options:**
+### **Recommended Solution: Ionic React**
 
-#### **1. Ionic React (Recommended for Native Feel):**
+For a **mobile-first app that works on web**, **Ionic React** is the single best choice because it provides native platform feel across all devices while maintaining web compatibility.
+
+#### **Installation:**
 ```bash
 npm install @ionic/react @ionic/core
 ```
 
-**Benefits:**
-- **Native Platform Feel:** Mimics iOS and Android native components
-- **Responsive Design:** Built-in responsive grid and components
-- **Touch Optimized:** Optimized for touch interactions
-- **Accessibility:** Excellent accessibility support
-- **Cross-Platform:** Works seamlessly on mobile, tablet, and desktop
-- **Component Library:** Rich set of pre-built components
+#### **Why Ionic React:**
+- **Mobile-First:** Designed specifically for mobile experiences
+- **Native Feel:** Mimics iOS and Android native components automatically
+- **Web Compatible:** Works perfectly on desktop browsers
+- **Touch Optimized:** Built-in touch interactions and gestures
+- **Responsive:** Automatic responsive design without custom CSS
+- **Accessibility:** Excellent accessibility support out of the box
+- **Performance:** Optimized for mobile performance
+- **Simple:** One library handles everything - no complex configuration
 
-**Integration Pattern:**
+#### **Integration Pattern:**
 ```typescript
 // src/components/common/IonicButton.tsx
 import { IonButton, IonIcon } from '@ionic/react';
 import { add, heart, play } from 'ionicons/icons';
 
-export const IonicActionButton: React.FC<ActionButtonProps> = ({
+export const ActionButton: React.FC<ActionButtonProps> = ({
   onClick,
   children,
   variant = 'primary',
@@ -1231,417 +1235,325 @@ export const IonicActionButton: React.FC<ActionButtonProps> = ({
 };
 ```
 
-#### **2. Chakra UI (Recommended for Modern Web):**
-```bash
-npm install @chakra-ui/react @emotion/react @emotion/styled framer-motion
-```
-
-**Benefits:**
-- **Modern Design System:** Clean, accessible design system
-- **Responsive Components:** Built-in responsive design patterns
-- **Theme Support:** Excellent theming and customization
-- **Accessibility:** WCAG compliant components
-- **TypeScript:** Full TypeScript support
-- **Performance:** Optimized for performance
-
-**Integration Pattern:**
+#### **Responsive Design (Automatic):**
 ```typescript
-// src/components/common/ChakraButton.tsx
-import { Button, ButtonProps } from '@chakra-ui/react';
-
-export const ChakraActionButton: React.FC<ActionButtonProps> = ({
-  onClick,
-  children,
-  variant = 'primary',
-  size = 'md',
-  disabled = false
-}) => {
-  const getVariant = () => {
-    switch (variant) {
-      case 'primary': return 'blue';
-      case 'secondary': return 'gray';
-      case 'danger': return 'red';
-      default: return 'blue';
-    }
-  };
-
+// Ionic handles responsive design automatically
+export const SongList: React.FC = () => {
   return (
-    <Button
-      onClick={onClick}
-      disabled={disabled}
-      colorScheme={getVariant()}
-      size={size}
-      variant="solid"
-    >
-      {children}
-    </Button>
-  );
-};
-```
-
-#### **3. Material-UI (MUI) (Recommended for Google Material Design):**
-```bash
-npm install @mui/material @emotion/react @emotion/styled @mui/icons-material
-```
-
-**Benefits:**
-- **Material Design:** Google's Material Design principles
-- **Comprehensive Components:** Extensive component library
-- **Responsive Grid:** Advanced responsive grid system
-- **Theme Customization:** Powerful theming capabilities
-- **Icon Library:** Large icon library included
-- **Enterprise Ready:** Production-ready for enterprise applications
-
-**Integration Pattern:**
-```typescript
-// src/components/common/MUIButton.tsx
-import { Button, ButtonProps } from '@mui/material';
-import { Add, Favorite, PlayArrow } from '@mui/icons-material';
-
-export const MUIActionButton: React.FC<ActionButtonProps> = ({
-  onClick,
-  children,
-  variant = 'primary',
-  icon,
-  disabled = false
-}) => {
-  const getVariant = () => {
-    switch (variant) {
-      case 'primary': return 'contained';
-      case 'secondary': return 'outlined';
-      case 'danger': return 'contained';
-      default: return 'contained';
-    }
-  };
-
-  const getColor = () => {
-    switch (variant) {
-      case 'danger': return 'error';
-      default: return 'primary';
-    }
-  };
-
-  return (
-    <Button
-      onClick={onClick}
-      disabled={disabled}
-      variant={getVariant()}
-      color={getColor()}
-      startIcon={icon && <Add />}
-    >
-      {children}
-    </Button>
-  );
-};
-```
-
-### **Responsive Design Implementation:**
-
-#### **Mobile-First Approach:**
-```typescript
-// Responsive breakpoints
-const BREAKPOINTS = {
-  mobile: '320px',
-  tablet: '768px',
-  desktop: '1024px',
-  wide: '1440px',
-} as const;
-
-// Responsive component pattern
-export const ResponsiveLayout: React.FC = ({ children }) => {
-  return (
-    <div className="
-      w-full max-w-full
-      px-4 sm:px-6 lg:px-8
-      py-2 sm:py-4 lg:py-6
-    ">
-      {children}
-    </div>
-  );
-};
-```
-
-#### **Responsive Navigation:**
-```typescript
-// Mobile: Bottom navigation
-// Tablet/Desktop: Top navigation
-export const ResponsiveNavigation: React.FC = () => {
-  const isMobile = useMediaQuery('(max-width: 768px)');
-  
-  return isMobile ? (
-    <MobileBottomNavigation />
-  ) : (
-    <DesktopTopNavigation />
-  );
-};
-```
-
-#### **Responsive Grid System:**
-```typescript
-// Responsive grid for song lists
-export const ResponsiveSongGrid: React.FC = ({ songs }) => {
-  return (
-    <div className="
-      grid
-      grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4
-      gap-4 sm:gap-6 lg:gap-8
-    ">
+    <IonList>
       {songs.map(song => (
-        <SongCard key={song.id} song={song} />
+        <IonItem key={song.id}>
+          <IonLabel>
+            <h2>{song.title}</h2>
+            <p>{song.artist}</p>
+          </IonLabel>
+          <IonButton slot="end" fill="clear">
+            <IonIcon icon={add} />
+          </IonButton>
+        </IonItem>
       ))}
-    </div>
+    </IonList>
   );
 };
 ```
 
-### **Native Platform Feel Implementation:**
-
-#### **Touch Interactions:**
+#### **Navigation (Mobile-First):**
 ```typescript
-// Touch-optimized components
-export const TouchOptimizedButton: React.FC<ButtonProps> = ({
-  onClick,
-  children,
-  ...props
-}) => {
+// Ionic provides mobile-optimized navigation
+export const AppNavigation: React.FC = () => {
   return (
-    <button
-      onClick={onClick}
-      className="
-        min-h-[44px] min-w-[44px] // iOS touch target minimum
-        active:scale-95 // Touch feedback
-        transition-transform duration-150
-        focus:outline-none focus:ring-2 focus:ring-blue-500
-      "
-      {...props}
-    >
-      {children}
-    </button>
+    <IonTabs>
+      <IonTabBar slot="bottom">
+        <IonTabButton tab="queue">
+          <IonIcon icon={list} />
+          <IonLabel>Queue</IonLabel>
+        </IonTabButton>
+        <IonTabButton tab="search">
+          <IonIcon icon={search} />
+          <IonLabel>Search</IonLabel>
+        </IonTabButton>
+        <IonTabButton tab="favorites">
+          <IonIcon icon={heart} />
+          <IonLabel>Favorites</IonLabel>
+        </IonTabButton>
+      </IonTabBar>
+    </IonTabs>
   );
 };
 ```
 
-#### **Swipe Gestures:**
+#### **Touch Interactions (Built-in):**
 ```typescript
-// Swipe to delete functionality
+// Ionic provides touch-optimized interactions automatically
 export const SwipeableSongItem: React.FC<SongItemProps> = ({
   song,
-  onDelete,
-  ...props
-}) => {
-  const [swipeOffset, setSwipeOffset] = useState(0);
-  
-  const handleTouchStart = (e: React.TouchEvent) => {
-    // Touch start logic
-  };
-  
-  const handleTouchMove = (e: React.TouchEvent) => {
-    // Touch move logic with swipe detection
-  };
-  
-  const handleTouchEnd = () => {
-    // Touch end logic with delete action
-  };
-  
-  return (
-    <div
-      className="relative overflow-hidden"
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
-    >
-      <div
-        className="transform transition-transform duration-200"
-        style={{ transform: `translateX(${swipeOffset}px)` }}
-      >
-        {/* Song item content */}
-      </div>
-      <div className="absolute right-0 top-0 h-full w-20 bg-red-500 flex items-center justify-center">
-        <span className="text-white">Delete</span>
-      </div>
-    </div>
-  );
-};
-```
-
-### **UI Library Migration Strategy:**
-
-#### **Phase 1: Component Abstraction Layer:**
-```typescript
-// src/components/ui/index.ts
-export { ActionButton } from './ActionButton';
-export { SongItem } from './SongItem';
-export { Modal } from './Modal';
-export { Toast } from './Toast';
-
-// src/components/ui/ActionButton.tsx
-import { useUIProvider } from '../../hooks/useUIProvider';
-
-export const ActionButton: React.FC<ActionButtonProps> = (props) => {
-  const { uiLibrary } = useUIProvider();
-  
-  switch (uiLibrary) {
-    case 'ionic':
-      return <IonicActionButton {...props} />;
-    case 'chakra':
-      return <ChakraActionButton {...props} />;
-    case 'mui':
-      return <MUIActionButton {...props} />;
-    default:
-      return <TailwindActionButton {...props} />;
-  }
-};
-```
-
-#### **Phase 2: Theme Configuration:**
-```typescript
-// src/theme/index.ts
-export const themeConfig = {
-  colors: {
-    primary: {
-      50: '#eff6ff',
-      500: '#3b82f6',
-      600: '#2563eb',
-      700: '#1d4ed8',
-    },
-    secondary: {
-      50: '#f9fafb',
-      500: '#6b7280',
-      600: '#4b5563',
-      700: '#374151',
-    },
-  },
-  spacing: {
-    xs: '0.25rem',
-    sm: '0.5rem',
-    md: '1rem',
-    lg: '1.5rem',
-    xl: '2rem',
-  },
-  breakpoints: {
-    mobile: '320px',
-    tablet: '768px',
-    desktop: '1024px',
-    wide: '1440px',
-  },
-};
-```
-
-#### **Phase 3: Progressive Enhancement:**
-```typescript
-// src/hooks/useUIProvider.ts
-export const useUIProvider = () => {
-  const [uiLibrary, setUILibrary] = useState<'tailwind' | 'ionic' | 'chakra' | 'mui'>('tailwind');
-  
-  useEffect(() => {
-    // Detect device capabilities and set appropriate UI library
-    const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    
-    if (isMobile && !prefersReducedMotion) {
-      setUILibrary('ionic');
-    } else if (window.innerWidth >= 1024) {
-      setUILibrary('chakra');
-    }
-  }, []);
-  
-  return { uiLibrary, setUILibrary };
-};
-```
-
-### **Performance Considerations:**
-
-#### **Bundle Size Optimization:**
-```typescript
-// Lazy load UI libraries
-const IonicComponents = lazy(() => import('./IonicComponents'));
-const ChakraComponents = lazy(() => import('./ChakraComponents'));
-const MUIComponents = lazy(() => import('./MUIComponents'));
-
-// Conditional loading based on device
-export const UILibraryProvider: React.FC = ({ children }) => {
-  const { uiLibrary } = useUIProvider();
-  
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      {uiLibrary === 'ionic' && <IonicComponents />}
-      {uiLibrary === 'chakra' && <ChakraComponents />}
-      {uiLibrary === 'mui' && <MUIComponents />}
-      {children}
-    </Suspense>
-  );
-};
-```
-
-#### **Tree Shaking:**
-```typescript
-// Import only needed components
-import { Button } from '@chakra-ui/react/button';
-import { Icon } from '@chakra-ui/react/icon';
-// Instead of: import { Button, Icon } from '@chakra-ui/react';
-```
-
-### **Accessibility Enhancements:**
-
-#### **Screen Reader Support:**
-```typescript
-// Enhanced accessibility for UI libraries
-export const AccessibleButton: React.FC<ButtonProps> = ({
-  children,
-  ariaLabel,
-  ...props
+  onDelete
 }) => {
   return (
-    <button
-      aria-label={ariaLabel}
-      role="button"
-      tabIndex={0}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          props.onClick?.(e as any);
-        }
-      }}
-      {...props}
-    >
-      {children}
-    </button>
+    <IonItemSliding>
+      <IonItem>
+        <IonLabel>
+          <h2>{song.title}</h2>
+          <p>{song.artist}</p>
+        </IonLabel>
+      </IonItem>
+      <IonItemOptions side="end">
+        <IonItemOption color="danger" onClick={() => onDelete(song.id)}>
+          <IonIcon icon={trash} slot="icon-only" />
+        </IonItemOption>
+      </IonItemOptions>
+    </IonItemSliding>
   );
 };
 ```
 
-### **Implementation Recommendations:**
+### **Migration Strategy (Simple):**
 
-#### **For Mobile-First Applications:**
-- **Primary Choice:** Ionic React
-- **Fallback:** Chakra UI with mobile optimizations
-- **Focus:** Touch interactions, swipe gestures, native feel
+#### **Step 1: Install and Setup (1 day)**
+```bash
+npm install @ionic/react @ionic/core
+```
 
-#### **For Cross-Platform Web Applications:**
-- **Primary Choice:** Chakra UI
-- **Fallback:** Material-UI
-- **Focus:** Responsive design, accessibility, modern aesthetics
+Add to `src/main.tsx`:
+```typescript
+import { setupIonicReact } from '@ionic/react';
 
-#### **For Enterprise Applications:**
-- **Primary Choice:** Material-UI
-- **Fallback:** Chakra UI
-- **Focus:** Consistency, accessibility, enterprise features
+setupIonicReact();
+```
 
-### **Migration Timeline:**
-1. **Week 1-2:** Set up UI library and create abstraction layer
-2. **Week 3-4:** Migrate core components (buttons, inputs, modals)
-3. **Week 5-6:** Implement responsive design patterns
-4. **Week 7-8:** Add native platform features (touch, gestures)
-5. **Week 9-10:** Performance optimization and testing
+#### **Step 2: Replace Core Components (3-4 days)**
+- Replace `ActionButton` with `IonButton`
+- Replace custom lists with `IonList` and `IonItem`
+- Replace modals with `IonModal`
+- Replace toasts with `IonToast`
+
+#### **Step 3: Update Navigation (1 day)**
+- Replace custom navigation with `IonTabs` or `IonMenu`
+- Mobile gets bottom tabs, desktop gets side menu automatically
+
+#### **Step 4: Add Touch Features (1 day)**
+- Add swipe-to-delete with `IonItemSliding`
+- Add pull-to-refresh with `IonRefresher`
+- Add infinite scroll with `IonInfiniteScroll`
+
+### **Benefits Over Current Approach:**
+
+#### **Before (Tailwind CSS):**
+- ❌ Custom responsive CSS for every component
+- ❌ Manual touch interaction implementation
+- ❌ Custom mobile navigation
+- ❌ Manual accessibility features
+- ❌ Complex responsive breakpoints
+
+#### **After (Ionic React):**
+- ✅ Automatic responsive design
+- ✅ Built-in touch interactions
+- ✅ Mobile-optimized navigation
+- ✅ Accessibility built-in
+- ✅ Native platform feel
+- ✅ Works on all devices automatically
+
+### **Performance:**
+- **Bundle Size:** ~50KB gzipped (minimal overhead)
+- **Mobile Performance:** Optimized for mobile devices
+- **Web Performance:** Works great on desktop browsers
+- **Loading:** Fast initial load with lazy loading
+
+### **Accessibility:**
+- **Screen Readers:** Full support out of the box
+- **Keyboard Navigation:** Complete keyboard support
+- **Touch Targets:** Proper 44px minimum touch targets
+- **WCAG Compliance:** Built-in accessibility standards
+
+### **Implementation Timeline:**
+- **Day 1:** Install and basic setup
+- **Days 2-5:** Replace core components
+- **Day 6:** Update navigation
+- **Day 7:** Add touch features and testing
 
 ### **Success Metrics:**
-- **Mobile Performance:** 90+ Lighthouse score on mobile
-- **Touch Responsiveness:** <100ms touch response time
+- **Mobile Performance:** 90+ Lighthouse score
+- **Touch Responsiveness:** <100ms response time
 - **Accessibility:** WCAG 2.1 AA compliance
-- **Bundle Size:** <200KB gzipped for UI library
-- **User Experience:** Improved user engagement metrics
+- **User Experience:** Native app feel on mobile
+- **Web Compatibility:** Perfect desktop experience
+
+### **Why Not Other Libraries:**
+- **Chakra UI:** Great for web, but requires custom mobile optimization
+- **Material-UI:** Enterprise-focused, overkill for this app
+- **Custom Tailwind:** Too much work for responsive design and touch interactions
+
+### **Simple Decision:**
+**Use Ionic React** - it's the only library that gives you:
+1. Mobile-first design automatically
+2. Native platform feel
+3. Perfect web compatibility
+4. Built-in touch interactions
+5. Zero configuration responsive design
+
+No complex choices, no multiple libraries, no over-engineering. Just one library that does everything you need for a mobile-first karaoke app.
 
 ---
 
-## 21️⃣ Development Setup & Configuration
+## 21️⃣ Design Folder & Mockups  
+
+### **Design Folder Contents:**
+The `/docs/design/` folder contains UI/UX mockups that were created using an **older version of Ionic** to demonstrate the intended layout and user experience.
+
+#### **Mockup Files:**
+- `00-web-layout.JPG` - Overall web layout structure
+- `01-Login.png` - Login screen design
+- `02-menu.jpeg` - Navigation menu layout
+- `02-queue-delete.png` - Queue management with delete functionality
+- `02-queue-drag.png` - Queue reordering with drag and drop
+- `02-queue-sorting.png` - Queue sorting interface
+- `02-queue.png` - Main queue view
+- `03-menu current page and non-admin.png` - Navigation with current page indicators
+- `03-menu playing (admin).png` - Admin view during playback
+- `03-menu.png` - General menu layout
+- `04-search typing .png` - Search interface with typing
+- `04-search-song info.png` - Search results with song information
+- `04-search.png` - Main search interface
+- `05-singers add.png` - Singer management interface
+- `05-singers.png` - Singer list view
+- `06-artists .png` - Artist browse interface
+- `06-artists (not admin).png` - Non-admin artist view
+- `06-artists search.png` - Artist search functionality
+- `06-artists songs.png` - Artist songs list
+- `07-favorites.png` - Favorites management
+- `08-history.png` - Play history view
+- `09- song lists songs expand.png` - Song lists with expandable sections
+- `09-song lists - songs.png` - Song lists with song details
+- `09-songs list.png` - Main song lists view
+- `10-Settings.png` - Settings interface
+- `11-top 100.png` - Top played songs
+- `12-favorite lists.png` - Favorite lists management
+- `12-favorites .png` - Favorites view
+
+### **Important Note About Ionic Versions:**
+The mockups were created using an **older version of Ionic** and may not reflect the current Ionic React component API or styling. However, they serve as valuable reference for:
+
+#### **Layout Intent:**
+- **Overall Structure:** How the app should be organized
+- **Navigation Flow:** User journey through different screens
+- **Component Placement:** Where buttons, lists, and controls should be positioned
+- **Information Hierarchy:** How data should be prioritized and displayed
+
+#### **User Experience Goals:**
+- **Mobile-First Design:** Touch-friendly interface elements
+- **Intuitive Navigation:** Clear paths between features
+- **Context-Aware Actions:** Different actions based on user role and context
+- **Real-time Updates:** Visual indicators for live data changes
+
+### **Implementation Considerations:**
+
+#### **Modern Ionic React vs Mockups:**
+```typescript
+// Mockup shows older Ionic syntax
+<IonButton color="primary" onClick={handleClick}>
+  Add to Queue
+</IonButton>
+
+// Modern Ionic React syntax (current recommendation)
+<IonButton fill="solid" color="primary" onClick={handleClick}>
+  <IonIcon icon={add} slot="start" />
+  Add to Queue
+</IonButton>
+```
+
+#### **Component Mapping:**
+| Mockup Component | Modern Ionic React Component |
+|------------------|------------------------------|
+| Old Button | `IonButton` with `fill` prop |
+| Old List | `IonList` with `IonItem` |
+| Old Modal | `IonModal` with `IonHeader` |
+| Old Navigation | `IonTabs` or `IonMenu` |
+| Old Toast | `IonToast` with `position` prop |
+
+#### **Styling Updates:**
+- **Colors:** Modern Ionic uses semantic color names
+- **Spacing:** Updated spacing system for better mobile experience
+- **Typography:** Improved font scaling for accessibility
+- **Touch Targets:** Enhanced minimum touch target sizes
+
+### **Using Mockups for Implementation:**
+
+#### **1. Layout Reference:**
+- Use mockups to understand the intended layout structure
+- Follow the visual hierarchy shown in the designs
+- Maintain the component relationships and positioning
+
+#### **2. Feature Requirements:**
+- Identify required functionality from mockups
+- Understand user interaction patterns
+- Note admin vs user permission differences
+
+#### **3. User Flow Validation:**
+- Verify navigation paths match mockup flow
+- Ensure all screens are implemented
+- Confirm user roles and permissions are correctly applied
+
+#### **4. Modern Implementation:**
+- Use current Ionic React components and syntax
+- Apply modern responsive design principles
+- Implement current accessibility standards
+- Follow current performance best practices
+
+### **Migration from Mockups to Modern Ionic:**
+
+#### **Step 1: Component Analysis**
+- Review each mockup for required components
+- Map to current Ionic React component library
+- Identify any custom components needed
+
+#### **Step 2: Layout Implementation**
+- Implement responsive layouts using modern Ionic grid
+- Use current Ionic spacing and sizing system
+- Apply modern touch interaction patterns
+
+#### **Step 3: Feature Implementation**
+- Build features using current Ionic React APIs
+- Implement modern state management patterns
+- Apply current performance optimization techniques
+
+#### **Step 4: Testing and Refinement**
+- Test on actual mobile devices
+- Verify touch interactions work correctly
+- Ensure accessibility compliance
+- Optimize for performance
+
+### **Key Differences to Note:**
+
+#### **Navigation:**
+- **Mockups:** May show older navigation patterns
+- **Modern:** Use `IonTabs` for bottom navigation on mobile
+- **Modern:** Use `IonMenu` for side navigation on desktop
+
+#### **Lists:**
+- **Mockups:** May show older list styling
+- **Modern:** Use `IonList` with `IonItem` for better performance
+- **Modern:** Implement `IonItemSliding` for swipe actions
+
+#### **Forms:**
+- **Mockups:** May show older form components
+- **Modern:** Use `IonInput`, `IonSelect`, etc. for better UX
+- **Modern:** Implement proper form validation
+
+#### **Modals:**
+- **Mockups:** May show older modal patterns
+- **Modern:** Use `IonModal` with proper backdrop handling
+- **Modern:** Implement proper focus management
+
+### **Recommendation:**
+1. **Use mockups as layout and UX reference**
+2. **Implement using current Ionic React components**
+3. **Follow modern responsive design principles**
+4. **Test on actual devices for touch interactions**
+5. **Ensure accessibility and performance compliance**
+
+The mockups provide excellent guidance for the intended user experience, but the implementation should use current Ionic React best practices and components.
+
+---
+
+## 22️⃣ Development Setup & Configuration
 

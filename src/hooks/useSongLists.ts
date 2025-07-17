@@ -33,19 +33,23 @@ export const useSongLists = () => {
   }, [songLists.length, allSongLists.length, currentPage]);
 
   const loadMore = useCallback(() => {
+    const endIndex = currentPage * ITEMS_PER_PAGE;
+    const hasMoreItems = endIndex < allSongLists.length;
+    
     console.log('useSongLists - loadMore called:', { 
-      hasMore, 
+      hasMoreItems, 
       currentPage, 
       allSongListsLength: allSongLists.length,
-      songListsLength: songLists.length 
+      endIndex 
     });
-    if (hasMore) {
+    
+    if (hasMoreItems) {
       console.log('useSongLists - Incrementing page from', currentPage, 'to', currentPage + 1);
       setCurrentPage(prev => prev + 1);
     } else {
       console.log('useSongLists - Not loading more because hasMore is false');
     }
-  }, [hasMore, currentPage, allSongLists.length, songLists.length]);
+  }, [currentPage, allSongLists.length]);
 
   // Check if a song exists in the catalog
   const checkSongAvailability = useCallback((songListSong: SongListSong) => {

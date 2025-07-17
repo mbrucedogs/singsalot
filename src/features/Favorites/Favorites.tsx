@@ -34,24 +34,22 @@ const Favorites: React.FC = () => {
         </IonToolbar>
       </IonHeader>
 
-      <div style={{ height: '100%', overflowY: 'auto' }}>
-        <InfiniteScrollList
-          items={favoritesItems}
-          isLoading={favoritesCount === 0}
-          hasMore={hasMore}
-          onLoadMore={loadMore}
-          onAddToQueue={handleAddToQueue}
-          onToggleFavorite={handleToggleFavorite}
-          context="favorites"
-          title=""
-          subtitle=""
-          emptyTitle="No favorites yet"
-          emptyMessage="Add songs to your favorites to see them here"
-          loadingTitle="Loading favorites..."
-          loadingMessage="Please wait while favorites data is being loaded"
-          debugInfo={`Favorites items loaded: ${favoritesCount}`}
-        />
-      </div>
+      <InfiniteScrollList
+        items={favoritesItems}
+        isLoading={favoritesCount === 0}
+        hasMore={hasMore}
+        onLoadMore={loadMore}
+        onAddToQueue={handleAddToQueue}
+        onToggleFavorite={handleToggleFavorite}
+        context="favorites"
+        title=""
+        subtitle=""
+        emptyTitle="No favorites yet"
+        emptyMessage="Add songs to your favorites to see them here"
+        loadingTitle="Loading favorites..."
+        loadingMessage="Please wait while favorites data is being loaded"
+        debugInfo={`Favorites items loaded: ${favoritesCount}`}
+      />
     </>
   );
 };

@@ -34,24 +34,22 @@ const NewSongs: React.FC = () => {
         </IonToolbar>
       </IonHeader>
 
-      <div style={{ height: '100%', overflowY: 'auto' }}>
-        <InfiniteScrollList
-          items={newSongsItems}
-          isLoading={newSongsCount === 0}
-          hasMore={hasMore}
-          onLoadMore={loadMore}
-          onAddToQueue={handleAddToQueue}
-          onToggleFavorite={handleToggleFavorite}
-          context="search"
-          title=""
-          subtitle=""
-          emptyTitle="No new songs"
-          emptyMessage="Check back later for new additions"
-          loadingTitle="Loading new songs..."
-          loadingMessage="Please wait while new songs data is being loaded"
-          debugInfo={`New songs loaded: ${newSongsCount}`}
-        />
-      </div>
+      <InfiniteScrollList
+        items={newSongsItems}
+        isLoading={newSongsCount === 0}
+        hasMore={hasMore}
+        onLoadMore={loadMore}
+        onAddToQueue={handleAddToQueue}
+        onToggleFavorite={handleToggleFavorite}
+        context="search"
+        title=""
+        subtitle=""
+        emptyTitle="No new songs"
+        emptyMessage="Check back later for new additions"
+        loadingTitle="Loading new songs..."
+        loadingMessage="Please wait while new songs data is being loaded"
+        debugInfo={`New songs loaded: ${newSongsCount}`}
+      />
     </>
   );
 };

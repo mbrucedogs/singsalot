@@ -1,0 +1,2737 @@
+{
+    "controllers": {
+      "mbrucedogs": {
+        "favorites": [
+          {
+            "artist": "Michael Jackson",
+            "count": 1,
+            "disabled": false,
+            "favorite": false,
+            "key": "4849",
+            "path": "z://MP4\\KaraFun Karaoke\\Karaoke Man In The Mirror - Michael Jackson.mp4",
+            "title": "Man In The Mirror"
+          },
+          {
+            "artist": "38 Special",
+            "disabled": false,
+            "favorite": false,
+            "genre": "Karaoke",
+            "path": "z://CDG\\Various\\38 Special - Hold On Loosely.mp3",
+            "title": "Hold On Loosely"
+          },
+          {
+            "artist": "5 Seconds Of Summer",
+            "disabled": false,
+            "favorite": true,
+            "path": "z://MP4\\5 Seconds Of Summer - She Looks So Perfect.mp4",
+            "title": "She Looks So Perfect"
+          },
+          {
+            "artist": "Babyface",
+            "disabled": false,
+            "favorite": false,
+            "path": "z://MP4\\TheKARAOKEChannel\\Every Time I Close My Eyes in the style of Babyface karaoke with lyrics.mp4",
+            "title": "Every Time I Close My Eyes"
+          },
+          {
+            "artist": "Billy Joel",
+            "disabled": false,
+            "favorite": false,
+            "path": "z://MP4\\TheKARAOKEChannel\\It s Still Rock And Roll To Me in the Style of  Billy Joel  with lyrics (no lead vocal).mp4",
+            "title": "It s Still Rock And Roll To Me"
+          },
+          {
+            "artist": "Brian McKnight",
+            "count": 1,
+            "disabled": false,
+            "favorite": false,
+            "key": "1620",
+            "path": "z://MP4\\KaraFun Karaoke\\Karaoke Back At One - Brian McKnight.mp4",
+            "title": "Back At One"
+          }
+        ],
+        "history": [
+          {
+            "artist": "38 Special",
+            "count": 7,
+            "disabled": false,
+            "favorite": true,
+            "path": "z://CDG\\Various\\38 Special - Hold On Loosely.mp3",
+            "title": "Hold On Loosely"
+          },
+          {
+            "artist": "Bon Jovi",
+            "count": 1,
+            "disabled": false,
+            "favorite": false,
+            "key": "20324",
+            "path": "z://MP4\\TheKARAOKEChannel\\Bon Jovi - Livin' On A Prayer (Karaoke with Lyrics).mp4",
+            "title": "Livin' On A Prayer"
+          },
+          {
+            "artist": "Semisonic",
+            "count": 1,
+            "disabled": false,
+            "favorite": false,
+            "key": "13371",
+            "path": "z://MP4\\KtvEntertainment\\Semisonic - Closing Time Karaoke Lyrics.mp4",
+            "title": "Closing Time"
+          },
+          {
+            "artist": "Lit",
+            "count": 25,
+            "disabled": false,
+            "favorite": true,
+            "path": "z://MP4\\KaraFun Karaoke\\Karaoke My Own Worst Enemy - Lit.mp4",
+            "title": "My Own Worst Enemy"
+          },
+          {
+            "artist": "Bobby Brown",
+            "count": 3,
+            "disabled": false,
+            "favorite": false,
+            "key": "24591",
+            "path": "z://CDG\\Sunfly Collection\\Sunfly Hits\\SF011\\Bobby Brown - My Perogative - SF011 - 13.mp3",
+            "title": "My Perogative"
+          },
+          {
+            "artist": "Bon Jovi",
+            "count": 3,
+            "disabled": false,
+            "favorite": false,
+            "path": "z://MP4\\Sing King Karaoke\\Bon Jovi - Bed Of Roses (Karaoke Version) (2).mp4",
+            "title": "Bed Of Roses"
+          },
+          {
+            "artist": "Nsync",
+            "count": 1,
+            "disabled": false,
+            "favorite": false,
+            "key": "10646",
+            "path": "z://MP4\\KaraokeOnVEVO\\Nsync - Tearin' Up My Heart (Karaoke).mp4",
+            "title": "Tearin' Up My Heart"
+          },
+          {
+            "artist": "Toby Keith",
+            "count": 3,
+            "disabled": false,
+            "favorite": false,
+            "path": "z://CDG\\Sunfly Collection\\Sunfly Most Wanted\\SFMW 850\\Toby Keith - American Soldier - SFMW 850 -10.mp3",
+            "title": "American Soldier"
+          },
+          {
+            "artist": "Boyz II Men",
+            "count": 1,
+            "disabled": false,
+            "favorite": false,
+            "path": "z://MP4\\TheKARAOKEChannel\\I ll Make Love To You in the style of Boyz II Men   Karaoke with Lyrics.mp4",
+            "title": "I ll Make Love To You"
+          },
+          {
+            "artist": "Bryan Adams & Sting & Rod Stewart",
+            "count": 3,
+            "disabled": false,
+            "favorite": false,
+            "path": "z://CDG\\Sunfly Collection\\Sunfly Hits\\SF007\\Bryan Adams & Sting & Rod Stewart - All For Love - SF007 - 01.mp3",
+            "title": "All For Love"
+          },
+          {
+            "artist": "Poison",
+            "count": 7,
+            "disabled": false,
+            "favorite": false,
+            "path": "z://MP4\\KtvEntertainment\\Poison - Talk Dirty To Me Karaoke Lyrics.mp4",
+            "title": "Talk Dirty To Me"
+          },
+          {
+            "artist": "NSYNC",
+            "count": 1,
+            "disabled": false,
+            "favorite": false,
+            "path": "z://MP4\\KaraokeOnVEVO\\NSYNC - God Must Have Spent A Little More Time On You (Karaoke).mp4",
+            "title": "God Must Have Spent A Little More Time On You"
+          },
+          {
+            "artist": "Young MC",
+            "count": 3,
+            "disabled": false,
+            "favorite": false,
+            "key": "35336",
+            "path": "z://CDG\\Various\\Young MC - Bust A Move.mp3",
+            "title": "Bust A Move"
+          },
+          {
+            "artist": "Selena",
+            "count": 1,
+            "disabled": false,
+            "favorite": false,
+            "key": "2600",
+            "path": "z://MP4\\KaraFun Karaoke\\Karaoke Dreaming Of You - Selena.mp4",
+            "title": "Dreaming Of You"
+          },
+          {
+            "artist": "Newton, Juice",
+            "count": 7,
+            "disabled": false,
+            "favorite": true,
+            "path": "z://MP4\\Let's Sing Karaoke\\Newton, Juice - Break It To Me Gently (Karaoke & Lyrics).mp4",
+            "title": "Break It To Me Gently"
+          },
+          {
+            "artist": "Babyface",
+            "count": 9,
+            "disabled": false,
+            "favorite": true,
+            "path": "z://MP4\\TheKARAOKEChannel\\Every Time I Close My Eyes in the style of Babyface karaoke with lyrics.mp4",
+            "title": "Every Time I Close My Eyes"
+          }
+        ],
+        "newSongs": [
+          {
+            "artist": "John Mayer",
+            "disabled": false,
+            "favorite": false,
+            "path": "z://MP4\\Sing King Karaoke\\John Mayer - You're Gonna Live Forever In Me (Karaoke Version).mp4",
+            "title": "You're Gonna Live Forever In Me"
+          },
+          {
+            "artist": "Imagine Dragons",
+            "disabled": false,
+            "favorite": false,
+            "path": "z://MP4\\Sing King Karaoke\\Imagine Dragons - Wrecked (Karaoke Version) (2).mp4",
+            "title": "Wrecked"
+          },
+          {
+            "artist": "Mitski",
+            "disabled": false,
+            "favorite": false,
+            "path": "z://MP4\\Sing King Karaoke\\Mitski - Nobody (Karaoke Version).mp4",
+            "title": "Nobody"
+          },
+          {
+            "artist": "vaultboy",
+            "disabled": false,
+            "favorite": false,
+            "path": "z://MP4\\Sing King Karaoke\\vaultboy - everything sucks (Karaoke Version).mp4",
+            "title": "everything sucks"
+          },
+          {
+            "artist": "T.I. feat. Rihanna",
+            "disabled": false,
+            "favorite": false,
+            "path": "z://MP4\\Sing King Karaoke\\T.I. feat. Rihanna - Live Your Life (Karaoke Version) (2).mp4",
+            "title": "Live Your Life"
+          }
+        ],
+        "player": {
+          "queue": [
+            {
+              "singer": {
+                "key": "2",
+                "lastLogin": "Sun, 06 Feb 2022 05:41:45 GMT",
+                "name": "Matt",
+                "songCount": 0
+              },
+              "song": {
+                "artist": "38 Special",
+                "disabled": false,
+                "favorite": false,
+                "genre": "Karaoke",
+                "path": "z://CDG\\Various\\38 Special - Hold On Loosely.mp3",
+                "title": "Hold On Loosely"
+              }
+            }
+          ],
+          "settings": {
+            "autoadvance": true,
+            "userpick": true
+          },
+          "singers": [
+            {
+              "key": "0",
+              "lastLogin": "Sun, 06 Feb 2022 04:05:05 GMT",
+              "name": "Heidi",
+              "songCount": 0
+            },
+            {
+              "key": "1",
+              "lastLogin": "Sun, 06 Feb 2022 04:08:09 GMT",
+              "name": "Tanya",
+              "songCount": 0
+            },
+            {
+              "key": "2",
+              "lastLogin": "Sun, 06 Feb 2022 05:41:45 GMT",
+              "name": "Matt",
+              "songCount": 0
+            }
+          ],
+          "state": "Playing"
+        },
+        "songList": [
+          {
+            "songs": [
+              {
+                "artist": "Glass Animals",
+                "foundSongs": [
+                  {
+                    "artist": "Glass Animals",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\Glass Animals - Heat Waves (Karaoke Version).mp4",
+                    "title": "Heat Waves"
+                  },
+                  {
+                    "artist": "Glass Animals",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\TheKARAOKEChannel\\Glass Animals - Heat Waves (Karaoke With Lyrics).mp4",
+                    "title": "Heat Waves"
+                  }
+                ],
+                "position": 1,
+                "title": "Heat Waves"
+              },
+              {
+                "artist": "GAYLE",
+                "foundSongs": [
+                  {
+                    "artist": "GAYLE",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\GAYLE - abcdefu (Karaoke Version).mp4",
+                    "title": "abcdefu"
+                  }
+                ],
+                "position": 2,
+                "title": "abcdefu"
+              },
+              {
+                "artist": "THE ANXIETY: WILLOW &amp; Tyler Cole",
+                "position": 3,
+                "title": "Meet Me At Our Spot"
+              },
+              {
+                "artist": "Imagine Dragons X JID",
+                "foundSongs": [
+                  {
+                    "artist": "Imagine Dragons feat. JID",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\Imagine Dragons feat. JID - Enemy (Karaoke Version).mp4",
+                    "title": "Enemy"
+                  }
+                ],
+                "position": 4,
+                "title": "Enemy"
+              },
+              {
+                "artist": "Billie Eilish",
+                "foundSongs": [
+                  {
+                    "artist": "Billie Eilish",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\Billie Eilish - Happier Than Ever (Karaoke Version).mp4",
+                    "title": "Happier Than Ever"
+                  },
+                  {
+                    "artist": "Billie Eilish",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\TheKARAOKEChannel\\Billie Eilish - Happier Than Ever (Karaoke with Lyrics).mp4",
+                    "title": "Happier Than Ever (Karaoke with Lyrics)"
+                  }
+                ],
+                "position": 5,
+                "title": "Happier Than Ever"
+              },
+              {
+                "artist": "Maneskin",
+                "foundSongs": [
+                  {
+                    "artist": "Måneskin",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\KaraFun Karaoke\\Beggin’ - Måneskin   Karaoke Version   KaraFun.mp4",
+                    "title": "Beggin’"
+                  },
+                  {
+                    "artist": "Måneskin",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\Måneskin - Beggin' (Karaoke Version).mp4",
+                    "title": "Beggin'"
+                  },
+                  {
+                    "artist": "Måneskin",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\TheKARAOKEChannel\\Måneskin - Beggin' (Karaoke with Lyrics).mp4",
+                    "title": "Beggin'"
+                  }
+                ],
+                "position": 6,
+                "title": "Beggin'"
+              },
+              {
+                "artist": "Elle King &amp; Miranda Lambert",
+                "position": 7,
+                "title": "Drunk (And I Don't Wanna Go Home)"
+              },
+              {
+                "artist": "The Walters",
+                "foundSongs": [
+                  {
+                    "artist": "The Walters",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\The Walters - I Love You So (Karaoke Version).mp4",
+                    "title": "I Love You So"
+                  }
+                ],
+                "position": 8,
+                "title": "I Love You So"
+              },
+              {
+                "artist": "Jaymes Young",
+                "foundSongs": [
+                  {
+                    "artist": "Jaymes Young",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\Jaymes Young - Infinity (Karaoke Version).mp4",
+                    "title": "Infinity"
+                  }
+                ],
+                "position": 9,
+                "title": "Infinity"
+              },
+              {
+                "artist": "Coldplay x BTS",
+                "position": 10,
+                "title": "My Universe"
+              },
+              {
+                "artist": "Oliver Tree",
+                "foundSongs": [
+                  {
+                    "artist": "Oliver Tree",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\Oliver Tree -  Life Goes On (Karaoke Version).mp4",
+                    "title": "Life Goes On"
+                  }
+                ],
+                "position": 11,
+                "title": "Life Goes On"
+              },
+              {
+                "artist": "Kid Rock",
+                "position": 12,
+                "title": "We The People"
+              },
+              {
+                "artist": "The Rare Occasions",
+                "position": 13,
+                "title": "Notion"
+              },
+              {
+                "artist": "Vundabar",
+                "position": 14,
+                "title": "Alien Blues"
+              },
+              {
+                "artist": "BoyWithUke",
+                "foundSongs": [
+                  {
+                    "artist": "BoyWithUke",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\BoyWithUke - Toxic (Karaoke Version).mp4",
+                    "title": "Toxic"
+                  }
+                ],
+                "position": 15,
+                "title": "Toxic"
+              },
+              {
+                "artist": "Gerry Rafferty",
+                "position": 16,
+                "title": "Right Down The Line"
+              },
+              {
+                "artist": "Sueco",
+                "position": 17,
+                "title": "Loser"
+              },
+              {
+                "artist": "Mother Mother",
+                "foundSongs": [
+                  {
+                    "artist": "Mother Mother",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\Mother Mother - Hayloft (Karaoke Version).mp4",
+                    "title": "Hayloft"
+                  }
+                ],
+                "position": 18,
+                "title": "Hayloft II"
+              },
+              {
+                "artist": "SiM",
+                "position": 19,
+                "title": "The Rumbling"
+              },
+              {
+                "artist": "Lana Del Rey",
+                "position": 20,
+                "title": "Watercolor Eyes"
+              },
+              {
+                "artist": "Rex Orange County",
+                "position": 21,
+                "title": "Keep It Up"
+              },
+              {
+                "artist": "Joy Again",
+                "position": 22,
+                "title": "Looking Out For You"
+              },
+              {
+                "artist": "Falling In Reverse",
+                "position": 23,
+                "title": "Zombified"
+              },
+              {
+                "artist": "iann dior, Travis Barker &amp; Machine Gun Kelly",
+                "position": 24,
+                "title": "Thought It Was"
+              },
+              {
+                "artist": "Avril Lavigne",
+                "position": 25,
+                "title": "Bite Me"
+              },
+              {
+                "artist": "Oliver Tree",
+                "position": 26,
+                "title": "Cowboys Don't Cry"
+              },
+              {
+                "artist": "Avril Lavigne Featuring blackbear",
+                "foundSongs": [
+                  {
+                    "artist": "Ne",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://CDG\\Sunfly Collection\\Sunfly Hits\\SF348\\Ne - Yo - SF301 - 02.mp3",
+                    "title": "Yo"
+                  }
+                ],
+                "position": 27,
+                "title": "Love It When You Hate Me"
+              },
+              {
+                "artist": "Shinedown",
+                "position": 28,
+                "title": "Planet Zero"
+              },
+              {
+                "artist": "Halsey",
+                "position": 29,
+                "title": "Could Have Been Me"
+              },
+              {
+                "artist": "Eyedress Featuring Dent May",
+                "position": 30,
+                "title": "Something About You"
+              },
+              {
+                "artist": "Daisy The Great X AJR",
+                "position": 31,
+                "title": "Record Player"
+              },
+              {
+                "artist": "Coyote Theory",
+                "foundSongs": [
+                  {
+                    "artist": "Coyote Theory",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\Coyote Theory - This Side Of Paradise (Karaoke Version).mp4",
+                    "title": "This Side Of Paradise"
+                  }
+                ],
+                "position": 32,
+                "title": "This Side Of Paradise"
+              },
+              {
+                "artist": "twenty one pilots",
+                "position": 33,
+                "title": "The Outside"
+              },
+              {
+                "artist": "Zach Williams",
+                "position": 34,
+                "title": "Heaven Help Me"
+              },
+              {
+                "artist": "Laura Les",
+                "position": 35,
+                "title": "Haunted"
+              },
+              {
+                "artist": "Grimes",
+                "position": 36,
+                "title": "Shinigami Eyes"
+              },
+              {
+                "artist": "Three Days Grace",
+                "position": 37,
+                "title": "So Called Life"
+              },
+              {
+                "artist": "The Lumineers",
+                "position": 38,
+                "title": "Brightside"
+              },
+              {
+                "artist": "Jack White",
+                "position": 39,
+                "title": "Taking Me Back"
+              },
+              {
+                "artist": "Montell Fish",
+                "position": 40,
+                "title": "Fall In Love With You."
+              },
+              {
+                "artist": "SALES",
+                "position": 41,
+                "title": "Pope Is A Rockstar"
+              },
+              {
+                "artist": "Jelly Roll",
+                "position": 42,
+                "title": "Son Of A Sinner"
+              },
+              {
+                "artist": "Tai Verdes",
+                "position": 43,
+                "title": "Last Day On Earth"
+              },
+              {
+                "artist": "Muse",
+                "position": 44,
+                "title": "Won't Stand Down"
+              },
+              {
+                "artist": "Lil Peep Featuring rainy bear",
+                "position": 45,
+                "title": "Nuts"
+              },
+              {
+                "artist": "Mareux",
+                "position": 46,
+                "title": "The Perfect Girl"
+              },
+              {
+                "artist": "Papa Roach",
+                "position": 47,
+                "title": "Kill The Noise"
+              },
+              {
+                "artist": "Conan Gray",
+                "position": 48,
+                "title": "Jigsaw"
+              },
+              {
+                "artist": "BoyWithUke",
+                "position": 49,
+                "title": "Long Drives"
+              },
+              {
+                "artist": "Caroline Polachek",
+                "foundSongs": [
+                  {
+                    "artist": "Ne",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://CDG\\Sunfly Collection\\Sunfly Hits\\SF348\\Ne - Yo - SF301 - 02.mp3",
+                    "title": "Yo"
+                  }
+                ],
+                "position": 50,
+                "title": "So Hot You're Hurting My Feelings"
+              }
+            ],
+            "title": "2022 - Rock-Songs"
+          },
+          {
+            "songs": [
+              {
+                "artist": "Kodak Black",
+                "position": 1,
+                "title": "Super Gremlin"
+              },
+              {
+                "artist": "Gunna &amp; Future Featuring Young Thug",
+                "position": 2,
+                "title": "Pushin P"
+              },
+              {
+                "artist": "Lil Nas X &amp; Jack Harlow",
+                "position": 3,
+                "title": "Industry Baby"
+              },
+              {
+                "artist": "Silk Sonic (Bruno Mars &amp; Anderson .Paak)",
+                "foundSongs": [
+                  {
+                    "artist": "Bruno Mars, Anderson .Paak, Silk Sonic",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\TheKARAOKEChannel\\Bruno Mars, Anderson .Paak, Silk Sonic - Smokin Out The Window (Karaoke With Lyrics).mp4",
+                    "title": "Smokin Out The Window"
+                  }
+                ],
+                "position": 4,
+                "title": "Smokin Out The Window"
+              },
+              {
+                "artist": "Muni Long",
+                "position": 5,
+                "title": "Hrs And Hrs"
+              },
+              {
+                "artist": "SZA",
+                "position": 6,
+                "title": "I Hate U"
+              },
+              {
+                "artist": "Drake Featuring 21 Savage &amp; Project Pat",
+                "position": 7,
+                "title": "Knife Talk"
+              },
+              {
+                "artist": "Latto",
+                "position": 8,
+                "title": "Big Energy"
+              },
+              {
+                "artist": "Doja Cat",
+                "foundSongs": [
+                  {
+                    "artist": "Doja Cat",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\Doja Cat - Woman (Karaoke Version).mp4",
+                    "title": "Woman"
+                  }
+                ],
+                "position": 9,
+                "title": "Woman"
+              },
+              {
+                "artist": "The Weeknd",
+                "foundSongs": [
+                  {
+                    "artist": "The Weeknd",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\TheKARAOKEChannel\\The Weeknd - Sacrifice (Karaoke With Lyrics).mp4",
+                    "title": "Sacrifice"
+                  }
+                ],
+                "position": 10,
+                "title": "Sacrifice"
+              },
+              {
+                "artist": "Gucci Mane Featuring Lil Durk",
+                "position": 11,
+                "title": "Rumors"
+              },
+              {
+                "artist": "Gunna Featuring Drake",
+                "position": 12,
+                "title": "P Power"
+              },
+              {
+                "artist": "Drake Featuring Lil Baby",
+                "position": 13,
+                "title": "Girls Want Girls"
+              },
+              {
+                "artist": "Drake Featuring Future &amp; Young Thug",
+                "position": 14,
+                "title": "Way 2 Sexy"
+              },
+              {
+                "artist": "Lil Durk Featuring Morgan Wallen",
+                "position": 15,
+                "title": "Broadway Girls"
+              },
+              {
+                "artist": "Frank Ocean",
+                "position": 16,
+                "title": "Lost"
+              },
+              {
+                "artist": "Nardo Wick Featuring G Herbo, Lil Durk &amp; 21 Savage",
+                "position": 17,
+                "title": "Who Want Smoke??"
+              },
+              {
+                "artist": "Rod Wave",
+                "position": 18,
+                "title": "Cold December"
+              },
+              {
+                "artist": "Giveon",
+                "position": 19,
+                "title": "For Tonight"
+              },
+              {
+                "artist": "Ari Lennox",
+                "position": 20,
+                "title": "Pressure"
+              },
+              {
+                "artist": "Moneybagg Yo",
+                "position": 21,
+                "title": "Scorpio"
+              },
+              {
+                "artist": "Benny The Butcher &amp; J. Cole",
+                "position": 22,
+                "title": "Johnny P's Caddy"
+              },
+              {
+                "artist": "Rod Wave",
+                "position": 23,
+                "title": "By Your Side"
+              },
+              {
+                "artist": "Gunna &amp; Future",
+                "position": 24,
+                "title": "Too Easy"
+              },
+              {
+                "artist": "Chloe",
+                "foundSongs": [
+                  {
+                    "artist": "Chlöe",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\TheKARAOKEChannel\\Chlöe - Have Mercy (Karaoke with Lyrics).mp4",
+                    "title": "Have Mercy"
+                  }
+                ],
+                "position": 25,
+                "title": "Have Mercy"
+              },
+              {
+                "artist": "Nardo Wick, Lil Baby &amp; Future",
+                "position": 26,
+                "title": "Me Or Sum"
+              },
+              {
+                "artist": "Fireboy DML &amp; Ed Sheeran",
+                "position": 27,
+                "title": "Peru"
+              },
+              {
+                "artist": "Yung Bleu &amp; Kehlani",
+                "position": 28,
+                "title": "Beautiful Lies"
+              },
+              {
+                "artist": "YoungBoy Never Broke Again",
+                "position": 29,
+                "title": "No Switch"
+              },
+              {
+                "artist": "NLE Choppa",
+                "foundSongs": [
+                  {
+                    "artist": "NLE Choppa ft. Blueface",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\NLE Choppa ft. Blueface - Shotta Flow (Remix) (Karaoke Version).mp4",
+                    "title": "Shotta Flow (Remix)"
+                  }
+                ],
+                "position": 30,
+                "title": "Shotta Flow 6"
+              },
+              {
+                "artist": "Chris Brown",
+                "position": 31,
+                "title": "Iffy"
+              },
+              {
+                "artist": "XXXTENTACION",
+                "position": 32,
+                "title": "Vice City"
+              },
+              {
+                "artist": "Summer Walker &amp; SZA",
+                "position": 33,
+                "title": "No Love"
+              },
+              {
+                "artist": "Megan Thee Stallion",
+                "position": 34,
+                "title": "Megan's Piano"
+              },
+              {
+                "artist": "The Game &amp; Kanye West",
+                "position": 35,
+                "title": "Eazy"
+              },
+              {
+                "artist": "YoungBoy Never Broke Again",
+                "position": 36,
+                "title": "Fish Scale"
+              },
+              {
+                "artist": "Ella Mai",
+                "position": 37,
+                "title": "DFMU"
+              },
+              {
+                "artist": "YoungBoy Never Broke Again",
+                "position": 38,
+                "title": "Bring The Hook"
+              },
+              {
+                "artist": "Gunna Featuring Lil Baby",
+                "position": 39,
+                "title": "25k Jacket"
+              },
+              {
+                "artist": "NLE Choppa Featuring Young Thug",
+                "position": 40,
+                "title": "Push It"
+              },
+              {
+                "artist": "Polo G",
+                "position": 41,
+                "title": "Bad Man (Smooth Criminal)"
+              },
+              {
+                "artist": "The Weeknd",
+                "foundSongs": [
+                  {
+                    "artist": "The Weeknd",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\TheKARAOKEChannel\\The Weeknd - Out Of Time (Karaoke With Lyrics).mp4",
+                    "title": "Out Of Time"
+                  }
+                ],
+                "position": 42,
+                "title": "Out Of Time"
+              },
+              {
+                "artist": "YoungBoy Never Broke Again",
+                "position": 43,
+                "title": "Bring It On"
+              },
+              {
+                "artist": "Playboi Carti",
+                "position": 44,
+                "title": "Sky"
+              },
+              {
+                "artist": "Young Thug With Drake &amp; Travis Scott",
+                "position": 45,
+                "title": "Bubbly"
+              },
+              {
+                "artist": "Gunna &amp; 21 Savage",
+                "position": 46,
+                "title": "Thought I Was Playing"
+              },
+              {
+                "artist": "NLE Choppa Featuring Polo G",
+                "position": 47,
+                "title": "Jumpin"
+              },
+              {
+                "artist": "YoungBoy Never Broke Again &amp; Birdman",
+                "position": 48,
+                "title": "Black Ball"
+              },
+              {
+                "artist": "The Weeknd",
+                "position": 49,
+                "title": "Is There Someone Else?"
+              },
+              {
+                "artist": "Key Glock",
+                "position": 50,
+                "title": "Proud"
+              }
+            ],
+            "title": "2022 - R-B-Hip-Hop-Songs"
+          },
+          {
+            "songs": [
+              {
+                "artist": "Glass Animals",
+                "foundSongs": [
+                  {
+                    "artist": "Glass Animals",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\Glass Animals - Heat Waves (Karaoke Version).mp4",
+                    "title": "Heat Waves"
+                  },
+                  {
+                    "artist": "Glass Animals",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\TheKARAOKEChannel\\Glass Animals - Heat Waves (Karaoke With Lyrics).mp4",
+                    "title": "Heat Waves"
+                  }
+                ],
+                "position": 1,
+                "title": "Heat Waves"
+              },
+              {
+                "artist": "Doja Cat",
+                "position": 2,
+                "title": "Need To Know"
+              },
+              {
+                "artist": "Lil Nas X",
+                "foundSongs": [
+                  {
+                    "artist": "Lil Nas X",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\Lil Nas X - THATS WHAT I WANT (Karaoke Version).mp4",
+                    "title": "THATS WHAT I WANT"
+                  },
+                  {
+                    "artist": "Lil Nas X",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\TheKARAOKEChannel\\Lil Nas X - THATS WHAT I WANT (Karaoke with Lyrics).mp4",
+                    "title": "THATS WHAT I WANT"
+                  }
+                ],
+                "position": 3,
+                "title": "Thats What I Want"
+              },
+              {
+                "artist": "Justin Bieber",
+                "position": 4,
+                "title": "Ghost"
+              },
+              {
+                "artist": "Adele",
+                "foundSongs": [
+                  {
+                    "artist": "Adele",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\TheKARAOKEChannel\\Adele - Easy On Me (Karaoke With Lyrics).mp4",
+                    "title": "Easy On Me"
+                  }
+                ],
+                "position": 5,
+                "title": "Easy On Me"
+              },
+              {
+                "artist": "Ed Sheeran",
+                "foundSongs": [
+                  {
+                    "artist": "Ed Sheeran",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\Ed Sheeran - Shivers (Karaoke Version).mp4",
+                    "title": "Shivers"
+                  }
+                ],
+                "position": 6,
+                "title": "Shivers"
+              },
+              {
+                "artist": "GAYLE",
+                "foundSongs": [
+                  {
+                    "artist": "GAYLE",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\GAYLE - abcdefu (Karaoke Version).mp4",
+                    "title": "abcdefu"
+                  }
+                ],
+                "position": 7,
+                "title": "abcdefu"
+              },
+              {
+                "artist": "The Kid LAROI &amp; Justin Bieber",
+                "position": 8,
+                "title": "Stay"
+              },
+              {
+                "artist": "Lil Nas X &amp; Jack Harlow",
+                "position": 9,
+                "title": "Industry Baby"
+              },
+              {
+                "artist": "Post Malone &amp; The Weeknd",
+                "position": 10,
+                "title": "One Right Now"
+              },
+              {
+                "artist": "Adele",
+                "foundSongs": [
+                  {
+                    "artist": "Adele",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\TheKARAOKEChannel\\Adele - Oh My God (Karaoke With Lyrics).mp4",
+                    "title": "Oh My God"
+                  }
+                ],
+                "position": 11,
+                "title": "Oh My God"
+              },
+              {
+                "artist": "NEIKED X Mae Muller X Polo G",
+                "position": 12,
+                "title": "Better Days"
+              },
+              {
+                "artist": "THE ANXIETY: WILLOW &amp; Tyler Cole",
+                "position": 13,
+                "title": "Meet Me At Our Spot"
+              },
+              {
+                "artist": "The Weeknd",
+                "foundSongs": [
+                  {
+                    "artist": "The Weeknd",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\TheKARAOKEChannel\\The Weeknd - Sacrifice (Karaoke With Lyrics).mp4",
+                    "title": "Sacrifice"
+                  }
+                ],
+                "position": 14,
+                "title": "Sacrifice"
+              },
+              {
+                "artist": "Doja Cat",
+                "foundSongs": [
+                  {
+                    "artist": "Doja Cat",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\Doja Cat - Woman (Karaoke Version).mp4",
+                    "title": "Woman"
+                  }
+                ],
+                "position": 15,
+                "title": "Woman"
+              },
+              {
+                "artist": "Charlie Puth",
+                "foundSongs": [
+                  {
+                    "artist": "Charlie Puth",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\TheKARAOKEChannel\\Charlie Puth - Light Switch (Karaoke With Lyrics).mp4",
+                    "title": "Light Switch"
+                  }
+                ],
+                "position": 16,
+                "title": "Light Switch"
+              },
+              {
+                "artist": "Taylor Swift",
+                "foundSongs": [
+                  {
+                    "artist": "Taylor Swift",
+                    "disabled": false,
+                    "favorite": false,
+                    "genre": "karaoke",
+                    "path": "z://CDG\\Sunfly Collection\\Sunfly Hits\\SF396\\SF396-01 - Taylor Swift - Me.mp3",
+                    "title": "Me"
+                  }
+                ],
+                "position": 17,
+                "title": "Message In A Bottle (Taylor's Version) (From The Vault)"
+              },
+              {
+                "artist": "Latto",
+                "position": 18,
+                "title": "Big Energy"
+              },
+              {
+                "artist": "Lauren Spencer-Smith",
+                "foundSongs": [
+                  {
+                    "artist": "Lauren Spencer Smith",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\TheKARAOKEChannel\\Lauren Spencer Smith - Fingers Crossed (Karaoke With Lyrics).mp4",
+                    "title": "Fingers Crossed"
+                  }
+                ],
+                "position": 19,
+                "title": "Fingers Crossed"
+              },
+              {
+                "artist": "Giveon",
+                "position": 20,
+                "title": "For Tonight"
+              },
+              {
+                "artist": "The Chainsmokers",
+                "position": 21,
+                "title": "High"
+              },
+              {
+                "artist": "Acraze Featuring Cherish",
+                "position": 22,
+                "title": "Do It To It"
+              },
+              {
+                "artist": "Chloe",
+                "foundSongs": [
+                  {
+                    "artist": "Chlöe",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\TheKARAOKEChannel\\Chlöe - Have Mercy (Karaoke with Lyrics).mp4",
+                    "title": "Have Mercy"
+                  }
+                ],
+                "position": 23,
+                "title": "Have Mercy"
+              },
+              {
+                "artist": "CKay",
+                "foundSongs": [
+                  {
+                    "artist": "CKay",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\CKay - love nwantiti (ah ah ah) (Karaoke Version).mp4",
+                    "title": "love nwantiti"
+                  }
+                ],
+                "position": 24,
+                "title": "Love Nwantiti (Ah Ah Ah)"
+              },
+              {
+                "artist": "Benson Boone",
+                "foundSongs": [
+                  {
+                    "artist": "Benson Boone",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\Benson Boone - GHOST TOWN (Karaoke Version).mp4",
+                    "title": "GHOST TOWN"
+                  }
+                ],
+                "position": 25,
+                "title": "Ghost Town"
+              },
+              {
+                "artist": "Swedish House Mafia &amp; The Weeknd",
+                "position": 26,
+                "title": "Moth To A Flame"
+              },
+              {
+                "artist": "Silk Sonic (Bruno Mars &amp; Anderson .Paak)",
+                "foundSongs": [
+                  {
+                    "artist": "Bruno Mars, Anderson .Paak, Silk Sonic",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\TheKARAOKEChannel\\Bruno Mars, Anderson .Paak, Silk Sonic - Smokin Out The Window (Karaoke With Lyrics).mp4",
+                    "title": "Smokin Out The Window"
+                  }
+                ],
+                "position": 27,
+                "title": "Smokin Out The Window"
+              },
+              {
+                "artist": "Alesso / Katy Perry",
+                "foundSongs": [
+                  {
+                    "artist": "Alesso, Katy Perry",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\TheKARAOKEChannel\\Alesso, Katy Perry - When I'm Gone (Karaoke With Lyrics).mp4",
+                    "title": "When I'm Gone"
+                  }
+                ],
+                "position": 28,
+                "title": "When I'm Gone"
+              },
+              {
+                "artist": "Blxst &amp; Tyga Featuring Ty Dolla $ign",
+                "position": 29,
+                "title": "Chosen"
+              },
+              {
+                "artist": "Emmy Meli",
+                "foundSongs": [
+                  {
+                    "artist": "Emmy Meli",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\Emmy Meli - I AM WOMAN (Karaoke Version).mp4",
+                    "title": "I AM WOMAN"
+                  }
+                ],
+                "position": 30,
+                "title": "I Am Woman"
+              },
+              {
+                "artist": "BIBI &amp; 347aidan",
+                "position": 31,
+                "title": "The Weekend"
+              },
+              {
+                "artist": "Juice WRLD &amp; Justin Bieber",
+                "position": 32,
+                "title": "Wandered To LA."
+              },
+              {
+                "artist": "SZA",
+                "position": 33,
+                "title": "I Hate U"
+              },
+              {
+                "artist": "Avril Lavigne Featuring blackbear",
+                "foundSongs": [
+                  {
+                    "artist": "Ne",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://CDG\\Sunfly Collection\\Sunfly Hits\\SF348\\Ne - Yo - SF301 - 02.mp3",
+                    "title": "Yo"
+                  }
+                ],
+                "position": 34,
+                "title": "Love It When You Hate Me"
+              },
+              {
+                "artist": "Imagine Dragons X JID",
+                "foundSongs": [
+                  {
+                    "artist": "Imagine Dragons feat. JID",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\Imagine Dragons feat. JID - Enemy (Karaoke Version).mp4",
+                    "title": "Enemy"
+                  }
+                ],
+                "position": 35,
+                "title": "Enemy"
+              },
+              {
+                "artist": "The Walters",
+                "foundSongs": [
+                  {
+                    "artist": "The Walters",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\The Walters - I Love You So (Karaoke Version).mp4",
+                    "title": "I Love You So"
+                  }
+                ],
+                "position": 36,
+                "title": "I Love You So"
+              },
+              {
+                "artist": "Tiesto &amp; Ava Max",
+                "position": 37,
+                "title": "The Motto"
+              },
+              {
+                "artist": "Carolina Gaitan, Mauro Castillo, Adassa, Rhenzy Feliz, Diane Guerrero, Stephanie Beatriz &amp; Encanto Cast",
+                "position": 38,
+                "title": "We Don't Talk About Bruno"
+              },
+              {
+                "artist": "Pitbull Featuring Anthony Watts &amp; DJWS",
+                "position": 39,
+                "title": "I Feel Good"
+              },
+              {
+                "artist": "ALTEGO x Britney Spears x Ginuwine",
+                "foundSongs": [
+                  {
+                    "artist": "Ginuwine",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\KaraFun Karaoke\\Karaoke Pony - Ginuwine.mp4",
+                    "title": "Pony"
+                  },
+                  {
+                    "artist": "Britney Spears",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\KaraFun Karaoke\\Toxic - Britney Spears   Karaoke Version   KaraFun.mp4",
+                    "title": "Toxic"
+                  },
+                  {
+                    "artist": "Britney Spears",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\KtvEntertainment\\Britney Spears - Toxic Karaoke Lyrics.mp4",
+                    "title": "Toxic"
+                  },
+                  {
+                    "artist": "Britney Spears",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Let's Sing Karaoke\\Britney Spears - Toxic.mp4",
+                    "title": "Toxic"
+                  },
+                  {
+                    "artist": "Britney Spears",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\Britney Spears - Toxic (Karaoke Version).mp4",
+                    "title": "Toxic"
+                  },
+                  {
+                    "artist": "Britney Spears",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://CDG\\Sunfly Collection\\Sunfly Hits\\SF215\\Britney Spears - Toxic - SF215 - 05.mp3",
+                    "title": "Toxic"
+                  },
+                  {
+                    "artist": "Britney Spears",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://CDG\\Various\\Britney Spears - Toxic.mp3",
+                    "title": "Toxic"
+                  },
+                  {
+                    "artist": "Ginuwine",
+                    "disabled": false,
+                    "favorite": false,
+                    "genre": "Karaoke",
+                    "path": "z://CDG\\Various\\Ginuwine - Pony.mp3",
+                    "title": "Pony"
+                  },
+                  {
+                    "artist": "Britney Spears",
+                    "disabled": false,
+                    "favorite": false,
+                    "genre": "karaoke",
+                    "path": "z://CDG\\Zoom Karaoke Pop Box\\ZPBX2-6\\ZPBX2-6-08 - Britney Spears - Toxic.mp3",
+                    "title": "Toxic"
+                  }
+                ],
+                "position": 40,
+                "title": "Toxic Pony"
+              }
+            ],
+            "title": "2022 - Pop-Songs"
+          },
+          {
+            "songs": [
+              {
+                "artist": "Carolina Gaitan, Mauro Castillo, Adassa, Rhenzy Feliz, Diane Guerrero, Stephanie Beatriz &amp; Encanto Cast",
+                "position": 1,
+                "title": "We Don't Talk About Bruno"
+              },
+              {
+                "artist": "Adele",
+                "foundSongs": [
+                  {
+                    "artist": "Adele",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\TheKARAOKEChannel\\Adele - Easy On Me (Karaoke With Lyrics).mp4",
+                    "title": "Easy On Me"
+                  }
+                ],
+                "position": 2,
+                "title": "Easy On Me"
+              },
+              {
+                "artist": "Glass Animals",
+                "foundSongs": [
+                  {
+                    "artist": "Glass Animals",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\Glass Animals - Heat Waves (Karaoke Version).mp4",
+                    "title": "Heat Waves"
+                  },
+                  {
+                    "artist": "Glass Animals",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\TheKARAOKEChannel\\Glass Animals - Heat Waves (Karaoke With Lyrics).mp4",
+                    "title": "Heat Waves"
+                  }
+                ],
+                "position": 3,
+                "title": "Heat Waves"
+              },
+              {
+                "artist": "The Kid LAROI &amp; Justin Bieber",
+                "position": 4,
+                "title": "Stay"
+              },
+              {
+                "artist": "Kodak Black",
+                "position": 5,
+                "title": "Super Gremlin"
+              },
+              {
+                "artist": "GAYLE",
+                "foundSongs": [
+                  {
+                    "artist": "GAYLE",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\GAYLE - abcdefu (Karaoke Version).mp4",
+                    "title": "abcdefu"
+                  }
+                ],
+                "position": 6,
+                "title": "abcdefu"
+              },
+              {
+                "artist": "Ed Sheeran",
+                "foundSongs": [
+                  {
+                    "artist": "Ed Sheeran",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\Ed Sheeran - Shivers (Karaoke Version).mp4",
+                    "title": "Shivers"
+                  }
+                ],
+                "position": 7,
+                "title": "Shivers"
+              },
+              {
+                "artist": "Jessica Darrow",
+                "position": 8,
+                "title": "Surface Pressure"
+              },
+              {
+                "artist": "Gunna &amp; Future Featuring Young Thug",
+                "position": 9,
+                "title": "Pushin P"
+              },
+              {
+                "artist": "Doja Cat",
+                "position": 10,
+                "title": "Need To Know"
+              },
+              {
+                "artist": "Elton John &amp; Dua Lipa",
+                "position": 11,
+                "title": "Cold Heart (PNAU Remix)"
+              },
+              {
+                "artist": "Justin Bieber",
+                "position": 12,
+                "title": "Ghost"
+              },
+              {
+                "artist": "Ed Sheeran",
+                "foundSongs": [
+                  {
+                    "artist": "Ed Sheeran",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\KaraFun Karaoke\\Bad Habits - Ed Sheeran   Karaoke Version   KaraFun.mp4",
+                    "title": "Bad Habits"
+                  },
+                  {
+                    "artist": "Ed Sheeran",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\Ed Sheeran - Bad Habits (Karaoke Version).mp4",
+                    "title": "Bad Habits"
+                  }
+                ],
+                "position": 13,
+                "title": "Bad Habits"
+              },
+              {
+                "artist": "Lil Nas X &amp; Jack Harlow",
+                "position": 14,
+                "title": "Industry Baby"
+              },
+              {
+                "artist": "Lil Nas X",
+                "foundSongs": [
+                  {
+                    "artist": "Lil Nas X",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\Lil Nas X - THATS WHAT I WANT (Karaoke Version).mp4",
+                    "title": "THATS WHAT I WANT"
+                  },
+                  {
+                    "artist": "Lil Nas X",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\TheKARAOKEChannel\\Lil Nas X - THATS WHAT I WANT (Karaoke with Lyrics).mp4",
+                    "title": "THATS WHAT I WANT"
+                  }
+                ],
+                "position": 15,
+                "title": "Thats What I Want"
+              },
+              {
+                "artist": "Silk Sonic (Bruno Mars &amp; Anderson .Paak)",
+                "foundSongs": [
+                  {
+                    "artist": "Bruno Mars, Anderson .Paak, Silk Sonic",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\TheKARAOKEChannel\\Bruno Mars, Anderson .Paak, Silk Sonic - Smokin Out The Window (Karaoke With Lyrics).mp4",
+                    "title": "Smokin Out The Window"
+                  }
+                ],
+                "position": 16,
+                "title": "Smokin Out The Window"
+              },
+              {
+                "artist": "Dua Lipa",
+                "foundSongs": [
+                  {
+                    "artist": "Dua Lipa",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Levitating - Dua Lipa.mp4",
+                    "title": "Levitating"
+                  },
+                  {
+                    "artist": "Dua Lipa",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\KaraFun Karaoke\\Levitating - Dua Lipa   Karaoke Version   KaraFun.mp4",
+                    "title": "Levitating"
+                  },
+                  {
+                    "artist": "Dua Lipa",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\Dua Lipa - Levitating (Karaoke Version).mp4",
+                    "title": "Levitating"
+                  }
+                ],
+                "position": 17,
+                "title": "Levitating"
+              },
+              {
+                "artist": "Muni Long",
+                "position": 18,
+                "title": "Hrs And Hrs"
+              },
+              {
+                "artist": "The Weeknd &amp; Ariana Grande",
+                "foundSongs": [
+                  {
+                    "artist": "The Weeknd",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\KaraFun Karaoke\\Save Your Tears - The Weeknd   Karaoke Version   KaraFun.mp4",
+                    "title": "Save Your Tears"
+                  },
+                  {
+                    "artist": "The Weeknd",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\The Weeknd - Save Your Tears (Karaoke Version).mp4",
+                    "title": "Save Your Tears"
+                  }
+                ],
+                "position": 19,
+                "title": "Save Your Tears"
+              },
+              {
+                "artist": "Stephanie Beatriz, Olga Merediz &amp; Encanto Cast",
+                "position": 20,
+                "title": "The Family Madrigal"
+              },
+              {
+                "artist": "Adele",
+                "foundSongs": [
+                  {
+                    "artist": "Adele",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\TheKARAOKEChannel\\Adele - Oh My God (Karaoke With Lyrics).mp4",
+                    "title": "Oh My God"
+                  }
+                ],
+                "position": 21,
+                "title": "Oh My God"
+              },
+              {
+                "artist": "Post Malone &amp; The Weeknd",
+                "position": 22,
+                "title": "One Right Now"
+              },
+              {
+                "artist": "Olivia Rodrigo",
+                "foundSongs": [
+                  {
+                    "artist": "Olivia Rodrigo",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\KaraFun Karaoke\\Good 4 U - Olivia Rodrigo   Karaoke Version   KaraFun.mp4",
+                    "title": "Good 4 U"
+                  },
+                  {
+                    "artist": "Olivia Rodrigo",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\Olivia Rodrigo - good 4 u (Karaoke Version).mp4",
+                    "title": "good 4 u"
+                  }
+                ],
+                "position": 23,
+                "title": "Good 4 U"
+              },
+              {
+                "artist": "Jordan Davis Featuring Luke Bryan",
+                "position": 24,
+                "title": "Buy Dirt"
+              },
+              {
+                "artist": "NEIKED X Mae Muller X Polo G",
+                "position": 25,
+                "title": "Better Days"
+              },
+              {
+                "artist": "SZA",
+                "position": 26,
+                "title": "I Hate U"
+              },
+              {
+                "artist": "Drake Featuring 21 Savage &amp; Project Pat",
+                "position": 27,
+                "title": "Knife Talk"
+              },
+              {
+                "artist": "Chris Stapleton",
+                "foundSongs": [
+                  {
+                    "artist": "Chris Stapleton",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\Chris Stapleton - You Should Probably Leave (Karaoke Version).mp4",
+                    "title": "You Should Probably Leave"
+                  }
+                ],
+                "position": 28,
+                "title": "You Should Probably Leave"
+              },
+              {
+                "artist": "Walker Hayes",
+                "foundSongs": [
+                  {
+                    "artist": "Walker Hayes",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\Walker Hayes - Fancy Like (Karaoke Version).mp4",
+                    "title": "Fancy Like"
+                  },
+                  {
+                    "artist": "Walker Hayes",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\TheKARAOKEChannel\\Walker Hayes - Fancy Like (Karaoke with Lyrics).mp4",
+                    "title": "Fancy Like"
+                  }
+                ],
+                "position": 29,
+                "title": "Fancy Like"
+              },
+              {
+                "artist": "CKay",
+                "foundSongs": [
+                  {
+                    "artist": "CKay",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\CKay - love nwantiti (ah ah ah) (Karaoke Version).mp4",
+                    "title": "love nwantiti"
+                  }
+                ],
+                "position": 30,
+                "title": "Love Nwantiti (Ah Ah Ah)"
+              },
+              {
+                "artist": "Diane Guerrero &amp; Stephanie Beatriz",
+                "position": 31,
+                "title": "What Else Can I Do?"
+              },
+              {
+                "artist": "Lauren Spencer-Smith",
+                "foundSongs": [
+                  {
+                    "artist": "Lauren Spencer Smith",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\TheKARAOKEChannel\\Lauren Spencer Smith - Fingers Crossed (Karaoke With Lyrics).mp4",
+                    "title": "Fingers Crossed"
+                  }
+                ],
+                "position": 32,
+                "title": "Fingers Crossed"
+              },
+              {
+                "artist": "Wizkid Featuring Justin Bieber &amp; Tems",
+                "position": 33,
+                "title": "Essence"
+              },
+              {
+                "artist": "Latto",
+                "position": 34,
+                "title": "Big Energy"
+              },
+              {
+                "artist": "Doja Cat Featuring SZA",
+                "foundSongs": [
+                  {
+                    "artist": "Doja Cat ft. SZA",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\Doja Cat ft. SZA - Kiss Me More (Karaoke Version).mp4",
+                    "title": "Kiss Me More"
+                  }
+                ],
+                "position": 35,
+                "title": "Kiss Me More"
+              },
+              {
+                "artist": "Doja Cat &amp; The Weeknd",
+                "position": 36,
+                "title": "You Right"
+              },
+              {
+                "artist": "Doja Cat",
+                "foundSongs": [
+                  {
+                    "artist": "Doja Cat",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\Doja Cat - Woman (Karaoke Version).mp4",
+                    "title": "Woman"
+                  }
+                ],
+                "position": 37,
+                "title": "Woman"
+              },
+              {
+                "artist": "Sebastian Yatra",
+                "position": 38,
+                "title": "Dos Oruguitas"
+              },
+              {
+                "artist": "Morgan Wallen",
+                "foundSongs": [
+                  {
+                    "artist": "Morgan Wallen",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\Morgan Wallen - Sand In My Boots (Karaoke Version).mp4",
+                    "title": "Sand In My Boots"
+                  }
+                ],
+                "position": 39,
+                "title": "Sand In My Boots"
+              },
+              {
+                "artist": "The Weeknd",
+                "foundSongs": [
+                  {
+                    "artist": "The Weeknd",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\TheKARAOKEChannel\\The Weeknd - Sacrifice (Karaoke With Lyrics).mp4",
+                    "title": "Sacrifice"
+                  }
+                ],
+                "position": 40,
+                "title": "Sacrifice"
+              },
+              {
+                "artist": "THE ANXIETY: WILLOW &amp; Tyler Cole",
+                "position": 41,
+                "title": "Meet Me At Our Spot"
+              },
+              {
+                "artist": "Jason Aldean &amp; Carrie Underwood",
+                "position": 42,
+                "title": "If I Didn't Love You"
+              },
+              {
+                "artist": "Imagine Dragons X JID",
+                "foundSongs": [
+                  {
+                    "artist": "Imagine Dragons feat. JID",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\Imagine Dragons feat. JID - Enemy (Karaoke Version).mp4",
+                    "title": "Enemy"
+                  }
+                ],
+                "position": 43,
+                "title": "Enemy"
+              },
+              {
+                "artist": "Dustin Lynch Featuring Lauren Alaina Or MacKenzie Porter",
+                "position": 44,
+                "title": "Thinking 'Bout You"
+              },
+              {
+                "artist": "Cody Johnson",
+                "foundSongs": [
+                  {
+                    "artist": "(Lebo M. & Cheryl Porter)",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\KaraFun Karaoke\\Karaoke Il cerchio della vita   Nants' Ingonyama -  (Lebo M. & Cheryl Porter).mp4",
+                    "title": "Il cerchio della vita   Nants' Ingonyama"
+                  }
+                ],
+                "position": 45,
+                "title": "'Til You Can't"
+              },
+              {
+                "artist": "Jimmie Allen &amp; Brad Paisley",
+                "position": 46,
+                "title": "Freedom Was A Highway"
+              },
+              {
+                "artist": "Kane Brown",
+                "position": 47,
+                "title": "One Mississippi"
+              },
+              {
+                "artist": "Parker McCollum",
+                "position": 48,
+                "title": "To Be Loved By You"
+              },
+              {
+                "artist": "Charlie Puth",
+                "foundSongs": [
+                  {
+                    "artist": "Charlie Puth",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\TheKARAOKEChannel\\Charlie Puth - Light Switch (Karaoke With Lyrics).mp4",
+                    "title": "Light Switch"
+                  }
+                ],
+                "position": 49,
+                "title": "Light Switch"
+              },
+              {
+                "artist": "Stephanie Beatriz",
+                "position": 50,
+                "title": "Waiting On A Miracle"
+              },
+              {
+                "artist": "Gucci Mane Featuring Lil Durk",
+                "position": 51,
+                "title": "Rumors"
+              },
+              {
+                "artist": "Gunna Featuring Drake",
+                "position": 52,
+                "title": "P Power"
+              },
+              {
+                "artist": "Sam Hunt",
+                "position": 53,
+                "title": "23"
+              },
+              {
+                "artist": "Lil Durk Featuring Morgan Wallen",
+                "position": 54,
+                "title": "Broadway Girls"
+              },
+              {
+                "artist": "Kelsea Ballerini Featuring Kenny Chesney",
+                "position": 55,
+                "title": "Half Of My Hometown"
+              },
+              {
+                "artist": "Walker Hayes",
+                "position": 56,
+                "title": "AA"
+              },
+              {
+                "artist": "The Chainsmokers",
+                "position": 57,
+                "title": "High"
+              },
+              {
+                "artist": "Blxst &amp; Tyga Featuring Ty Dolla $ign",
+                "position": 58,
+                "title": "Chosen"
+              },
+              {
+                "artist": "Nardo Wick Featuring G Herbo, Lil Durk &amp; 21 Savage",
+                "position": 59,
+                "title": "Who Want Smoke??"
+              },
+              {
+                "artist": "Eric Church",
+                "position": 60,
+                "title": "Heart On Fire"
+              },
+              {
+                "artist": "Taylor Swift",
+                "foundSongs": [
+                  {
+                    "artist": "Taylor Swift",
+                    "disabled": false,
+                    "favorite": false,
+                    "genre": "karaoke",
+                    "path": "z://CDG\\Sunfly Collection\\Sunfly Hits\\SF396\\SF396-01 - Taylor Swift - Me.mp3",
+                    "title": "Me"
+                  }
+                ],
+                "position": 61,
+                "title": "Message In A Bottle (Taylor's Version) (From The Vault)"
+              },
+              {
+                "artist": "Rod Wave",
+                "position": 62,
+                "title": "Cold December"
+              },
+              {
+                "artist": "Dierks Bentley, Breland &amp; HARDY",
+                "position": 63,
+                "title": "Beers On Me"
+              },
+              {
+                "artist": "Michael Ray",
+                "position": 64,
+                "title": "Whiskey And Rain"
+              },
+              {
+                "artist": "Giveon",
+                "position": 65,
+                "title": "For Tonight"
+              },
+              {
+                "artist": "Luke Combs",
+                "position": 66,
+                "title": "Doin' This"
+              },
+              {
+                "artist": "Ari Lennox",
+                "position": 67,
+                "title": "Pressure"
+              },
+              {
+                "artist": "Moneybagg Yo",
+                "position": 68,
+                "title": "Scorpio"
+              },
+              {
+                "artist": "Cole Swindell / Lainey Wilson",
+                "position": 69,
+                "title": "Never Say Never"
+              },
+              {
+                "artist": "Acraze Featuring Cherish",
+                "position": 70,
+                "title": "Do It To It"
+              },
+              {
+                "artist": "The Walters",
+                "foundSongs": [
+                  {
+                    "artist": "The Walters",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\The Walters - I Love You So (Karaoke Version).mp4",
+                    "title": "I Love You So"
+                  }
+                ],
+                "position": 71,
+                "title": "I Love You So"
+              },
+              {
+                "artist": "Benny The Butcher &amp; J. Cole",
+                "position": 72,
+                "title": "Johnny P's Caddy"
+              },
+              {
+                "artist": "Rod Wave",
+                "position": 73,
+                "title": "By Your Side"
+              },
+              {
+                "artist": "Stephanie Beatriz, Olga Merediz, John Leguizamo, Adassa, Maluma &amp; Encanto Cast",
+                "position": 74,
+                "title": "All Of You"
+              },
+              {
+                "artist": "Taylor Swift",
+                "foundSongs": [
+                  {
+                    "artist": "Taylor Swift",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Karaoke Sing Sing\\Taylor Swift - All Too Well (Karaoke Version) (2).mp4",
+                    "title": "All Too Well"
+                  },
+                  {
+                    "artist": "Taylor Swift",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\King of Karaoke\\Taylor Swift - All Too Well - King of Karaoke.mp4",
+                    "title": "All Too Well"
+                  },
+                  {
+                    "artist": "Taylor Swift",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\Taylor Swift - All Too Well (Karaoke Version).mp4",
+                    "title": "All Too Well"
+                  },
+                  {
+                    "artist": "Taylor Swift",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\TheKARAOKEChannel\\Taylor Swift - All Too Well (Taylor's Version) (Karaoke With Lyrics).mp4",
+                    "title": "All Too Well"
+                  }
+                ],
+                "position": 75,
+                "title": "All Too Well (Taylor's Version)"
+              },
+              {
+                "artist": "Gunna &amp; Future",
+                "position": 76,
+                "title": "Too Easy"
+              },
+              {
+                "artist": "Maren Morris",
+                "position": 77,
+                "title": "Circles Around This Town"
+              },
+              {
+                "artist": "Nardo Wick, Lil Baby &amp; Future",
+                "position": 78,
+                "title": "Me Or Sum"
+              },
+              {
+                "artist": "Fireboy DML &amp; Ed Sheeran",
+                "position": 79,
+                "title": "Peru"
+              },
+              {
+                "artist": "Yung Bleu &amp; Kehlani",
+                "position": 80,
+                "title": "Beautiful Lies"
+              },
+              {
+                "artist": "Doja Cat",
+                "position": 81,
+                "title": "Get Into It (Yuh)"
+              },
+              {
+                "artist": "Miranda Lambert",
+                "position": 82,
+                "title": "If I Was A Cowboy"
+              },
+              {
+                "artist": "YoungBoy Never Broke Again",
+                "position": 83,
+                "title": "No Switch"
+              },
+              {
+                "artist": "The Weeknd",
+                "foundSongs": [
+                  {
+                    "artist": "The Weeknd",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\The Weeknd - Take My Breath (Karaoke Version).mp4",
+                    "title": "Take My Breath"
+                  },
+                  {
+                    "artist": "The Weeknd",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\TheKARAOKEChannel\\The Weeknd - Take My Breath (Karaoke with Lyrics).mp4",
+                    "title": "Take My Breath (Karaoke with Lyrics)"
+                  }
+                ],
+                "position": 84,
+                "title": "Take My Breath"
+              },
+              {
+                "artist": "Blake Shelton",
+                "position": 85,
+                "title": "Come Back As A Country Boy"
+              },
+              {
+                "artist": "NLE Choppa",
+                "foundSongs": [
+                  {
+                    "artist": "NLE Choppa ft. Blueface",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\NLE Choppa ft. Blueface - Shotta Flow (Remix) (Karaoke Version).mp4",
+                    "title": "Shotta Flow (Remix)"
+                  }
+                ],
+                "position": 86,
+                "title": "Shotta Flow 6"
+              },
+              {
+                "artist": "Chris Brown",
+                "position": 87,
+                "title": "Iffy"
+              },
+              {
+                "artist": "Russell Dickerson",
+                "position": 88,
+                "title": "Home Sweet"
+              },
+              {
+                "artist": "XXXTENTACION",
+                "position": 89,
+                "title": "Vice City"
+              },
+              {
+                "artist": "Drake Featuring Travis Scott",
+                "position": 90,
+                "title": "Fair Trade"
+              },
+              {
+                "artist": "Em Beihold",
+                "position": 91,
+                "title": "Numb Little Bug"
+              },
+              {
+                "artist": "Carly Pearce &amp; Ashley McBryde",
+                "position": 92,
+                "title": "Never Wanted To Be That Girl"
+              },
+              {
+                "artist": "ERNEST Featuring Morgan Wallen",
+                "position": 93,
+                "title": "Flower Shops"
+              },
+              {
+                "artist": "Jaymes Young",
+                "foundSongs": [
+                  {
+                    "artist": "Jaymes Young",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\Jaymes Young - Infinity (Karaoke Version).mp4",
+                    "title": "Infinity"
+                  }
+                ],
+                "position": 94,
+                "title": "Infinity"
+              },
+              {
+                "artist": "Tiesto &amp; Ava Max",
+                "position": 95,
+                "title": "The Motto"
+              },
+              {
+                "artist": "Summer Walker &amp; SZA",
+                "position": 96,
+                "title": "No Love"
+              },
+              {
+                "artist": "Megan Thee Stallion",
+                "position": 97,
+                "title": "Megan's Piano"
+              },
+              {
+                "artist": "The Game &amp; Kanye West",
+                "position": 98,
+                "title": "Eazy"
+              },
+              {
+                "artist": "YoungBoy Never Broke Again",
+                "position": 99,
+                "title": "Fish Scale"
+              },
+              {
+                "artist": "Carlos Vives",
+                "position": 100,
+                "title": "Colombia, Mi Encanto"
+              }
+            ],
+            "title": "2022 - Hot 100"
+          },
+          {
+            "songs": [
+              {
+                "artist": "Jordan Davis Featuring Luke Bryan",
+                "position": 1,
+                "title": "Buy Dirt"
+              },
+              {
+                "artist": "Chris Stapleton",
+                "foundSongs": [
+                  {
+                    "artist": "Chris Stapleton",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\Chris Stapleton - You Should Probably Leave (Karaoke Version).mp4",
+                    "title": "You Should Probably Leave"
+                  }
+                ],
+                "position": 2,
+                "title": "You Should Probably Leave"
+              },
+              {
+                "artist": "Walker Hayes",
+                "foundSongs": [
+                  {
+                    "artist": "Walker Hayes",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\Walker Hayes - Fancy Like (Karaoke Version).mp4",
+                    "title": "Fancy Like"
+                  },
+                  {
+                    "artist": "Walker Hayes",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\TheKARAOKEChannel\\Walker Hayes - Fancy Like (Karaoke with Lyrics).mp4",
+                    "title": "Fancy Like"
+                  }
+                ],
+                "position": 3,
+                "title": "Fancy Like"
+              },
+              {
+                "artist": "Morgan Wallen",
+                "foundSongs": [
+                  {
+                    "artist": "Morgan Wallen",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\Morgan Wallen - Sand In My Boots (Karaoke Version).mp4",
+                    "title": "Sand In My Boots"
+                  }
+                ],
+                "position": 4,
+                "title": "Sand In My Boots"
+              },
+              {
+                "artist": "Jason Aldean &amp; Carrie Underwood",
+                "position": 5,
+                "title": "If I Didn't Love You"
+              },
+              {
+                "artist": "Dustin Lynch Featuring Lauren Alaina Or MacKenzie Porter",
+                "position": 6,
+                "title": "Thinking 'Bout You"
+              },
+              {
+                "artist": "Cody Johnson",
+                "foundSongs": [
+                  {
+                    "artist": "(Lebo M. & Cheryl Porter)",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\KaraFun Karaoke\\Karaoke Il cerchio della vita   Nants' Ingonyama -  (Lebo M. & Cheryl Porter).mp4",
+                    "title": "Il cerchio della vita   Nants' Ingonyama"
+                  }
+                ],
+                "position": 7,
+                "title": "'Til You Can't"
+              },
+              {
+                "artist": "Jimmie Allen &amp; Brad Paisley",
+                "position": 8,
+                "title": "Freedom Was A Highway"
+              },
+              {
+                "artist": "Kane Brown",
+                "position": 9,
+                "title": "One Mississippi"
+              },
+              {
+                "artist": "Parker McCollum",
+                "position": 10,
+                "title": "To Be Loved By You"
+              },
+              {
+                "artist": "Sam Hunt",
+                "position": 11,
+                "title": "23"
+              },
+              {
+                "artist": "Kelsea Ballerini Featuring Kenny Chesney",
+                "position": 12,
+                "title": "Half Of My Hometown"
+              },
+              {
+                "artist": "Walker Hayes",
+                "position": 13,
+                "title": "AA"
+              },
+              {
+                "artist": "Eric Church",
+                "position": 14,
+                "title": "Heart On Fire"
+              },
+              {
+                "artist": "Elle King &amp; Miranda Lambert",
+                "position": 15,
+                "title": "Drunk (And I Don't Wanna Go Home)"
+              },
+              {
+                "artist": "Dierks Bentley, Breland &amp; HARDY",
+                "position": 16,
+                "title": "Beers On Me"
+              },
+              {
+                "artist": "Luke Combs",
+                "position": 17,
+                "title": "Doin' This"
+              },
+              {
+                "artist": "Cole Swindell / Lainey Wilson",
+                "position": 18,
+                "title": "Never Say Never"
+              },
+              {
+                "artist": "Taylor Swift",
+                "foundSongs": [
+                  {
+                    "artist": "Taylor Swift",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Karaoke Sing Sing\\Taylor Swift - All Too Well (Karaoke Version) (2).mp4",
+                    "title": "All Too Well"
+                  },
+                  {
+                    "artist": "Taylor Swift",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\King of Karaoke\\Taylor Swift - All Too Well - King of Karaoke.mp4",
+                    "title": "All Too Well"
+                  },
+                  {
+                    "artist": "Taylor Swift",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\Taylor Swift - All Too Well (Karaoke Version).mp4",
+                    "title": "All Too Well"
+                  },
+                  {
+                    "artist": "Taylor Swift",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\TheKARAOKEChannel\\Taylor Swift - All Too Well (Taylor's Version) (Karaoke With Lyrics).mp4",
+                    "title": "All Too Well"
+                  }
+                ],
+                "position": 19,
+                "title": "All Too Well (Taylor's Version)"
+              },
+              {
+                "artist": "Maren Morris",
+                "position": 20,
+                "title": "Circles Around This Town"
+              },
+              {
+                "artist": "Miranda Lambert",
+                "position": 21,
+                "title": "If I Was A Cowboy"
+              },
+              {
+                "artist": "Blake Shelton",
+                "position": 22,
+                "title": "Come Back As A Country Boy"
+              },
+              {
+                "artist": "Russell Dickerson",
+                "position": 23,
+                "title": "Home Sweet"
+              },
+              {
+                "artist": "Carly Pearce &amp; Ashley McBryde",
+                "position": 24,
+                "title": "Never Wanted To Be That Girl"
+              },
+              {
+                "artist": "ERNEST Featuring Morgan Wallen",
+                "position": 25,
+                "title": "Flower Shops"
+              },
+              {
+                "artist": "HARDY",
+                "position": 26,
+                "title": "Give Heaven Some Hell"
+              },
+              {
+                "artist": "Thomas Rhett",
+                "position": 27,
+                "title": "Slow Down Summer"
+              },
+              {
+                "artist": "Jason Aldean",
+                "position": 28,
+                "title": "Trouble With A Heartbreak"
+              },
+              {
+                "artist": "Taylor Swift Featuring Chris Stapleton",
+                "foundSongs": [
+                  {
+                    "artist": "Taylor Swift",
+                    "disabled": false,
+                    "favorite": false,
+                    "genre": "karaoke",
+                    "path": "z://CDG\\Sunfly Collection\\Sunfly Hits\\SF396\\SF396-01 - Taylor Swift - Me.mp3",
+                    "title": "Me"
+                  }
+                ],
+                "position": 29,
+                "title": "I Bet You Think About Me (Taylor's Version) (From The Vault)"
+              },
+              {
+                "artist": "Keith Urban",
+                "position": 30,
+                "title": "Wild Hearts"
+              },
+              {
+                "artist": "Ingrid Andress With Sam Hunt",
+                "position": 31,
+                "title": "Wishful Drinking"
+              },
+              {
+                "artist": "Walker Hayes",
+                "position": 32,
+                "title": "U Gurl"
+              },
+              {
+                "artist": "Dan + Shay",
+                "position": 33,
+                "title": "Steal My Love"
+              },
+              {
+                "artist": "Mitchell Tenpenny",
+                "position": 34,
+                "title": "Truth About You"
+              },
+              {
+                "artist": "Parmalee",
+                "foundSongs": [
+                  {
+                    "artist": "Parmalee",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Sing King Karaoke\\Parmalee - Take My Name (Karaoke Version).mp4",
+                    "title": "Take My Name"
+                  }
+                ],
+                "position": 35,
+                "title": "Take My Name"
+              },
+              {
+                "artist": "Morgan Wade",
+                "position": 36,
+                "title": "Wilder Days"
+              },
+              {
+                "artist": "Gabby Barrett",
+                "position": 37,
+                "title": "Pick Me Up"
+              },
+              {
+                "artist": "Jake Owen",
+                "position": 38,
+                "title": "Best Thing Since Backroads"
+              },
+              {
+                "artist": "Lauren Alaina Duet With Jon Pardi",
+                "position": 39,
+                "title": "Getting Over Him"
+              },
+              {
+                "artist": "Luke Bryan",
+                "foundSongs": [
+                  {
+                    "artist": "Luke Bryan",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Karaoke Studio\\Light It Up (In the Style of Luke Bryan) Karaoke with Lyrics.mp4",
+                    "title": "Light It Up"
+                  },
+                  {
+                    "artist": "Luke Bryan",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\KtvEntertainment\\Luke Bryan - Kick The Dust Up Karaoke Lyrics.mp4",
+                    "title": "Kick The Dust Up"
+                  },
+                  {
+                    "artist": "Luke Bryan",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://MP4\\Stingray Karaoke\\Light It Up  Luke Bryan   Karaoke with Lyrics.mp4",
+                    "title": "Light It Up"
+                  }
+                ],
+                "position": 40,
+                "title": "Up"
+              },
+              {
+                "artist": "Tim McGraw",
+                "position": 41,
+                "title": "7500 OBO"
+              },
+              {
+                "artist": "Chris Stapleton",
+                "position": 42,
+                "title": "Cold"
+              },
+              {
+                "artist": "Kameron Marlowe",
+                "position": 43,
+                "title": "Steady Heart"
+              },
+              {
+                "artist": "Russell Dickerson &amp; Jake Scott",
+                "position": 44,
+                "title": "She Likes It"
+              },
+              {
+                "artist": "Chris Young &amp; Mitchell Tenpenny",
+                "position": 45,
+                "title": "At The End Of A Bar"
+              },
+              {
+                "artist": "Kane Brown",
+                "position": 46,
+                "title": "Whiskey Sour"
+              },
+              {
+                "artist": "Lee Brice",
+                "position": 47,
+                "title": "Soul"
+              },
+              {
+                "artist": "Brothers Osborne",
+                "foundSongs": [
+                  {
+                    "artist": "Ne",
+                    "disabled": false,
+                    "favorite": false,
+                    "path": "z://CDG\\Sunfly Collection\\Sunfly Hits\\SF348\\Ne - Yo - SF301 - 02.mp3",
+                    "title": "Yo"
+                  }
+                ],
+                "position": 48,
+                "title": "I'm Not For Everyone"
+              },
+              {
+                "artist": "Restless Road",
+                "position": 49,
+                "title": "Growing Old With You"
+              },
+              {
+                "artist": "Chris Stapleton",
+                "position": 50,
+                "title": "Joy Of My Life"
+              }
+            ],
+            "title": "2022 - Country-Songs"
+          }
+        ],
+        "songs": [
+          {
+            "artist": "ACDC",
+            "disabled": false,
+            "favorite": false,
+            "path": "z://MP4\\ACDC - Shot In The Dark (Karaoke Version).mp4",
+            "title": "Shot In The Dark"
+          },
+          {
+            "artist": "Afrojack and Chris Brown",
+            "disabled": false,
+            "favorite": false,
+            "path": "z://MP4\\Afrojack and Chris Brown - As Your Friend.mp4",
+            "title": "As Your Friend"
+          },
+          {
+            "artist": "Andy Grammer",
+            "disabled": false,
+            "favorite": false,
+            "path": "z://MP4\\Andy Grammer - Honey I Am Good.mp4",
+            "title": "Honey I Am Good"
+          },
+          {
+            "artist": "Avicii and Nicky Romero",
+            "disabled": false,
+            "favorite": false,
+            "path": "z://MP4\\Avicii and Nicky Romero - I Could Be The One.mp4",
+            "title": "I Could Be The One"
+          },
+          {
+            "artist": "Bastille",
+            "disabled": false,
+            "favorite": false,
+            "path": "z://MP4\\Bastille - Flaws.mp4",
+            "title": "Flaws"
+          },
+          {
+            "artist": "Big Sean and E40",
+            "disabled": false,
+            "favorite": false,
+            "path": "z://MP4\\Big Sean and E40 - I Don t F--k With You.mp4",
+            "title": "I Don t F--k With You"
+          },
+          {
+            "artist": "Blake Shelton feat. Gwen Stefani",
+            "disabled": false,
+            "favorite": false,
+            "path": "z://MP4\\Blake Shelton feat. Gwen Stefani - Happy Anywhere (Karaoke Version).mp4",
+            "title": "Happy Anywhere"
+          },
+          {
+            "artist": "Bradley Cooper",
+            "disabled": false,
+            "favorite": false,
+            "path": "z://MP4\\Bradley Cooper - Maybe It's Time (Karaoke Instrumental) A Star Is Born.mp4",
+            "title": "Maybe It's Time (A Star is Born)"
+          },
+          {
+            "artist": "Bruno Mars ft. Cardi B",
+            "disabled": false,
+            "favorite": false,
+            "path": "z://MP4\\Bruno Mars ft. Cardi B - Finesse Remix (Karaoke Version).mp4",
+            "title": "Finesse Remix"
+          }
+        ]
+      }
+    }
+  }

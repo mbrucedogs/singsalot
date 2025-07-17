@@ -1,7 +1,7 @@
 import React from 'react';
 import { IonHeader, IonToolbar, IonTitle, IonChip, IonIcon } from '@ionic/react';
 import { time } from 'ionicons/icons';
-import { InfiniteScrollList } from '../../components/common';
+import { InfiniteScrollList, SongItem } from '../../components/common';
 import { useHistory } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectHistory } from '../../redux';
@@ -51,22 +51,31 @@ const History: React.FC = () => {
       </IonHeader>
 
       <div style={{ height: '100%', overflowY: 'auto' }}>
-        <InfiniteScrollList
+        <InfiniteScrollList<Song>
           items={historyItems}
           isLoading={historyCount === 0}
           hasMore={hasMore}
           onLoadMore={loadMore}
-          onAddToQueue={handleAddToQueue}
-          onToggleFavorite={handleToggleFavorite}
-          context="history"
-          title=""
-          subtitle=""
+          renderItem={(song) => (
+            <div className="flex items-center">
+              <div className="flex-1">
+                <SongItem
+                  song={song}
+                  context="history"
+                  onAddToQueue={() => handleAddToQueue(song)}
+                  onToggleFavorite={() => handleToggleFavorite(song)}
+                />
+              </div>
+              {renderExtraContent(song)}
+            </div>
+          )}
+          title="Recently Played"
+          subtitle={`${historyCount} items loaded`}
           emptyTitle="No history yet"
           emptyMessage="Songs will appear here after they've been played"
           loadingTitle="Loading history..."
           loadingMessage="Please wait while history data is being loaded"
           debugInfo={`History items loaded: ${historyCount}`}
-          renderExtraContent={renderExtraContent}
         />
       </div>
     </>

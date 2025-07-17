@@ -1,46 +1,35 @@
 import React, { useEffect, useRef } from 'react';
-import { SongItem, EmptyState } from './index';
-import type { Song } from '../../types';
+import { EmptyState } from './index';
 
-interface InfiniteScrollListProps {
-  items: Song[];
+interface InfiniteScrollListProps<T> {
+  items: T[];
   isLoading: boolean;
   hasMore: boolean;
   onLoadMore: () => void;
-  onAddToQueue: (song: Song) => void;
-  onToggleFavorite: (song: Song) => void;
-  onRemoveFromQueue?: (song: Song) => void;
-  context: 'search' | 'queue' | 'history' | 'topPlayed' | 'favorites';
+  renderItem: (item: T, index: number) => React.ReactNode;
   title: string;
   subtitle?: string;
   emptyTitle: string;
   emptyMessage: string;
   loadingTitle?: string;
   loadingMessage?: string;
-  isAdmin?: boolean;
-  renderExtraContent?: (item: Song, index: number) => React.ReactNode;
   debugInfo?: string;
 }
 
-const InfiniteScrollList: React.FC<InfiniteScrollListProps> = ({
+const InfiniteScrollList = <T extends { key?: string }>({
   items,
   isLoading,
   hasMore,
   onLoadMore,
-  onAddToQueue,
-  onToggleFavorite,
-  onRemoveFromQueue,
-  context,
+  renderItem,
   title,
   subtitle,
   emptyTitle,
   emptyMessage,
   loadingTitle = "Loading...",
   loadingMessage = "Please wait while data is being loaded",
-  isAdmin = false,
-  renderExtraContent,
   debugInfo,
-}) => {
+}: InfiniteScrollListProps<T>) => {
   const observerRef = useRef<HTMLDivElement>(null);
 
   // Intersection Observer for infinite scrolling
@@ -111,21 +100,8 @@ const InfiniteScrollList: React.FC<InfiniteScrollListProps> = ({
         ) : (
           <div className="divide-y divide-gray-200">
             {items.map((item, index) => (
-              <div key={item.key} className="flex items-center">
-                {/* Song Info */}
-                <div className="flex-1">
-                  <SongItem
-                    song={item}
-                    context={context}
-                    onAddToQueue={() => onAddToQueue(item)}
-                    onToggleFavorite={() => onToggleFavorite(item)}
-                    onRemoveFromQueue={onRemoveFromQueue ? () => onRemoveFromQueue(item) : undefined}
-                    isAdmin={isAdmin}
-                  />
-                </div>
-
-                {/* Extra Content */}
-                {renderExtraContent && renderExtraContent(item, index)}
+              <div key={item.key}>
+                {renderItem(item, index)}
               </div>
             ))}
             

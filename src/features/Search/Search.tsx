@@ -1,9 +1,10 @@
 import React from 'react';
 import { IonSearchbar } from '@ionic/react';
-import { InfiniteScrollList } from '../../components/common';
+import { InfiniteScrollList, SongItem } from '../../components/common';
 import { useSearch } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectIsAdmin, selectSongs } from '../../redux';
+import type { Song } from '../../types';
 
 const Search: React.FC = () => {
   const {
@@ -55,20 +56,25 @@ const Search: React.FC = () => {
       </div>
 
       {/* Search Results */}
-      <InfiniteScrollList
+      <InfiniteScrollList<Song>
         items={searchResults.songs}
         isLoading={songsCount === 0}
         hasMore={searchResults.hasMore}
         onLoadMore={loadMore}
-        onAddToQueue={handleAddToQueue}
-        onToggleFavorite={handleToggleFavorite}
-        context="search"
+        renderItem={(song) => (
+          <SongItem
+            song={song}
+            context="search"
+            onAddToQueue={() => handleAddToQueue(song)}
+            onToggleFavorite={() => handleToggleFavorite(song)}
+            isAdmin={isAdmin}
+          />
+        )}
         title=""
         emptyTitle={searchTerm ? "No songs found" : "No songs available"}
         emptyMessage={searchTerm ? "Try adjusting your search terms" : "Songs will appear here once loaded"}
         loadingTitle="Loading songs..."
         loadingMessage="Please wait while songs are being loaded from the database"
-        isAdmin={isAdmin}
         debugInfo=""
       />
 

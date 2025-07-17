@@ -1,9 +1,10 @@
 import React from 'react';
 import { IonHeader, IonToolbar, IonTitle, IonChip } from '@ionic/react';
-import { InfiniteScrollList } from '../../components/common';
+import { InfiniteScrollList, SongItem } from '../../components/common';
 import { useFavorites } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectFavorites } from '../../redux';
+import type { Song } from '../../types';
 
 const Favorites: React.FC = () => {
   const {
@@ -34,16 +35,21 @@ const Favorites: React.FC = () => {
         </IonToolbar>
       </IonHeader>
 
-      <InfiniteScrollList
+      <InfiniteScrollList<Song>
         items={favoritesItems}
         isLoading={favoritesCount === 0}
         hasMore={hasMore}
         onLoadMore={loadMore}
-        onAddToQueue={handleAddToQueue}
-        onToggleFavorite={handleToggleFavorite}
-        context="favorites"
-        title=""
-        subtitle=""
+        renderItem={(song) => (
+          <SongItem
+            song={song}
+            context="favorites"
+            onAddToQueue={() => handleAddToQueue(song)}
+            onToggleFavorite={() => handleToggleFavorite(song)}
+          />
+        )}
+        title="Favorites"
+        subtitle={`${favoritesCount} items loaded`}
         emptyTitle="No favorites yet"
         emptyMessage="Add songs to your favorites to see them here"
         loadingTitle="Loading favorites..."

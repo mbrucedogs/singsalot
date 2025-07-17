@@ -1,4 +1,5 @@
 import React from 'react';
+import { IonItem, IonLabel } from '@ionic/react';
 import ActionButton from './ActionButton';
 import type { SongItemProps } from '../../types';
 
@@ -132,11 +133,8 @@ const SongItem: React.FC<SongItemProps> = ({
   };
 
   return (
-    <div className={`
-      flex items-center justify-between p-4 border-b border-gray-200 hover:bg-gray-50 transition-colors
-      ${className}
-    `}>
-      <div className="flex-1 min-w-0">
+    <IonItem className={className}>
+      <IonLabel>
         <h3 className="text-sm font-medium text-gray-900 truncate">
           {song.title}
         </h3>
@@ -154,12 +152,12 @@ const SongItem: React.FC<SongItemProps> = ({
             Played {song.count} times
           </p>
         )}
-      </div>
+      </IonLabel>
       
-      <div className="ml-4 flex-shrink-0">
+      <div slot="end" className="flex gap-2">
         {renderActionPanel()}
       </div>
-    </div>
+    </IonItem>
   );
 };
 

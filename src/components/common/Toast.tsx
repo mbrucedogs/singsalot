@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import { IonToast } from '@ionic/react';
 import type { ToastProps } from '../../types';
 
 const Toast: React.FC<ToastProps> = ({ 
@@ -7,50 +8,41 @@ const Toast: React.FC<ToastProps> = ({
   duration = 3000, 
   onClose 
 }) => {
-  const [isVisible, setIsVisible] = useState(true);
+  const [isOpen, setIsOpen] = useState(true);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsVisible(false);
-      setTimeout(onClose, 300); // Wait for fade out animation
-    }, duration);
+  const handleDismiss = () => {
+    setIsOpen(false);
+    onClose();
+  };
 
-    return () => clearTimeout(timer);
-  }, [duration, onClose]);
-
-  const getTypeStyles = () => {
+  const getColor = () => {
     switch (type) {
       case 'success':
-        return 'bg-green-500 text-white';
+        return 'success';
       case 'error':
-        return 'bg-red-500 text-white';
+        return 'danger';
       case 'info':
       default:
-        return 'bg-blue-500 text-white';
+        return 'primary';
     }
   };
 
   return (
-    <div
-      className={`
-        fixed top-4 right-4 z-50 px-4 py-2 rounded-md shadow-lg transition-opacity duration-300
-        ${getTypeStyles()}
-        ${isVisible ? 'opacity-100' : 'opacity-0'}
-      `}
-    >
-      <div className="flex items-center">
-        <span className="text-sm font-medium">{message}</span>
-        <button
-          onClick={() => {
-            setIsVisible(false);
-            setTimeout(onClose, 300);
-          }}
-          className="ml-3 text-white hover:text-gray-200 focus:outline-none"
-        >
-          ×
-        </button>
-      </div>
-    </div>
+    <IonToast
+      isOpen={isOpen}
+      onDidDismiss={handleDismiss}
+      message={message}
+      duration={duration}
+      color={getColor()}
+      position="top"
+      buttons={[
+        {
+          text: '×',
+          role: 'cancel',
+          handler: handleDismiss
+        }
+      ]}
+    />
   );
 };
 

@@ -1,5 +1,7 @@
 import React from 'react';
-import { SongItem, EmptyState, ActionButton, PlayerControls } from '../../components/common';
+import { IonList, IonItem, IonItemSliding, IonItemOptions, IonItemOption, IonIcon, IonLabel, IonChip } from '@ionic/react';
+import { trash, arrowUp, arrowDown } from 'ionicons/icons';
+import { EmptyState, ActionButton, PlayerControls } from '../../components/common';
 import { useQueue } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectQueue, selectPlayerState } from '../../redux';
@@ -11,7 +13,6 @@ const Queue: React.FC = () => {
     queueStats,
     canReorder,
     handleRemoveFromQueue,
-    handleToggleFavorite,
     handleMoveUp,
     handleMoveDown,
   } = useQueue();
@@ -73,67 +74,79 @@ const Queue: React.FC = () => {
             }
           />
         ) : (
-          <div className="divide-y divide-gray-200">
+          <IonList>
             {queueItems.map((queueItem, index) => {
               console.log(`Queue item ${index}: order=${queueItem.order}, key=${queueItem.key}`);
+              const canDelete = index === 0 ? canDeleteFirstItem : true;
+              
               return (
-              <div key={queueItem.key} className="flex items-center">
-                {/* Order Number */}
-                <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center bg-gray-100 text-gray-600 font-medium">
-                  {queueItem.order}
-                </div>
+                <IonItemSliding key={queueItem.key}>
+                  <IonItem>
+                    {/* Order Number */}
+                    <div slot="start" className="flex-shrink-0 w-12 h-12 flex items-center justify-center bg-gray-100 text-gray-600 font-medium rounded-full">
+                      {queueItem.order}
+                    </div>
 
-                {/* Song Info */}
-                <div className="flex-1">
-                  <SongItem
-                    song={queueItem.song}
-                    context="queue"
-                    onRemoveFromQueue={
-                      // Only allow removal of first item when stopped or paused
-                      index === 0 && !canDeleteFirstItem 
-                        ? undefined 
-                        : () => handleRemoveFromQueue(queueItem)
-                    }
-                    onToggleFavorite={() => handleToggleFavorite(queueItem.song)}
-                    isAdmin={canReorder}
-                  />
-                </div>
+                    {/* Song Info */}
+                    <IonLabel>
+                      <h3 className="text-sm font-medium text-gray-900 truncate">
+                        {queueItem.song.title}
+                      </h3>
+                      <p className="text-sm text-gray-500 truncate">
+                        {queueItem.song.artist}
+                      </p>
+                      <div className="flex items-center mt-1">
+                        <IonChip color="medium">
+                          {queueItem.singer.name}
+                        </IonChip>
+                        {queueItem.isCurrentUser && (
+                          <IonChip color="primary">
+                            You
+                          </IonChip>
+                        )}
+                      </div>
+                    </IonLabel>
 
-                {/* Singer Info */}
-                <div className="flex-shrink-0 px-4 py-2 text-sm text-gray-600">
-                  <div className="font-medium">{queueItem.singer.name}</div>
-                  <div className="text-xs text-gray-400">
-                    {queueItem.isCurrentUser ? '(You)' : ''}
-                  </div>
-                </div>
-
-                {/* Admin Controls */}
-                {canReorder && (
-                  <div className="flex-shrink-0 px-4 py-2 flex flex-col gap-1">
-                    {queueItem.order > 2 && (
-                      <ActionButton
-                        onClick={() => handleMoveUp(queueItem)}
-                        variant="secondary"
-                        size="sm"
-                      >
-                        ↑
-                      </ActionButton>
+                    {/* Admin Controls */}
+                    {canReorder && (
+                      <div slot="end" className="flex flex-col gap-1">
+                        {queueItem.order > 2 && (
+                          <ActionButton
+                            onClick={() => handleMoveUp(queueItem)}
+                            variant="secondary"
+                            size="sm"
+                          >
+                            <IonIcon icon={arrowUp} />
+                          </ActionButton>
+                        )}
+                        {queueItem.order > 1 && queueItem.order < queueItems.length && (
+                          <ActionButton
+                            onClick={() => handleMoveDown(queueItem)}
+                            variant="secondary"
+                            size="sm"
+                          >
+                            <IonIcon icon={arrowDown} />
+                          </ActionButton>
+                        )}
+                      </div>
                     )}
-                    {queueItem.order > 1 && queueItem.order < queueItems.length && (
-                      <ActionButton
-                        onClick={() => handleMoveDown(queueItem)}
-                        variant="secondary"
-                        size="sm"
+                  </IonItem>
+
+                  {/* Swipe Actions */}
+                  {canDelete && (
+                    <IonItemOptions side="end">
+                      <IonItemOption 
+                        color="danger" 
+                        onClick={() => handleRemoveFromQueue(queueItem)}
                       >
-                        ↓
-                      </ActionButton>
-                    )}
-                  </div>
-                )}
-              </div>
-            );
+                        <IonIcon icon={trash} slot="icon-only" />
+                      </IonItemOption>
+                    </IonItemOptions>
+                  )}
+                </IonItemSliding>
+              );
             })}
-          </div>
+          </IonList>
         )}
       </div>
     </div>

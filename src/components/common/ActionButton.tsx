@@ -1,4 +1,5 @@
 import React from 'react';
+import { IonButton } from '@ionic/react';
 import type { ActionButtonProps } from '../../types';
 
 const ActionButton: React.FC<ActionButtonProps> = ({
@@ -9,46 +10,43 @@ const ActionButton: React.FC<ActionButtonProps> = ({
   disabled = false,
   className = ''
 }) => {
-  const getVariantStyles = () => {
+  const getVariant = () => {
     switch (variant) {
       case 'primary':
-        return 'bg-blue-600 hover:bg-blue-700 text-white';
+        return 'primary';
       case 'secondary':
-        return 'bg-gray-200 hover:bg-gray-300 text-gray-800';
+        return 'medium';
       case 'danger':
-        return 'bg-red-600 hover:bg-red-700 text-white';
+        return 'danger';
       default:
-        return 'bg-blue-600 hover:bg-blue-700 text-white';
+        return 'primary';
     }
   };
 
-  const getSizeStyles = () => {
+  const getSize = () => {
     switch (size) {
       case 'sm':
-        return 'px-2 py-1 text-xs';
+        return 'small';
       case 'md':
-        return 'px-3 py-2 text-sm';
+        return 'default';
       case 'lg':
-        return 'px-4 py-2 text-base';
+        return 'large';
       default:
-        return 'px-3 py-2 text-sm';
+        return 'default';
     }
   };
 
   return (
-    <button
+    <IonButton
       onClick={onClick}
       disabled={disabled}
-      className={`
-        font-medium rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2
-        ${getVariantStyles()}
-        ${getSizeStyles()}
-        ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
-        ${className}
-      `}
+      fill="solid"
+      color={getVariant()}
+      size={getSize()}
+      className={className}
     >
       {children}
-    </button>
+    </IonButton>
   );
 };
 

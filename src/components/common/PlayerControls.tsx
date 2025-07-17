@@ -1,4 +1,6 @@
 import React from 'react';
+import { IonCard, IonCardContent, IonChip, IonIcon } from '@ionic/react';
+import { play, pause, stop } from 'ionicons/icons';
 import ActionButton from './ActionButton';
 import { useAppSelector } from '../../redux';
 import { selectPlayerState, selectIsAdmin, selectQueue } from '../../redux';
@@ -70,63 +72,73 @@ const PlayerControls: React.FC<PlayerControlsProps> = ({ className = '' }) => {
   console.log('PlayerControls - currentState:', currentState);
   console.log('PlayerControls - hasSongsInQueue:', hasSongsInQueue);
 
+  const getStateColor = () => {
+    switch (currentState) {
+      case PlayerState.playing:
+        return 'success';
+      case PlayerState.paused:
+        return 'warning';
+      default:
+        return 'medium';
+    }
+  };
+
   return (
-    <div className={`bg-white rounded-lg shadow p-4 ${className}`}>
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-2">
-          <h3 className="text-lg font-medium text-gray-900">Player Controls</h3>
-          <span className={`px-2 py-1 text-xs rounded-full ${
-            currentState === PlayerState.playing 
-              ? 'bg-green-100 text-green-800' 
-              : currentState === PlayerState.paused 
-              ? 'bg-yellow-100 text-yellow-800'
-              : 'bg-gray-100 text-gray-800'
-          }`}>
-            {currentState}
-          </span>
-        </div>
-      </div>
-      
-      <div className="mt-4 flex items-center justify-center space-x-3">
-        {currentState === PlayerState.playing ? (
-          <ActionButton
-            onClick={handlePause}
-            variant="primary"
-            size="lg"
-          >
-            ⏸️ Pause
-          </ActionButton>
-        ) : (
-          <ActionButton
-            onClick={handlePlay}
-            variant="primary"
-            size="lg"
-            disabled={!hasSongsInQueue}
-          >
-            ▶️ Play
-          </ActionButton>
-        )}
-        
-        {currentState !== PlayerState.stopped && (
-          <ActionButton
-            onClick={handleStop}
-            variant="danger"
-            size="sm"
-          >
-            ⏹️ Stop
-          </ActionButton>
-        )}
-      </div>
-      
-      <div className="mt-3 text-xs text-gray-500 text-center">
-        Admin controls - Only visible to admin users
-        {!hasSongsInQueue && (
-          <div className="mt-1 text-orange-600">
-            Add songs to queue to enable playback controls
+    <IonCard className={className}>
+      <IonCardContent>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <h3 className="text-lg font-medium text-gray-900">Player Controls</h3>
+            <IonChip color={getStateColor()}>
+              {currentState}
+            </IonChip>
           </div>
-        )}
-      </div>
-    </div>
+        </div>
+        
+        <div className="mt-4 flex items-center justify-center space-x-3">
+          {currentState === PlayerState.playing ? (
+            <ActionButton
+              onClick={handlePause}
+              variant="primary"
+              size="lg"
+            >
+              <IonIcon icon={pause} slot="start" />
+              Pause
+            </ActionButton>
+          ) : (
+            <ActionButton
+              onClick={handlePlay}
+              variant="primary"
+              size="lg"
+              disabled={!hasSongsInQueue}
+            >
+              <IonIcon icon={play} slot="start" />
+              Play
+            </ActionButton>
+          )}
+          
+          {currentState !== PlayerState.stopped && (
+            <ActionButton
+              onClick={handleStop}
+              variant="danger"
+              size="sm"
+            >
+              <IonIcon icon={stop} slot="start" />
+              Stop
+            </ActionButton>
+          )}
+        </div>
+        
+        <div className="mt-3 text-xs text-gray-500 text-center">
+          Admin controls - Only visible to admin users
+          {!hasSongsInQueue && (
+            <div className="mt-1 text-orange-600">
+              Add songs to queue to enable playback controls
+            </div>
+          )}
+        </div>
+      </IonCardContent>
+    </IonCard>
   );
 };
 

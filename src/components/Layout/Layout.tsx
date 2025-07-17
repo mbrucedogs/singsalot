@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { IonApp, IonHeader, IonToolbar, IonTitle, IonContent, IonFooter, IonChip } from '@ionic/react';
 import { selectCurrentSinger, selectIsAdmin, selectControllerName } from '../../redux/authSlice';
 import { logout } from '../../redux/authSlice';
 import { ActionButton } from '../common';
@@ -18,63 +19,55 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            {/* Logo/Title */}
+    <IonApp>
+      <IonHeader>
+        <IonToolbar>
+          <IonTitle>
             <div className="flex items-center">
-              <h1 className="text-xl font-bold text-gray-900">
-                🎤 Karaoke App
-              </h1>
+              <span>🎤 Karaoke App</span>
               {controllerName && (
                 <span className="ml-4 text-sm text-gray-500">
                   Party: {controllerName}
                 </span>
               )}
             </div>
-
-            {/* User Info & Logout */}
-            <div className="flex items-center space-x-4">
-              {currentSinger && (
-                <div className="flex items-center space-x-3">
-                  <div className="text-sm text-gray-600">
-                    <span className="font-medium">{currentSinger}</span>
-                    {isAdmin && (
-                      <span className="ml-2 px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">
-                        Admin
-                      </span>
-                    )}
-                  </div>
-                  <ActionButton
-                    onClick={handleLogout}
-                    variant="secondary"
-                    size="sm"
-                  >
-                    Logout
-                  </ActionButton>
-                </div>
-              )}
+          </IonTitle>
+          
+          {/* User Info & Logout */}
+          {currentSinger && (
+            <div slot="end" className="flex items-center space-x-3">
+              <div className="text-sm text-gray-600">
+                <span className="font-medium">{currentSinger}</span>
+                {isAdmin && (
+                  <IonChip color="primary">
+                    Admin
+                  </IonChip>
+                )}
+              </div>
+              <ActionButton
+                onClick={handleLogout}
+                variant="secondary"
+                size="sm"
+              >
+                Logout
+              </ActionButton>
             </div>
-          </div>
-        </div>
-      </header>
+          )}
+        </IonToolbar>
+      </IonHeader>
 
-      {/* Main Content */}
-      <main className="flex-1">
+      <IonContent>
         {children}
-      </main>
+      </IonContent>
 
-      {/* Footer */}
-      <footer className="bg-white border-t border-gray-200 mt-auto">
-        <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
+      <IonFooter>
+        <IonToolbar>
           <div className="text-center text-sm text-gray-500">
             <p>🎵 Powered by Firebase Realtime Database</p>
           </div>
-        </div>
-      </footer>
-    </div>
+        </IonToolbar>
+      </IonFooter>
+    </IonApp>
   );
 };
 

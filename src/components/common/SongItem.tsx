@@ -2,6 +2,16 @@ import React from 'react';
 import ActionButton from './ActionButton';
 import type { SongItemProps } from '../../types';
 
+// Utility function to extract filename from path
+const extractFilename = (path: string): string => {
+  if (!path) return '';
+  
+  // Handle different path separators (Windows backslash, Unix forward slash)
+  const normalizedPath = path.replace(/\\/g, '/');
+  const parts = normalizedPath.split('/');
+  return parts[parts.length - 1] || '';
+};
+
 const SongItem: React.FC<SongItemProps> = ({
   song,
   context,
@@ -133,6 +143,12 @@ const SongItem: React.FC<SongItemProps> = ({
         <p className="text-sm text-gray-500 truncate">
           {song.artist}
         </p>
+        {/* Show filename for all contexts except queue */}
+        {context !== 'queue' && song.path && (
+          <p className="text-xs text-gray-400 truncate">
+            {extractFilename(song.path)}
+          </p>
+        )}
         {song.count && (
           <p className="text-xs text-gray-400">
             Played {song.count} times

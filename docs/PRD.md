@@ -14,7 +14,7 @@ The app leverages **Firebase Realtime Database** for real-time synchronization, 
 - 🎯 Deliver a single-session karaoke experience where users connect to a controller and manage/search songs.  
 - ✅ Use Firebase for real-time multi-user sync of queues, history, and playback state.  
 - ✅ Prioritize fast performance, reusable modular architecture, and clear business logic separation.  
-- ✅ Enable adding songs from multiple entry points (search, history, top played).  
+- ✅ Enable adding songs from multiple entry points (search, history, top played, favorites, new songs, artists, song lists).  
 - ✅ Ensure graceful handling of Firebase sync issues using retry patterns and partial node updates.
 - ✅ True Separation of Concerns - UI components only handle presentation
 - ✅ Reusable Business Logic - Hooks can be used across components
@@ -22,59 +22,101 @@ The app leverages **Firebase Realtime Database** for real-time synchronization, 
 - ✅ Maintainable - Changes to logic don't affect UI
 - ✅ Performance - Memoized selectors and optimized hooks
 - ✅ Type Safety - Full TypeScript coverage throughout
-- The codebase needs to follow the Single Responsibility Principle perfectly - each file has one clear purpose!
+- ✅ The codebase needs to follow the Single Responsibility Principle perfectly - each file has one clear purpose!
 
 ---
 
 ## 3️⃣ User Roles & Permissions  
 
-| Role         | Search Songs | Add Songs | Delete Songs | Reorder Queue | Playback Control | Manage Singers |
-|--------------|---------------|-----------|--------------|----------------|------------------|----------------|
-| **Host/Admin** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **Singer/User** | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ |
+| Role         | Search Songs | Add Songs | Delete Songs | Reorder Queue | Playback Control | Manage Singers | View All Features |
+|--------------|---------------|-----------|--------------|----------------|------------------|----------------|-------------------|
+| **Host/Admin** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **Singer/User** | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ✅ |
+
+**Additional Permissions:**
+- **Admin Access:** Available via URL parameter `?admin=true`
+- **Queue Management:** Only admins can reorder queue items using up/down arrows
+- **First Item Protection:** First queue item cannot be deleted while playing (only when stopped/paused)
+- **Singer Auto-Add:** Singers are automatically added to the singers list when they join
 
 ---
 
 ## 4️⃣ Feature Overview  
 
-- **Search:**  
-  - Local, Redux-managed search on a preloaded song list.  
-  - Common song item view with context-based action panel.  
+### **Authentication & Session Management:**
+- **Login Flow:** Simple form-based authentication with Party ID and singer name
+- **Admin Mode:** Special admin access via URL parameter with enhanced privileges
+- **Session Persistence:** Authentication state managed in Redux with automatic logout on page reload
+- **Controller Connection:** Users connect to specific controller/party sessions
 
-- **Queue Management:**  
-  - Shared real-time synced queue.  
-  - Admin can reorder; all users can delete songs.  
-  - Duplicate prevention based on `fileLocation` field of each song.  
+### **Search:**  
+- **Local Search:** Redux-managed search on preloaded song catalog
+- **Real-time Results:** Instant search results as user types
+- **Infinite Scroll:** Paginated results with automatic loading
+- **Context Actions:** Common song item view with context-based action panel
 
-- **Favorites:**  
-  - Shared real-time synced.  
-  - Anyone can do this
-  - Duplicate prevention based on `fileLocation` field of each song.  
+### **Queue Management:**  
+- **Real-time Sync:** Shared queue synchronized across all connected clients
+- **Admin Controls:** Only admins can reorder using up/down arrow buttons
+- **User Actions:** All users can delete songs (except first item when playing)
+- **Order Management:** Sequential order system with automatic cleanup of inconsistent keys
+- **Duplicate Prevention:** Based on `path` field of each song
+- **Singer Attribution:** Each queue item shows which singer added it
 
-- **Latest Songs:**  
-  - This is the newSongs node in the controller.
-  - Shared real-time synced.  
+### **Favorites:**  
+- **Real-time Sync:** Shared favorites list synchronized across all clients
+- **Universal Access:** Anyone can add/remove favorites
+- **Duplicate Prevention:** Based on `path` field of each song
+- **Infinite Scroll:** Paginated display with automatic loading
 
-- **Playback Control:**  
-  - Managed by Admin only.  
-  - Playback state synced to all clients using the `player` node in Firebase. 
-  - The Player.state is mapped to the PlayerState enum in the types.ts. 
+### **New Songs:**  
+- **Latest Additions:** Shows recently added songs from the `newSongs` node
+- **Real-time Updates:** Automatically syncs when new songs are added
+- **Infinite Scroll:** Paginated display with automatic loading
 
-- **History Tracking:**  
-  - Songs added to history automatically when played.  
-  - Append-only log, shared across clients.  
+### **Artists:**  
+- **Artist Browse:** Browse songs by artist with search functionality
+- **Modal View:** Click artist to see all their songs in a modal
+- **Song Count:** Shows number of songs per artist
+- **Infinite Scroll:** Paginated artist list with automatic loading
 
-- **Top Played:**  
-  - Generated by a Firebase Cloud Function based on history.  
-  - Stored inside the `controller` node for client reference.  
+### **Song Lists:**  
+- **Predefined Lists:** Curated song lists with specific themes or collections
+- **Song Matching:** Automatically matches list songs to available catalog
+- **Expandable View:** Click to expand and see available song versions
+- **Modal Interface:** Full-screen modal for viewing list contents
+- **Availability Status:** Shows which songs are available in the catalog
 
-- **Singer Management:**  
-  - Admin can add/remove singers.  
-  - All users can view the current singers list.  
-  
-- **Error Handling:**  
-  - Retry options for sync failures.  
-  - Full controller object loaded on start; incremental sync after.
+### **History Tracking:**  
+- **Play History:** Songs automatically added to history when played
+- **Date Display:** Shows when each song was last played
+- **Append-only:** History is append-only, shared across all clients
+- **Infinite Scroll:** Paginated display with automatic loading
+
+### **Top Played:**  
+- **Popular Songs:** Generated by Firebase Cloud Function based on history
+- **Play Count:** Shows number of times each song has been played
+- **Real-time Updates:** Automatically updates when new plays are recorded
+- **Infinite Scroll:** Paginated display with automatic loading
+
+### **Singer Management:**  
+- **Admin Control:** Only admins can add/remove singers
+- **Auto-Add:** Singers automatically added when they join the session
+- **View Access:** All users can view the current singers list
+- **Last Login:** Tracks when each singer last joined
+
+### **Playback Control:**  
+- **Admin Only:** Playback controls only visible to admin users
+- **State Sync:** Playback state synced to all clients using the `player.state` node
+- **Player States:** Playing, Paused, Stopped (mapped to PlayerState enum)
+- **Queue Integration:** Controls work with the current queue
+
+### **Error Handling & Sync:**  
+- **Retry Patterns:** Graceful handling of Firebase sync failures
+- **Full Load:** Complete controller object loaded on initial connection
+- **Incremental Updates:** Subsequent updates target specific child nodes
+- **Connection Status:** Real-time connection status monitoring
+- **Empty State Handling:** Graceful handling of missing or empty data
 
 ---
 
@@ -84,9 +126,22 @@ Data models are defined externally in:
 > [`types.ts`](./types.ts)  
 
 This file contains TypeScript interfaces describing:  
-- `Song` — Used in queue, search results, and UI actions.  
-- `Controller` — Main object containing queue, singers, history, player state, and top played list.  
-- `PlayerState` — Playback status object synced in Firebase.  
+- `Song` — Core song data with artist, title, path, and metadata
+- `QueueItem` — Queue entries with order, singer, and song data
+- `Singer` — User information with name and last login
+- `SongList` — Predefined song collections with metadata
+- `SongListSong` — Individual songs within a song list
+- `TopPlayed` — Popular songs with play count
+- `Controller` — Main object containing all app data
+- `PlayerState` — Playback status enum (Playing, Paused, Stopped)
+- `Authentication` — User session data with admin status
+- `Settings` — Player settings (autoadvance, userpick)
+
+**Key Data Relationships:**
+- Songs are identified by their `path` field for duplicate prevention
+- Queue items have sequential `order` values for proper ordering
+- All data is stored as Firebase records with string keys
+- History tracks play dates and counts for each song
 
 ---
 
@@ -95,93 +150,684 @@ This file contains TypeScript interfaces describing:
 Defined externally in:  
 > [`firebase_schema.json`](./firebase_schema.json)  
 
-Example structure:  
+**Complete Structure:**
 ```json
 controllers: {
   [controllerName]: {
-    favorites: { ... },
-    history: { ... },
-    topPlayed: { ... },
-    newSongs: { ... },
+    favorites: Record<string, Song>,
+    history: Record<string, Song>,
+    topPlayed: Record<string, TopPlayed>,
+    newSongs: Record<string, Song>,
     player: { 
-      queue: { ... },
-      settings: { ... },
-      singers: { ... },
-      state: "..."
+      queue: Record<string, QueueItem>,
+      settings: Settings,
+      singers: Record<string, Singer>,
+      state: Player
     },
-    songList: { ... },
-    songs: { ... }
+    songList: Record<string, SongList>,
+    songs: Record<string, Song>
   }
 }
 ```
 
-- Initial sync loads the full `controller` object.
-- Subsequent updates target specific child nodes.
+**Data Flow:**
+- **Initial Sync:** Loads the complete `controller` object on connection
+- **Real-time Updates:** Subscribes to specific nodes for incremental updates
+- **Key Management:** Uses sequential numerical keys for queue items
+- **Auto-initialization:** Creates empty controller structure if none exists
 
 ---
 
 ## 7️⃣ UI/UX Behavior  
 
-- Shared **Empty State View** for empty lists or missing data.  
-- Toast notifications for user actions like add/remove/favorite.  
-- Playback controls only visible to Admin.  
-- Common song list item with dynamic action panel based on context (search, queue, history).  
-- Match the design is show in images within the design folder.
-- Design needs to have light/dark mode as well as be responsive to work in all devices.
+### **Design System:**
+- **Responsive Design:** Works on all device sizes (mobile, tablet, desktop)
+- **Light/Dark Mode:** Support for both themes (implementation pending)
+- **Modern UI:** Clean, intuitive interface with consistent styling
+- **Accessibility:** Keyboard navigation and screen reader support
 
-Defined externally in:
-> ['design'](./design/)
+### **Navigation:**
+- **Tab-based Navigation:** Horizontal navigation bar with icons
+- **Active States:** Clear indication of current page
+- **Breadcrumbs:** Context-aware navigation (implementation pending)
+
+### **Common Components:**
+- **Empty State View:** Consistent empty state for all lists
+- **Loading States:** Spinner animations during data loading
+- **Toast Notifications:** Success/error feedback for user actions
+- **Action Buttons:** Consistent button styling with variants
+- **Song Items:** Reusable song display with context-aware actions
+- **Infinite Scroll:** Automatic loading of additional content
+
+### **Context-Specific Behavior:**
+- **Search Context:** Add to queue, toggle favorite actions
+- **Queue Context:** Remove from queue, reorder (admin), toggle favorite
+- **History Context:** Add to queue, toggle favorite, show play date
+- **Favorites Context:** Add to queue, remove from favorites
+- **Artist Context:** Modal view with all artist songs
+- **Song List Context:** Expandable song matching with availability status
+
+### **Admin-Specific UI:**
+- **Playback Controls:** Only visible to admin users
+- **Queue Reorder:** Up/down arrow buttons for queue management
+- **Singer Management:** Add/remove singer functionality
+- **Enhanced Permissions:** Visual indicators for admin capabilities
+
 ---
 
-## 8️⃣ Codebase Organization  
+## 8️⃣ UI Rules & Constraints  
 
-| Folder | Purpose |
-|--------|---------|
-| `/components/common` | Shared UI components (EmptyState, Toast, ActionButton) |
-| `/features` | Feature-specific components (Search, Queue, History, TopPlayed) |
-| `/redux` | State management slices (controller, queue, player) |
-| `/firebase` | Firebase CRUD and real-time sync services |
+### **Queue Management Rules:**
+- **Admin-Only Reordering:** Only admin users can reorder queue items using up/down arrows
+- **First Item Protection:** First queue item cannot be deleted while playing (only when stopped/paused)
+- **Reorder Constraints:** 
+  - Items with `order > 2` can move up (↑ button visible)
+  - Items with `order > 1` AND `order < queue.length` can move down (↓ button visible)
+  - First item (order = 1) cannot be moved up
+  - Last item cannot be moved down
+- **Sequential Ordering:** Queue items must maintain sequential order (1, 2, 3, etc.)
+- **Order Validation:** Automatic cleanup of inconsistent order values on queue initialization
+- **Key Management:** Queue items use sequential numerical keys (0, 1, 2, etc.)
+
+### **Playback Control Rules:**
+- **Admin-Only Visibility:** Player controls only visible to admin users (`isAdmin = true`)
+- **Queue Dependency:** Play button is disabled when queue is empty (`hasSongsInQueue = false`)
+- **State-Based Controls:**
+  - When `playing`: Show pause button, hide play button
+  - When `paused` or `stopped`: Show play button, hide pause button
+  - When `playing` or `paused`: Show stop button
+  - When `stopped`: Hide stop button
+- **State Display:** Current player state shown with color-coded badges (green=playing, yellow=paused, gray=stopped)
+
+### **Search Rules:**
+- **Minimum Search Length:** Search only activates after 2+ characters (`MIN_SEARCH_LENGTH = 2`)
+- **Debounce Delay:** 300ms delay before search execution (`DEBOUNCE_DELAY = 300`)
+- **Search Scope:** Searches both song title and artist fields (case-insensitive)
+- **Empty Search:** When search term is empty or too short, shows all songs
+- **Page Reset:** Search resets to page 1 when search term changes
+
+### **Pagination & Infinite Scroll Rules:**
+- **Items Per Page:** 20 items loaded per page (`ITEMS_PER_PAGE = 20`)
+- **Load More Logic:** Only shows "load more" when there are more items than currently displayed
+- **Intersection Observer:** Triggers load more when user scrolls to bottom 10% of list
+- **Page State:** Each feature maintains its own page state independently
+
+### **Mandatory List Pagination Requirements:**
+- **All Lists Must Use InfiniteScrollList:** Every list in the application MUST use the `InfiniteScrollList` component to prevent UI blocking
+- **No Direct Array Rendering:** Never render large arrays directly in components - always use pagination
+- **Consistent Page Size:** All lists use exactly 20 items per page (`ITEMS_PER_PAGE = 20`)
+- **Progressive Loading:** Items are loaded progressively as user scrolls, not all at once
+- **Intersection Observer Threshold:** 10% threshold for triggering load more (`threshold: 0.1`)
+- **Loading State Management:** Show loading spinner only when no items are loaded yet
+- **HasMore Calculation:** Only show "load more" when `currentItems.length < totalItems.length`
+- **Page Reset on Search:** Reset to page 1 when search term changes
+- **Independent Page States:** Each feature (Search, History, Favorites, etc.) maintains separate page state
+- **Memory Optimization:** Only render currently visible items plus buffer for smooth scrolling
+- **Performance Monitoring:** Log render times and intersection detection for debugging
+- **Error Handling:** Graceful handling of load more failures with retry options
+- **Accessibility:** Ensure infinite scroll works with keyboard navigation and screen readers
+
+### **InfiniteScrollList Component Rules:**
+- **Required Props:** All lists must provide `items`, `isLoading`, `hasMore`, `onLoadMore`
+- **Context Support:** Must support all contexts: 'search', 'queue', 'history', 'topPlayed', 'favorites'
+- **Loading States:** 
+  - Show spinner when `isLoading && items.length === 0`
+  - Show empty state when `items.length === 0 && !isLoading`
+  - Show load more trigger when `hasMore && items.length > 0`
+- **Observer Management:** Automatic cleanup of intersection observers on unmount
+- **Debug Information:** Optional debug info display for development
+- **Extra Content Support:** Allow custom content rendering per item
+- **Admin Controls:** Pass through admin status for context-specific actions
+
+### **Toast Notification Rules:**
+- **Duration Settings:**
+  - Success messages: 3 seconds (`SUCCESS: 3000`)
+  - Error messages: 5 seconds (`ERROR: 5000`)
+  - Info messages: 3 seconds (`INFO: 3000`)
+- **Auto-dismiss:** Toasts automatically disappear after duration
+- **Manual Dismiss:** Users can manually close toasts with × button
+- **Stacking:** Multiple toasts can be displayed simultaneously
+- **Position:** Fixed position at top-right corner with z-index 50
+
+### **Authentication Rules:**
+- **Admin Access:** Available via URL parameter `?admin=true`
+- **URL Cleanup:** Admin parameter removed from URL after successful authentication
+- **Session Persistence:** Authentication state lost on page reload (requires re-login)
+- **Required Fields:** Both Party ID and singer name required for login
+- **Admin Default:** Admin mode pre-fills singer name as "Admin"
+
+### **Data Display Rules:**
+- **Loading States:** Show spinner when data count is 0
+- **Empty States:** Show empty state when data exists but filtered results are empty
+- **Debug Information:** Show data counts and loading status in development
+- **User Attribution:** Show "(You)" indicator for current user's queue items
+- **Availability Status:** Show "Not available in catalog" for unmatched song list items
+
+### **Action Button Rules:**
+- **Context-Based Actions:** Different actions available based on context (search, queue, history, etc.)
+- **Permission-Based Visibility:** Actions hidden based on user role (admin vs regular user)
+- **State-Based Disabling:** Buttons disabled based on current state (e.g., play button when queue empty)
+- **Confirmation Feedback:** All actions show success/error toast notifications
+
+### **Modal & Overlay Rules:**
+- **Artist Modal:** Full-screen modal for viewing artist songs
+- **Song List Modal:** Full-screen modal with expandable song sections
+- **Z-Index Management:** Modals use high z-index (9999) to appear above all content
+- **Backdrop:** Semi-transparent black backdrop (50% opacity)
+- **Close Actions:** Modal can be closed via close button or backdrop click
+
+### **Error Handling Rules:**
+- **Error Boundaries:** React error boundaries catch component-level errors
+- **Graceful Degradation:** App continues to work with cached data during connection issues
+- **User Feedback:** Clear error messages with recovery options
+- **Retry Logic:** Automatic retry for failed Firebase operations
+- **Fallback Values:** Default values provided for missing or corrupted data
+
+### **Performance Rules:**
+- **Memoization:** Expensive operations memoized with `useMemo` and `useCallback`
+- **Debouncing:** Search input debounced to prevent excessive API calls
+- **Incremental Loading:** Large datasets loaded in chunks via infinite scroll
+- **Optimistic Updates:** UI updates immediately, with rollback on error
+- **Connection Monitoring:** Real-time connection status tracking
+
+### **Data Validation Rules:**
+- **Type Safety:** All data validated against TypeScript interfaces
+- **Required Fields:** Critical fields (controller name, singer name) validated before operations
+- **Duplicate Prevention:** Songs identified by `path` field for duplicate checking
+- **Order Validation:** Queue order automatically fixed if inconsistencies detected
+- **Key Cleanup:** Inconsistent Firebase keys automatically migrated to sequential format
+
+### **Feature Flag Rules:**
+- **Configurable Features:** Features can be enabled/disabled via constants:
+  - `ENABLE_SEARCH: true`
+  - `ENABLE_QUEUE_REORDER: true`
+  - `ENABLE_FAVORITES: true`
+  - `ENABLE_HISTORY: true`
+  - `ENABLE_TOP_PLAYED: true`
+  - `ENABLE_ADMIN_CONTROLS: true`
+
+### **Constants & Limits:**
+- **Queue Limits:** Maximum 100 items (`MAX_ITEMS: 100`)
+- **History Limits:** Maximum 50 items (`MAX_ITEMS: 50`)
+- **Top Played Limits:** Maximum 20 items (`MAX_ITEMS: 20`)
+- **Search Limits:** Minimum 2 characters, 300ms debounce
+- **Toast Limits:** Success/Info 3s, Error 5s duration
 
 ---
 
-## 9️⃣ Cloud Function Design — Top Played  
+## 9️⃣ Codebase Organization  
 
-- Triggered when a new song is added to `history`.  
-- Increments the play count inside `/controllers/{controllerName}/topPlayed/{songId}`.  
-- Ensures Top Played is up-to-date without blocking client-side actions.
+| Folder | Purpose | Key Files |
+|--------|---------|-----------|
+| `/components/common` | Shared UI components | `ActionButton.tsx`, `EmptyState.tsx`, `SongItem.tsx`, `InfiniteScrollList.tsx` |
+| `/components/Auth` | Authentication components | `AuthInitializer.tsx`, `LoginPrompt.tsx` |
+| `/components/Layout` | Layout and navigation | `Layout.tsx`, `Navigation.tsx` |
+| `/features` | Feature-specific components | `Search.tsx`, `Queue.tsx`, `History.tsx`, `Artists.tsx`, `SongLists.tsx` |
+| `/hooks` | Business logic hooks | `useQueue.ts`, `useSearch.ts`, `useSongOperations.ts` |
+| `/redux` | State management | `controllerSlice.ts`, `authSlice.ts`, `selectors.ts` |
+| `/firebase` | Firebase services | `services.ts`, `FirebaseProvider.tsx` |
+| `/types` | TypeScript definitions | `index.ts` (extends docs/types.ts) |
+| `/utils` | Utility functions | `dataProcessing.ts` |
+
+**Architecture Principles:**
+- **Single Responsibility:** Each file has one clear purpose
+- **Separation of Concerns:** UI components separate from business logic
+- **Reusable Hooks:** Business logic extracted into custom hooks
+- **Type Safety:** Full TypeScript coverage with strict typing
+- **Performance:** Memoized selectors and optimized re-renders
+
+**List Component Standards:**
+- **Mandatory InfiniteScrollList Usage:** All list displays MUST use the `InfiniteScrollList` component
+- **Consistent Pagination:** All lists implement 20-item pagination with infinite scroll
+- **Hook-Based Logic:** All list logic extracted into custom hooks (useSearch, useHistory, etc.)
+- **Context-Aware Actions:** Song items display different actions based on context
+- **Loading State Consistency:** All lists show consistent loading and empty states
+- **Performance Monitoring:** All list components include performance logging
+- **Error Boundary Protection:** All lists wrapped in error boundaries
+- **Accessibility Compliance:** All lists support keyboard navigation and screen readers
 
 ---
 
-## 🔟 External Reference Files  
+## 🔟 Cloud Function Design — Top Played  
+
+- **Trigger:** Firebase Cloud Function triggered when song added to `history`
+- **Action:** Increments play count in `/controllers/{controllerName}/topPlayed/{songId}`
+- **Benefits:** Non-blocking updates, real-time popularity tracking
+- **Data Structure:** Stores artist, title, and count for each popular song
+
+---
+
+## 11️⃣ External Reference Files  
 
 | File | Purpose |
 |------|---------|
-| [`types.ts`](./types.ts) | TypeScript interfaces for app data models and validation |
+| [`types.ts`](./types.ts) | Core TypeScript interfaces for data models |
 | [`firebase_schema.json`](./firebase_schema.json) | Firebase Realtime Database structure reference |
+| [`design/`](./design/) | UI/UX mockups and design specifications |
 
 ---
 
-## 11️⃣ Data Access Model & Validation  
+## 12️⃣ Data Access Model & Validation  
 
 > **Client-Controlled Access Model**  
 
 This app does **not** use Firebase Realtime Database Security Rules.  
 All permissions, validation, and business logic are enforced in the client application.
 
-### Enforced Client-Side:
-- ✅ Admin-only permissions for queue reorder, playback control, and singer management.  
-- ✅ Duplicate song prevention enforced before adding to the queue.  
-- ✅ Singer is auto-added on join if not already present in the list.  
-- ✅ Data validated against `types.ts` before being written to Firebase.  
+### **Enforced Client-Side:**
+- ✅ **Admin-only permissions** for queue reorder, playback control, and singer management
+- ✅ **Duplicate song prevention** enforced before adding to queue/favorites
+- ✅ **Singer auto-addition** when users join the session
+- ✅ **Data validation** against TypeScript interfaces before Firebase writes
+- ✅ **Queue order management** with sequential numbering and cleanup
+- ✅ **First item protection** preventing deletion during playback
+
+### **Business Logic Validation:**
+- **Queue Operations:** Order validation, duplicate prevention, singer attribution
+- **Authentication:** Admin mode detection, session management
+- **Data Integrity:** Type checking, required field validation
+- **State Management:** Redux state consistency, error handling
 
 **Assumed Environment:**  
-- The app is used in trusted, in-home scenarios with controlled participants.  
-- Open Firebase access is considered acceptable for this use case.  
+- The app is used in trusted, in-home scenarios with controlled participants
+- Open Firebase access is considered acceptable for this use case
+- All users are trusted participants in the karaoke session
+
+---
+
+## 13️⃣ Performance & Optimization  
+
+### **State Management:**
+- **Redux Toolkit:** Efficient state management with immutable updates
+- **Memoized Selectors:** Optimized data access with `createSelector`
+- **Incremental Loading:** Pagination and infinite scroll for large datasets
+- **Real-time Sync:** Efficient Firebase subscriptions with cleanup
+
+### **UI Performance:**
+- **React.memo:** Component memoization to prevent unnecessary re-renders
+- **useCallback/useMemo:** Hook optimization for expensive operations
+- **Virtual Scrolling:** Efficient rendering of large lists (implementation pending)
+- **Lazy Loading:** Code splitting for better initial load times
+
+### **Data Optimization:**
+- **Efficient Queries:** Optimized Firebase queries with specific node subscriptions
+- **Caching Strategy:** Redux state caching with timestamp-based invalidation
+- **Batch Operations:** Grouped Firebase updates for better performance
+- **Connection Management:** Proper cleanup of Firebase listeners
+
+### **List Performance & UI Blocking Prevention:**
+- **Mandatory Pagination:** All lists MUST use pagination to prevent UI blocking
+- **Progressive Rendering:** Only render visible items plus small buffer (20 items per page)
+- **Intersection Observer:** Efficient scroll detection without performance impact
+- **Memory Management:** Automatic cleanup of observers and event listeners
+- **Virtual Scrolling:** Future implementation for very large datasets (1000+ items)
+- **Debounced Operations:** Search and filter operations debounced to prevent excessive re-renders
+- **Memoized Selectors:** Redux selectors memoized to prevent unnecessary re-computations
+- **Optimistic Updates:** UI updates immediately with rollback on error
+- **Lazy Loading:** Images and heavy content loaded only when needed
+- **Render Optimization:** React.memo and useCallback for expensive operations
+- **Bundle Splitting:** Code splitting for better initial load times
+
+---
+
+## 14️⃣ Error Handling & Resilience  
+
+### **Firebase Connection:**
+- **Connection Monitoring:** Real-time connection status tracking
+- **Retry Logic:** Automatic retry for failed operations
+- **Graceful Degradation:** App continues to work with cached data
+- **Error Boundaries:** React error boundaries for component-level error handling
+
+### **Data Validation:**
+- **Type Safety:** TypeScript compilation-time error prevention
+- **Runtime Validation:** Data structure validation before Firebase writes
+- **Fallback Values:** Default values for missing or corrupted data
+- **User Feedback:** Clear error messages and recovery options
+
+### **State Recovery:**
+- **Session Persistence:** Authentication state recovery
+- **Data Rehydration:** Redux state restoration from Firebase
+- **Conflict Resolution:** Handling concurrent user modifications
+- **Data Consistency:** Automatic cleanup of inconsistent data structures
+
+---
+
+## 15️⃣ Testing Strategy  
+
+### **Unit Testing:**
+- **Hook Testing:** Business logic hooks with isolated testing
+- **Selector Testing:** Redux selector validation
+- **Utility Testing:** Pure function testing for data processing
+- **Type Testing:** TypeScript interface validation
+
+### **Integration Testing:**
+- **Firebase Integration:** Real-time sync testing
+- **Redux Integration:** State management flow testing
+- **Component Integration:** UI component interaction testing
+- **API Testing:** Firebase service layer testing
+
+### **E2E Testing:**
+- **User Flow Testing:** Complete user journey validation
+- **Multi-user Testing:** Concurrent user interaction testing
+- **Performance Testing:** Load testing for large datasets
+- **Cross-browser Testing:** Browser compatibility validation
+
+---
+
+## 16️⃣ Deployment & Environment  
+
+### **Build Configuration:**
+- **Vite:** Fast build tool with hot module replacement
+- **TypeScript:** Strict type checking and compilation
+- **ESLint:** Code quality and consistency enforcement
+- **Tailwind CSS:** Utility-first CSS framework
+
+### **Environment Variables:**
+- **Firebase Config:** Database connection configuration
+- **Controller Name:** Default controller for development
+- **Feature Flags:** Environment-specific feature toggles
+
+### **Deployment Targets:**
+- **Development:** Local development with hot reload
+- **Staging:** Pre-production testing environment
+- **Production:** Live karaoke app deployment
+
+---
+
+## 17️⃣ Firebase Implementation Patterns  
+
+### **Key Management & Data Structure:**
+- **Sequential Numerical Keys:** Queue items use sequential numerical keys (0, 1, 2, etc.) instead of Firebase push IDs
+- **Key Migration:** Automatic cleanup of inconsistent keys (migrate push ID keys to sequential numerical keys)
+- **Order Validation:** Queue items maintain sequential order (1, 2, 3, etc.) with automatic cleanup
+- **Controller Structure:** Complete controller object loaded on initial connection with empty initialization if not exists
+
+### **Firebase Services Architecture:**
+- **Service Layer Pattern:** All Firebase operations abstracted into service modules:
+  - `controllerService` - Controller CRUD operations
+  - `queueService` - Queue management with key cleanup
+  - `playerService` - Player state management
+  - `historyService` - History operations
+  - `favoritesService` - Favorites management
+- **Subscription Pattern:** Each service provides subscribe/unsubscribe functions for real-time updates
+- **Error Handling:** Service functions include try-catch blocks with console logging
+
+### **Real-time Sync Implementation:**
+- **FirebaseProvider Pattern:** Centralized sync management with connection status tracking
+- **Full Controller Load:** Initial load of complete controller object on authentication
+- **Empty Controller Initialization:** Creates empty controller structure if none exists
+- **Connection Status:** Real-time tracking of `isConnected` and `syncStatus` states
+- **Cleanup Management:** Proper cleanup of Firebase listeners on unmount
+
+### **Queue Management Patterns:**
+- **Sequential Key Generation:** Next key calculated as `Math.max(existingKeys) + 1`
+- **Key Cleanup Function:** `cleanupQueueKeys()` migrates push ID keys to sequential numerical keys
+- **Order Calculation:** Next order calculated as `Math.max(existingOrders) + 1`
+- **Order Fixing:** Automatic queue order validation and repair in `useQueue` hook
+- **Swap Operations:** Queue reordering uses Promise.all for atomic updates
+
+### **Data Validation & Type Safety:**
+- **TypeScript Interfaces:** All data validated against TypeScript interfaces before Firebase writes
+- **Required Field Validation:** Critical fields (controller name, singer name) validated before operations
+- **Fallback Values:** Default values provided for missing or corrupted data
+- **Type Assertions:** Safe type casting with existence checks
+
+### **Error Handling Patterns:**
+- **Service-Level Error Handling:** Each service function includes try-catch with console logging
+- **Hook-Level Error Handling:** Custom hooks include error handling with toast notifications
+- **Graceful Degradation:** App continues to work with cached data during connection issues
+- **Error Boundaries:** React error boundaries for component-level error handling
+- **Connection Monitoring:** Real-time connection status with error state management
+
+### **Performance Optimization Patterns:**
+- **Efficient Queries:** Specific node subscriptions instead of full controller subscriptions
+- **Listener Cleanup:** Proper cleanup of Firebase listeners to prevent memory leaks
+- **Batch Operations:** Grouped Firebase updates using `update()` for better performance
+- **Memoized Selectors:** Redux selectors memoized to prevent unnecessary re-computations
+- **Incremental Loading:** Large datasets loaded in chunks via infinite scroll
+
+### **Authentication Integration:**
+- **Controller-Based Sessions:** Users connect to specific controller sessions
+- **Admin Parameter Handling:** Admin access via URL parameter with automatic cleanup
+- **Session Persistence:** Authentication state managed in Redux (lost on page reload)
+- **Auto-Initialization:** Empty controller created if none exists for new sessions
+
+### **Constants & Configuration:**
+- **Environment Variables:** Firebase config loaded from environment variables with fallbacks
+- **Feature Flags:** Configurable features via constants (ENABLE_SEARCH, ENABLE_QUEUE_REORDER, etc.)
+- **UI Constants:** Centralized constants for toast durations, search delays, item limits
+- **Error Messages:** Centralized error message constants for consistency
+
+### **Critical Implementation Details:**
+- **Queue Key Pattern:** Must use sequential numerical keys (0, 1, 2, etc.) - NOT push IDs
+- **Order Management:** Queue items must maintain sequential order with automatic validation
+- **Controller Initialization:** Empty controller structure created if none exists
+- **Listener Management:** All Firebase listeners must be properly cleaned up
+- **Error Recovery:** Graceful handling of Firebase sync failures with retry patterns
+- **Type Safety:** All data must be validated against TypeScript interfaces
+- **Performance:** Use specific node subscriptions instead of full controller subscriptions
+- **Memory Management:** Proper cleanup of observers, listeners, and subscriptions
+
+### **Firebase Schema Requirements:**
+- **Controller Structure:** Must match the exact structure defined in `types.ts`
+- **Key Format:** Queue items must use sequential numerical keys
+- **Data Types:** All data must conform to TypeScript interfaces
+- **Required Fields:** Critical fields must be present for operations to succeed
+- **Default Values:** Empty controller must have all required fields with default values
+
+### **Migration & Compatibility:**
+- **Key Migration:** Automatic migration of push ID keys to sequential numerical keys
+- **Order Fixing:** Automatic repair of inconsistent queue order values
+- **Backward Compatibility:** Support for existing data with inconsistent keys
+- **Data Validation:** Runtime validation of data structure integrity
+
+---
+
+## 18️⃣ Critical Implementation Notes  
+
+### **DO NOT CHANGE These Patterns:**
+- **Queue Key Management:** Sequential numerical keys (0, 1, 2, etc.) - changing this will break queue functionality
+- **Controller Structure:** Exact structure must match `types.ts` - changing will break sync
+- **Service Layer Pattern:** All Firebase operations must go through service modules
+- **Subscription Pattern:** Real-time updates must use subscribe/unsubscribe pattern
+- **Error Handling:** Service-level error handling with console logging must be maintained
+- **Type Safety:** All data validation against TypeScript interfaces must be preserved
+- **Connection Management:** FirebaseProvider pattern with connection status tracking
+- **Cleanup Management:** Proper cleanup of listeners and subscriptions
+
+### **Critical Dependencies:**
+- **Firebase Config:** Must be properly configured with environment variables
+- **TypeScript Interfaces:** Must match exactly with Firebase data structure
+- **Redux State:** Must maintain consistency with Firebase data
+- **Service Functions:** Must handle all error cases and provide proper cleanup
+- **Hook Dependencies:** Must include proper dependency arrays for useEffect hooks
+
+### **Performance Requirements:**
+- **List Pagination:** All lists must use infinite scroll with 20 items per page
+- **Memory Management:** Proper cleanup of all listeners and observers
+- **Efficient Queries:** Use specific node subscriptions, not full controller subscriptions
+- **Optimistic Updates:** UI updates immediately with rollback on error
+- **Debounced Operations:** Search and filter operations must be debounced
+
+### **Error Recovery Patterns:**
+- **Graceful Degradation:** App must continue working with cached data during connection issues
+- **Retry Logic:** Automatic retry for failed Firebase operations
+- **User Feedback:** Clear error messages with recovery options
+- **Data Validation:** Runtime validation with fallback values
+- **Connection Monitoring:** Real-time connection status with error state management
 
 ---
 
 ## ✅ Summary  
 
-This PRD serves as the primary source of truth for application logic, Firebase data flow, and feature requirements.  
+This PRD serves as the comprehensive source of truth for application logic, Firebase data flow, and feature requirements.  
 It works alongside `types.ts` and `firebase_schema.json` to inform both human developers and AI tools for accurate implementation.
+
+**Key Success Metrics:**
+- ✅ **Real-time Sync:** All users see updates within 1 second
+- ✅ **Performance:** App loads in under 3 seconds on mobile
+- ✅ **Reliability:** 99.9% uptime with graceful error handling
+- ✅ **User Experience:** Intuitive interface requiring minimal training
+- ✅ **Scalability:** Supports up to 50 concurrent users per session
+
+---
+
+## 19️⃣ Environment Configuration & .env.local Setup  
+
+### **Environment File Structure:**
+The application uses Vite's built-in environment variable support with the following file structure:
+
+```
+project-root/
+├── .env.template          # Template file with all required variables
+├── .env.local            # Local development environment (gitignored)
+├── .env.production       # Production environment (if needed)
+└── .env.staging         # Staging environment (if needed)
+```
+
+### **Required Environment Variables:**
+
+#### **Firebase Configuration (Required):**
+```bash
+# Firebase Configuration
+VITE_FIREBASE_API_KEY=your-api-key
+VITE_FIREBASE_AUTH_DOMAIN=your-project-id.firebaseapp.com
+VITE_FIREBASE_DATABASE_URL=https://your-project-id-default-rtdb.firebaseio.com
+VITE_FIREBASE_PROJECT_ID=your-project-id
+VITE_FIREBASE_STORAGE_BUCKET=your-project-id.appspot.com
+VITE_FIREBASE_MESSAGING_SENDER_ID=123456789
+VITE_FIREBASE_APP_ID=your-app-id
+```
+
+#### **App Configuration (Optional with defaults):**
+```bash
+# App Configuration
+VITE_CONTROLLER_NAME=default
+VITE_APP_TITLE=SingSalot AI
+```
+
+### **Environment Variable Usage Pattern:**
+- **Vite Prefix:** All environment variables must be prefixed with `VITE_` to be accessible in the client-side code
+- **Fallback Values:** All environment variables have fallback values in `src/constants/index.ts`
+- **Type Safety:** Environment variables are accessed via `import.meta.env.VITE_*`
+- **Build-time Injection:** Variables are injected at build time, not runtime
+
+### **Configuration Loading Pattern:**
+```typescript
+// src/constants/index.ts
+export const FIREBASE_CONFIG = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || 'your-api-key',
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || 'your-project-id.firebaseapp.com',
+  databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL || 'https://your-project-id-default-rtdb.firebaseio.com',
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || 'your-project-id',
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || 'your-project-id.appspot.com',
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || '123456789',
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || 'your-app-id',
+};
+
+export const CONTROLLER_NAME = import.meta.env.VITE_CONTROLLER_NAME || 'default';
+```
+
+### **Setup Instructions:**
+
+#### **1. Initial Setup:**
+```bash
+# Copy the template file
+cp .env.template .env.local
+
+# Edit .env.local with your actual Firebase configuration
+nano .env.local
+```
+
+#### **2. Firebase Configuration:**
+1. Go to Firebase Console → Project Settings
+2. Copy the configuration values from the "General" tab
+3. Replace the placeholder values in `.env.local`
+
+#### **3. Controller Configuration:**
+- `VITE_CONTROLLER_NAME`: Set to your desired controller name (default: "default")
+- `VITE_APP_TITLE`: Set to your desired app title (default: "SingSalot AI")
+
+### **Environment-Specific Configurations:**
+
+#### **Development (.env.local):**
+```bash
+# Local development with hot reload
+VITE_CONTROLLER_NAME=dev-controller
+VITE_APP_TITLE=SingSalot AI (Dev)
+```
+
+#### **Staging (.env.staging):**
+```bash
+# Pre-production testing
+VITE_CONTROLLER_NAME=staging-controller
+VITE_APP_TITLE=SingSalot AI (Staging)
+```
+
+#### **Production (.env.production):**
+```bash
+# Live production environment
+VITE_CONTROLLER_NAME=production-controller
+VITE_APP_TITLE=SingSalot AI
+```
+
+### **Security Considerations:**
+- **Client-Side Exposure:** All `VITE_*` variables are exposed in the client bundle
+- **Firebase Security:** Firebase API keys are safe to expose in client-side code
+- **Database Rules:** Security is enforced through Firebase Realtime Database Rules
+- **Environment Isolation:** Use different Firebase projects for different environments
+
+### **Build Process Integration:**
+- **Development:** Uses `.env.local` automatically when running `npm run dev`
+- **Production Build:** Uses `.env.production` when running `npm run build`
+- **Environment Detection:** Vite automatically detects the correct environment file
+- **Build-time Injection:** Variables are replaced at build time, not runtime
+
+### **Error Handling for Missing Variables:**
+- **Fallback Values:** All variables have sensible defaults
+- **Console Warnings:** Missing required variables show console warnings
+- **Graceful Degradation:** App continues to work with fallback values
+- **Development Feedback:** Clear error messages for missing configuration
+
+### **Environment Variable Validation:**
+```typescript
+// Validation pattern used in the app
+const validateFirebaseConfig = () => {
+  const requiredVars = [
+    'VITE_FIREBASE_API_KEY',
+    'VITE_FIREBASE_AUTH_DOMAIN',
+    'VITE_FIREBASE_DATABASE_URL',
+    'VITE_FIREBASE_PROJECT_ID'
+  ];
+  
+  const missing = requiredVars.filter(varName => !import.meta.env[varName]);
+  
+  if (missing.length > 0) {
+    console.warn('Missing Firebase configuration:', missing);
+  }
+};
+```
+
+### **Deployment Considerations:**
+- **CI/CD Integration:** Environment variables must be set in deployment pipeline
+- **Build Commands:** Different build commands for different environments
+- **Environment Files:** `.env.local` is gitignored, other files may be committed
+- **Secret Management:** Use deployment platform's secret management for production
+
+### **Troubleshooting:**
+- **Variable Not Found:** Ensure variable name starts with `VITE_`
+- **Build Issues:** Check that all required variables are set
+- **Runtime Errors:** Verify Firebase configuration is correct
+- **Environment Detection:** Ensure correct `.env` file is being used
+
+### **Best Practices:**
+- **Template File:** Always maintain `.env.template` with all required variables
+- **Documentation:** Document all environment variables and their purposes
+- **Validation:** Implement runtime validation for critical configuration
+- **Fallbacks:** Provide sensible default values for all variables
+- **Security:** Never commit sensitive values to version control
+
+---
+
+## 20️⃣ Development Setup & Configuration
 

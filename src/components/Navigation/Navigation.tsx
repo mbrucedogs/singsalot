@@ -1,11 +1,12 @@
-import React from 'react';
-import { IonTabs, IonTabBar, IonTabButton, IonLabel, IonIcon } from '@ionic/react';
+import React, { useState, useEffect } from 'react';
+import { IonMenu, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonLabel, IonIcon } from '@ionic/react';
 import { list, search, heart, add, mic, documentText, time, trophy, people } from 'ionicons/icons';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const Navigation: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [isLargeScreen, setIsLargeScreen] = useState(false);
 
   const navItems = [
     { path: '/queue', label: 'Queue', icon: list },
@@ -19,62 +20,126 @@ const Navigation: React.FC = () => {
     { path: '/singers', label: 'Singers', icon: people },
   ];
 
-  // For mobile, show bottom tabs with main features
-  const mobileNavItems = [
-    { path: '/queue', label: 'Queue', icon: list },
-    { path: '/search', label: 'Search', icon: search },
-    { path: '/favorites', label: 'Favorites', icon: heart },
-    { path: '/history', label: 'History', icon: time },
-  ];
+  // Check screen size for responsive menu behavior
+  useEffect(() => {
+    const checkScreenSize = () => {
+      const large = window.innerWidth >= 768;
+      console.log('Screen width:', window.innerWidth, 'Is large screen:', large);
+      setIsLargeScreen(large);
+    };
 
-  // Check if we're on mobile (you can adjust this breakpoint)
-  const isMobile = window.innerWidth < 768;
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
 
-  const currentItems = isMobile ? mobileNavItems : navItems;
+  const handleNavigation = (path: string) => {
+    navigate(path);
+    // Close menu on mobile after navigation
+    if (!isLargeScreen) {
+      const menu = document.querySelector('ion-menu');
+      if (menu) {
+        menu.close();
+      }
+    }
+  };
 
-  return (
-    <>
-      {isMobile ? (
-        <IonTabs>
-          <IonTabBar slot="bottom">
-            {currentItems.map((item) => (
-              <IonTabButton
-                key={item.path}
-                tab={item.path}
-                selected={location.pathname === item.path}
-                onClick={() => navigate(item.path)}
-              >
-                <IonIcon icon={item.icon} />
-                <IonLabel>{item.label}</IonLabel>
-              </IonTabButton>
-            ))}
-          </IonTabBar>
-        </IonTabs>
-      ) : (
-        <nav className="bg-white border-b border-gray-200">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex space-x-8">
-              {currentItems.map((item) => (
-                <button
-                  key={item.path}
-                  onClick={() => navigate(item.path)}
-                  className={`
-                    flex items-center px-3 py-4 text-sm font-medium border-b-2 transition-colors
-                    ${location.pathname === item.path
-                      ? 'border-blue-500 text-blue-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                    }
-                  `}
-                >
-                  <IonIcon icon={item.icon} className="mr-2" />
-                  {item.label}
-                </button>
-              ))}
+  // For large screens, render a fixed sidebar instead of a menu
+  if (isLargeScreen) {
+    console.log('Rendering large screen sidebar');
+    return (
+      <div 
+        style={{
+          position: 'fixed',
+          left: 0,
+          top: 0,
+          height: '100vh',
+          width: '256px',
+          backgroundColor: 'white',
+          boxShadow: '2px 0 8px rgba(0,0,0,0.1)',
+          zIndex: 1000,
+          borderRight: '1px solid #e5e7eb',
+          overflowY: 'auto'
+        }}
+      >
+        <div style={{ padding: '16px', borderBottom: '1px solid #e5e7eb', backgroundColor: '#f9fafb' }}>
+          <h2 style={{ fontSize: '18px', fontWeight: '600', color: '#1f2937', margin: 0 }}>Karaoke</h2>
+          <p style={{ fontSize: '14px', color: '#6b7280', margin: '4px 0 0 0' }}>Singer: Matt</p>
+        </div>
+        <nav style={{ marginTop: '16px' }}>
+          {navItems.map((item) => (
+            <div
+              key={item.path}
+              onClick={() => handleNavigation(item.path)}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                padding: '12px 16px',
+                cursor: 'pointer',
+                backgroundColor: location.pathname === item.path ? '#dbeafe' : 'transparent',
+                color: location.pathname === item.path ? '#2563eb' : '#374151',
+                borderRight: location.pathname === item.path ? '2px solid #2563eb' : 'none',
+                transition: 'background-color 0.2s, color 0.2s'
+              }}
+              onMouseEnter={(e) => {
+                if (location.pathname !== item.path) {
+                  e.currentTarget.style.backgroundColor = '#f3f4f6';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (location.pathname !== item.path) {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                }
+              }}
+            >
+              <IonIcon 
+                icon={item.icon} 
+                style={{ 
+                  marginRight: '12px',
+                  fontSize: '20px'
+                }} 
+              />
+              <span style={{ fontWeight: '500' }}>{item.label}</span>
             </div>
-          </div>
+          ))}
         </nav>
-      )}
-    </>
+      </div>
+    );
+  }
+
+  // For mobile screens, use the Ionic menu
+  console.log('Rendering mobile menu');
+  return (
+    <IonMenu 
+      contentId="main-content" 
+      type="overlay"
+      side="start"
+      swipeGesture={true}
+      style={{
+        '--width': '250px'
+      } as React.CSSProperties}
+    >
+      <IonHeader>
+        <IonToolbar>
+          <IonTitle>Menu</IonTitle>
+        </IonToolbar>
+      </IonHeader>
+      <IonContent>
+        <IonList>
+          {navItems.map((item) => (
+            <IonItem
+              key={item.path}
+              button
+              onClick={() => handleNavigation(item.path)}
+              className={location.pathname === item.path ? 'ion-activated' : ''}
+            >
+              <IonIcon icon={item.icon} slot="start" />
+              <IonLabel>{item.label}</IonLabel>
+            </IonItem>
+          ))}
+        </IonList>
+      </IonContent>
+    </IonMenu>
   );
 };
 

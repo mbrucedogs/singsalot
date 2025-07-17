@@ -1,4 +1,5 @@
 import React from 'react';
+import { IonHeader, IonToolbar, IonTitle, IonChip } from '@ionic/react';
 import { InfiniteScrollList } from '../../components/common';
 import { useFavorites } from '../../hooks';
 import { useAppSelector } from '../../redux';
@@ -21,22 +22,37 @@ const Favorites: React.FC = () => {
   console.log('Favorites component - favorites items:', favoritesItems);
 
   return (
-    <InfiniteScrollList
-      items={favoritesItems}
-      isLoading={favoritesCount === 0}
-      hasMore={hasMore}
-      onLoadMore={loadMore}
-      onAddToQueue={handleAddToQueue}
-      onToggleFavorite={handleToggleFavorite}
-      context="favorites"
-      title="Favorites"
-      subtitle={`${favoritesItems.length} song${favoritesItems.length !== 1 ? 's' : ''} in favorites`}
-      emptyTitle="No favorites yet"
-      emptyMessage="Add songs to your favorites to see them here"
-      loadingTitle="Loading favorites..."
-      loadingMessage="Please wait while favorites data is being loaded"
-      debugInfo={`Favorites items loaded: ${favoritesCount}`}
-    />
+    <>
+      <IonHeader>
+        <IonToolbar>
+          <IonTitle>
+            Favorites
+            <IonChip color="primary" className="ml-2">
+              {favoritesItems.length}
+            </IonChip>
+          </IonTitle>
+        </IonToolbar>
+      </IonHeader>
+
+      <div style={{ height: '100%', overflowY: 'auto' }}>
+        <InfiniteScrollList
+          items={favoritesItems}
+          isLoading={favoritesCount === 0}
+          hasMore={hasMore}
+          onLoadMore={loadMore}
+          onAddToQueue={handleAddToQueue}
+          onToggleFavorite={handleToggleFavorite}
+          context="favorites"
+          title=""
+          subtitle=""
+          emptyTitle="No favorites yet"
+          emptyMessage="Add songs to your favorites to see them here"
+          loadingTitle="Loading favorites..."
+          loadingMessage="Please wait while favorites data is being loaded"
+          debugInfo={`Favorites items loaded: ${favoritesCount}`}
+        />
+      </div>
+    </>
   );
 };
 

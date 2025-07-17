@@ -15,3 +15,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Ensure menu button is visible */
+ion-menu-button {
+  --color: var(--ion-color-primary);
+  --padding-start: 8px;
+  --padding-end: 8px;
+}
+
+/* Menu item styling */
+ion-item.ion-activated {
+  --background: var(--ion-color-primary);
+  --color: var(--ion-color-primary-contrast);
+}
+
+/* Ensure mobile menu appears above other content */
+ion-menu {
+  --z-index: 1000;
+}

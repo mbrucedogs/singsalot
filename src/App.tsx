@@ -1,6 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout/Layout';
-import Navigation from './components/Navigation/Navigation';
 import { Search, Queue, History, Favorites, NewSongs, Artists, Singers, SongLists } from './features';
 import TopPlayed from './features/TopPlayed/Top100';
 import { FirebaseProvider } from './firebase/FirebaseProvider';
@@ -14,7 +13,6 @@ function App() {
         <Router>
           <AuthInitializer>
             <Layout>
-              <Navigation />
               <Routes>
                 <Route path="/" element={<Navigate to="/queue" replace />} />
                 <Route path="/search" element={<Search />} />

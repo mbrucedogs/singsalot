@@ -1,4 +1,6 @@
 import React from 'react';
+import { IonHeader, IonToolbar, IonTitle, IonChip, IonIcon } from '@ionic/react';
+import { time } from 'ionicons/icons';
 import { InfiniteScrollList } from '../../components/common';
 import { useHistory } from '../../hooks';
 import { useAppSelector } from '../../redux';
@@ -26,32 +28,48 @@ const History: React.FC = () => {
   const renderExtraContent = (item: Song) => {
     if (item.date) {
       return (
-        <div className="flex-shrink-0 px-4 py-2 text-sm text-gray-500">
+        <IonChip color="medium" className="ml-2">
+          <IonIcon icon={time} />
           {formatDate(item.date)}
-        </div>
+        </IonChip>
       );
     }
     return null;
   };
 
   return (
-    <InfiniteScrollList
-      items={historyItems}
-      isLoading={historyCount === 0}
-      hasMore={hasMore}
-      onLoadMore={loadMore}
-      onAddToQueue={handleAddToQueue}
-      onToggleFavorite={handleToggleFavorite}
-      context="history"
-      title="Recently Played"
-      subtitle={`${historyItems.length} song${historyItems.length !== 1 ? 's' : ''} in history`}
-      emptyTitle="No history yet"
-      emptyMessage="Songs will appear here after they've been played"
-      loadingTitle="Loading history..."
-      loadingMessage="Please wait while history data is being loaded"
-      debugInfo={`History items loaded: ${historyCount}`}
-      renderExtraContent={renderExtraContent}
-    />
+    <>
+      <IonHeader>
+        <IonToolbar>
+          <IonTitle>
+            Recently Played
+            <IonChip color="primary" className="ml-2">
+              {historyItems.length}
+            </IonChip>
+          </IonTitle>
+        </IonToolbar>
+      </IonHeader>
+
+      <div style={{ height: '100%', overflowY: 'auto' }}>
+        <InfiniteScrollList
+          items={historyItems}
+          isLoading={historyCount === 0}
+          hasMore={hasMore}
+          onLoadMore={loadMore}
+          onAddToQueue={handleAddToQueue}
+          onToggleFavorite={handleToggleFavorite}
+          context="history"
+          title=""
+          subtitle=""
+          emptyTitle="No history yet"
+          emptyMessage="Songs will appear here after they've been played"
+          loadingTitle="Loading history..."
+          loadingMessage="Please wait while history data is being loaded"
+          debugInfo={`History items loaded: ${historyCount}`}
+          renderExtraContent={renderExtraContent}
+        />
+      </div>
+    </>
   );
 };
 

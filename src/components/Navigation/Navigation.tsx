@@ -3,10 +3,15 @@ import { NavLink } from 'react-router-dom';
 
 const Navigation: React.FC = () => {
   const navItems = [
-    { path: '/', label: 'Search', icon: '🔍' },
     { path: '/queue', label: 'Queue', icon: '📋' },
+    { path: '/search', label: 'Search', icon: '🔍' },
+    { path: '/favorites', label: 'Favorites', icon: '❤️' },
+    { path: '/new-songs', label: 'New Songs', icon: '🆕' },
+    { path: '/artists', label: 'Artists', icon: '🎤' },
+    { path: '/song-lists', label: 'Song Lists', icon: '📝' },
     { path: '/history', label: 'History', icon: '⏰' },
-    { path: '/top-played', label: 'Top Played', icon: '🏆' },
+    { path: '/top-played', label: 'Top 100', icon: '🏆' },
+    { path: '/singers', label: 'Singers', icon: '👥' },
   ];
 
   return (

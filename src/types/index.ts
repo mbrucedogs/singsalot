@@ -90,7 +90,7 @@ export interface Controller {
     singers: Record<string, Singer>;
     state: Player;
   };
-  songList: Record<string, unknown>;
+  songList: Record<string, SongList>;
   songs: Record<string, Song>;
 }
 
@@ -120,7 +120,7 @@ export interface ActionButtonProps {
 
 export interface SongItemProps {
   song: Song;
-  context: 'search' | 'queue' | 'history' | 'favorites';
+  context: 'search' | 'queue' | 'history' | 'favorites' | 'topPlayed';
   onAddToQueue?: () => void;
   onRemoveFromQueue?: () => void;
   onToggleFavorite?: () => void;

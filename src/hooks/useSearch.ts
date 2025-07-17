@@ -1,32 +1,61 @@
 import { useState, useCallback, useMemo } from 'react';
-import { useAppSelector } from '../redux';
-import { selectSearchResults } from '../redux/selectors';
+import { useAppSelector, selectSongsArray } from '../redux';
 import { useSongOperations } from './useSongOperations';
 import { useToast } from './useToast';
 import { UI_CONSTANTS } from '../constants';
+import { filterSongs } from '../utils/dataProcessing';
 import type { Song } from '../types';
+
+const ITEMS_PER_PAGE = 20;
 
 export const useSearch = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
   const { addToQueue, toggleFavorite } = useSongOperations();
   const { showSuccess, showError } = useToast();
 
-  // Get filtered search results using selector
-  const searchResults = useAppSelector(state => 
-    selectSearchResults(state, searchTerm)
-  );
+  // Get all songs from Redux (this is memoized)
+  const allSongs = useAppSelector(selectSongsArray);
 
-  // Debounced search term for performance
-  const debouncedSearchTerm = useMemo(() => {
-    if (searchTerm.length < UI_CONSTANTS.SEARCH.MIN_SEARCH_LENGTH) {
-      return '';
+  // Memoize filtered results to prevent unnecessary re-computations
+  const filteredSongs = useMemo(() => {
+    if (!searchTerm.trim() || searchTerm.length < UI_CONSTANTS.SEARCH.MIN_SEARCH_LENGTH) {
+      return allSongs;
     }
-    return searchTerm;
-  }, [searchTerm]);
+    
+    return filterSongs(allSongs, searchTerm);
+  }, [allSongs, searchTerm]);
+
+  // Paginate the filtered results - show all items up to current page
+  const searchResults = useMemo(() => {
+    const endIndex = currentPage * ITEMS_PER_PAGE;
+    const paginatedSongs = filteredSongs.slice(0, endIndex);
+    
+    return {
+      songs: paginatedSongs,
+      count: filteredSongs.length,
+      hasMore: endIndex < filteredSongs.length,
+      currentPage,
+      totalPages: Math.ceil(filteredSongs.length / ITEMS_PER_PAGE),
+    };
+  }, [filteredSongs, currentPage]);
 
   const handleSearchChange = useCallback((value: string) => {
     setSearchTerm(value);
+    setCurrentPage(1); // Reset to first page when searching
   }, []);
+
+  const loadMore = useCallback(() => {
+    console.log('useSearch - loadMore called:', { 
+      hasMore: searchResults.hasMore, 
+      currentPage, 
+      filteredSongsLength: filteredSongs.length,
+      searchResultsCount: searchResults.count
+    });
+    if (searchResults.hasMore) {
+      setCurrentPage(prev => prev + 1);
+    }
+  }, [searchResults.hasMore, currentPage, filteredSongs.length, searchResults.count]);
 
   const handleAddToQueue = useCallback(async (song: Song) => {
     try {
@@ -48,10 +77,10 @@ export const useSearch = () => {
 
   return {
     searchTerm,
-    debouncedSearchTerm,
     searchResults,
     handleSearchChange,
     handleAddToQueue,
     handleToggleFavorite,
+    loadMore,
   };
 }; 

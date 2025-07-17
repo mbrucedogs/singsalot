@@ -1,13 +1,21 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
-import type { RootState } from '../../redux/store';
+import { useSelector, useDispatch } from 'react-redux';
+import { selectCurrentSinger, selectIsAdmin, selectControllerName } from '../../redux/authSlice';
+import { logout } from '../../redux/authSlice';
+import { ActionButton } from '../common';
 import type { LayoutProps } from '../../types';
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
-  // TODO: Replace with actual Redux selectors
-  const currentSinger = useSelector((state: RootState) => state.auth?.singer || '');
-  const isAdmin = useSelector((state: RootState) => state.auth?.isAdmin || false);
-  const controllerName = useSelector((state: RootState) => state.auth?.controller || '');
+  const currentSinger = useSelector(selectCurrentSinger);
+  const isAdmin = useSelector(selectIsAdmin);
+  const controllerName = useSelector(selectControllerName);
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    dispatch(logout());
+    // Reload the page to return to login screen
+    window.location.reload();
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -22,21 +30,30 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               </h1>
               {controllerName && (
                 <span className="ml-4 text-sm text-gray-500">
-                  Controller: {controllerName}
+                  Party: {controllerName}
                 </span>
               )}
             </div>
 
-            {/* User Info */}
+            {/* User Info & Logout */}
             <div className="flex items-center space-x-4">
               {currentSinger && (
-                <div className="text-sm text-gray-600">
-                  <span className="font-medium">{currentSinger}</span>
-                  {isAdmin && (
-                    <span className="ml-2 px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">
-                      Admin
-                    </span>
-                  )}
+                <div className="flex items-center space-x-3">
+                  <div className="text-sm text-gray-600">
+                    <span className="font-medium">{currentSinger}</span>
+                    {isAdmin && (
+                      <span className="ml-2 px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">
+                        Admin
+                      </span>
+                    )}
+                  </div>
+                  <ActionButton
+                    onClick={handleLogout}
+                    variant="secondary"
+                    size="sm"
+                  >
+                    Logout
+                  </ActionButton>
                 </div>
               )}
             </div>

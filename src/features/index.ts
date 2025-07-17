@@ -1,4 +1,9 @@
 export { default as Search } from './Search/Search';
 export { default as Queue } from './Queue/Queue';
 export { default as History } from './History/History';
-export { default as TopPlayed } from './TopPlayed/TopPlayed'; 
+export { default as TopPlayed } from './TopPlayed/Top100';
+export { default as Favorites } from './Favorites/Favorites';
+export { default as NewSongs } from './NewSongs/NewSongs';
+export { default as Artists } from './Artists/Artists';
+export { default as Singers } from './Singers/Singers';
+export { default as SongLists } from './SongLists/SongLists'; 

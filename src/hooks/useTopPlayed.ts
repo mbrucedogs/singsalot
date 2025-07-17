@@ -1,14 +1,35 @@
-import { useCallback } from 'react';
-import { useAppSelector } from '../redux';
-import { selectTopPlayedArray } from '../redux/selectors';
+import { useCallback, useMemo, useState } from 'react';
+import { useAppSelector, selectTopPlayedArray } from '../redux';
 import { useSongOperations } from './useSongOperations';
 import { useToast } from './useToast';
 import type { TopPlayed } from '../types';
 
+const ITEMS_PER_PAGE = 20;
+
 export const useTopPlayed = () => {
-  const topPlayedItems = useAppSelector(selectTopPlayedArray);
+  const allTopPlayedItems = useAppSelector(selectTopPlayedArray);
   const { addToQueue, toggleFavorite } = useSongOperations();
   const { showSuccess, showError } = useToast();
+  
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Paginate the top played items - show all items up to current page
+  const topPlayedItems = useMemo(() => {
+    const endIndex = currentPage * ITEMS_PER_PAGE;
+    return allTopPlayedItems.slice(0, endIndex);
+  }, [allTopPlayedItems, currentPage]);
+
+  const hasMore = useMemo(() => {
+    // Only show "hasMore" if there are more items than currently loaded
+    return allTopPlayedItems.length > ITEMS_PER_PAGE && topPlayedItems.length < allTopPlayedItems.length;
+  }, [topPlayedItems.length, allTopPlayedItems.length]);
+
+  const loadMore = useCallback(() => {
+    console.log('useTopPlayed - loadMore called:', { hasMore, currentPage, allTopPlayedItemsLength: allTopPlayedItems.length });
+    if (hasMore) {
+      setCurrentPage(prev => prev + 1);
+    }
+  }, [hasMore, currentPage, allTopPlayedItems.length]);
 
   const handleAddToQueue = useCallback(async (song: TopPlayed) => {
     try {
@@ -44,6 +65,11 @@ export const useTopPlayed = () => {
 
   return {
     topPlayedItems,
+    allTopPlayedItems,
+    hasMore,
+    loadMore,
+    currentPage,
+    totalPages: Math.ceil(allTopPlayedItems.length / ITEMS_PER_PAGE),
     handleAddToQueue,
     handleToggleFavorite,
   };

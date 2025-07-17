@@ -1,6 +1,7 @@
 // App constants
 export const APP_NAME = '🎤 Karaoke App';
 export const APP_VERSION = '1.0.0';
+export const CONTROLLER_NAME = import.meta.env.VITE_CONTROLLER_NAME || 'default';
 
 // Firebase configuration
 export const FIREBASE_CONFIG = {

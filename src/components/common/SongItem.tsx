@@ -96,6 +96,26 @@ const SongItem: React.FC<SongItemProps> = ({
           </div>
         );
       
+      case 'topPlayed':
+        return (
+          <div className="flex gap-2">
+            <ActionButton
+              onClick={onAddToQueue || (() => {})}
+              variant="primary"
+              size="sm"
+            >
+              Add to Queue
+            </ActionButton>
+            <ActionButton
+              onClick={onToggleFavorite || (() => {})}
+              variant={song.favorite ? 'danger' : 'secondary'}
+              size="sm"
+            >
+              {song.favorite ? '❤️' : '🤍'}
+            </ActionButton>
+          </div>
+        );
+      
       default:
         return null;
     }

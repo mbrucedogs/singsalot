@@ -1,6 +1,5 @@
 import { useCallback } from 'react';
-import { useAppSelector } from '../redux';
-import { selectQueueWithUserInfo, selectQueueStats, selectCanReorderQueue } from '../redux/selectors';
+import { useAppSelector, selectQueueWithUserInfo, selectQueueStats, selectCanReorderQueue } from '../redux';
 import { useSongOperations } from './useSongOperations';
 import { useToast } from './useToast';
 import type { QueueItem } from '../types';

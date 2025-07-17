@@ -157,6 +157,8 @@ export const selectQueue = (state: { controller: ControllerState }) => state.con
 export const selectFavorites = (state: { controller: ControllerState }) => state.controller.data?.favorites || {};
 export const selectHistory = (state: { controller: ControllerState }) => state.controller.data?.history || {};
 export const selectTopPlayed = (state: { controller: ControllerState }) => state.controller.data?.topPlayed || {};
+export const selectNewSongs = (state: { controller: ControllerState }) => state.controller.data?.newSongs || {};
+export const selectSongList = (state: { controller: ControllerState }) => state.controller.data?.songList || {};
 export const selectPlayerState = (state: { controller: ControllerState }) => state.controller.data?.player?.state;
 export const selectSettings = (state: { controller: ControllerState }) => state.controller.data?.player?.settings;
 export const selectSingers = (state: { controller: ControllerState }) => state.controller.data?.player?.singers || {};

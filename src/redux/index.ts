@@ -25,6 +25,8 @@ export {
   selectFavorites,
   selectHistory,
   selectTopPlayed,
+  selectNewSongs,
+  selectSongList,
   selectPlayerState,
   selectSettings,
   selectSingers,

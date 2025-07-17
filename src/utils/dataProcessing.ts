@@ -39,6 +39,33 @@ export const sortTopPlayedByCount = (songs: TopPlayed[]): TopPlayed[] => {
   return [...songs].sort((a, b) => b.count - a.count);
 };
 
+// Sort songs by artist then title (case insensitive)
+export const sortSongsByArtistAndTitle = (songs: Song[]): Song[] => {
+  const sortedSongs = [...songs].sort((a, b) => {
+    // First sort by artist (case insensitive)
+    const artistA = a.artist.toLowerCase();
+    const artistB = b.artist.toLowerCase();
+    
+    if (artistA !== artistB) {
+      return artistA.localeCompare(artistB);
+    }
+    
+    // If artists are the same, sort by title (case insensitive)
+    const titleA = a.title.toLowerCase();
+    const titleB = b.title.toLowerCase();
+    return titleA.localeCompare(titleB);
+  });
+
+  // Debug logging for first few songs to verify sorting
+  if (sortedSongs.length > 0) {
+    console.log('Songs sorted by artist and title. First 5 songs:', 
+      sortedSongs.slice(0, 5).map(s => `${s.artist} - ${s.title}`)
+    );
+  }
+
+  return sortedSongs;
+};
+
 // Limit array to specified length
 export const limitArray = <T>(array: T[], limit: number): T[] => {
   return array.slice(0, limit);

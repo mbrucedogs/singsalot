@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { selectIsAuthenticated } from '../../redux/authSlice';
+import { debugLog } from '../../utils/logger';
 import { LoginPrompt } from './index';
 
 interface AuthInitializerProps {
@@ -17,7 +18,7 @@ const AuthInitializer: React.FC<AuthInitializerProps> = ({ children }) => {
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
 
   useEffect(() => {
-    console.log('AuthInitializer effect - isAuthenticated:', isAuthenticated, 'showLogin:', showLogin);
+    debugLog('AuthInitializer effect - isAuthenticated:', isAuthenticated, 'showLogin:', showLogin);
     // Only process admin parameter once
     if (hasProcessedAdminParam) return;
 
@@ -54,7 +55,7 @@ const AuthInitializer: React.FC<AuthInitializerProps> = ({ children }) => {
       <LoginPrompt
         isAdmin={isAdminMode}
         onComplete={() => {
-          console.log('onComplete called, setting showLogin to false');
+          debugLog('onComplete called, setting showLogin to false');
           setShowLogin(false);
         }}
       />

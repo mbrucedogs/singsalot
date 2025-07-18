@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { IonIcon } from '@ionic/react';
 import { micOutline } from 'ionicons/icons';
 import { useAppDispatch } from '../../redux/hooks';
+import { debugLog } from '../../utils/logger';
 import { setAuth } from '../../redux/authSlice';
 import { database } from '../../firebase/config';
 import { ref, get } from 'firebase/database';
@@ -20,7 +21,7 @@ const LoginPrompt: React.FC<LoginPromptProps> = ({ isAdmin, onComplete }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Login form submitted');
+    debugLog('Login form submitted');
     if (!partyId.trim() || !singerName.trim()) {
       setError('Please enter both Party Id and your name.');
       return;
@@ -43,9 +44,9 @@ const LoginPrompt: React.FC<LoginPromptProps> = ({ isAdmin, onComplete }) => {
         isAdmin: isAdmin,
         controller: partyId.trim(),
       };
-      console.log('Dispatching auth:', auth);
+      debugLog('Dispatching auth:', auth);
       dispatch(setAuth(auth));
-      console.log('Calling onComplete');
+      debugLog('Calling onComplete');
       onComplete();
     } catch (error) {
       console.error('Error checking controller:', error);

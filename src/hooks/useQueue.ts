@@ -4,6 +4,7 @@ import { useSongOperations } from './useSongOperations';
 import { useToast } from './useToast';
 import { queueService } from '../firebase/services';
 import { selectControllerName } from '../redux';
+import { debugLog } from '../utils/logger';
 import type { QueueItem } from '../types';
 
 export const useQueue = () => {
@@ -25,7 +26,7 @@ export const useQueue = () => {
     });
 
     if (needsFix) {
-      console.log('Fixing queue order...');
+      debugLog('Fixing queue order...');
       try {
         // Update all items with sequential order
         const updatePromises = queueItems.map((item, index) => {
@@ -37,7 +38,7 @@ export const useQueue = () => {
         });
 
         await Promise.all(updatePromises);
-        console.log('Queue order fixed successfully');
+        debugLog('Queue order fixed successfully');
       } catch (error) {
         console.error('Failed to fix queue order:', error);
       }
@@ -83,12 +84,12 @@ export const useQueue = () => {
   }, [toggleFavorite, showSuccess, showError]);
 
   const handleMoveUp = useCallback(async (queueItem: QueueItem) => {
-    console.log('handleMoveUp called with:', queueItem);
-    console.log('Current queueItems:', queueItems);
-    console.log('Controller name:', controllerName);
+    debugLog('handleMoveUp called with:', queueItem);
+    debugLog('Current queueItems:', queueItems);
+    debugLog('Controller name:', controllerName);
     
     if (!controllerName || !queueItem.key || queueItem.order <= 1) {
-      console.log('Early return - conditions not met:', { 
+      debugLog('Early return - conditions not met:', { 
         controllerName: !!controllerName, 
         queueItemKey: !!queueItem.key, 
         order: queueItem.order 
@@ -99,15 +100,15 @@ export const useQueue = () => {
     try {
       // Find the item above this one
       const itemAbove = queueItems.find(item => item.order === queueItem.order - 1);
-      console.log('Item above:', itemAbove);
+      debugLog('Item above:', itemAbove);
       
       if (!itemAbove || !itemAbove.key) {
-        console.log('No item above found');
+        debugLog('No item above found');
         showError('Cannot move item up');
         return;
       }
 
-      console.log('Swapping orders:', {
+      debugLog('Swapping orders:', {
         currentItem: { key: queueItem.key, order: queueItem.order },
         itemAbove: { key: itemAbove.key, order: itemAbove.order }
       });
@@ -118,7 +119,7 @@ export const useQueue = () => {
         queueService.updateQueueItem(controllerName, itemAbove.key, { order: queueItem.order })
       ]);
 
-      console.log('Move up completed successfully');
+      debugLog('Move up completed successfully');
       showSuccess('Song moved up in queue');
     } catch (error) {
       console.error('Failed to move song up:', error);
@@ -127,12 +128,12 @@ export const useQueue = () => {
   }, [controllerName, queueItems, showSuccess, showError]);
 
   const handleMoveDown = useCallback(async (queueItem: QueueItem) => {
-    console.log('handleMoveDown called with:', queueItem);
-    console.log('Current queueItems:', queueItems);
-    console.log('Controller name:', controllerName);
+    debugLog('handleMoveDown called with:', queueItem);
+    debugLog('Current queueItems:', queueItems);
+    debugLog('Controller name:', controllerName);
     
     if (!controllerName || !queueItem.key || queueItem.order >= queueItems.length) {
-      console.log('Early return - conditions not met:', { 
+      debugLog('Early return - conditions not met:', { 
         controllerName: !!controllerName, 
         queueItemKey: !!queueItem.key, 
         order: queueItem.order,
@@ -144,15 +145,15 @@ export const useQueue = () => {
     try {
       // Find the item below this one
       const itemBelow = queueItems.find(item => item.order === queueItem.order + 1);
-      console.log('Item below:', itemBelow);
+      debugLog('Item below:', itemBelow);
       
       if (!itemBelow || !itemBelow.key) {
-        console.log('No item below found');
+        debugLog('No item below found');
         showError('Cannot move item down');
         return;
       }
 
-      console.log('Swapping orders:', {
+      debugLog('Swapping orders:', {
         currentItem: { key: queueItem.key, order: queueItem.order },
         itemBelow: { key: itemBelow.key, order: itemBelow.order }
       });
@@ -163,7 +164,7 @@ export const useQueue = () => {
         queueService.updateQueueItem(controllerName, itemBelow.key, { order: queueItem.order })
       ]);
 
-      console.log('Move down completed successfully');
+      debugLog('Move down completed successfully');
       showSuccess('Song moved down in queue');
     } catch (error) {
       console.error('Failed to move song down:', error);
@@ -172,12 +173,12 @@ export const useQueue = () => {
   }, [controllerName, queueItems, showSuccess, showError]);
 
   const handleReorder = useCallback(async (oldIndex: number, newIndex: number) => {
-    console.log('handleReorder called with:', { oldIndex, newIndex });
-    console.log('Current queueItems:', queueItems);
-    console.log('Controller name:', controllerName);
+    debugLog('handleReorder called with:', { oldIndex, newIndex });
+    debugLog('Current queueItems:', queueItems);
+    debugLog('Controller name:', controllerName);
     
     if (!controllerName || oldIndex === newIndex) {
-      console.log('Early return - conditions not met:', { 
+      debugLog('Early return - conditions not met:', { 
         controllerName: !!controllerName, 
         oldIndex, 
         newIndex 
@@ -188,12 +189,12 @@ export const useQueue = () => {
     try {
       const itemToMove = queueItems[oldIndex];
       if (!itemToMove || !itemToMove.key) {
-        console.log('No item to move found');
+        debugLog('No item to move found');
         showError('Cannot reorder item');
         return;
       }
 
-      console.log('Moving item:', {
+      debugLog('Moving item:', {
         item: { key: itemToMove.key, order: itemToMove.order },
         fromIndex: oldIndex,
         toIndex: newIndex
@@ -233,7 +234,7 @@ export const useQueue = () => {
       );
 
       await Promise.all(updatePromises);
-      console.log('Reorder completed successfully');
+      debugLog('Reorder completed successfully');
       showSuccess('Queue reordered successfully');
     } catch (error) {
       console.error('Failed to reorder queue:', error);

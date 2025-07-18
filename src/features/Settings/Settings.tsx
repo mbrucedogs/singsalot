@@ -6,6 +6,7 @@ import { selectIsAdmin, selectSettings } from '../../redux';
 import { useDisabledSongs } from '../../hooks';
 import { InfiniteScrollList, ActionButton } from '../../components/common';
 import { filterSongs } from '../../utils/dataProcessing';
+import { setDebugEnabled, isDebugEnabled, debugLog } from '../../utils/logger';
 import type { Song } from '../../types';
 
 interface DisabledSongDisplay {
@@ -44,7 +45,11 @@ const Settings: React.FC = () => {
 
   const handleToggleSetting = async (setting: string, value: boolean) => {
     // This would need to be implemented with the settings service
-    console.log(`Toggle ${setting} to ${value}`);
+    debugLog(`Toggle ${setting} to ${value}`);
+  };
+
+  const handleToggleDebug = (enabled: boolean) => {
+    setDebugEnabled(enabled);
   };
 
   const handleRemoveDisabledSong = async (song: DisabledSongDisplay) => {
@@ -87,6 +92,14 @@ const Settings: React.FC = () => {
                   slot="end"
                   checked={playerSettings?.userpick || false}
                   onIonChange={(e) => handleToggleSetting('userpick', e.detail.checked)}
+                />
+              </IonItem>
+              <IonItem>
+                <IonLabel>Debug Logging</IonLabel>
+                <IonToggle
+                  slot="end"
+                  checked={isDebugEnabled()}
+                  onIonChange={(e) => handleToggleDebug(e.detail.checked)}
                 />
               </IonItem>
             </IonList>

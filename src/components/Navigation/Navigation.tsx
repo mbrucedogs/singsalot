@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { PlayerControls } from '../common';
 import { useAppSelector } from '../../redux';
 import { selectIsAdmin } from '../../redux';
+import { debugLog } from '../../utils/logger';
 
 const Navigation: React.FC = () => {
   const location = useLocation();
@@ -32,7 +33,7 @@ const Navigation: React.FC = () => {
   useEffect(() => {
     const checkScreenSize = () => {
       const large = window.innerWidth >= 768;
-      console.log('Screen width:', window.innerWidth, 'Is large screen:', large);
+      debugLog('Screen width:', window.innerWidth, 'Is large screen:', large);
       setIsLargeScreen(large);
     };
 
@@ -54,7 +55,7 @@ const Navigation: React.FC = () => {
 
   // For large screens, render a fixed sidebar instead of a menu
   if (isLargeScreen) {
-    console.log('Rendering large screen sidebar');
+    debugLog('Rendering large screen sidebar');
     return (
       <div 
         style={{
@@ -121,7 +122,7 @@ const Navigation: React.FC = () => {
   }
 
   // For mobile screens, use the Ionic menu
-  console.log('Rendering mobile menu');
+  debugLog('Rendering mobile menu');
   return (
     <IonMenu 
       contentId="main-content" 

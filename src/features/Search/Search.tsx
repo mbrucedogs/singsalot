@@ -4,6 +4,7 @@ import { InfiniteScrollList, SongItem } from '../../components/common';
 import { useSearch } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectIsAdmin, selectSongs } from '../../redux';
+import { debugLog } from '../../utils/logger';
 import type { Song } from '../../types';
 
 const Search: React.FC = () => {
@@ -27,15 +28,15 @@ const Search: React.FC = () => {
     return () => {
       const endTime = performance.now();
       const renderTime = endTime - startTime;
-      console.log(`Search component render time: ${renderTime.toFixed(2)}ms`);
+      debugLog(`Search component render time: ${renderTime.toFixed(2)}ms`);
     };
   });
 
   // Debug logging
-  console.log('Search component - songs count:', songsCount);
-  console.log('Search component - search results:', searchResults);
-  console.log('Search component - search term:', searchTerm);
-  console.log('Search component - showing:', searchResults.songs.length, 'of', searchResults.count);
+  debugLog('Search component - songs count:', songsCount);
+  debugLog('Search component - search results:', searchResults);
+  debugLog('Search component - search term:', searchTerm);
+  debugLog('Search component - showing:', searchResults.songs.length, 'of', searchResults.count);
 
   return (
     <div className="max-w-4xl mx-auto p-6">

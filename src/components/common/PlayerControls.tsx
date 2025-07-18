@@ -6,6 +6,7 @@ import { useAppSelector } from '../../redux';
 import { selectPlayerState, selectIsAdmin, selectQueue } from '../../redux';
 import { playerService } from '../../firebase/services';
 import { selectControllerName } from '../../redux';
+import { debugLog } from '../../utils/logger';
 import { useToast } from '../../hooks/useToast';
 import { PlayerState } from '../../types';
 
@@ -22,9 +23,9 @@ const PlayerControls: React.FC<PlayerControlsProps> = ({ className = '', variant
   const { showSuccess, showError } = useToast();
 
   // Debug logging
-  console.log('PlayerControls - playerState:', playerState);
-  console.log('PlayerControls - isAdmin:', isAdmin);
-  console.log('PlayerControls - queue length:', Object.keys(queue).length);
+  debugLog('PlayerControls - playerState:', playerState);
+  debugLog('PlayerControls - isAdmin:', isAdmin);
+  debugLog('PlayerControls - queue length:', Object.keys(queue).length);
 
   const handlePlay = async () => {
     if (!controllerName) return;
@@ -70,8 +71,8 @@ const PlayerControls: React.FC<PlayerControlsProps> = ({ className = '', variant
   const currentState = playerState?.state || PlayerState.stopped;
   const hasSongsInQueue = Object.keys(queue).length > 0;
 
-  console.log('PlayerControls - currentState:', currentState);
-  console.log('PlayerControls - hasSongsInQueue:', hasSongsInQueue);
+  debugLog('PlayerControls - currentState:', currentState);
+  debugLog('PlayerControls - hasSongsInQueue:', hasSongsInQueue);
 
   const getStateColor = () => {
     switch (currentState) {

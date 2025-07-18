@@ -5,6 +5,7 @@ import { InfiniteScrollList, ActionButton } from '../../components/common';
 import { useSingers } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectSingers } from '../../redux';
+import { debugLog } from '../../utils/logger';
 import type { Singer } from '../../types';
 
 const Singers: React.FC = () => {
@@ -39,8 +40,8 @@ const Singers: React.FC = () => {
   const singersCount = Object.keys(singersData).length;
 
   // Debug logging
-  console.log('Singers component - singers count:', singersCount);
-  console.log('Singers component - singers:', singers);
+  debugLog('Singers component - singers count:', singersCount);
+  debugLog('Singers component - singers:', singers);
 
   // Render singer item for InfiniteScrollList
   const renderSingerItem = (singer: Singer) => (

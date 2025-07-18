@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { useAppSelector, selectFavoritesArray } from '../redux';
+import { debugLog } from '../utils/logger';
 import { useSongOperations } from './useSongOperations';
 import { useToast } from './useToast';
 import { useDisabledSongs } from './useDisabledSongs';
@@ -28,7 +29,7 @@ export const useFavorites = () => {
   }, [favoritesItems.length, allFavoritesItems.length, filterDisabledSongs]);
 
   const loadMore = useCallback(() => {
-    console.log('useFavorites - loadMore called:', { hasMore, currentPage, allFavoritesItemsLength: allFavoritesItems.length });
+    debugLog('useFavorites - loadMore called:', { hasMore, currentPage, allFavoritesItemsLength: allFavoritesItems.length });
     if (hasMore) {
       setCurrentPage(prev => prev + 1);
     }

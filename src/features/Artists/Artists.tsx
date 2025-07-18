@@ -5,6 +5,7 @@ import { InfiniteScrollList, SongItem } from '../../components/common';
 import { useArtists } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectSongs } from '../../redux';
+import { debugLog } from '../../utils/logger';
 
 const Artists: React.FC = () => {
   const {
@@ -24,10 +25,10 @@ const Artists: React.FC = () => {
   const [selectedArtist, setSelectedArtist] = useState<string | null>(null);
 
   // Debug logging
-  console.log('Artists component - artists count:', artists.length);
-  console.log('Artists component - selected artist:', selectedArtist);
-  console.log('Artists component - songs count:', songsCount);
-  console.log('Artists component - search term:', searchTerm);
+  debugLog('Artists component - artists count:', artists.length);
+  debugLog('Artists component - selected artist:', selectedArtist);
+  debugLog('Artists component - songs count:', songsCount);
+  debugLog('Artists component - search term:', searchTerm);
 
   const handleArtistClick = (artist: string) => {
     setSelectedArtist(artist);

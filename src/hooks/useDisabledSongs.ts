@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { disabledSongsService } from '../firebase/services';
 import { useAppSelector } from '../redux';
 import { selectControllerName } from '../redux';
+import { debugLog } from '../utils/logger';
 import { useToast } from './useToast';
 import type { Song, DisabledSong } from '../types';
 
@@ -66,7 +67,7 @@ export const useDisabledSongs = () => {
     }
 
     try {
-      console.log('Adding disabled song:', { controllerName, song });
+      debugLog('Adding disabled song:', { controllerName, song });
       await disabledSongsService.addDisabledSong(controllerName, song);
       showSuccess('Song marked as disabled');
     } catch (error) {

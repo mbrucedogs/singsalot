@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { useAppSelector, selectArtistsArray, selectSongsArray } from '../redux';
+import { debugLog } from '../utils/logger';
 import { useSongOperations } from './useSongOperations';
 import { useToast } from './useToast';
 import type { Song } from '../types';
@@ -55,17 +56,17 @@ export const useArtists = () => {
   }, [artists.length, filteredArtists.length]);
 
   const loadMore = useCallback(() => {
-    console.log('useArtists - loadMore called:', { 
+    debugLog('useArtists - loadMore called:', { 
       hasMore, 
       currentPage, 
       filteredArtistsLength: filteredArtists.length,
       artistsLength: artists.length 
     });
     if (hasMore) {
-      console.log('useArtists - Incrementing page from', currentPage, 'to', currentPage + 1);
+      debugLog('useArtists - Incrementing page from', currentPage, 'to', currentPage + 1);
       setCurrentPage(prev => prev + 1);
     } else {
-      console.log('useArtists - Not loading more because hasMore is false');
+      debugLog('useArtists - Not loading more because hasMore is false');
     }
   }, [hasMore, currentPage, filteredArtists.length, artists.length]);
 

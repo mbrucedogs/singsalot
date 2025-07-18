@@ -3,6 +3,7 @@ import { InfiniteScrollList, SongItem } from '../../components/common';
 import { useNewSongs } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectNewSongs } from '../../redux';
+import { debugLog } from '../../utils/logger';
 import type { Song } from '../../types';
 
 const NewSongs: React.FC = () => {
@@ -18,8 +19,8 @@ const NewSongs: React.FC = () => {
   const newSongsCount = Object.keys(newSongs).length;
 
   // Debug logging
-  console.log('NewSongs component - new songs count:', newSongsCount);
-  console.log('NewSongs component - new songs items:', newSongsItems);
+  debugLog('NewSongs component - new songs count:', newSongsCount);
+  debugLog('NewSongs component - new songs items:', newSongsItems);
 
   return (
     <>

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { debugLog } from '../../utils/logger';
 import { EmptyState } from './index';
 
 interface InfiniteScrollListProps<T> {
@@ -28,18 +29,18 @@ const InfiniteScrollList = <T extends string | { key?: string }>({
 
   // Intersection Observer for infinite scrolling
   useEffect(() => {
-    console.log('InfiniteScrollList - Setting up observer:', { hasMore, isLoading, itemsLength: items.length });
+    debugLog('InfiniteScrollList - Setting up observer:', { hasMore, isLoading, itemsLength: items.length });
     
     const observer = new IntersectionObserver(
       (entries) => {
-        console.log('InfiniteScrollList - Intersection detected:', { 
+        debugLog('InfiniteScrollList - Intersection detected:', { 
           isIntersecting: entries[0].isIntersecting, 
           hasMore, 
           isLoading 
         });
         
         if (entries[0].isIntersecting && hasMore && !isLoading) {
-          console.log('InfiniteScrollList - Loading more items');
+          debugLog('InfiniteScrollList - Loading more items');
           onLoadMore();
         }
       },

@@ -9,6 +9,7 @@ import {
   update
 } from 'firebase/database';
 import { database } from './config';
+import { debugLog } from '../utils/logger';
 import type { Song, QueueItem, Controller, Singer, DisabledSong } from '../types';
 
 // Basic CRUD operations for controllers
@@ -336,7 +337,7 @@ export const disabledSongsService = {
 
   // Add a song to the disabled list
   addDisabledSong: async (controllerName: string, song: Song) => {
-    console.log('disabledSongsService.addDisabledSong called with:', { controllerName, song });
+    debugLog('disabledSongsService.addDisabledSong called with:', { controllerName, song });
     
     if (!controllerName) {
       throw new Error('Controller name is required');
@@ -351,7 +352,7 @@ export const disabledSongsService = {
     }
     
     const songKey = disabledSongsService.generateSongKey(song.path);
-    console.log('Generated song key:', songKey);
+    debugLog('Generated song key:', songKey);
     
     const disabledSongRef = ref(database, `controllers/${controllerName}/disabledSongs/${songKey}`);
     const disabledSong = {
@@ -362,9 +363,9 @@ export const disabledSongsService = {
       disabledAt: new Date().toISOString(),
     };
     
-    console.log('Saving disabled song:', disabledSong);
+    debugLog('Saving disabled song:', disabledSong);
     await set(disabledSongRef, disabledSong);
-    console.log('Disabled song saved successfully');
+    debugLog('Disabled song saved successfully');
   },
 
   // Remove a song from the disabled list

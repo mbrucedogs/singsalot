@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { useAppSelector, selectHistoryArray } from '../redux';
+import { debugLog } from '../utils/logger';
 import { useSongOperations } from './useSongOperations';
 import { useToast } from './useToast';
 import { useDisabledSongs } from './useDisabledSongs';
@@ -28,7 +29,7 @@ export const useHistory = () => {
   }, [historyItems.length, allHistoryItems.length, filterDisabledSongs]);
 
   const loadMore = useCallback(() => {
-    console.log('useHistory - loadMore called:', { hasMore, currentPage, allHistoryItemsLength: allHistoryItems.length });
+    debugLog('useHistory - loadMore called:', { hasMore, currentPage, allHistoryItemsLength: allHistoryItems.length });
     if (hasMore) {
       setCurrentPage(prev => prev + 1);
     }

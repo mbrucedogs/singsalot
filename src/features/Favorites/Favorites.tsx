@@ -3,6 +3,7 @@ import { InfiniteScrollList, SongItem } from '../../components/common';
 import { useFavorites } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectFavorites } from '../../redux';
+import { debugLog } from '../../utils/logger';
 import type { Song } from '../../types';
 
 const Favorites: React.FC = () => {
@@ -18,8 +19,8 @@ const Favorites: React.FC = () => {
   const favoritesCount = Object.keys(favorites).length;
 
   // Debug logging
-  console.log('Favorites component - favorites count:', favoritesCount);
-  console.log('Favorites component - favorites items:', favoritesItems);
+  debugLog('Favorites component - favorites count:', favoritesCount);
+  debugLog('Favorites component - favorites items:', favoritesItems);
 
   return (
     <>

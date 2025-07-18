@@ -1,3 +1,4 @@
+import { debugLog } from './logger';
 import type { Song, QueueItem, TopPlayed } from '../types';
 
 // Convert Firebase object to array with keys
@@ -83,7 +84,7 @@ export const sortSongsByArtistAndTitle = (songs: Song[]): Song[] => {
 
   // Debug logging for first few songs to verify sorting
   if (sortedSongs.length > 0) {
-    console.log('Songs sorted by artist and title. First 5 songs:', 
+    debugLog('Songs sorted by artist and title. First 5 songs:', 
       sortedSongs.slice(0, 5).map(s => `${s.artist} - ${s.title}`)
     );
   }

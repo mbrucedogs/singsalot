@@ -6,12 +6,13 @@ import { useAppSelector } from '../../redux';
 import { selectTopPlayed, selectSongsArray } from '../../redux';
 import { InfiniteScrollList, SongItem } from '../../components/common';
 import { filterSongs } from '../../utils/dataProcessing';
+import { debugLog } from '../../utils/logger';
 import { useSongOperations } from '../../hooks';
 import { useToast } from '../../hooks';
 import type { TopPlayed, Song } from '../../types';
 
 const Top100: React.FC = () => {
-  console.log('Top100 component - RENDERING START');
+  debugLog('Top100 component - RENDERING START');
 
   const {
     topPlayedItems,
@@ -27,7 +28,7 @@ const Top100: React.FC = () => {
   const { showSuccess, showError } = useToast();
   const [selectedTopPlayed, setSelectedTopPlayed] = useState<TopPlayed | null>(null);
 
-  console.log('Top100 component - Redux data:', { topPlayedCount, topPlayedItems: topPlayedItems.length });
+  debugLog('Top100 component - Redux data:', { topPlayedCount, topPlayedItems: topPlayedItems.length });
 
   const handleTopPlayedClick = useCallback((item: TopPlayed) => {
     setSelectedTopPlayed(item);
@@ -44,7 +45,7 @@ const Top100: React.FC = () => {
     // Use the shared search function with title and artist
     const searchTerm = `${selectedTopPlayed.title} ${selectedTopPlayed.artist}`;
     
-    console.log('Top100 - Search details:', {
+    debugLog('Top100 - Search details:', {
       selectedTopPlayed,
       searchTerm,
       allSongsCount: allSongs.length
@@ -52,7 +53,7 @@ const Top100: React.FC = () => {
     
     const filteredSongs = filterSongs(allSongs, searchTerm);
     
-    console.log('Top100 - Search results:', {
+    debugLog('Top100 - Search results:', {
       filteredSongsCount: filteredSongs.length,
       firstFewResults: filteredSongs.slice(0, 3).map(s => `${s.artist} - ${s.title}`)
     });
@@ -83,7 +84,7 @@ const Top100: React.FC = () => {
   const displayCount = topPlayedItems.length;
   const displayHasMore = hasMore;
 
-  console.log('Top100 component - Real Firebase data:', { 
+  debugLog('Top100 component - Real Firebase data:', { 
     displayItems: displayItems.length, 
     displayCount, 
     displayHasMore,
@@ -93,7 +94,7 @@ const Top100: React.FC = () => {
     isLoading
   });
 
-  console.log('Top100 component - About to render JSX');
+  debugLog('Top100 component - About to render JSX');
 
   return (
     <>

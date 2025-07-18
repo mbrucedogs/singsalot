@@ -5,6 +5,7 @@ import { InfiniteScrollList, SongItem } from '../../components/common';
 import { useHistory } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectHistory } from '../../redux';
+import { debugLog } from '../../utils/logger';
 import { formatDate } from '../../utils/dataProcessing';
 import type { Song } from '../../types';
 
@@ -21,8 +22,8 @@ const History: React.FC = () => {
   const historyCount = Object.keys(history).length;
 
   // Debug logging
-  console.log('History component - history count:', historyCount);
-  console.log('History component - history items:', historyItems);
+  debugLog('History component - history count:', historyCount);
+  debugLog('History component - history items:', historyItems);
 
   // Render extra content for history items (play date)
   const renderExtraContent = (item: Song) => {

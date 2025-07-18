@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { useAppSelector, selectTopPlayedArray } from '../redux';
+import { debugLog } from '../utils/logger';
 import { useSongOperations } from './useSongOperations';
 import { useToast } from './useToast';
 import type { TopPlayed } from '../types';
@@ -18,7 +19,7 @@ export const useTopPlayed = () => {
   const topPlayedItems = useMemo(() => {
     const endIndex = currentPage * ITEMS_PER_PAGE;
     const result = allTopPlayedItems.slice(0, endIndex);
-    console.log('useTopPlayed - pagination:', {
+    debugLog('useTopPlayed - pagination:', {
       currentPage,
       ITEMS_PER_PAGE,
       endIndex,
@@ -31,7 +32,7 @@ export const useTopPlayed = () => {
   const hasMore = useMemo(() => {
     // Show "hasMore" if there are more items than currently loaded
     const result = topPlayedItems.length < allTopPlayedItems.length;
-    console.log('useTopPlayed - hasMore calculation:', {
+    debugLog('useTopPlayed - hasMore calculation:', {
       topPlayedItemsLength: topPlayedItems.length,
       allTopPlayedItemsLength: allTopPlayedItems.length,
       result
@@ -40,7 +41,7 @@ export const useTopPlayed = () => {
   }, [topPlayedItems.length, allTopPlayedItems.length]);
 
   const loadMore = useCallback(() => {
-    console.log('useTopPlayed - loadMore called:', { hasMore, currentPage, allTopPlayedItemsLength: allTopPlayedItems.length });
+    debugLog('useTopPlayed - loadMore called:', { hasMore, currentPage, allTopPlayedItemsLength: allTopPlayedItems.length });
     if (hasMore && !isLoading) {
       setIsLoading(true);
       // Simulate a small delay to show loading state

@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { useAppSelector, selectSongListArray, selectSongsArray } from '../redux';
+import { debugLog } from '../utils/logger';
 import { useSongOperations } from './useSongOperations';
 import { useToast } from './useToast';
 import type { SongListSong, Song } from '../types';
@@ -23,7 +24,7 @@ export const useSongLists = () => {
   const hasMore = useMemo(() => {
     // Show "hasMore" if there are more items than currently loaded
     const hasMoreItems = songLists.length < allSongLists.length;
-    console.log('useSongLists - hasMore calculation:', { 
+    debugLog('useSongLists - hasMore calculation:', { 
       songListsLength: songLists.length, 
       allSongListsLength: allSongLists.length, 
       hasMore: hasMoreItems,
@@ -36,7 +37,7 @@ export const useSongLists = () => {
     const endIndex = currentPage * ITEMS_PER_PAGE;
     const hasMoreItems = endIndex < allSongLists.length;
     
-    console.log('useSongLists - loadMore called:', { 
+    debugLog('useSongLists - loadMore called:', { 
       hasMoreItems, 
       currentPage, 
       allSongListsLength: allSongLists.length,
@@ -44,10 +45,10 @@ export const useSongLists = () => {
     });
     
     if (hasMoreItems) {
-      console.log('useSongLists - Incrementing page from', currentPage, 'to', currentPage + 1);
+      debugLog('useSongLists - Incrementing page from', currentPage, 'to', currentPage + 1);
       setCurrentPage(prev => prev + 1);
     } else {
-      console.log('useSongLists - Not loading more because hasMore is false');
+      debugLog('useSongLists - Not loading more because hasMore is false');
     }
   }, [currentPage, allSongLists.length]);
 

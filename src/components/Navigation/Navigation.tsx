@@ -64,16 +64,29 @@ const Navigation: React.FC = () => {
           top: 0,
           height: '100vh',
           width: '256px',
-          backgroundColor: 'white',
+          backgroundColor: 'var(--ion-background-color)',
           boxShadow: '2px 0 8px rgba(0,0,0,0.1)',
           zIndex: 1000,
-          borderRight: '1px solid #e5e7eb',
+          borderRight: '1px solid var(--ion-border-color)',
           overflowY: 'auto'
         }}
       >
-        <div style={{ padding: '16px', borderBottom: '1px solid #e5e7eb', backgroundColor: '#f9fafb' }}>
-          <h2 style={{ fontSize: '18px', fontWeight: '600', color: '#1f2937', margin: 0 }}>Karaoke</h2>
-          <p style={{ fontSize: '14px', color: '#6b7280', margin: '4px 0 0 0' }}>Singer: Matt</p>
+        <div style={{ 
+          padding: '16px', 
+          borderBottom: '1px solid var(--ion-border-color)', 
+          backgroundColor: 'var(--ion-color-light)' 
+        }}>
+          <h2 style={{ 
+            fontSize: '18px', 
+            fontWeight: '600', 
+            color: 'var(--ion-text-color)', 
+            margin: 0 
+          }}>Karaoke</h2>
+          <p style={{ 
+            fontSize: '14px', 
+            color: 'var(--ion-color-medium)', 
+            margin: '4px 0 0 0' 
+          }}>Singer: Matt</p>
         </div>
         <nav style={{ marginTop: '16px' }}>
           {navItems.map((item) => (
@@ -85,14 +98,14 @@ const Navigation: React.FC = () => {
                 alignItems: 'center',
                 padding: '12px 16px',
                 cursor: 'pointer',
-                backgroundColor: location.pathname === item.path ? '#dbeafe' : 'transparent',
-                color: location.pathname === item.path ? '#2563eb' : '#374151',
-                borderRight: location.pathname === item.path ? '2px solid #2563eb' : 'none',
+                backgroundColor: location.pathname === item.path ? 'var(--ion-color-primary-tint)' : 'transparent',
+                color: location.pathname === item.path ? 'var(--ion-color-primary)' : 'var(--ion-text-color)',
+                borderRight: location.pathname === item.path ? '2px solid var(--ion-color-primary)' : 'none',
                 transition: 'background-color 0.2s, color 0.2s'
               }}
               onMouseEnter={(e) => {
                 if (location.pathname !== item.path) {
-                  e.currentTarget.style.backgroundColor = '#f3f4f6';
+                  e.currentTarget.style.backgroundColor = 'var(--ion-color-light)';
                 }
               }}
               onMouseLeave={(e) => {
@@ -115,7 +128,7 @@ const Navigation: React.FC = () => {
         
         {/* Player Controls */}
         <div style={{ marginTop: 'auto', padding: '16px' }}>
-          <PlayerControls variant="dark" />
+          <PlayerControls />
         </div>
       </div>
     );
@@ -135,9 +148,22 @@ const Navigation: React.FC = () => {
     >
       <IonHeader>
         <IonToolbar>
-          <div style={{ padding: '16px', borderBottom: '1px solid #e5e7eb', backgroundColor: '#f9fafb' }}>
-            <h2 style={{ fontSize: '18px', fontWeight: '600', color: '#1f2937', margin: 0 }}>Karaoke</h2>
-            <p style={{ fontSize: '14px', color: '#6b7280', margin: '4px 0 0 0' }}>Singer: Matt</p>
+          <div style={{ 
+            padding: '16px', 
+            borderBottom: '1px solid var(--ion-border-color)', 
+            backgroundColor: 'var(--ion-color-light)' 
+          }}>
+            <h2 style={{ 
+              fontSize: '18px', 
+              fontWeight: '600', 
+              color: 'var(--ion-text-color)', 
+              margin: 0 
+            }}>Karaoke</h2>
+            <p style={{ 
+              fontSize: '14px', 
+              color: 'var(--ion-color-medium)', 
+              margin: '4px 0 0 0' 
+            }}>Singer: Matt</p>
           </div>
         </IonToolbar>
       </IonHeader>
@@ -158,7 +184,7 @@ const Navigation: React.FC = () => {
         
         {/* Player Controls for Mobile */}
         <div style={{ padding: '16px' }}>
-          <PlayerControls variant="dark" />
+          <PlayerControls />
         </div>
       </IonContent>
     </IonMenu>

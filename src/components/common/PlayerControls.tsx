@@ -1,25 +1,23 @@
 import React from 'react';
 import { IonCard, IonCardContent, IonChip, IonIcon } from '@ionic/react';
-import { playOutline, pauseOutline, stopOutline, play, pause, stop } from 'ionicons/icons';
-import ActionButton from './ActionButton';
+import { play, pause, stop } from 'ionicons/icons';
 import { useAppSelector } from '../../redux';
-import { selectPlayerState, selectIsAdmin, selectQueueLength } from '../../redux';
+import { selectIsAdmin, selectPlayerState, selectQueueLength, selectControllerName } from '../../redux';
 import { playerService } from '../../firebase/services';
-import { selectControllerName } from '../../redux';
-import { debugLog } from '../../utils/logger';
-import { useToast } from '../../hooks/useToast';
 import { PlayerState } from '../../types';
+import ActionButton from './ActionButton';
+import { useToast } from '../../hooks/useToast';
+import { debugLog } from '../../utils/logger';
 
 interface PlayerControlsProps {
   className?: string;
-  variant?: 'light' | 'dark';
 }
 
-const PlayerControls: React.FC<PlayerControlsProps> = ({ className = '', variant = 'light' }) => {
-  const playerState = useAppSelector(selectPlayerState);
+const PlayerControls: React.FC<PlayerControlsProps> = ({ className = '' }) => {
   const isAdmin = useAppSelector(selectIsAdmin);
-  const controllerName = useAppSelector(selectControllerName);
+  const playerState = useAppSelector(selectPlayerState);
   const queueLength = useAppSelector(selectQueueLength);
+  const controllerName = useAppSelector(selectControllerName);
   const { showSuccess, showError } = useToast();
 
   // Debug logging
@@ -85,92 +83,12 @@ const PlayerControls: React.FC<PlayerControlsProps> = ({ className = '', variant
     }
   };
 
-  const getStatusText = () => {
-    switch (currentState) {
-      case PlayerState.playing:
-        return 'Currently Playing';
-      case PlayerState.paused:
-        return 'Currently Paused';
-      default:
-        return 'Currently Stopped';
-    }
-  };
-
-  // Dark mode variant
-  if (variant === 'dark') {
-    return (
-      <div className={`bg-black text-white ${className}`}>
-        {/* Status Text */}
-        <h3 className="text-lg font-bold">{getStatusText()}</h3>
-        
-        {/* Control Buttons */}
-        <div>
-          {currentState === PlayerState.playing ? (
-            <div 
-              className="flex items-center cursor-pointer hover:bg-gray-800"
-              style={{ padding: '12px 0px' }}
-              onClick={handlePause}
-            >
-              <IonIcon 
-                icon={pauseOutline} 
-                style={{ 
-                  marginRight: '12px',
-                  fontSize: '24px'
-                }} 
-              />
-              <span style={{ fontWeight: '500' }}>Pause</span>
-            </div>
-          ) : (
-            <div 
-              className="flex items-center cursor-pointer hover:bg-gray-800"
-              style={{ padding: '12px 0px' }}
-              onClick={handlePlay}
-            >
-              <IonIcon 
-                icon={playOutline} 
-                style={{ 
-                  marginRight: '12px',
-                  fontSize: '24px'
-                }} 
-              />
-              <span style={{ fontWeight: '500' }}>Play</span>
-            </div>
-          )}
-          
-          {currentState !== PlayerState.stopped && (
-            <div 
-              className="flex items-center cursor-pointer hover:bg-gray-800"
-              style={{ padding: '12px 0px' }}
-              onClick={handleStop}
-            >
-              <IonIcon 
-                icon={stopOutline} 
-                style={{ 
-                  marginRight: '12px',
-                  fontSize: '24px'
-                }} 
-              />
-              <span style={{ fontWeight: '500' }}>Stop</span>
-            </div>
-          )}
-        </div>
-        
-        {!hasSongsInQueue && (
-          <div style={{ padding: '12px 0px' }} className="text-xs text-gray-400">
-            Add songs to queue to enable playback controls
-          </div>
-        )}
-      </div>
-    );
-  }
-
-  // Light mode variant (original)
   return (
     <IonCard className={className}>
       <IonCardContent>
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <h3 className="text-lg font-medium text-gray-900">Player Controls</h3>
+            <h3 className="text-lg font-medium">Player Controls</h3>
             <IonChip color={getStateColor()}>
               {currentState}
             </IonChip>
@@ -208,7 +126,7 @@ const PlayerControls: React.FC<PlayerControlsProps> = ({ className = '', variant
           )}
         </div>
         
-        <div className="mt-3 text-xs text-gray-500 text-center">
+        <div className="mt-3 text-xs text-center">
           Admin controls - Only visible to admin users
           {!hasSongsInQueue && (
             <div className="mt-1 text-orange-600">

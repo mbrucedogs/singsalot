@@ -11,10 +11,25 @@
 @import '@ionic/react/css/flex-utils.css';
 @import '@ionic/react/css/display.css';
 
+/* Dark mode support - system preference */
+@import '@ionic/react/css/palettes/dark.system.css';
+
 /* Tailwind CSS - comes after Ionic to avoid overriding essential Ionic styles */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Dark mode detection */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ion-color-primary: #3880ff;
+    --ion-color-primary-rgb: 56, 128, 255;
+    --ion-color-primary-contrast: #ffffff;
+    --ion-color-primary-contrast-rgb: 255, 255, 255;
+    --ion-color-primary-shade: #3171e0;
+    --ion-color-primary-tint: #4c8dff;
+  }
+}
 
 /* Ensure menu button is visible */
 ion-menu-button {
@@ -36,7 +51,7 @@ ion-menu {
 
 /* Ensure modal content is visible */
 ion-modal ion-content {
-  --background: var(--ion-background-color, #ffffff);
+  --background: var(--ion-background-color);
 }
 
 ion-modal ion-list {
@@ -45,7 +60,7 @@ ion-modal ion-list {
 
 /* Ensure content is visible and properly styled */
 ion-content {
-  --background: var(--ion-background-color, #ffffff);
+  --background: var(--ion-background-color);
 }
 
 ion-list {
@@ -55,7 +70,7 @@ ion-list {
 /* Ensure items are properly displayed */
 ion-item {
   --background: transparent;
-  --color: var(--ion-text-color, #000000);
+  --color: var(--ion-text-color);
 }
 
 /* Settings page specific styling */
@@ -107,7 +122,7 @@ ion-modal .ion-input-label,
 ion-modal ion-label {
   font-weight: bold !important;
   font-size: 1rem !important;
-  color: #111827 !important;
+  color: var(--ion-text-color) !important;
   margin-bottom: 0.5rem !important;
   display: block !important;
 }
@@ -123,7 +138,7 @@ ion-modal ion-button {
 .bold-label {
   font-weight: bold !important;
   font-size: 1rem !important;
-  color: #111827 !important;
+  color: var(--ion-text-color) !important;
   margin-bottom: 0.5rem !important;
   display: block !important;
 }
@@ -131,27 +146,25 @@ ion-modal ion-button {
 /* Bold song title styling */
 .bold-title {
   font-weight: bold !important;
-  color: #111827 !important;
+  color: var(--ion-text-color) !important;
 }
 
 /* Override Ionic label text color for song titles */
 ion-item ion-label .bold-title {
-  color: #111827 !important;
+  color: var(--ion-text-color) !important;
 }
-
-
 
 /* Input field styling to match search box */
 .visible-input {
-  border: 1px solid #d1d5db !important;
+  border: 1px solid var(--ion-border-color, #d1d5db) !important;
   border-radius: 8px !important;
   padding: 0 12px !important;
-  background: #ffffff !important;
+  background: var(--ion-background-color) !important;
 }
 
 .visible-input ion-input {
-  border: 1px solid #d1d5db !important;
+  border: 1px solid var(--ion-border-color, #d1d5db) !important;
   border-radius: 8px !important;
   padding: 0 12px !important;
-  background: #ffffff !important;
+  background: var(--ion-background-color) !important;
 }

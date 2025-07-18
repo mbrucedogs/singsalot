@@ -17,6 +17,7 @@ const AuthInitializer: React.FC<AuthInitializerProps> = ({ children }) => {
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
 
   useEffect(() => {
+    console.log('AuthInitializer effect - isAuthenticated:', isAuthenticated, 'showLogin:', showLogin);
     // Only process admin parameter once
     if (hasProcessedAdminParam) return;
 
@@ -52,7 +53,10 @@ const AuthInitializer: React.FC<AuthInitializerProps> = ({ children }) => {
     return (
       <LoginPrompt
         isAdmin={isAdminMode}
-        onComplete={() => setShowLogin(false)}
+        onComplete={() => {
+          console.log('onComplete called, setting showLogin to false');
+          setShowLogin(false);
+        }}
       />
     );
   }

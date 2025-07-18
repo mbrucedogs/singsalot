@@ -1,6 +1,10 @@
 import { useState } from 'react';
+import { IonIcon } from '@ionic/react';
+import { micOutline } from 'ionicons/icons';
 import { useAppDispatch } from '../../redux/hooks';
 import { setAuth } from '../../redux/authSlice';
+import { database } from '../../firebase/config';
+import { ref, get } from 'firebase/database';
 import type { Authentication } from '../../types';
 
 interface LoginPromptProps {
@@ -9,77 +13,242 @@ interface LoginPromptProps {
 }
 
 const LoginPrompt: React.FC<LoginPromptProps> = ({ isAdmin, onComplete }) => {
-  const [singerName, setSingerName] = useState(isAdmin ? 'Admin' : '');
-  const [partyId, setPartyId] = useState('');
+  const [singerName, setSingerName] = useState(isAdmin ? 'Admin' : 'Matt');
+  const [partyId, setPartyId] = useState('mbrucedogs-test');
   const [error, setError] = useState('');
   const dispatch = useAppDispatch();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('Login form submitted');
     if (!partyId.trim() || !singerName.trim()) {
       setError('Please enter both Party Id and your name.');
       return;
     }
     setError('');
-    const auth: Authentication = {
-      authenticated: true,
-      singer: singerName.trim(),
-      isAdmin: isAdmin,
-      controller: partyId.trim(),
-    };
-    dispatch(setAuth(auth));
-    onComplete();
+    
+    // Check if controller exists in Firebase
+    try {
+      const controllerRef = ref(database, `controllers/${partyId.trim()}`);
+      const snapshot = await get(controllerRef);
+      
+      if (!snapshot.exists()) {
+        setError('Invalid Party Id. Please check your Party Id and try again.');
+        return;
+      }
+      
+      const auth: Authentication = {
+        authenticated: true,
+        singer: singerName.trim(),
+        isAdmin: isAdmin,
+        controller: partyId.trim(),
+      };
+      console.log('Dispatching auth:', auth);
+      dispatch(setAuth(auth));
+      console.log('Calling onComplete');
+      onComplete();
+    } catch (error) {
+      console.error('Error checking controller:', error);
+      setError('Error connecting to server. Please try again.');
+    }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="max-w-md w-full bg-white shadow-lg rounded-lg p-6">
-        <div className="text-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">
-            Welcome to Karaoke! 🎤
-          </h1>
-          <p className="text-gray-600">
-            {isAdmin ? 'You have admin privileges' : 'Enter your Party Id and name to get started'}
-          </p>
+    <>
+      <div className="login-container">
+        <div className="login-card">
+          <div className="login-header">
+            <h1 className="login-title">Login</h1>
+            <div className="app-brand">
+              <div className="microphone-icon">
+                <IonIcon icon={micOutline} size='large'/>
+              </div>
+              <h2 className="app-name">Sings-A-Lot</h2>
+            </div>
+          </div>
+          
+          <form onSubmit={handleSubmit} className="login-form">
+            <div className="form-group">
+              <label htmlFor="partyId" className="form-label">
+                Party Id
+              </label>
+              <input
+                type="text"
+                id="partyId"
+                value={partyId}
+                onChange={(e) => setPartyId(e.target.value)}
+                className="form-input"
+                autoFocus
+              />
+            </div>
+            
+            <div className="form-group">
+              <label htmlFor="singerName" className="form-label">
+                FirstName
+              </label>
+              <input
+                type="text"
+                id="singerName"
+                value={singerName}
+                onChange={(e) => setSingerName(e.target.value)}
+                className="form-input"
+              />
+            </div>
+            
+            {error && <div className="error-message">{error}</div>}
+            
+            <button type="submit" className="login-button">
+              Login
+            </button>
+          </form>
         </div>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="partyId" className="block text-sm font-medium text-gray-700 mb-1">
-              Party Id
-            </label>
-            <input
-              type="text"
-              id="partyId"
-              value={partyId}
-              onChange={(e) => setPartyId(e.target.value)}
-              placeholder="Enter your Party Id"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              autoFocus
-            />
-          </div>
-          <div>
-            <label htmlFor="singerName" className="block text-sm font-medium text-gray-700 mb-1">
-              Your Name
-            </label>
-            <input
-              type="text"
-              id="singerName"
-              value={singerName}
-              onChange={(e) => setSingerName(e.target.value)}
-              placeholder={isAdmin ? 'Admin' : 'Enter your name'}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
-          </div>
-          {error && <div className="text-red-500 text-sm text-center">{error}</div>}
-          <button
-            type="submit"
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md transition-colors"
-          >
-            {isAdmin ? 'Start as Admin' : 'Join Session'}
-          </button>
-        </form>
       </div>
-    </div>
+
+      <style>{`
+        .login-container {
+          min-height: 100vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background-color: #000000;
+          color: #ffffff;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .login-card {
+          width: 100%;
+          max-width: 400px;
+          padding: 2rem;
+          text-align: center;
+        }
+
+        .login-header {
+          margin-bottom: 2rem;
+        }
+
+        .login-title {
+          font-size: 1.5rem;
+          font-weight: 600;
+          margin: 0 0 1rem 0;
+          color: #ffffff;
+        }
+
+        .app-brand {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
+          margin-bottom: 2rem;
+        }
+
+        .microphone-icon {
+          font-size: 3rem;
+          color: #3b82f6;
+        }
+
+        .microphone-icon ion-icon {
+          width: 3rem;
+          height: 3rem;
+        }
+
+        .app-name {
+          font-size: 2rem;
+          font-weight: 700;
+          margin: 0;
+          color: #ffffff;
+        }
+
+        .login-form {
+          display: flex;
+          flex-direction: column;
+          gap: 1.5rem;
+        }
+
+        .form-group {
+          text-align: left;
+        }
+
+        .form-label {
+          display: block;
+          font-size: 0.875rem;
+          font-weight: 500;
+          margin-bottom: 0.5rem;
+          color: #ffffff;
+        }
+
+        .form-input {
+          width: 100%;
+          padding: 0.75rem;
+          border: none;
+          border-bottom: 1px solid #ffffff;
+          background: transparent;
+          color: #ffffff;
+          font-size: 1rem;
+          outline: none;
+          transition: border-color 0.2s;
+        }
+
+        .form-input::placeholder {
+          color: rgba(255, 255, 255, 0.6);
+        }
+
+        .form-input:focus {
+          border-bottom-color: #3b82f6;
+        }
+
+        .error-message {
+          color: #ef4444;
+          font-size: 0.875rem;
+          text-align: center;
+          margin-top: 0.5rem;
+        }
+
+        .login-button {
+          width: 100%;
+          padding: 0.75rem 1.5rem;
+          background-color: #3b82f6;
+          color: #ffffff;
+          border: none;
+          border-radius: 0.5rem;
+          font-size: 1rem;
+          font-weight: 500;
+          cursor: pointer;
+          transition: background-color 0.2s;
+          margin-top: 1rem;
+        }
+
+        .login-button:hover {
+          background-color: #2563eb;
+        }
+
+        .login-button:active {
+          transform: translateY(1px);
+        }
+
+        /* Light mode overrides */
+        @media (prefers-color-scheme: light) {
+          .login-container {
+            background-color: #ffffff;
+            color: #000000;
+          }
+          
+          .login-title,
+          .app-name,
+          .form-label {
+            color: #000000;
+          }
+          
+          .form-input {
+            border-bottom-color: #000000;
+            color: #000000;
+          }
+          
+          .form-input::placeholder {
+            color: rgba(0, 0, 0, 0.6);
+          }
+        }
+      `}</style>
+    </>
   );
 };
 

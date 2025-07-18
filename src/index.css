@@ -1,4 +1,4 @@
-/* Ionic CSS imports */
+/* Ionic CSS imports - must come first to establish base styles */
 @import '@ionic/react/css/core.css';
 @import '@ionic/react/css/normalize.css';
 @import '@ionic/react/css/structure.css';
@@ -11,7 +11,7 @@
 @import '@ionic/react/css/flex-utils.css';
 @import '@ionic/react/css/display.css';
 
-/* Tailwind CSS */
+/* Tailwind CSS - comes after Ionic to avoid overriding essential Ionic styles */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -32,4 +32,37 @@ ion-item.ion-activated {
 /* Ensure mobile menu appears above other content */
 ion-menu {
   --z-index: 1000;
+}
+
+/* Ensure modal content is visible */
+ion-modal ion-content {
+  --background: var(--ion-background-color, #ffffff);
+}
+
+ion-modal ion-list {
+  background: transparent;
+}
+
+/* Ensure content is visible and properly styled */
+ion-content {
+  --background: var(--ion-background-color, #ffffff);
+}
+
+ion-list {
+  background: transparent;
+}
+
+/* Ensure items are properly displayed */
+ion-item {
+  --background: transparent;
+  --color: var(--ion-text-color, #000000);
+}
+
+/* Ensure accordion content is visible */
+ion-accordion {
+  --background: transparent;
+}
+
+ion-accordion ion-item {
+  --background: transparent;
 }

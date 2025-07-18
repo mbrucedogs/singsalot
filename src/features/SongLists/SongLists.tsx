@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { IonItem, IonLabel, IonModal, IonHeader, IonToolbar, IonTitle, IonButton, IonIcon, IonChip, IonContent, IonList, IonAccordionGroup, IonAccordion } from '@ionic/react';
 import { close, list } from 'ionicons/icons';
 import { InfiniteScrollList, PageHeader, SongItem } from '../../components/common';
@@ -35,13 +35,26 @@ const SongLists: React.FC = () => {
     setExpandedSongKey(null); // Reset expansion when closing
   };
 
-  const handleSongItemClick = (songKey: string) => {
+  const handleSongItemClick = useCallback((songKey: string) => {
     setExpandedSongKey(expandedSongKey === songKey ? null : songKey);
-  };
+  }, [expandedSongKey]);
 
   const finalSelectedList = selectedSongList
     ? allSongLists.find(list => list.key === selectedSongList)
     : null;
+
+  // Pre-calculate available songs for the selected list to avoid repeated calculations
+  const selectedListWithAvailability = useMemo(() => {
+    if (!finalSelectedList) return null;
+    
+    return {
+      ...finalSelectedList,
+      songs: finalSelectedList.songs.map(songListSong => ({
+        ...songListSong,
+        availableSongs: checkSongAvailability(songListSong)
+      }))
+    };
+  }, [finalSelectedList, checkSongAvailability]);
 
   // Render song list item for InfiniteScrollList
   const renderSongListItem = (songList: SongList) => (
@@ -94,26 +107,16 @@ const SongLists: React.FC = () => {
           
           <IonContent>
             <IonAccordionGroup value={expandedSongKey}>
-              {finalSelectedList?.songs.map((songListSong: SongListSong, index) => {
-                const availableSongs = checkSongAvailability(songListSong);
+              {selectedListWithAvailability?.songs.map((songListSong: SongListSong & { availableSongs: Song[] }, index) => {
+                const availableSongs = songListSong.availableSongs;
                 const isAvailable = availableSongs.length > 0;
                 const songKey = songListSong.key || `${songListSong.title}-${songListSong.position}-${index}`;
 
                 if (isAvailable) {
                   // Available songs get an accordion that expands
                   return (
-                    <IonAccordion key={songKey} value={songKey} style={{ '--border-style': 'none' } as React.CSSProperties}>
-                      <IonItem 
-                        slot="header" 
-                        detail={false} 
-                        button 
-                        onClick={() => handleSongItemClick(songKey)}
-                        style={{ 
-                          '--border-style': 'solid',
-                          '--border-width': '0 0 1px 0',
-                          '--border-color': 'rgba(0, 0, 0, 0.13)'
-                        } as React.CSSProperties}
-                      >
+                    <IonAccordion key={songKey} value={songKey}>
+                      <IonItem slot="header" detail={false} button onClick={() => handleSongItemClick(songKey)}>
                         {/* Number */}
                         <div slot="start" className="flex-shrink-0 w-12 h-12 flex items-center justify-center text-gray-600 font-medium">
                           {index + 1})

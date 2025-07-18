@@ -10,15 +10,28 @@ export const objectToArray = <T extends { key?: string }>(
   }));
 };
 
-// Filter songs by search term
+// Filter songs by search term with intelligent multi-word handling
 export const filterSongs = (songs: Song[], searchTerm: string): Song[] => {
   if (!searchTerm.trim()) return songs;
   
-  const term = searchTerm.toLowerCase();
-  return songs.filter(song =>
-    song.title.toLowerCase().includes(term) ||
-    song.artist.toLowerCase().includes(term)
-  );
+  const terms = searchTerm.toLowerCase().split(/\s+/).filter(term => term.length > 0);
+  
+  if (terms.length === 0) return songs;
+  
+  return songs.filter(song => {
+    const songTitle = song.title.toLowerCase();
+    const songArtist = song.artist.toLowerCase();
+    
+    // If only one term, use OR logic (title OR artist)
+    if (terms.length === 1) {
+      return songTitle.includes(terms[0]) || songArtist.includes(terms[0]);
+    }
+    
+    // If multiple terms, use AND logic (all terms must match somewhere)
+    return terms.every(term => 
+      songTitle.includes(term) || songArtist.includes(term)
+    );
+  });
 };
 
 // Sort queue items by order

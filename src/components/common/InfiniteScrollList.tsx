@@ -63,7 +63,7 @@ const InfiniteScrollList = <T extends string | { key?: string }>({
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="max-w-4xl mx-auto p-6 pb-4">
       {/* List */}
       <div className="bg-white rounded-lg shadow">
         {items.length === 0 && !isLoading ? (
@@ -115,7 +115,7 @@ const InfiniteScrollList = <T extends string | { key?: string }>({
 
       {/* Stats */}
       {items.length > 0 && (
-        <div style={{ marginTop: '16px', marginBottom: '24px' }} className="text-sm text-gray-500 text-center">
+        <div style={{ marginTop: '16px', marginBottom: '20px' }} className="text-sm text-gray-500 text-center">
           Showing {items.length} item{items.length !== 1 ? 's' : ''}
           {hasMore && ` • Scroll down to load more`}
         </div>

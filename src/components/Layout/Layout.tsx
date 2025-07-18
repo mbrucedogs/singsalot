@@ -46,9 +46,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         top: 0,
         right: 0,
         bottom: 0,
-        zIndex: 1
+        zIndex: 1,
+        display: 'flex',
+        flexDirection: 'column'
       }}>
-        <IonHeader style={{ position: 'relative', zIndex: 2 }}>
+        <IonHeader style={{ position: 'relative', zIndex: 2, flexShrink: 0 }}>
           <IonToolbar>
             {/* Only show hamburger button on mobile */}
             {!isLargeScreen && <IonMenuButton slot="start" />}
@@ -78,9 +80,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           style={{
             position: 'relative',
             zIndex: 1,
-            height: 'calc(100vh - 64px)', // Adjust header height
+            flex: 1,
             overflow: 'auto', // Allow scrolling
-            paddingBottom: '40px' // Add more bottom padding
+            boxSizing: 'border-box'
           }}
         >
           {children}

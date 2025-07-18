@@ -4,7 +4,7 @@ import { trash, reorderThreeOutline, reorderTwoOutline, playCircle } from 'ionic
 import { ActionButton } from '../../components/common';
 import { useQueue } from '../../hooks';
 import { useAppSelector } from '../../redux';
-import { selectQueue, selectPlayerState, selectIsAdmin, selectControllerName } from '../../redux';
+import { selectQueueLength, selectPlayerStateMemoized, selectIsAdmin, selectControllerName } from '../../redux';
 import { PlayerState } from '../../types';
 import { queueService } from '../../firebase/services';
 import { debugLog } from '../../utils/logger';
@@ -23,11 +23,10 @@ const Queue: React.FC = () => {
     handleRemoveFromQueue,
   } = useQueue();
 
-  const queue = useAppSelector(selectQueue);
-  const playerState = useAppSelector(selectPlayerState);
+  const queueCount = useAppSelector(selectQueueLength);
+  const playerState = useAppSelector(selectPlayerStateMemoized);
   const isAdmin = useAppSelector(selectIsAdmin);
   const controllerName = useAppSelector(selectControllerName);
-  const queueCount = Object.keys(queue).length;
 
   // Debug logging
   debugLog('Queue component - queue count:', queueCount);

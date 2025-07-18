@@ -5,6 +5,8 @@ import type { Song, QueueItem, TopPlayed } from '../types';
 export const objectToArray = <T extends { key?: string }>(
   obj: Record<string, T>
 ): T[] => {
+  if (Object.keys(obj).length === 0) return [];
+  
   return Object.entries(obj).map(([key, item]) => ({
     ...item,
     key,

@@ -151,14 +151,17 @@ export const selectControllerLoading = (state: { controller: ControllerState }) 
 export const selectControllerError = (state: { controller: ControllerState }) => state.controller.error;
 export const selectLastUpdated = (state: { controller: ControllerState }) => state.controller.lastUpdated;
 
+// Constants for empty objects to prevent new references
+const EMPTY_OBJECT = {};
+
 // Selectors for specific data
-export const selectSongs = (state: { controller: ControllerState }) => state.controller.data?.songs || {};
-export const selectQueue = (state: { controller: ControllerState }) => state.controller.data?.player?.queue || {};
-export const selectFavorites = (state: { controller: ControllerState }) => state.controller.data?.favorites || {};
-export const selectHistory = (state: { controller: ControllerState }) => state.controller.data?.history || {};
-export const selectTopPlayed = (state: { controller: ControllerState }) => state.controller.data?.topPlayed || {};
-export const selectNewSongs = (state: { controller: ControllerState }) => state.controller.data?.newSongs || {};
-export const selectSongList = (state: { controller: ControllerState }) => state.controller.data?.songList || {};
+export const selectSongs = (state: { controller: ControllerState }) => state.controller.data?.songs ?? EMPTY_OBJECT;
+export const selectQueue = (state: { controller: ControllerState }) => state.controller.data?.player?.queue ?? EMPTY_OBJECT;
+export const selectFavorites = (state: { controller: ControllerState }) => state.controller.data?.favorites ?? EMPTY_OBJECT;
+export const selectHistory = (state: { controller: ControllerState }) => state.controller.data?.history ?? EMPTY_OBJECT;
+export const selectTopPlayed = (state: { controller: ControllerState }) => state.controller.data?.topPlayed ?? EMPTY_OBJECT;
+export const selectNewSongs = (state: { controller: ControllerState }) => state.controller.data?.newSongs ?? EMPTY_OBJECT;
+export const selectSongList = (state: { controller: ControllerState }) => state.controller.data?.songList ?? EMPTY_OBJECT;
 export const selectPlayerState = (state: { controller: ControllerState }) => {
   const playerState = state.controller.data?.player?.state;
   
@@ -173,6 +176,6 @@ export const selectPlayerState = (state: { controller: ControllerState }) => {
   return playerState;
 };
 export const selectSettings = (state: { controller: ControllerState }) => state.controller.data?.player?.settings;
-export const selectSingers = (state: { controller: ControllerState }) => state.controller.data?.player?.singers || {};
+export const selectSingers = (state: { controller: ControllerState }) => state.controller.data?.player?.singers ?? EMPTY_OBJECT;
 
 export default controllerSlice.reducer; 

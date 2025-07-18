@@ -2,7 +2,7 @@ import React from 'react';
 import { InfiniteScrollList, SongItem } from '../../components/common';
 import { useNewSongs } from '../../hooks';
 import { useAppSelector } from '../../redux';
-import { selectNewSongs } from '../../redux';
+import { selectNewSongsArray } from '../../redux';
 import { debugLog } from '../../utils/logger';
 import type { Song } from '../../types';
 
@@ -15,8 +15,8 @@ const NewSongs: React.FC = () => {
     handleToggleFavorite,
   } = useNewSongs();
 
-  const newSongs = useAppSelector(selectNewSongs);
-  const newSongsCount = Object.keys(newSongs).length;
+  const newSongsArray = useAppSelector(selectNewSongsArray);
+  const newSongsCount = newSongsArray.length;
 
   // Debug logging
   debugLog('NewSongs component - new songs count:', newSongsCount);

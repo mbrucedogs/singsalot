@@ -1,13 +1,13 @@
 import { useCallback } from 'react';
 import { useAppSelector } from '../redux';
-import { selectControllerName, selectCurrentSinger } from '../redux';
+import { selectControllerName, selectCurrentSinger, selectQueueObject } from '../redux';
 import { queueService, favoritesService } from '../firebase/services';
 import type { Song, QueueItem } from '../types';
 
 export const useSongOperations = () => {
   const controllerName = useAppSelector(selectControllerName);
   const currentSinger = useAppSelector(selectCurrentSinger);
-  const currentQueue = useAppSelector((state) => state.controller.data?.player?.queue || {});
+  const currentQueue = useAppSelector(selectQueueObject);
 
   const addToQueue = useCallback(async (song: Song) => {
     if (!controllerName || !currentSinger) {

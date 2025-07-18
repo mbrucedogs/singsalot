@@ -1,5 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit';
-import type { RootState } from '../types';
+import type { RootState, QueueItem, Singer, Song } from '../types';
 import { 
   selectSongs, 
   selectQueue, 
@@ -10,7 +10,8 @@ import {
   selectSongList,
   selectSingers,
   selectIsAdmin,
-  selectCurrentSinger 
+  selectCurrentSinger,
+  selectPlayerState
 } from './index';
 import { 
   objectToArray, 
@@ -19,8 +20,7 @@ import {
   sortHistoryByDate, 
   sortTopPlayedByCount,
   sortSongsByArtistAndTitle,
-  limitArray,
-  getQueueStats
+  limitArray
 } from '../utils/dataProcessing';
 import { UI_CONSTANTS } from '../constants';
 
@@ -54,7 +54,18 @@ export const selectQueueArray = createSelector(
 
 export const selectQueueStats = createSelector(
   [selectQueue],
-  (queue) => getQueueStats(queue)
+  (queue) => {
+    const queueArray = Object.values(queue) as QueueItem[];
+    const totalSongs = queueArray.length;
+    const singers = [...new Set(queueArray.map(item => item.singer.name))];
+    const estimatedDuration = totalSongs * 3; // Rough estimate: 3 minutes per song
+    
+    return {
+      totalSongs,
+      singers,
+      estimatedDuration,
+    };
+  }
 );
 
 export const selectHistoryArray = createSelector(
@@ -92,7 +103,7 @@ export const selectNewSongsArrayWithoutDisabled = createSelector(
 
 export const selectSingersArray = createSelector(
   [selectSingers],
-  (singers) => objectToArray(singers).sort((a, b) => a.name.localeCompare(b.name))
+  (singers) => (objectToArray(singers) as Singer[]).sort((a, b) => a.name.localeCompare(b.name))
 );
 
 export const selectSongListArray = createSelector(
@@ -104,7 +115,7 @@ export const selectArtistsArray = createSelector(
   [selectSongs],
   (songs) => {
     const artists = new Set<string>();
-    Object.values(songs).forEach(song => {
+    (Object.values(songs) as Song[]).forEach((song) => {
       if (song.artist) {
         artists.add(song.artist);
       }
@@ -122,12 +133,12 @@ export const selectTopPlayedArray = createSelector(
 export const selectUserQueueItems = createSelector(
   [selectQueueArray, selectCurrentSinger],
   (queueArray, currentSinger) => 
-    queueArray.filter(item => item.singer.name === currentSinger)
+    queueArray.filter((item: QueueItem) => item.singer.name === currentSinger)
 );
 
 export const selectCanReorderQueue = createSelector(
   [selectIsAdmin],
-  (isAdmin) => isAdmin
+  (isAdmin) => Boolean(isAdmin)
 );
 
 // Search-specific selectors
@@ -151,15 +162,40 @@ export const selectSearchResultsWithoutDisabled = createSelector(
 // Queue-specific selectors
 export const selectQueueWithUserInfo = createSelector(
   [selectQueueArray, selectCurrentSinger],
-  (queueArray, currentSinger) => 
-    queueArray.map(item => ({
+  (queueArray, currentSinger) => {
+    // If no items, return empty array
+    if (queueArray.length === 0) return [];
+    
+    // If no current singer, return items without isCurrentUser flag
+    if (!currentSinger) {
+      return queueArray.map(item => ({
+        ...item,
+        isCurrentUser: false,
+      }));
+    }
+    
+    // Map items and add isCurrentUser flag
+    return queueArray.map(item => ({
       ...item,
       isCurrentUser: item.singer.name === currentSinger,
-    }))
+    }));
+  }
 );
 
 // Memoized selector for queue length to prevent unnecessary re-renders
 export const selectQueueLength = createSelector(
   [selectQueue],
   (queue) => Object.keys(queue).length
+);
+
+// Memoized selector for queue object to prevent unnecessary re-renders
+export const selectQueueObject = createSelector(
+  [selectQueue],
+  (queue) => Object.keys(queue).length > 0 ? { ...queue } : {}
+);
+
+// Memoized selector for player state to prevent unnecessary re-renders
+export const selectPlayerStateMemoized = createSelector(
+  [selectPlayerState],
+  (playerState) => playerState ? { ...playerState } : null
 ); 

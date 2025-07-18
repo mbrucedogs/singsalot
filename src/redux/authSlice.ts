@@ -72,8 +72,8 @@ export const selectAuth = (state: { auth: AuthState }) => state.auth.data;
 export const selectAuthLoading = (state: { auth: AuthState }) => state.auth.loading;
 export const selectAuthError = (state: { auth: AuthState }) => state.auth.error;
 export const selectIsAuthenticated = (state: { auth: AuthState }) => state.auth.data?.authenticated || false;
-export const selectCurrentSinger = (state: { auth: AuthState }) => state.auth.data?.singer || '';
-export const selectIsAdmin = (state: { auth: AuthState }) => state.auth.data?.isAdmin || false;
-export const selectControllerName = (state: { auth: AuthState }) => state.auth.data?.controller || '';
+export const selectCurrentSinger = (state: { auth: AuthState }) => state.auth.data?.singer ?? '';
+export const selectIsAdmin = (state: { auth: AuthState }) => Boolean(state.auth.data?.isAdmin);
+export const selectControllerName = (state: { auth: AuthState }) => state.auth.data?.controller ?? '';
 
 export default authSlice.reducer; 

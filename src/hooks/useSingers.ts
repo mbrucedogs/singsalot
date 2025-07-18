@@ -1,11 +1,13 @@
 import { useCallback } from 'react';
-import { useAppSelector, selectSingersArray, selectIsAdmin } from '../redux';
+import { useAppSelector, selectSingersArray, selectIsAdmin, selectControllerName } from '../redux';
 import { useToast } from './useToast';
+import { singerService } from '../firebase/services';
 import type { Singer } from '../types';
 
 export const useSingers = () => {
   const singers = useAppSelector(selectSingersArray);
   const isAdmin = useAppSelector(selectIsAdmin);
+  const controllerName = useAppSelector(selectControllerName);
   const { showSuccess, showError } = useToast();
 
   const handleRemoveSinger = useCallback(async (singer: Singer) => {
@@ -14,13 +16,19 @@ export const useSingers = () => {
       return;
     }
 
+    if (!controllerName) {
+      showError('Controller not found');
+      return;
+    }
+
     try {
-      // TODO: Implement remove singer functionality
-      showSuccess(`${singer.name} removed from singers list`);
-    } catch {
+      await singerService.removeSinger(controllerName, singer.name);
+      showSuccess(`${singer.name} removed from singers list and queue`);
+    } catch (error) {
+      console.error('Failed to remove singer:', error);
       showError('Failed to remove singer');
     }
-  }, [isAdmin, showSuccess, showError]);
+  }, [isAdmin, controllerName, showSuccess, showError]);
 
   return {
     singers,

@@ -9,7 +9,7 @@ import {
   update
 } from 'firebase/database';
 import { database } from './config';
-import type { Song, QueueItem, Controller } from '../types';
+import type { Song, QueueItem, Controller, Singer } from '../types';
 
 // Basic CRUD operations for controllers
 export const controllerService = {
@@ -198,5 +198,63 @@ export const favoritesService = {
     });
     
     return () => off(favoritesRef);
+  }
+};
+
+// Singer management operations
+export const singerService = {
+  // Remove singer and all their queue items
+  removeSinger: async (controllerName: string, singerName: string) => {
+    // First, remove all queue items for this singer
+    const queueRef = ref(database, `controllers/${controllerName}/player/queue`);
+    const queueSnapshot = await get(queueRef);
+    
+    if (queueSnapshot.exists()) {
+      const queue = queueSnapshot.val();
+      const updates: Record<string, QueueItem | null> = {};
+      
+      // Find all queue items for this singer and mark them for removal
+      Object.entries(queue).forEach(([key, item]) => {
+        if (item && (item as QueueItem).singer.name === singerName) {
+          updates[key] = null; // Mark for removal
+        }
+      });
+      
+      // Remove the queue items
+      if (Object.keys(updates).length > 0) {
+        await update(queueRef, updates);
+      }
+    }
+    
+    // Then, remove the singer from the singers list
+    const singersRef = ref(database, `controllers/${controllerName}/player/singers`);
+    const singersSnapshot = await get(singersRef);
+    
+    if (singersSnapshot.exists()) {
+      const singers = singersSnapshot.val();
+      const updates: Record<string, Singer | null> = {};
+      
+      // Find the singer by name and mark for removal
+      Object.entries(singers).forEach(([key, singer]) => {
+        if (singer && (singer as Singer).name === singerName) {
+          updates[key] = null; // Mark for removal
+        }
+      });
+      
+      // Remove the singer
+      if (Object.keys(updates).length > 0) {
+        await update(singersRef, updates);
+      }
+    }
+  },
+
+  // Listen to singers changes
+  subscribeToSingers: (controllerName: string, callback: (data: Record<string, Singer>) => void) => {
+    const singersRef = ref(database, `controllers/${controllerName}/player/singers`);
+    onValue(singersRef, (snapshot) => {
+      callback(snapshot.exists() ? snapshot.val() : {});
+    });
+    
+    return () => off(singersRef);
   }
 }; 

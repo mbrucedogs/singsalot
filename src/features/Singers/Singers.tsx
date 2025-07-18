@@ -1,5 +1,5 @@
 import React from 'react';
-import { IonItem, IonLabel, IonIcon, IonItemSliding, IonItemOptions, IonItemOption } from '@ionic/react';
+import { IonItem, IonLabel, IonIcon } from '@ionic/react';
 import { trash } from 'ionicons/icons';
 import { InfiniteScrollList, PageHeader } from '../../components/common';
 import { useSingers } from '../../hooks';
@@ -23,27 +23,24 @@ const Singers: React.FC = () => {
 
   // Render singer item for InfiniteScrollList
   const renderSingerItem = (singer: Singer) => (
-    <IonItemSliding key={singer.key}>
-      <IonItem detail={false}>
-        <IonLabel>
-          <h3 className="text-sm font-medium text-gray-900">
-            {singer.name}
-          </h3>
-        </IonLabel>
-      </IonItem>
+    <IonItem detail={false}>
+      <IonLabel>
+        <h3 className="text-sm font-medium text-gray-900">
+          {singer.name}
+        </h3>
+      </IonLabel>
 
-      {/* Swipe to Remove (Admin Only) */}
+      {/* Delete Icon (Admin Only) */}
       {isAdmin && (
-        <IonItemOptions side="end">
-          <IonItemOption 
-            color="danger" 
-            onClick={() => handleRemoveSinger(singer)}
-          >
-            <IonIcon icon={trash} slot="icon-only" />
-          </IonItemOption>
-        </IonItemOptions>
+        <IonIcon 
+          icon={trash} 
+          slot="end" 
+          color="danger"
+          className="cursor-pointer"
+          onClick={() => handleRemoveSinger(singer)}
+        />
       )}
-    </IonItemSliding>
+    </IonItem>
   );
 
   return (

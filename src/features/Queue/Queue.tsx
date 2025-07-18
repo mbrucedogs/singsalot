@@ -138,7 +138,7 @@ const Queue: React.FC = () => {
             )}
             {canReorder && queueMode === 'reorder' && (
               <div className="text-gray-400">
-                <IonIcon icon={reorderTwoOutline} size="small" />
+                <IonIcon icon={reorderTwoOutline} size="large" />
               </div>
             )}
           </div>
@@ -211,7 +211,7 @@ const Queue: React.FC = () => {
               color="danger" 
               onClick={() => handleRemoveFromQueue(firstItem)}
             >
-              <IonIcon icon={trash} slot="icon-only" size="lg" />
+              <IonIcon icon={trash} slot="icon-only"/>
             </IonItemOption>
           </IonItemOptions>
         )}

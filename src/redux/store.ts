@@ -8,6 +8,15 @@ export const store = configureStore({
     controller: controllerReducer,
     auth: authReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      // Completely disable serializable state check in development
+      serializableCheck: false,
+      // Disable immutable check for large data objects
+      immutableCheck: {
+        ignoredPaths: ['controller.songs', 'controller.queue', 'controller.history', 'controller.favorites', 'controller.newSongs', 'controller.topPlayed', 'controller.songList', 'controller.singers'],
+      },
+    }),
 });
 
 export type RootState = AppRootState;

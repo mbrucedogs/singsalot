@@ -156,4 +156,10 @@ export const selectQueueWithUserInfo = createSelector(
       ...item,
       isCurrentUser: item.singer.name === currentSinger,
     }))
+);
+
+// Memoized selector for queue length to prevent unnecessary re-renders
+export const selectQueueLength = createSelector(
+  [selectQueue],
+  (queue) => Object.keys(queue).length
 ); 

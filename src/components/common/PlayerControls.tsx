@@ -3,7 +3,7 @@ import { IonCard, IonCardContent, IonChip, IonIcon } from '@ionic/react';
 import { playOutline, pauseOutline, stopOutline, play, pause, stop } from 'ionicons/icons';
 import ActionButton from './ActionButton';
 import { useAppSelector } from '../../redux';
-import { selectPlayerState, selectIsAdmin, selectQueue } from '../../redux';
+import { selectPlayerState, selectIsAdmin, selectQueueLength } from '../../redux';
 import { playerService } from '../../firebase/services';
 import { selectControllerName } from '../../redux';
 import { debugLog } from '../../utils/logger';
@@ -19,13 +19,13 @@ const PlayerControls: React.FC<PlayerControlsProps> = ({ className = '', variant
   const playerState = useAppSelector(selectPlayerState);
   const isAdmin = useAppSelector(selectIsAdmin);
   const controllerName = useAppSelector(selectControllerName);
-  const queue = useAppSelector(selectQueue);
+  const queueLength = useAppSelector(selectQueueLength);
   const { showSuccess, showError } = useToast();
 
   // Debug logging
   debugLog('PlayerControls - playerState:', playerState);
   debugLog('PlayerControls - isAdmin:', isAdmin);
-  debugLog('PlayerControls - queue length:', Object.keys(queue).length);
+  debugLog('PlayerControls - queue length:', queueLength);
 
   const handlePlay = async () => {
     if (!controllerName) return;
@@ -69,7 +69,7 @@ const PlayerControls: React.FC<PlayerControlsProps> = ({ className = '', variant
   }
 
   const currentState = playerState?.state || PlayerState.stopped;
-  const hasSongsInQueue = Object.keys(queue).length > 0;
+  const hasSongsInQueue = queueLength > 0;
 
   debugLog('PlayerControls - currentState:', currentState);
   debugLog('PlayerControls - hasSongsInQueue:', hasSongsInQueue);

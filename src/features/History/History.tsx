@@ -44,31 +44,29 @@ const History: React.FC = () => {
         subtitle={`${historyCount} items loaded`}
       />
 
-      <div style={{ height: '100%', overflowY: 'auto' }}>
-        <InfiniteScrollList<Song>
-          items={historyItems}
-          isLoading={historyCount === 0}
-          hasMore={hasMore}
-          onLoadMore={loadMore}
-          renderItem={(song) => (
-            <div className="flex items-center">
-              <div className="flex-1">
-                <SongItem
-                  song={song}
-                  context="history"
-                  onAddToQueue={() => handleAddToQueue(song)}
-                  onToggleFavorite={() => handleToggleFavorite(song)}
-                />
-              </div>
-              {renderExtraContent(song)}
+      <InfiniteScrollList<Song>
+        items={historyItems}
+        isLoading={historyCount === 0}
+        hasMore={hasMore}
+        onLoadMore={loadMore}
+        renderItem={(song) => (
+          <div className="flex items-center">
+            <div className="flex-1">
+              <SongItem
+                song={song}
+                context="history"
+                onAddToQueue={() => handleAddToQueue(song)}
+                onToggleFavorite={() => handleToggleFavorite(song)}
+              />
             </div>
-          )}
-          emptyTitle="No history yet"
-          emptyMessage="Songs will appear here after they've been played"
-          loadingTitle="Loading history..."
-          loadingMessage="Please wait while history data is being loaded"
-        />
-      </div>
+            {renderExtraContent(song)}
+          </div>
+        )}
+        emptyTitle="No history yet"
+        emptyMessage="Songs will appear here after they've been played"
+        loadingTitle="Loading history..."
+        loadingMessage="Please wait while history data is being loaded"
+      />
     </>
   );
 };

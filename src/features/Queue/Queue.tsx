@@ -42,8 +42,6 @@ const Queue: React.FC = () => {
   console.log('Queue component - canDeleteItems:', canDeleteItems);
   console.log('Queue component - canReorder:', canReorder);
 
-  // Determine if currently playing
-  const isPlaying = playerState?.state === PlayerState.playing;
 
   // Update list items when queue changes
   useEffect(() => {

@@ -85,7 +85,7 @@ export const selectArtistsArray = createSelector(
 
 export const selectTopPlayedArray = createSelector(
   [selectTopPlayed],
-  (topPlayed) => limitArray(sortTopPlayedByCount(objectToArray(topPlayed)), UI_CONSTANTS.TOP_PLAYED.MAX_ITEMS)
+  (topPlayed) => sortTopPlayedByCount(objectToArray(topPlayed))
 );
 
 // User-specific selectors

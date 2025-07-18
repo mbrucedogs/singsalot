@@ -16,6 +16,8 @@ const Top100: React.FC = () => {
   const {
     topPlayedItems,
     loadMore,
+    hasMore,
+    isLoading,
   } = useTopPlayed();
 
   const topPlayed = useAppSelector(selectTopPlayed);
@@ -76,80 +78,19 @@ const Top100: React.FC = () => {
     }
   }, [toggleFavorite, showSuccess, showError]);
 
-  // Mock data for testing - these are artist/title combinations, not individual songs
-  const mockTopPlayedItems: TopPlayed[] = [
-    {
-      key: 'mock-1',
-      title: 'CAN T STOP THE FEELING',
-      artist: 'Justin Timberlake',
-      count: 63
-    },
-    {
-      key: 'mock-2',
-      title: 'SWEET CAROLINE',
-      artist: 'Neil Diamond',
-      count: 58
-    },
-    {
-      key: 'mock-3',
-      title: 'DON\'T STOP BELIEVIN\'',
-      artist: 'Journey',
-      count: 52
-    },
-    {
-      key: 'mock-4',
-      title: 'LIVIN\' ON A PRAYER',
-      artist: 'Bon Jovi',
-      count: 47
-    },
-    {
-      key: 'mock-5',
-      title: 'WONDERWALL',
-      artist: 'Oasis',
-      count: 41
-    },
-    {
-      key: 'mock-6',
-      title: 'HOTEL CALIFORNIA',
-      artist: 'Eagles',
-      count: 38
-    },
-    {
-      key: 'mock-7',
-      title: 'STAIRWAY TO HEAVEN',
-      artist: 'Led Zeppelin',
-      count: 35
-    },
-    {
-      key: 'mock-8',
-      title: 'IMAGINE',
-      artist: 'John Lennon',
-      count: 32
-    },
-    {
-      key: 'mock-9',
-      title: 'HEY JUDE',
-      artist: 'The Beatles',
-      count: 29
-    },
-    {
-      key: 'mock-10',
-      title: 'YESTERDAY',
-      artist: 'The Beatles',
-      count: 26
-    }
-  ];
+  // Use real Firebase data from the hook
+  const displayItems = topPlayedItems;
+  const displayCount = topPlayedItems.length;
+  const displayHasMore = hasMore;
 
-  // Use mock data for now
-  const displayItems = mockTopPlayedItems;
-  const displayCount = displayItems.length;
-  const displayHasMore = false; // No more mock data to load
-
-  console.log('Top100 component - Mock data:', { 
+  console.log('Top100 component - Real Firebase data:', { 
     displayItems: displayItems.length, 
     displayCount, 
     displayHasMore,
-    firstItem: displayItems[0]
+    firstItem: displayItems[0],
+    totalTopPlayedCount: topPlayedCount,
+    hasMore,
+    isLoading
   });
 
   console.log('Top100 component - About to render JSX');
@@ -158,12 +99,12 @@ const Top100: React.FC = () => {
     <>
       <PageHeader
         title="Top 100 Played"
-        subtitle={`${displayCount} items loaded (Mock Data)`}
+        subtitle={`${displayCount} items loaded`}
       />
 
       <InfiniteScrollList<TopPlayed>
         items={displayItems}
-        isLoading={false}
+        isLoading={isLoading}
         hasMore={displayHasMore}
         onLoadMore={loadMore}
         renderItem={(item, index) => (

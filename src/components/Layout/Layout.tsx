@@ -79,8 +79,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           style={{
             position: 'relative',
             zIndex: 1,
-            height: 'calc(100vh - 56px)', // Subtract header height
-            overflow: 'hidden' // Prevent main content from scrolling
+            height: 'calc(100vh - 64px)', // Adjust header height
+            overflow: 'auto', // Allow scrolling
+            paddingBottom: '40px' // Add more bottom padding
           }}
         >
           {children}

@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout/Layout';
-import { Search, Queue, History, Favorites, NewSongs, Artists, Singers, SongLists } from './features';
+import { Search, Queue, History, Favorites, NewSongs, Artists, Singers, SongLists, Settings } from './features';
 import TopPlayed from './features/TopPlayed/Top100';
 import { FirebaseProvider } from './firebase/FirebaseProvider';
 import { ErrorBoundary } from './components/common';
@@ -24,6 +24,7 @@ function App() {
                 <Route path="/history" element={<History />} />
                 <Route path="/top-played" element={<TopPlayed />} />
                 <Route path="/singers" element={<Singers />} />
+                <Route path="/settings" element={<Settings />} />
                 <Route path="*" element={<Navigate to="/queue" replace />} />
               </Routes>
             </Layout>

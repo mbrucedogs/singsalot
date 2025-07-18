@@ -12,24 +12,44 @@ export const useTopPlayed = () => {
   const { showSuccess, showError } = useToast();
   
   const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Paginate the top played items - show all items up to current page
   const topPlayedItems = useMemo(() => {
     const endIndex = currentPage * ITEMS_PER_PAGE;
-    return allTopPlayedItems.slice(0, endIndex);
+    const result = allTopPlayedItems.slice(0, endIndex);
+    console.log('useTopPlayed - pagination:', {
+      currentPage,
+      ITEMS_PER_PAGE,
+      endIndex,
+      allTopPlayedItemsLength: allTopPlayedItems.length,
+      resultLength: result.length
+    });
+    return result;
   }, [allTopPlayedItems, currentPage]);
 
   const hasMore = useMemo(() => {
-    // Only show "hasMore" if there are more items than currently loaded
-    return allTopPlayedItems.length > ITEMS_PER_PAGE && topPlayedItems.length < allTopPlayedItems.length;
+    // Show "hasMore" if there are more items than currently loaded
+    const result = topPlayedItems.length < allTopPlayedItems.length;
+    console.log('useTopPlayed - hasMore calculation:', {
+      topPlayedItemsLength: topPlayedItems.length,
+      allTopPlayedItemsLength: allTopPlayedItems.length,
+      result
+    });
+    return result;
   }, [topPlayedItems.length, allTopPlayedItems.length]);
 
   const loadMore = useCallback(() => {
     console.log('useTopPlayed - loadMore called:', { hasMore, currentPage, allTopPlayedItemsLength: allTopPlayedItems.length });
-    if (hasMore) {
-      setCurrentPage(prev => prev + 1);
+    if (hasMore && !isLoading) {
+      setIsLoading(true);
+      // Simulate a small delay to show loading state
+      setTimeout(() => {
+        setCurrentPage(prev => prev + 1);
+        setIsLoading(false);
+      }, 100);
     }
-  }, [hasMore, currentPage, allTopPlayedItems.length]);
+  }, [hasMore, currentPage, allTopPlayedItems.length, isLoading]);
 
   const handleAddToQueue = useCallback(async (song: TopPlayed) => {
     try {
@@ -68,6 +88,7 @@ export const useTopPlayed = () => {
     allTopPlayedItems,
     hasMore,
     loadMore,
+    isLoading,
     currentPage,
     totalPages: Math.ceil(allTopPlayedItems.length / ITEMS_PER_PAGE),
     handleAddToQueue,

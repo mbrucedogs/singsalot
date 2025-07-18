@@ -6,4 +6,5 @@ export { default as Favorites } from './Favorites/Favorites';
 export { default as NewSongs } from './NewSongs/NewSongs';
 export { default as Artists } from './Artists/Artists';
 export { default as Singers } from './Singers/Singers';
-export { default as SongLists } from './SongLists/SongLists'; 
+export { default as SongLists } from './SongLists/SongLists';
+export { default as Settings } from './Settings/Settings'; 

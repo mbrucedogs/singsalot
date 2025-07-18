@@ -3,13 +3,16 @@ import { IonMenu, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem,
 import { timeOutline, settingsOutline, listOutline, musicalNotesOutline, peopleOutline, peopleCircleOutline, heartOutline, searchOutline, starOutline } from 'ionicons/icons';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { PlayerControls } from '../common';
+import { useAppSelector } from '../../redux';
+import { selectIsAdmin } from '../../redux';
 
 const Navigation: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [isLargeScreen, setIsLargeScreen] = useState(false);
+  const isAdmin = useAppSelector(selectIsAdmin);
 
-  const navItems = [
+  const allNavItems = [
     { path: '/search', label: 'Search', icon: searchOutline },
     { path: '/queue', label: 'Queue', icon: musicalNotesOutline },
     { path: '/singers', label: 'Singers', icon: peopleCircleOutline },
@@ -19,8 +22,11 @@ const Navigation: React.FC = () => {
     { path: '/history', label: 'History', icon: timeOutline },
     { path: '/new-songs', label: 'New Songs', icon: listOutline },
     { path: '/song-lists', label: 'Song Lists', icon: listOutline },
-    { path: '/settings', label: 'Settings', icon: settingsOutline },
+    { path: '/settings', label: 'Settings', icon: settingsOutline, adminOnly: true },
   ];
+
+  // Filter navigation items based on admin status
+  const navItems = allNavItems.filter(item => !item.adminOnly || isAdmin);
 
   // Check screen size for responsive menu behavior
   useEffect(() => {

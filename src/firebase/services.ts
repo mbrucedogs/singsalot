@@ -286,4 +286,36 @@ export const singerService = {
     
     return () => off(singersRef);
   }
+};
+
+// Settings operations
+export const settingsService = {
+  // Get current settings
+  getSettings: async (controllerName: string) => {
+    const settingsRef = ref(database, `controllers/${controllerName}/player/settings`);
+    const snapshot = await get(settingsRef);
+    return snapshot.exists() ? snapshot.val() : null;
+  },
+
+  // Update a specific setting
+  updateSetting: async (controllerName: string, setting: string, value: boolean) => {
+    const settingRef = ref(database, `controllers/${controllerName}/player/settings/${setting}`);
+    await set(settingRef, value);
+  },
+
+  // Update multiple settings at once
+  updateSettings: async (controllerName: string, settings: Record<string, boolean>) => {
+    const settingsRef = ref(database, `controllers/${controllerName}/player/settings`);
+    await update(settingsRef, settings);
+  },
+
+  // Listen to settings changes
+  subscribeToSettings: (controllerName: string, callback: (data: Record<string, boolean>) => void) => {
+    const settingsRef = ref(database, `controllers/${controllerName}/player/settings`);
+    onValue(settingsRef, (snapshot) => {
+      callback(snapshot.exists() ? snapshot.val() : {});
+    });
+    
+    return () => off(settingsRef);
+  }
 }; 

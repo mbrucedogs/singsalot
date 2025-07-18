@@ -219,7 +219,7 @@ const Queue: React.FC = () => {
 
   return (
     <>
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-end items-center mb-4 pr-4 right-button-container">
 
         {isAdmin && (
           <IonButton

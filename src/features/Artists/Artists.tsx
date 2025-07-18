@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { IonSearchbar, IonList, IonItem, IonLabel, IonModal, IonHeader, IonToolbar, IonTitle, IonButton, IonIcon, IonContent } from '@ionic/react';
-import { close, add, heart, heartOutline, list } from 'ionicons/icons';
-import { InfiniteScrollList } from '../../components/common';
+import { IonSearchbar, IonItem, IonLabel, IonModal, IonHeader, IonToolbar, IonTitle, IonButton, IonIcon, IonContent } from '@ionic/react';
+import { close, list } from 'ionicons/icons';
+import { InfiniteScrollList, SongItem } from '../../components/common';
 import { useArtists } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectSongs } from '../../redux';
@@ -82,7 +82,12 @@ const Artists: React.FC = () => {
         />
 
         {/* Artist Songs Modal */}
-        <IonModal isOpen={!!selectedArtist} onDidDismiss={handleCloseArtistSongs}>
+        <IonModal 
+          isOpen={!!selectedArtist} 
+          onDidDismiss={handleCloseArtistSongs}
+          breakpoints={[0, 0.5, 0.8]}
+          initialBreakpoint={0.8}
+        >
           <IonHeader>
             <IonToolbar>
               <IonTitle>Songs by {selectedArtist}</IonTitle>
@@ -93,36 +98,17 @@ const Artists: React.FC = () => {
           </IonHeader>
           
           <IonContent>
-            <IonList>
+            <div className="p-4">
               {selectedArtistSongs.map((song) => (
-                <IonItem key={song.key}>
-                  <IonLabel>
-                    <h3 className="text-sm font-medium text-gray-900">
-                      {song.title}
-                    </h3>
-                    <p className="text-sm text-gray-500">
-                      {song.artist}
-                    </p>
-                  </IonLabel>
-                  <div slot="end" className="flex gap-2">
-                    <IonButton
-                      fill="clear"
-                      size="small"
-                      onClick={() => handleAddToQueue(song)}
-                    >
-                      <IonIcon icon={add} slot="icon-only" />
-                    </IonButton>
-                    <IonButton
-                      fill="clear"
-                      size="small"
-                      onClick={() => handleToggleFavorite(song)}
-                    >
-                      <IonIcon icon={song.favorite ? heart : heartOutline} slot="icon-only" />
-                    </IonButton>
-                  </div>
-                </IonItem>
+                <SongItem
+                  key={song.key}
+                  song={song}
+                  context="search"
+                  onAddToQueue={() => handleAddToQueue(song)}
+                  onToggleFavorite={() => handleToggleFavorite(song)}
+                />
               ))}
-            </IonList>
+            </div>
           </IonContent>
         </IonModal>
       </div>

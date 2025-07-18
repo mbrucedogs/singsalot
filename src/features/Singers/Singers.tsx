@@ -70,14 +70,14 @@ const Singers: React.FC = () => {
 
   return (
     <>
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-end items-center mb-4 pr-4 right-button-container">
         {isAdmin && (
           <IonButton 
             fill="clear" 
             onClick={handleOpenAddModal}
             className="text-primary"
           >
-            <IonIcon icon={add} slot="icon-only" />
+            <IonIcon icon={add} slot="icon-only" size="large" />
           </IonButton>
         )}
       </div>
@@ -97,7 +97,12 @@ const Singers: React.FC = () => {
       </div>
 
       {/* Add Singer Modal */}
-      <IonModal isOpen={showAddModal} onDidDismiss={handleCloseAddModal}>
+      <IonModal 
+        isOpen={showAddModal} 
+        onDidDismiss={handleCloseAddModal}
+        breakpoints={[0, 0.5, 0.8]}
+        initialBreakpoint={0.8}
+      >
         <IonHeader>
           <IonToolbar>
             <IonTitle>Add New Singer</IonTitle>

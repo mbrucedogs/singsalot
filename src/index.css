@@ -85,6 +85,13 @@ ion-item {
   margin-left: auto !important;
 }
 
+/* Right-justified button container with padding */
+.right-button-container {
+  padding-right: 16px !important;
+  padding-top: 20px !important;
+  padding-bottom: 10px !important;
+}
+
 /* Ensure accordion content is visible */
 ion-accordion {
   --background: transparent;

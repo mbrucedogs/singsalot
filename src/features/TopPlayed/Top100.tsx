@@ -3,7 +3,7 @@ import { IonHeader, IonToolbar, IonTitle, IonChip } from '@ionic/react';
 import { useTopPlayed } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectTopPlayed } from '../../redux';
-import { InfiniteScrollList } from '../../components/common';
+import { InfiniteScrollList, PageHeader } from '../../components/common';
 import type { TopPlayed } from '../../types';
 
 const Top100: React.FC = () => {
@@ -110,6 +110,11 @@ const Top100: React.FC = () => {
         </IonToolbar>
       </IonHeader>
 
+      <PageHeader
+        title="Top 100 Played"
+        subtitle={`${displayCount} items loaded (Mock Data)`}
+      />
+
       <InfiniteScrollList<TopPlayed>
         items={displayItems}
         isLoading={false}
@@ -133,11 +138,8 @@ const Top100: React.FC = () => {
             </div>
           </div>
         )}
-        title="Top 100 Played"
-        subtitle={`${displayCount} items loaded (Mock Data)`}
         emptyTitle="No top played songs"
         emptyMessage="Play some songs to see the top played list"
-        debugInfo={`Top played items loaded: ${displayCount} (Mock Data)`}
       />
     </>
   );

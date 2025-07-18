@@ -1,7 +1,7 @@
 import React from 'react';
 import { IonHeader, IonToolbar, IonTitle, IonChip, IonIcon } from '@ionic/react';
 import { time } from 'ionicons/icons';
-import { InfiniteScrollList, SongItem } from '../../components/common';
+import { InfiniteScrollList, PageHeader, SongItem } from '../../components/common';
 import { useHistory } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectHistory } from '../../redux';
@@ -50,6 +50,11 @@ const History: React.FC = () => {
         </IonToolbar>
       </IonHeader>
 
+      <PageHeader
+        title="Recently Played"
+        subtitle={`${historyCount} items loaded`}
+      />
+
       <div style={{ height: '100%', overflowY: 'auto' }}>
         <InfiniteScrollList<Song>
           items={historyItems}
@@ -69,13 +74,10 @@ const History: React.FC = () => {
               {renderExtraContent(song)}
             </div>
           )}
-          title="Recently Played"
-          subtitle={`${historyCount} items loaded`}
           emptyTitle="No history yet"
           emptyMessage="Songs will appear here after they've been played"
           loadingTitle="Loading history..."
           loadingMessage="Please wait while history data is being loaded"
-          debugInfo={`History items loaded: ${historyCount}`}
         />
       </div>
     </>

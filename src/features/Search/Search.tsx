@@ -1,6 +1,6 @@
 import React from 'react';
 import { IonSearchbar } from '@ionic/react';
-import { InfiniteScrollList, SongItem } from '../../components/common';
+import { InfiniteScrollList, PageHeader, SongItem } from '../../components/common';
 import { useSearch } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectIsAdmin, selectSongs } from '../../redux';
@@ -37,9 +37,12 @@ const Search: React.FC = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
+      <PageHeader
+        title="Search Songs"
+        subtitle="Search by title or artist"
+      />
+
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900 mb-4">Search Songs</h1>
-        
         {/* Search Input */}
         <IonSearchbar
           placeholder="Search by title or artist..."
@@ -70,12 +73,10 @@ const Search: React.FC = () => {
             isAdmin={isAdmin}
           />
         )}
-        title=""
         emptyTitle={searchTerm ? "No songs found" : "No songs available"}
         emptyMessage={searchTerm ? "Try adjusting your search terms" : "Songs will appear here once loaded"}
         loadingTitle="Loading songs..."
         loadingMessage="Please wait while songs are being loaded from the database"
-        debugInfo=""
       />
 
       {/* Search Stats */}

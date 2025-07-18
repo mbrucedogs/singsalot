@@ -7,28 +7,22 @@ interface InfiniteScrollListProps<T> {
   hasMore: boolean;
   onLoadMore: () => void;
   renderItem: (item: T, index: number) => React.ReactNode;
-  title: string;
-  subtitle?: string;
   emptyTitle: string;
   emptyMessage: string;
   loadingTitle?: string;
   loadingMessage?: string;
-  debugInfo?: string;
 }
 
-const InfiniteScrollList = <T extends { key?: string }>({
+const InfiniteScrollList = <T extends string | { key?: string }>({
   items,
   isLoading,
   hasMore,
   onLoadMore,
   renderItem,
-  title,
-  subtitle,
   emptyTitle,
   emptyMessage,
   loadingTitle = "Loading...",
   loadingMessage = "Please wait while data is being loaded",
-  debugInfo,
 }: InfiniteScrollListProps<T>) => {
   const observerRef = useRef<HTMLDivElement>(null);
 
@@ -59,22 +53,16 @@ const InfiniteScrollList = <T extends { key?: string }>({
     return () => observer.disconnect();
   }, [onLoadMore, hasMore, isLoading, items.length]);
 
+  // Generate key for item
+  const getItemKey = (item: T, index: number): string => {
+    if (typeof item === 'string') {
+      return item;
+    }
+    return item.key || `item-${index}`;
+  };
+
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">{title}</h1>
-        {subtitle && (
-          <p className="text-sm text-gray-600">{subtitle}</p>
-        )}
-        
-        {/* Debug info */}
-        {debugInfo && (
-          <div className="mt-2 text-sm text-gray-500">
-            {debugInfo}
-          </div>
-        )}
-      </div>
-
       {/* List */}
       <div className="bg-white rounded-lg shadow">
         {items.length === 0 && !isLoading ? (
@@ -98,9 +86,9 @@ const InfiniteScrollList = <T extends { key?: string }>({
             }
           />
         ) : (
-          <div className="divide-y divide-gray-200">
+          <div>
             {items.map((item, index) => (
-              <div key={item.key}>
+              <div key={getItemKey(item, index)} className="px-4">
                 {renderItem(item, index)}
               </div>
             ))}

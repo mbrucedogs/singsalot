@@ -1,6 +1,6 @@
 import React from 'react';
 import { IonHeader, IonToolbar, IonTitle, IonChip } from '@ionic/react';
-import { InfiniteScrollList, SongItem } from '../../components/common';
+import { InfiniteScrollList, PageHeader, SongItem } from '../../components/common';
 import { useNewSongs } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectNewSongs } from '../../redux';
@@ -35,6 +35,11 @@ const NewSongs: React.FC = () => {
         </IonToolbar>
       </IonHeader>
 
+      <PageHeader
+        title="New Songs"
+        subtitle={`${newSongsCount} items loaded`}
+      />
+
       <InfiniteScrollList<Song>
         items={newSongsItems}
         isLoading={newSongsCount === 0}
@@ -48,13 +53,10 @@ const NewSongs: React.FC = () => {
             onToggleFavorite={() => handleToggleFavorite(song)}
           />
         )}
-        title="New Songs"
-        subtitle={`${newSongsCount} items loaded`}
         emptyTitle="No new songs"
         emptyMessage="Check back later for new additions"
         loadingTitle="Loading new songs..."
         loadingMessage="Please wait while new songs data is being loaded"
-        debugInfo={`New songs loaded: ${newSongsCount}`}
       />
     </>
   );

@@ -1,6 +1,9 @@
 import React from 'react';
-import { IonItem, IonLabel } from '@ionic/react';
+import { IonItem, IonLabel, IonIcon } from '@ionic/react';
+import { add, heart, heartOutline, trash } from 'ionicons/icons';
 import ActionButton from './ActionButton';
+import { useAppSelector } from '../../redux';
+import { selectQueue, selectFavorites } from '../../redux';
 import type { SongItemProps } from '../../types';
 
 // Utility function to extract filename from path
@@ -23,127 +26,91 @@ const SongItem: React.FC<SongItemProps> = ({
   isAdmin = false,
   className = ''
 }) => {
+  // Get current state from Redux
+  const queue = useAppSelector(selectQueue);
+  const favorites = useAppSelector(selectFavorites);
+  
+  // Check if song is in queue or favorites based on path
+  const isInQueue = Object.values(queue).some(item => item.song.path === song.path);
+  const isInFavorites = Object.values(favorites).some(favSong => favSong.path === song.path);
   const renderActionPanel = () => {
-    switch (context) {
-      case 'search':
-        return (
-          <div className="flex gap-2">
-            <ActionButton
-              onClick={onAddToQueue || (() => {})}
-              variant="primary"
-              size="sm"
-            >
-              Add to Queue
-            </ActionButton>
-            <ActionButton
-              onClick={onToggleFavorite || (() => {})}
-              variant={song.favorite ? 'danger' : 'secondary'}
-              size="sm"
-            >
-              {song.favorite ? '❤️' : '🤍'}
-            </ActionButton>
-          </div>
-        );
-      
-      case 'queue':
-        return (
-          <div className="flex gap-2">
-            {isAdmin && onRemoveFromQueue && (
-              <ActionButton
-                onClick={onRemoveFromQueue}
-                variant="danger"
-                size="sm"
-              >
-                Remove
-              </ActionButton>
-            )}
-            <ActionButton
-              onClick={onToggleFavorite || (() => {})}
-              variant={song.favorite ? 'danger' : 'secondary'}
-              size="sm"
-            >
-              {song.favorite ? '❤️' : '🤍'}
-            </ActionButton>
-          </div>
-        );
-      
-      case 'history':
-        return (
-          <div className="flex gap-2">
-            <ActionButton
-              onClick={onAddToQueue || (() => {})}
-              variant="primary"
-              size="sm"
-            >
-              Add to Queue
-            </ActionButton>
-            <ActionButton
-              onClick={onToggleFavorite || (() => {})}
-              variant={song.favorite ? 'danger' : 'secondary'}
-              size="sm"
-            >
-              {song.favorite ? '❤️' : '🤍'}
-            </ActionButton>
-          </div>
-        );
-      
-      case 'favorites':
-        return (
-          <div className="flex gap-2">
-            <ActionButton
-              onClick={onAddToQueue || (() => {})}
-              variant="primary"
-              size="sm"
-            >
-              Add to Queue
-            </ActionButton>
-            <ActionButton
-              onClick={onDelete || (() => {})}
-              variant="danger"
-              size="sm"
-            >
-              Remove
-            </ActionButton>
-          </div>
-        );
-      
-      case 'topPlayed':
-        return (
-          <div className="flex gap-2">
-            <ActionButton
-              onClick={onAddToQueue || (() => {})}
-              variant="primary"
-              size="sm"
-            >
-              Add to Queue
-            </ActionButton>
-            <ActionButton
-              onClick={onToggleFavorite || (() => {})}
-              variant={song.favorite ? 'danger' : 'secondary'}
-              size="sm"
-            >
-              {song.favorite ? '❤️' : '🤍'}
-            </ActionButton>
-          </div>
-        );
-      
-      default:
-        return null;
+    const buttons = [];
+
+    // Add to Queue button (for all contexts except queue, only if not already in queue)
+    if (context !== 'queue' && !isInQueue) {
+      buttons.push(
+        <ActionButton
+          key="add"
+          onClick={onAddToQueue || (() => {})}
+          variant="primary"
+          size="sm"
+        >
+          <IonIcon icon={add} />
+        </ActionButton>
+      );
     }
+
+    // Remove from Queue button (only for queue context, admin only)
+    if (context === 'queue' && isAdmin && onRemoveFromQueue) {
+      buttons.push(
+        <ActionButton
+          key="remove"
+          onClick={onRemoveFromQueue}
+          variant="danger"
+          size="sm"
+        >
+          <IonIcon icon={trash} />
+        </ActionButton>
+      );
+    }
+
+    // Delete from Favorites button (only for favorites context)
+    if (context === 'favorites' && onDelete) {
+      buttons.push(
+        <ActionButton
+          key="delete"
+          onClick={onDelete}
+          variant="danger"
+          size="sm"
+        >
+          <IonIcon icon={trash} />
+        </ActionButton>
+      );
+    }
+
+    // Toggle Favorite button (for all contexts except favorites)
+    if (context !== 'favorites') {
+      buttons.push(
+        <ActionButton
+          key="favorite"
+          onClick={onToggleFavorite || (() => {})}
+          variant={isInFavorites ? 'danger' : 'secondary'}
+          size="sm"
+        >
+          <IonIcon icon={isInFavorites ? heart : heartOutline} />
+        </ActionButton>
+      );
+    }
+
+    return buttons.length > 0 ? (
+      <div className="flex gap-2">
+        {buttons}
+      </div>
+    ) : null;
   };
 
   return (
     <IonItem className={className}>
-      <IonLabel>
-        <h3 className="text-sm font-medium text-gray-900 truncate">
+      <IonLabel className="flex-1 min-w-0">
+        <h3 className="text-base font-extrabold text-gray-900 break-words">
           {song.title}
         </h3>
-        <p className="text-sm text-gray-500 truncate">
+        <p className="text-sm italic text-gray-500 break-words">
           {song.artist}
         </p>
         {/* Show filename for all contexts except queue */}
         {context !== 'queue' && song.path && (
-          <p className="text-xs text-gray-400 truncate">
+          <p className="text-xs text-gray-400 break-words">
             {extractFilename(song.path)}
           </p>
         )}
@@ -154,7 +121,7 @@ const SongItem: React.FC<SongItemProps> = ({
         )}
       </IonLabel>
       
-      <div slot="end" className="flex gap-2">
+      <div slot="end" className="flex gap-2 flex-shrink-0 ml-2">
         {renderActionPanel()}
       </div>
     </IonItem>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { IonHeader, IonToolbar, IonTitle, IonChip } from '@ionic/react';
-import { InfiniteScrollList, SongItem } from '../../components/common';
+import { InfiniteScrollList, PageHeader, SongItem } from '../../components/common';
 import { useFavorites } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectFavorites } from '../../redux';
@@ -35,6 +35,11 @@ const Favorites: React.FC = () => {
         </IonToolbar>
       </IonHeader>
 
+      <PageHeader
+        title="Favorites"
+        subtitle={`${favoritesCount} items loaded`}
+      />
+
       <InfiniteScrollList<Song>
         items={favoritesItems}
         isLoading={favoritesCount === 0}
@@ -48,13 +53,10 @@ const Favorites: React.FC = () => {
             onToggleFavorite={() => handleToggleFavorite(song)}
           />
         )}
-        title="Favorites"
-        subtitle={`${favoritesCount} items loaded`}
         emptyTitle="No favorites yet"
         emptyMessage="Add songs to your favorites to see them here"
         loadingTitle="Loading favorites..."
         loadingMessage="Please wait while favorites data is being loaded"
-        debugInfo={`Favorites items loaded: ${favoritesCount}`}
       />
     </>
   );

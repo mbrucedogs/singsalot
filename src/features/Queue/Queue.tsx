@@ -74,7 +74,7 @@ const Queue: React.FC = () => {
             }
           />
         ) : (
-          <IonList>
+          <IonList className="px-4">
             {queueItems.map((queueItem, index) => {
               console.log(`Queue item ${index}: order=${queueItem.order}, key=${queueItem.key}`);
               const canDelete = index === 0 ? canDeleteFirstItem : true;

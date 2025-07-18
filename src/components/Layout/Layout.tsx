@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { IonApp, IonHeader, IonToolbar, IonTitle, IonContent, IonChip, IonMenuButton } from '@ionic/react';
-import { selectCurrentSinger, selectIsAdmin, selectControllerName } from '../../redux/authSlice';
+import { IonApp, IonHeader, IonToolbar, IonTitle, IonContent, IonMenuButton, IonIcon } from '@ionic/react';
+import { logOut } from 'ionicons/icons';
+import { selectControllerName } from '../../redux/authSlice';
 import { logout } from '../../redux/authSlice';
 import { ActionButton } from '../common';
 import Navigation from '../Navigation/Navigation';
 import type { LayoutProps } from '../../types';
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
-  const currentSinger = useSelector(selectCurrentSinger);
-  const isAdmin = useSelector(selectIsAdmin);
   const controllerName = useSelector(selectControllerName);
   const dispatch = useDispatch();
   const [isLargeScreen, setIsLargeScreen] = useState(false);
@@ -52,35 +51,25 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             
             <IonTitle>
               <div className="flex items-center">
-                <span>🎤 Karaoke App</span>
+                <span>Sings A Lot</span>
                 {controllerName && (
                   <span className="ml-4 text-sm text-gray-500">
-                    Party: {controllerName}
+                  : {controllerName}
                   </span>
                 )}
               </div>
             </IonTitle>
             
-            {/* User Info & Logout */}
-            {currentSinger && (
-              <div slot="end" className="flex items-center space-x-3">
-                <div className="text-sm text-gray-600">
-                  <span className="font-medium">{currentSinger}</span>
-                  {isAdmin && (
-                    <IonChip color="primary">
-                      Admin
-                    </IonChip>
-                  )}
-                </div>
-                <ActionButton
-                  onClick={handleLogout}
-                  variant="secondary"
-                  size="sm"
-                >
-                  Logout
-                </ActionButton>
-              </div>
-            )}
+            {/* Logout Button */}
+            <div slot="end">
+              <ActionButton
+                onClick={handleLogout}
+                variant="secondary"
+                size="sm"
+              >
+                <IonIcon icon={logOut} />
+              </ActionButton>
+            </div>
           </IonToolbar>
         </IonHeader>
 

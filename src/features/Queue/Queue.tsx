@@ -1,10 +1,10 @@
 import React from 'react';
-import { IonItem, IonItemSliding, IonItemOptions, IonItemOption, IonIcon, IonLabel, IonChip } from '@ionic/react';
+import { IonItem, IonItemSliding, IonItemOptions, IonItemOption, IonIcon, IonLabel } from '@ionic/react';
 import { trash, arrowUp, arrowDown } from 'ionicons/icons';
-import { ActionButton, PlayerControls, InfiniteScrollList, PageHeader } from '../../components/common';
+import { ActionButton, InfiniteScrollList, PageHeader } from '../../components/common';
 import { useQueue } from '../../hooks';
 import { useAppSelector } from '../../redux';
-import { selectQueue, selectPlayerState } from '../../redux';
+import { selectQueue, selectPlayerState, selectIsAdmin } from '../../redux';
 import { PlayerState } from '../../types';
 import type { QueueItem } from '../../types';
 
@@ -20,23 +20,26 @@ const Queue: React.FC = () => {
 
   const queue = useAppSelector(selectQueue);
   const playerState = useAppSelector(selectPlayerState);
+  const isAdmin = useAppSelector(selectIsAdmin);
   const queueCount = Object.keys(queue).length;
 
   // Debug logging
   console.log('Queue component - queue count:', queueCount);
   console.log('Queue component - queue items:', queueItems);
   console.log('Queue component - player state:', playerState);
+  console.log('Queue component - isAdmin:', isAdmin);
+  console.log('Queue component - canReorder:', canReorder);
 
-  // Check if first item can be deleted (only when stopped or paused)
-  const canDeleteFirstItem = playerState?.state === PlayerState.stopped || playerState?.state === PlayerState.paused;
+  // Check if items can be deleted (admin can delete any item when not playing)
+  const canDeleteItems = isAdmin && (playerState?.state === PlayerState.stopped || playerState?.state === PlayerState.paused);
   
-  console.log('Queue component - canDeleteFirstItem:', canDeleteFirstItem);
+  console.log('Queue component - canDeleteItems:', canDeleteItems);
   console.log('Queue component - canReorder:', canReorder);
 
   // Render queue item for InfiniteScrollList
   const renderQueueItem = (queueItem: QueueItem, index: number) => {
     console.log(`Queue item ${index}: order=${queueItem.order}, key=${queueItem.key}`);
-    const canDelete = index === 0 ? canDeleteFirstItem : true;
+    const canDelete = isAdmin; // Allow admin to delete any item
     
     return (
       <IonItemSliding key={queueItem.key}>
@@ -48,7 +51,10 @@ const Queue: React.FC = () => {
 
           {/* Song Info */}
           <IonLabel>
-            <h3 className="text-sm font-medium text-gray-900 truncate">
+            <p className="text-sm bold-title truncate">
+              {queueItem.singer.name}
+            </p>
+            <h3 className="text-sm bold-title truncate">
               {queueItem.song.title}
             </h3>
             <p className="text-sm text-gray-500 truncate">
@@ -56,30 +62,36 @@ const Queue: React.FC = () => {
             </p>
           </IonLabel>
 
-          {/* Singer Pill - Moved to far right */}
-          <IonChip slot="end" color="medium">
-            {queueItem.singer.name}
-          </IonChip>
-
           {/* Admin Controls */}
-          {canReorder && (
-            <div slot="end" className="flex flex-col gap-1 ml-2">
-              {queueItem.order > 2 && (
+          {(canReorder || isAdmin) && (
+            <div slot="end" className="flex items-center gap-2 ml-2">
+              <div className="flex flex-col gap-1">
+                {queueItem.order > 2 && (
+                  <ActionButton
+                    onClick={() => handleMoveUp(queueItem)}
+                    variant="secondary"
+                    size="sm"
+                  >
+                    <IonIcon icon={arrowUp} />
+                  </ActionButton>
+                )}
+                {queueItem.order > 1 && queueItem.order < queueItems.length && (
+                  <ActionButton
+                    onClick={() => handleMoveDown(queueItem)}
+                    variant="secondary"
+                    size="sm"
+                  >
+                    <IonIcon icon={arrowDown} />
+                  </ActionButton>
+                )}
+              </div>
+              {canDelete && (
                 <ActionButton
-                  onClick={() => handleMoveUp(queueItem)}
-                  variant="secondary"
+                  onClick={() => handleRemoveFromQueue(queueItem)}
+                  variant="danger"
                   size="sm"
                 >
-                  <IonIcon icon={arrowUp} />
-                </ActionButton>
-              )}
-              {queueItem.order > 1 && queueItem.order < queueItems.length && (
-                <ActionButton
-                  onClick={() => handleMoveDown(queueItem)}
-                  variant="secondary"
-                  size="sm"
-                >
-                  <IonIcon icon={arrowDown} />
+                  <IonIcon icon={trash} />
                 </ActionButton>
               )}
             </div>
@@ -108,12 +120,7 @@ const Queue: React.FC = () => {
         subtitle={`${queueStats.totalSongs} song${queueStats.totalSongs !== 1 ? 's' : ''} in queue`}
       />
 
-      {/* Player Controls - Only visible to admin users */}
-      <div className="max-w-4xl mx-auto p-6 mb-6">
-        <div style={{ paddingLeft: '16px' }}>
-          <PlayerControls variant="dark" />
-        </div>
-      </div>
+
 
       <div className="max-w-4xl mx-auto p-6">
         {/* Queue List */}

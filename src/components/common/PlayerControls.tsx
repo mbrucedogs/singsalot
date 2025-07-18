@@ -100,9 +100,7 @@ const PlayerControls: React.FC<PlayerControlsProps> = ({ className = '', variant
     return (
       <div className={`bg-black text-white ${className}`}>
         {/* Status Text */}
-        <div style={{ padding: '0px 0px' }}>
-          <h3 className="text-lg font-bold">{getStatusText()}</h3>
-        </div>
+        <h3 className="text-lg font-bold">{getStatusText()}</h3>
         
         {/* Control Buttons */}
         <div>

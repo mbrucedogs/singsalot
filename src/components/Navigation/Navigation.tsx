@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { IonMenu, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonLabel, IonIcon } from '@ionic/react';
+import { IonMenu, IonHeader, IonToolbar, IonContent, IonList, IonItem, IonLabel, IonIcon } from '@ionic/react';
 import { timeOutline, settingsOutline, listOutline, musicalNotesOutline, peopleOutline, peopleCircleOutline, heartOutline, searchOutline, starOutline } from 'ionicons/icons';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { PlayerControls } from '../common';
@@ -134,7 +134,10 @@ const Navigation: React.FC = () => {
     >
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Menu</IonTitle>
+          <div style={{ padding: '16px', borderBottom: '1px solid #e5e7eb', backgroundColor: '#f9fafb' }}>
+            <h2 style={{ fontSize: '18px', fontWeight: '600', color: '#1f2937', margin: 0 }}>Karaoke</h2>
+            <p style={{ fontSize: '14px', color: '#6b7280', margin: '4px 0 0 0' }}>Singer: Matt</p>
+          </div>
         </IonToolbar>
       </IonHeader>
       <IonContent>

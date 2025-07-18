@@ -101,7 +101,6 @@ const Queue: React.FC = () => {
   const renderQueueItem = (queueItem: QueueItem, index: number) => {
     console.log(`Queue item ${index}: order=${queueItem.order}, key=${queueItem.key}`);
     const canDelete = isAdmin && queueMode === 'delete'; // Only allow delete in delete mode
-    const isFirstItem = index === 0;
     
     return (
       <IonItemSliding key={queueItem.key}>
@@ -212,7 +211,7 @@ const Queue: React.FC = () => {
               color="danger" 
               onClick={() => handleRemoveFromQueue(firstItem)}
             >
-              <IonIcon icon={trash} slot="icon-only" />
+              <IonIcon icon={trash} slot="icon-only" size="lg" />
             </IonItemOption>
           </IonItemOptions>
         )}
@@ -223,41 +222,24 @@ const Queue: React.FC = () => {
   return (
     <>
       <PageHeader
-        title="Queue"
-        subtitle={`${queueStats.totalSongs} song${queueStats.totalSongs !== 1 ? 's' : ''} in queue`}
+       title="Queue"
+       subtitle={`${queueStats.totalSongs} song${queueStats.totalSongs !== 1 ? 's' : ''} in queue`}
+       action={
+         isAdmin && (
+           <IonButton
+             onClick={toggleQueueMode}
+             fill="outline"
+             size="small"
+             className="flex items-center gap-2"
+           >
+             <IonIcon icon={queueMode === 'delete' ? reorderThreeOutline : trash} />
+           </IonButton>
+         )
+       }
       />
 
+    
       <div className="max-w-4xl mx-auto p-6">
-        {/* Mode Toggle Button */}
-        {canReorder && (
-          <div className="mb-4 flex justify-end">
-            <IonButton
-              onClick={toggleQueueMode}
-              fill="outline"
-              size="small"
-              className="flex items-center gap-2"
-            >
-              <IonIcon icon={queueMode === 'delete' ? reorderThreeOutline : trash} />
-              {queueMode === 'delete' ? 'Reorder Mode' : 'Delete Mode'}
-            </IonButton>
-          </div>
-        )}
-
-        {/* Mode Instructions */}
-        {canReorder && (
-          <div className="mb-4 p-3 bg-blue-50 rounded-lg">
-            <p className="text-sm text-blue-800">
-              {queueMode === 'reorder' 
-                ? (isPlaying 
-                    ? "💡 Drag and drop to reorder songs (first song is locked while playing)"
-                    : "💡 Drag and drop to reorder songs"
-                  )
-                : "🗑️ Click the trash icon to delete songs from the queue"
-              }
-            </p>
-          </div>
-        )}
-
         {/* First Item (Currently Playing) */}
         {renderFirstItem()}
 

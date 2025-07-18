@@ -30,9 +30,39 @@ export const useSingers = () => {
     }
   }, [isAdmin, controllerName, showSuccess, showError]);
 
+  const handleAddSinger = useCallback(async (singerName: string) => {
+    if (!isAdmin) {
+      showError('Only admins can add singers');
+      return;
+    }
+
+    if (!controllerName) {
+      showError('Controller not found');
+      return;
+    }
+
+    if (!singerName.trim()) {
+      showError('Singer name cannot be empty');
+      return;
+    }
+
+    try {
+      await singerService.addSinger(controllerName, singerName.trim());
+      showSuccess(`${singerName} added to singers list`);
+    } catch (error) {
+      console.error('Failed to add singer:', error);
+      if (error instanceof Error && error.message === 'Singer already exists') {
+        showError('Singer already exists');
+      } else {
+        showError('Failed to add singer');
+      }
+    }
+  }, [isAdmin, controllerName, showSuccess, showError]);
+
   return {
     singers,
     isAdmin,
     handleRemoveSinger,
+    handleAddSinger,
   };
 }; 

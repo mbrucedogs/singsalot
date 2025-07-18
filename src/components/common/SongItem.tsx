@@ -102,7 +102,7 @@ const SongItem: React.FC<SongItemProps> = ({
   return (
     <IonItem className={className}>
       <IonLabel className="flex-1 min-w-0">
-        <h3 className="text-base font-extrabold text-gray-900 break-words">
+        <h3 className="text-base bold-title break-words">
           {song.title}
         </h3>
         <p className="text-sm italic text-gray-500 break-words">

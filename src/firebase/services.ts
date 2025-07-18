@@ -203,6 +203,35 @@ export const favoritesService = {
 
 // Singer management operations
 export const singerService = {
+  // Add a new singer
+  addSinger: async (controllerName: string, singerName: string) => {
+    const singersRef = ref(database, `controllers/${controllerName}/player/singers`);
+    const singersSnapshot = await get(singersRef);
+    
+    const currentSingers = singersSnapshot.exists() ? singersSnapshot.val() : {};
+    
+    // Check if singer already exists
+    const existingSinger = Object.values(currentSingers).find((singer) => 
+      (singer as Singer).name.toLowerCase() === singerName.toLowerCase()
+    );
+    
+    if (existingSinger) {
+      throw new Error('Singer already exists');
+    }
+    
+    // Create new singer with current timestamp
+    const newSinger: Omit<Singer, 'key'> = {
+      name: singerName,
+      lastLogin: new Date().toISOString()
+    };
+    
+    // Add to singers list
+    const newSingerRef = push(singersRef);
+    await set(newSingerRef, newSinger);
+    
+    return { key: newSingerRef.key };
+  },
+
   // Remove singer and all their queue items
   removeSinger: async (controllerName: string, singerName: string) => {
     // First, remove all queue items for this singer

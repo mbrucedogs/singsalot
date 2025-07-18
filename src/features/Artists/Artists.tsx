@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { IonSearchbar, IonList, IonItem, IonLabel, IonModal, IonHeader, IonToolbar, IonTitle, IonButton, IonIcon } from '@ionic/react';
+import { IonSearchbar, IonList, IonItem, IonLabel, IonModal, IonHeader, IonToolbar, IonTitle, IonButton, IonIcon, IonContent } from '@ionic/react';
 import { close, add, heart, heartOutline, list } from 'ionicons/icons';
 import { InfiniteScrollList, PageHeader } from '../../components/common';
 import { useArtists } from '../../hooks';
@@ -56,15 +56,8 @@ const Artists: React.FC = () => {
 
   return (
     <>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Artists</IonTitle>
-        </IonToolbar>
-      </IonHeader>
-
       <PageHeader
         title="Artists"
-        subtitle="Browse songs by artist"
       />
 
       <div className="max-w-4xl mx-auto p-6">
@@ -103,7 +96,7 @@ const Artists: React.FC = () => {
             </IonToolbar>
           </IonHeader>
           
-          <div className="p-4">
+          <IonContent>
             <IonList>
               {selectedArtistSongs.map((song) => (
                 <IonItem key={song.key}>
@@ -134,7 +127,7 @@ const Artists: React.FC = () => {
                 </IonItem>
               ))}
             </IonList>
-          </div>
+          </IonContent>
         </IonModal>
       </div>
     </>

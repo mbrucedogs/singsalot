@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { IonHeader, IonToolbar, IonTitle, IonList, IonItem, IonLabel, IonModal, IonButton, IonIcon, IonChip, IonAccordion, IonAccordionGroup } from '@ionic/react';
-import { close, documentText, add, heart, heartOutline } from 'ionicons/icons';
+import React, { useState } from 'react';
+import { IonItem, IonLabel, IonModal, IonHeader, IonToolbar, IonTitle, IonButton, IonIcon, IonChip, IonContent, IonList, IonAccordionGroup, IonAccordion } from '@ionic/react';
+import { close, list } from 'ionicons/icons';
+import { InfiniteScrollList, PageHeader, SongItem } from '../../components/common';
 import { useSongLists } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectSongList } from '../../redux';
-import type { SongListSong, Song } from '../../types';
+import type { SongListSong, SongList, Song } from '../../types';
 
 const SongLists: React.FC = () => {
   const {
@@ -19,237 +20,163 @@ const SongLists: React.FC = () => {
 
   const songListData = useAppSelector(selectSongList);
   const songListCount = Object.keys(songListData).length;
-  const observerRef = useRef<HTMLDivElement>(null);
-
-  // Intersection Observer for infinite scrolling
-  useEffect(() => {
-    console.log('SongLists - Setting up observer:', { hasMore, songListCount, itemsLength: songLists.length });
-    
-    const observer = new IntersectionObserver(
-      (entries) => {
-        console.log('SongLists - Intersection detected:', { 
-          isIntersecting: entries[0].isIntersecting, 
-          hasMore, 
-          songListCount 
-        });
-        
-        if (entries[0].isIntersecting && hasMore && songListCount > 0) {
-          console.log('SongLists - Loading more items');
-          loadMore();
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (observerRef.current) {
-      observer.observe(observerRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, [loadMore, hasMore, songListCount]);
   const [selectedSongList, setSelectedSongList] = useState<string | null>(null);
+  const [expandedSongKey, setExpandedSongKey] = useState<string | null>(null);
 
-  // Debug logging - only log when data changes
-  useEffect(() => {
-    console.log('SongLists component - songList count:', songListCount);
-    console.log('SongLists component - songLists:', songLists);
-  }, [songListCount, songLists.length]);
+
 
   const handleSongListClick = (songListKey: string) => {
-    console.log('SongLists - handleSongListClick called with key:', songListKey);
     setSelectedSongList(songListKey);
+    setExpandedSongKey(null); // Reset expansion when opening a new song list
   };
 
   const handleCloseSongList = () => {
     setSelectedSongList(null);
+    setExpandedSongKey(null); // Reset expansion when closing
+  };
+
+  const handleSongItemClick = (songKey: string) => {
+    setExpandedSongKey(expandedSongKey === songKey ? null : songKey);
   };
 
   const finalSelectedList = selectedSongList
     ? allSongLists.find(list => list.key === selectedSongList)
     : null;
-  
-  // Debug logging for modal
-  useEffect(() => {
-    console.log('SongLists - Modal state check:', { 
-      selectedSongList, 
-      finalSelectedList: !!finalSelectedList,
-      songListsLength: songLists.length 
-    });
-    if (selectedSongList) {
-      console.log('SongLists - Modal opened for song list:', selectedSongList);
-      console.log('SongLists - Selected list data:', finalSelectedList);
-      console.log('SongLists - About to render modal, finalSelectedList:', !!finalSelectedList);
-    }
-  }, [selectedSongList, finalSelectedList, songLists.length]);
+
+  // Render song list item for InfiniteScrollList
+  const renderSongListItem = (songList: SongList) => (
+    <IonItem button onClick={() => handleSongListClick(songList.key!)} detail={false}>
+      <IonLabel>
+        <h3 className="text-sm font-medium text-gray-900">
+          {songList.title}
+        </h3>
+        <p className="text-sm text-gray-500">
+          {songList.songs.length} song{songList.songs.length !== 1 ? 's' : ''}
+        </p>
+      </IonLabel>
+      <IonIcon icon={list} slot="end" color="primary" />
+    </IonItem>
+  );
 
   return (
     <>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>
-            Song Lists
-            <IonChip color="primary" className="ml-2">
-              {songLists.length}
-            </IonChip>
-          </IonTitle>
-        </IonToolbar>
-      </IonHeader>
+      <PageHeader
+        title="Song Lists"
+        subtitle={`${songListCount} items loaded`}
+      />
 
-      <div className="p-4">
-        <p className="text-sm text-gray-600 mb-4">
-          {songLists.length} song list{songLists.length !== 1 ? 's' : ''} available
-        </p>
-        
-        {/* Debug info */}
-        <div className="mb-4 text-sm text-gray-500">
-          Song lists loaded: {songListCount}
-        </div>
+      <div className="max-w-4xl mx-auto p-6">
+        <InfiniteScrollList<SongList>
+          items={songLists}
+          isLoading={songListCount === 0}
+          hasMore={hasMore}
+          onLoadMore={loadMore}
+          renderItem={renderSongListItem}
+          emptyTitle="No song lists available"
+          emptyMessage="Song lists will appear here when they're available"
+          loadingTitle="Loading song lists..."
+          loadingMessage="Please wait while song lists are being loaded"
+        />
 
-        {/* Song Lists */}
-        <div className="bg-white rounded-lg shadow">
-          {songListCount === 0 ? (
-            <div className="p-8 text-center">
-              <div className="text-gray-400 mb-4">
-                <svg className="h-12 w-12 mx-auto animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
-              </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">Loading song lists...</h3>
-              <p className="text-sm text-gray-500">Please wait while song lists are being loaded</p>
-            </div>
-          ) : songLists.length === 0 ? (
-            <div className="p-8 text-center">
-              <div className="text-gray-400 mb-4">
-                <svg className="h-12 w-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
-                </svg>
-              </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No song lists available</h3>
-              <p className="text-sm text-gray-500">Song lists will appear here when they're available</p>
-            </div>
-          ) : (
-            <IonList>
-              {songLists.map((songList) => (
-                <IonItem key={songList.key} button onClick={() => handleSongListClick(songList.key!)}>
-                  <IonIcon icon={documentText} slot="start" color="primary" />
-                  <IonLabel>
-                    <h3 className="text-sm font-medium text-gray-900">
-                      {songList.title}
-                    </h3>
-                    <p className="text-sm text-gray-500">
-                      {songList.songs.length} song{songList.songs.length !== 1 ? 's' : ''}
-                    </p>
-                  </IonLabel>
-                  <IonChip slot="end" color="primary">
-                    View Songs
-                  </IonChip>
-                </IonItem>
-              ))}
-              
-              {/* Infinite scroll trigger */}
-              {hasMore && (
-                <div 
-                  ref={observerRef}
-                  className="py-4 text-center text-gray-500"
-                >
-                  <div className="inline-flex items-center">
-                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Loading more song lists...
-                  </div>
-                </div>
-              )}
-            </IonList>
-          )}
-        </div>
-      </div>
+        {/* Song List Modal */}
+        <IonModal 
+          isOpen={!!finalSelectedList} 
+          onDidDismiss={handleCloseSongList}
+        >
+          <IonHeader>
+            <IonToolbar>
+              <IonTitle>{finalSelectedList?.title}</IonTitle>
+              <IonButton slot="end" fill="clear" onClick={handleCloseSongList}>
+                <IonIcon icon={close} />
+              </IonButton>
+            </IonToolbar>
+          </IonHeader>
+          
+          <IonContent>
+            <IonAccordionGroup value={expandedSongKey}>
+              {finalSelectedList?.songs.map((songListSong: SongListSong, index) => {
+                const availableSongs = checkSongAvailability(songListSong);
+                const isAvailable = availableSongs.length > 0;
+                const songKey = songListSong.key || `${songListSong.title}-${songListSong.position}-${index}`;
 
-      {/* Song List Modal */}
-      <IonModal isOpen={!!finalSelectedList} onDidDismiss={handleCloseSongList}>
-        <IonHeader>
-          <IonToolbar>
-            <IonTitle>{finalSelectedList?.title}</IonTitle>
-            <IonButton slot="end" fill="clear" onClick={handleCloseSongList}>
-              <IonIcon icon={close} />
-            </IonButton>
-          </IonToolbar>
-        </IonHeader>
-        {/* Remove IonContent, use a div instead */}
-        <div>
-          <IonAccordionGroup>
-            {finalSelectedList?.songs.map((songListSong: SongListSong, idx) => {
-              const availableSongs = checkSongAvailability(songListSong);
-              const isAvailable = availableSongs.length > 0;
+                if (isAvailable) {
+                  // Available songs get an accordion that expands
+                  return (
+                    <IonAccordion key={songKey} value={songKey} style={{ '--border-style': 'none' } as React.CSSProperties}>
+                      <IonItem 
+                        slot="header" 
+                        detail={false} 
+                        button 
+                        onClick={() => handleSongItemClick(songKey)}
+                        style={{ 
+                          '--border-style': 'solid',
+                          '--border-width': '0 0 1px 0',
+                          '--border-color': 'rgba(0, 0, 0, 0.13)'
+                        } as React.CSSProperties}
+                      >
+                        {/* Number */}
+                        <div slot="start" className="flex-shrink-0 w-12 h-12 flex items-center justify-center text-gray-600 font-medium">
+                          {index + 1})
+                        </div>
 
-              return (
-                <IonAccordion key={songListSong.key || `${songListSong.title}-${songListSong.position}-${idx}`} value={songListSong.key}>
-                  <IonItem slot="header" className={!isAvailable ? 'opacity-50' : ''}>
-                    <IonLabel>
-                      <h3 className="text-sm font-medium text-gray-900">
-                        {songListSong.title}
-                      </h3>
-                      <p className="text-sm text-gray-500">
-                        {songListSong.artist} • Position {songListSong.position}
-                      </p>
-                      {!isAvailable && (
-                        <p className="text-xs text-red-500 mt-1">
-                          Not available in catalog
-                        </p>
-                      )}
-                    </IonLabel>
-                    {isAvailable && (
-                      <IonChip slot="end" color="success">
-                        {availableSongs.length} version{availableSongs.length !== 1 ? 's' : ''}
-                      </IonChip>
-                    )}
-                  </IonItem>
+                        <IonLabel>
+                          <h3 className="text-sm font-medium text-gray-900">
+                            {songListSong.artist}
+                          </h3>
+                          <p className="text-sm text-gray-500">
+                            {songListSong.title}
+                          </p>
+                        </IonLabel>
 
-                  <div slot="content">
-                    {isAvailable ? (
-                      <IonList>
-                        {availableSongs.map((song: Song, sidx) => (
-                          <IonItem key={song.key || `${song.title}-${song.artist}-${sidx}`}> 
-                            <IonLabel>
-                              <h3 className="text-sm font-medium text-gray-900">
-                                {song.title}
-                              </h3>
-                              <p className="text-sm text-gray-500">
-                                {song.artist}
-                              </p>
-                            </IonLabel>
-                            <div slot="end" className="flex gap-2">
-                              <IonButton
-                                fill="clear"
-                                size="small"
-                                onClick={() => handleAddToQueue(song)}
-                              >
-                                <IonIcon icon={add} slot="icon-only" />
-                              </IonButton>
-                              <IonButton
-                                fill="clear"
-                                size="small"
-                                onClick={() => handleToggleFavorite(song)}
-                              >
-                                <IonIcon icon={song.favorite ? heart : heartOutline} slot="icon-only" />
-                              </IonButton>
-                            </div>
-                          </IonItem>
-                        ))}
-                      </IonList>
-                    ) : (
-                      <div className="p-4 text-center text-gray-500">
-                        No matching songs found in catalog
+                        <IonChip slot="end" color="success">
+                          {availableSongs.length} version{availableSongs.length !== 1 ? 's' : ''}
+                        </IonChip>
+                      </IonItem>
+
+                      <div slot="content" className="bg-gray-50 border-l-4 border-primary">
+                        <IonList>
+                          {availableSongs.map((song: Song, sidx) => (
+                            <SongItem
+                              key={song.key || `${song.title}-${song.artist}-${sidx}`}
+                              song={song}
+                              context="search"
+                              onAddToQueue={() => handleAddToQueue(song)}
+                              onToggleFavorite={() => handleToggleFavorite(song)}
+                            />
+                          ))}
+                        </IonList>
                       </div>
-                    )}
-                  </div>
-                </IonAccordion>
-              );
-            })}
-          </IonAccordionGroup>
-        </div>
-      </IonModal>
+                    </IonAccordion>
+                  );
+                } else {
+                  // Unavailable songs get a simple item
+                  return (
+                    <IonItem 
+                      key={songKey}
+                      detail={false}
+                      className="opacity-50"
+                    >
+                      {/* Number */}
+                      <div slot="start" className="flex-shrink-0 w-12 h-12 flex items-center justify-center text-gray-600 font-medium">
+                        {index + 1})
+                      </div>
+
+                      <IonLabel>
+                        <h3 className="text-sm font-medium text-gray-400">
+                          {songListSong.artist}
+                        </h3>
+                        <p className="text-sm text-gray-300">
+                          {songListSong.title}
+                        </p>
+                      </IonLabel>
+                    </IonItem>
+                  );
+                }
+              })}
+            </IonAccordionGroup>
+          </IonContent>
+        </IonModal>
+      </div>
     </>
   );
 };

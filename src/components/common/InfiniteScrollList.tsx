@@ -114,7 +114,7 @@ const InfiniteScrollList = <T extends string | { key?: string }>({
 
       {/* Stats */}
       {items.length > 0 && (
-        <div className="mt-4 text-sm text-gray-500 text-center">
+        <div style={{ marginTop: '16px', marginBottom: '24px' }} className="text-sm text-gray-500 text-center">
           Showing {items.length} item{items.length !== 1 ? 's' : ''}
           {hasMore && ` • Scroll down to load more`}
         </div>

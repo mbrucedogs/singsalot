@@ -1,5 +1,5 @@
 import React from 'react';
-import { IonHeader, IonToolbar, IonTitle, IonChip, IonIcon } from '@ionic/react';
+import { IonChip, IonIcon } from '@ionic/react';
 import { time } from 'ionicons/icons';
 import { InfiniteScrollList, PageHeader, SongItem } from '../../components/common';
 import { useHistory } from '../../hooks';
@@ -39,17 +39,6 @@ const History: React.FC = () => {
 
   return (
     <>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>
-            Recently Played
-            <IonChip color="primary" className="ml-2">
-              {historyItems.length}
-            </IonChip>
-          </IonTitle>
-        </IonToolbar>
-      </IonHeader>
-
       <PageHeader
         title="Recently Played"
         subtitle={`${historyCount} items loaded`}

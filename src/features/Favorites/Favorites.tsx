@@ -1,5 +1,4 @@
 import React from 'react';
-import { IonHeader, IonToolbar, IonTitle, IonChip } from '@ionic/react';
 import { InfiniteScrollList, PageHeader, SongItem } from '../../components/common';
 import { useFavorites } from '../../hooks';
 import { useAppSelector } from '../../redux';
@@ -24,17 +23,6 @@ const Favorites: React.FC = () => {
 
   return (
     <>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>
-            Favorites
-            <IonChip color="primary" className="ml-2">
-              {favoritesItems.length}
-            </IonChip>
-          </IonTitle>
-        </IonToolbar>
-      </IonHeader>
-
       <PageHeader
         title="Favorites"
         subtitle={`${favoritesCount} items loaded`}

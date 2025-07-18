@@ -1,5 +1,4 @@
 import React from 'react';
-import { IonHeader, IonToolbar, IonTitle, IonChip } from '@ionic/react';
 import { InfiniteScrollList, PageHeader, SongItem } from '../../components/common';
 import { useNewSongs } from '../../hooks';
 import { useAppSelector } from '../../redux';
@@ -24,17 +23,6 @@ const NewSongs: React.FC = () => {
 
   return (
     <>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>
-            New Songs
-            <IonChip color="primary" className="ml-2">
-              {newSongsItems.length}
-            </IonChip>
-          </IonTitle>
-        </IonToolbar>
-      </IonHeader>
-
       <PageHeader
         title="New Songs"
         subtitle={`${newSongsCount} items loaded`}

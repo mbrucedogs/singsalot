@@ -34,12 +34,13 @@ const Search: React.FC = () => {
   // Debug logging
   console.log('Search component - songs count:', songsCount);
   console.log('Search component - search results:', searchResults);
+  console.log('Search component - search term:', searchTerm);
+  console.log('Search component - showing:', searchResults.songs.length, 'of', searchResults.count);
 
   return (
     <div className="max-w-4xl mx-auto p-6">
       <PageHeader
         title="Search Songs"
-        subtitle="Search by title or artist"
       />
 
       <div className="mb-6">
@@ -51,11 +52,6 @@ const Search: React.FC = () => {
           debounce={300}
           showClearButton="focus"
         />
-
-        {/* Debug info */}
-        <div className="mt-2 text-sm text-gray-500">
-          Total songs loaded: {songsCount} | Showing: {searchResults.songs.length} of {searchResults.count} | Page: {searchResults.currentPage}/{searchResults.totalPages} | Search term: "{searchTerm}"
-        </div>
       </div>
 
       {/* Search Results */}

@@ -40,3 +40,37 @@
 .read-the-docs {
   color: #888;
 }
+
+/* Override Ionic accordion separator styling with higher specificity */
+ion-accordion.accordion-no-full-separator {
+  --border-style: none !important;
+}
+
+ion-accordion.accordion-no-full-separator::part(header) {
+  --border-style: none !important;
+}
+
+ion-accordion.accordion-no-full-separator ion-item.item-no-full-separator {
+  --border-style: solid !important;
+  --border-width: 0 0 1px 0 !important;
+  --border-color: var(--ion-item-border-color, rgba(0, 0, 0, 0.13)) !important;
+}
+
+ion-accordion.accordion-no-full-separator ion-item.item-no-full-separator::part(native) {
+  --border-style: solid !important;
+  --border-width: 0 0 1px 0 !important;
+  --border-color: var(--ion-item-border-color, rgba(0, 0, 0, 0.13)) !important;
+}
+
+/* Alternative approach: Target all accordion items globally */
+ion-accordion ion-item {
+  --border-style: solid !important;
+  --border-width: 0 0 1px 0 !important;
+  --border-color: var(--ion-item-border-color, rgba(0, 0, 0, 0.13)) !important;
+}
+
+ion-accordion ion-item::part(native) {
+  --border-style: solid !important;
+  --border-width: 0 0 1px 0 !important;
+  --border-color: var(--ion-item-border-color, rgba(0, 0, 0, 0.13)) !important;
+}

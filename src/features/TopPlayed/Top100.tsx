@@ -1,5 +1,4 @@
 import React from 'react';
-import { IonHeader, IonToolbar, IonTitle, IonChip } from '@ionic/react';
 import { useTopPlayed } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectTopPlayed } from '../../redux';
@@ -99,17 +98,6 @@ const Top100: React.FC = () => {
 
   return (
     <>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>
-            Top 100 Played
-            <IonChip color="primary" className="ml-2">
-              {displayItems.length}
-            </IonChip>
-          </IonTitle>
-        </IonToolbar>
-      </IonHeader>
-
       <PageHeader
         title="Top 100 Played"
         subtitle={`${displayCount} items loaded (Mock Data)`}

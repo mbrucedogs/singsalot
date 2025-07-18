@@ -80,7 +80,7 @@ const Top100: React.FC = () => {
   const mockTopPlayedItems: TopPlayed[] = [
     {
       key: 'mock-1',
-      title: 'CAN\'T STOP THE FEELING',
+      title: 'CAN T STOP THE FEELING',
       artist: 'Justin Timberlake',
       count: 63
     },

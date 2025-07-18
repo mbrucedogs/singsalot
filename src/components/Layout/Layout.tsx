@@ -1,17 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import { IonApp, IonHeader, IonToolbar, IonTitle, IonContent, IonMenuButton, IonIcon } from '@ionic/react';
 import { logOut } from 'ionicons/icons';
 import { selectControllerName } from '../../redux/authSlice';
 import { logout } from '../../redux/authSlice';
 import { ActionButton } from '../common';
 import Navigation from '../Navigation/Navigation';
+import { getPageTitle } from '../../utils/routeUtils';
 import type { LayoutProps } from '../../types';
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const controllerName = useSelector(selectControllerName);
   const dispatch = useDispatch();
+  const location = useLocation();
   const [isLargeScreen, setIsLargeScreen] = useState(false);
+  
+  // Get the current page title
+  const currentPageTitle = getPageTitle(location.pathname);
 
   // Check screen size for responsive layout
   useEffect(() => {
@@ -51,12 +57,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             
             <IonTitle>
               <div className="flex items-center">
-                <span>Sings A Lot</span>
-                {controllerName && (
-                  <span className="ml-4 text-sm text-gray-500">
-                  : {controllerName}
-                  </span>
-                )}
+                <span>{currentPageTitle}</span>
               </div>
             </IonTitle>
             

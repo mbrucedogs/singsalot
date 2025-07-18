@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { IonItem, IonLabel, IonIcon, IonModal, IonHeader, IonToolbar, IonTitle, IonButton, IonContent, IonInput, IonLabel as IonInputLabel } from '@ionic/react';
 import { trash, add, close } from 'ionicons/icons';
-import { InfiniteScrollList, PageHeader, ActionButton } from '../../components/common';
+import { InfiniteScrollList, ActionButton } from '../../components/common';
 import { useSingers } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectSingers } from '../../redux';
@@ -70,21 +70,17 @@ const Singers: React.FC = () => {
 
   return (
     <>
-      <PageHeader
-        title="Singers"
-        subtitle={`${singersCount} singers in the party`}
-        action={
-          isAdmin && (
-            <IonButton 
-              fill="clear" 
-              onClick={handleOpenAddModal}
-              className="text-primary"
-            >
-              <IonIcon icon={add} slot="icon-only" />
-            </IonButton>
-          )
-        }
-      />
+      <div className="flex justify-between items-center mb-4">
+        {isAdmin && (
+          <IonButton 
+            fill="clear" 
+            onClick={handleOpenAddModal}
+            className="text-primary"
+          >
+            <IonIcon icon={add} slot="icon-only" />
+          </IonButton>
+        )}
+      </div>
 
       <div className="max-w-4xl mx-auto p-6">
         <InfiniteScrollList<Singer>

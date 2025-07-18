@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { IonToggle, IonItem, IonLabel, IonList } from '@ionic/react';
-import { PageHeader } from '../../components/common';
+import { } from '../../components/common';
 import { useAppSelector } from '../../redux';
 import { selectControllerName } from '../../redux';
 import { settingsService } from '../../firebase/services';
@@ -62,10 +62,9 @@ const Settings: React.FC = () => {
 
   return (
     <>
-      <PageHeader
-        title="Settings"
-        subtitle="Configure player behavior"
-      />
+      <div className="text-sm text-gray-500 text-center mb-4">
+        Configure player behavior
+      </div>
 
       <div className="max-w-4xl mx-auto p-6">
         <IonList>

@@ -4,7 +4,7 @@ import { close, list } from 'ionicons/icons';
 import { useTopPlayed } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectTopPlayed, selectSongsArray } from '../../redux';
-import { InfiniteScrollList, PageHeader, SongItem } from '../../components/common';
+import { InfiniteScrollList, SongItem } from '../../components/common';
 import { filterSongs } from '../../utils/dataProcessing';
 import { useSongOperations } from '../../hooks';
 import { useToast } from '../../hooks';
@@ -97,11 +97,6 @@ const Top100: React.FC = () => {
 
   return (
     <>
-      <PageHeader
-        title="Top 100 Played"
-        subtitle={`${displayCount} items loaded`}
-      />
-
       <InfiniteScrollList<TopPlayed>
         items={displayItems}
         isLoading={isLoading}

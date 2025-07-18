@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { IonButton, IonIcon, IonReorderGroup, IonReorder, IonItem, IonLabel, IonItemSliding, IonItemOptions, IonItemOption } from '@ionic/react';
 import { trash, reorderThreeOutline, reorderTwoOutline, playCircle } from 'ionicons/icons';
-import { PageHeader, ActionButton } from '../../components/common';
+import { ActionButton } from '../../components/common';
 import { useQueue } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectQueue, selectPlayerState, selectIsAdmin, selectControllerName } from '../../redux';
@@ -219,22 +219,19 @@ const Queue: React.FC = () => {
 
   return (
     <>
-      <PageHeader
-       title="Queue"
-       subtitle={`${queueStats.totalSongs} song${queueStats.totalSongs !== 1 ? 's' : ''} in queue`}
-       action={
-         isAdmin && (
-           <IonButton
-             onClick={toggleQueueMode}
-             fill="outline"
-             size="small"
-             className="flex items-center gap-2"
-           >
-             <IonIcon icon={queueMode === 'delete' ? reorderThreeOutline : trash} />
-           </IonButton>
-         )
-       }
-      />
+      <div className="flex justify-between items-center mb-4">
+
+        {isAdmin && (
+          <IonButton
+            onClick={toggleQueueMode}
+            fill="outline"
+            size="small"
+            className="flex items-center gap-2"
+          >
+            <IonIcon icon={queueMode === 'delete' ? reorderThreeOutline : trash} />
+          </IonButton>
+        )}
+      </div>
 
     
       <div className="max-w-4xl mx-auto p-6">

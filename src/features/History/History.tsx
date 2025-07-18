@@ -1,7 +1,7 @@
 import React from 'react';
 import { IonChip, IonIcon } from '@ionic/react';
 import { time } from 'ionicons/icons';
-import { InfiniteScrollList, PageHeader, SongItem } from '../../components/common';
+import { InfiniteScrollList, SongItem } from '../../components/common';
 import { useHistory } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectHistory } from '../../redux';
@@ -39,11 +39,6 @@ const History: React.FC = () => {
 
   return (
     <>
-      <PageHeader
-        title="Recently Played"
-        subtitle={`${historyCount} items loaded`}
-      />
-
       <InfiniteScrollList<Song>
         items={historyItems}
         isLoading={historyCount === 0}

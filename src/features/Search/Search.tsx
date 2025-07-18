@@ -1,6 +1,6 @@
 import React from 'react';
 import { IonSearchbar } from '@ionic/react';
-import { InfiniteScrollList, PageHeader, SongItem } from '../../components/common';
+import { InfiniteScrollList, SongItem } from '../../components/common';
 import { useSearch } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectIsAdmin, selectSongs } from '../../redux';
@@ -39,10 +39,6 @@ const Search: React.FC = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <PageHeader
-        title="Search Songs"
-      />
-
       <div className="mb-6">
         {/* Search Input */}
         <IonSearchbar

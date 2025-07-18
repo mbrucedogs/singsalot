@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { IonItem, IonLabel, IonModal, IonHeader, IonToolbar, IonTitle, IonButton, IonIcon, IonChip, IonContent, IonList, IonAccordionGroup, IonAccordion } from '@ionic/react';
 import { close, list } from 'ionicons/icons';
-import { InfiniteScrollList, PageHeader, SongItem } from '../../components/common';
+import { InfiniteScrollList, SongItem } from '../../components/common';
 import { useSongLists } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectSongList } from '../../redux';
@@ -73,11 +73,6 @@ const SongLists: React.FC = () => {
 
   return (
     <>
-      <PageHeader
-        title="Song Lists"
-        subtitle={`${songListCount} items loaded`}
-      />
-
       <div className="max-w-4xl mx-auto p-6">
         <InfiniteScrollList<SongList>
           items={songLists}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { InfiniteScrollList, PageHeader, SongItem } from '../../components/common';
+import { InfiniteScrollList, SongItem } from '../../components/common';
 import { useNewSongs } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectNewSongs } from '../../redux';
@@ -23,11 +23,6 @@ const NewSongs: React.FC = () => {
 
   return (
     <>
-      <PageHeader
-        title="New Songs"
-        subtitle={`${newSongsCount} items loaded`}
-      />
-
       <InfiniteScrollList<Song>
         items={newSongsItems}
         isLoading={newSongsCount === 0}

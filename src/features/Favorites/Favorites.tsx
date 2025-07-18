@@ -1,5 +1,5 @@
 import React from 'react';
-import { InfiniteScrollList, PageHeader, SongItem } from '../../components/common';
+import { InfiniteScrollList, SongItem } from '../../components/common';
 import { useFavorites } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectFavorites } from '../../redux';
@@ -23,11 +23,6 @@ const Favorites: React.FC = () => {
 
   return (
     <>
-      <PageHeader
-        title="Favorites"
-        subtitle={`${favoritesCount} items loaded`}
-      />
-
       <InfiniteScrollList<Song>
         items={favoritesItems}
         isLoading={favoritesCount === 0}

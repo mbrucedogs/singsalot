@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { IonSearchbar, IonList, IonItem, IonLabel, IonModal, IonHeader, IonToolbar, IonTitle, IonButton, IonIcon, IonContent } from '@ionic/react';
 import { close, add, heart, heartOutline, list } from 'ionicons/icons';
-import { InfiniteScrollList, PageHeader } from '../../components/common';
+import { InfiniteScrollList } from '../../components/common';
 import { useArtists } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectSongs } from '../../redux';
@@ -56,10 +56,6 @@ const Artists: React.FC = () => {
 
   return (
     <>
-      <PageHeader
-        title="Artists"
-      />
-
       <div className="max-w-4xl mx-auto p-6">
         <div className="mb-6">
           {/* Search Input */}

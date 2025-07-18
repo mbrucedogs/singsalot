@@ -58,6 +58,33 @@ ion-item {
   --color: var(--ion-text-color, #000000);
 }
 
+/* Settings page specific styling */
+.settings-container {
+  padding: 0 16px !important;
+}
+
+.settings-container ion-list {
+  margin: 0 -16px !important;
+  padding: 0 16px !important;
+}
+
+.settings-container h2 {
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+}
+
+.settings-container .bg-gray-50 {
+  margin: 0 16px !important;
+}
+
+.settings-container ion-item {
+  --padding-end: 0 !important;
+}
+
+.settings-container ion-toggle {
+  margin-left: auto !important;
+}
+
 /* Ensure accordion content is visible */
 ion-accordion {
   --background: transparent;

@@ -56,6 +56,14 @@ export interface Song extends SongBase {
   date?: string;
 }
 
+export interface DisabledSong {
+  path: string;
+  artist: string;
+  title: string;
+  disabledAt: string;
+  key?: string;
+}
+
 export type PickedSong = {
   song: Song
 }

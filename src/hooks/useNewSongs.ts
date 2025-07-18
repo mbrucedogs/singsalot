@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { useAppSelector, selectNewSongsArray } from '../redux';
 import { useSongOperations } from './useSongOperations';
 import { useToast } from './useToast';
+import { useDisabledSongs } from './useDisabledSongs';
 import type { Song } from '../types';
 
 const ITEMS_PER_PAGE = 20;
@@ -10,19 +11,21 @@ export const useNewSongs = () => {
   const allNewSongsItems = useAppSelector(selectNewSongsArray);
   const { addToQueue, toggleFavorite } = useSongOperations();
   const { showSuccess, showError } = useToast();
+  const { filterDisabledSongs, isSongDisabled, addDisabledSong, removeDisabledSong } = useDisabledSongs();
   
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Paginate the new songs items - show all items up to current page
+  // Filter out disabled songs and paginate
   const newSongsItems = useMemo(() => {
+    const filteredItems = filterDisabledSongs(allNewSongsItems);
     const endIndex = currentPage * ITEMS_PER_PAGE;
-    return allNewSongsItems.slice(0, endIndex);
-  }, [allNewSongsItems, currentPage]);
+    return filteredItems.slice(0, endIndex);
+  }, [allNewSongsItems, currentPage, filterDisabledSongs]);
 
   const hasMore = useMemo(() => {
-    // Only show "hasMore" if there are more items than currently loaded
-    return allNewSongsItems.length > ITEMS_PER_PAGE && newSongsItems.length < allNewSongsItems.length;
-  }, [newSongsItems.length, allNewSongsItems.length]);
+    const filteredItems = filterDisabledSongs(allNewSongsItems);
+    return filteredItems.length > ITEMS_PER_PAGE && newSongsItems.length < filteredItems.length;
+  }, [newSongsItems.length, allNewSongsItems.length, filterDisabledSongs]);
 
   const loadMore = useCallback(() => {
     console.log('useNewSongs - loadMore called:', { hasMore, currentPage, allNewSongsItemsLength: allNewSongsItems.length });
@@ -49,14 +52,25 @@ export const useNewSongs = () => {
     }
   }, [toggleFavorite, showSuccess, showError]);
 
+  const handleToggleDisabled = useCallback(async (song: Song) => {
+    try {
+      if (isSongDisabled(song)) {
+        await removeDisabledSong(song);
+      } else {
+        await addDisabledSong(song);
+      }
+    } catch {
+      showError('Failed to update song disabled status');
+    }
+  }, [isSongDisabled, addDisabledSong, removeDisabledSong, showError]);
+
   return {
     newSongsItems,
-    allNewSongsItems,
     hasMore,
     loadMore,
-    currentPage,
-    totalPages: Math.ceil(allNewSongsItems.length / ITEMS_PER_PAGE),
     handleAddToQueue,
     handleToggleFavorite,
+    handleToggleDisabled,
+    isSongDisabled,
   };
 }; 

@@ -2,6 +2,7 @@ import { useState, useCallback, useMemo } from 'react';
 import { useAppSelector, selectSongsArray } from '../redux';
 import { useSongOperations } from './useSongOperations';
 import { useToast } from './useToast';
+import { useDisabledSongs } from './useDisabledSongs';
 import { UI_CONSTANTS } from '../constants';
 import { filterSongs } from '../utils/dataProcessing';
 import type { Song } from '../types';
@@ -13,6 +14,7 @@ export const useSearch = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const { addToQueue, toggleFavorite } = useSongOperations();
   const { showSuccess, showError } = useToast();
+  const { disabledSongPaths, addDisabledSong, removeDisabledSong, isSongDisabled } = useDisabledSongs();
 
   // Get all songs from Redux (this is memoized)
   const allSongs = useAppSelector(selectSongsArray);
@@ -20,11 +22,13 @@ export const useSearch = () => {
   // Memoize filtered results to prevent unnecessary re-computations
   const filteredSongs = useMemo(() => {
     if (!searchTerm.trim() || searchTerm.length < UI_CONSTANTS.SEARCH.MIN_SEARCH_LENGTH) {
-      return allSongs;
+      // If no search term, return all songs except disabled ones
+      return allSongs.filter(song => !isSongDisabled(song));
     }
     
-    return filterSongs(allSongs, searchTerm);
-  }, [allSongs, searchTerm]);
+    // Apply both search filter and disabled songs filter
+    return filterSongs(allSongs, searchTerm, disabledSongPaths);
+  }, [allSongs, searchTerm, disabledSongPaths, isSongDisabled]);
 
   // Paginate the filtered results - show all items up to current page
   const searchResults = useMemo(() => {
@@ -46,16 +50,10 @@ export const useSearch = () => {
   }, []);
 
   const loadMore = useCallback(() => {
-    console.log('useSearch - loadMore called:', { 
-      hasMore: searchResults.hasMore, 
-      currentPage, 
-      filteredSongsLength: filteredSongs.length,
-      searchResultsCount: searchResults.count
-    });
     if (searchResults.hasMore) {
       setCurrentPage(prev => prev + 1);
     }
-  }, [searchResults.hasMore, currentPage, filteredSongs.length, searchResults.count]);
+  }, [searchResults.hasMore]);
 
   const handleAddToQueue = useCallback(async (song: Song) => {
     try {
@@ -75,12 +73,26 @@ export const useSearch = () => {
     }
   }, [toggleFavorite, showSuccess, showError]);
 
+  const handleToggleDisabled = useCallback(async (song: Song) => {
+    try {
+      if (isSongDisabled(song)) {
+        await removeDisabledSong(song);
+      } else {
+        await addDisabledSong(song);
+      }
+    } catch {
+      showError('Failed to update song disabled status');
+    }
+  }, [isSongDisabled, addDisabledSong, removeDisabledSong, showError]);
+
   return {
     searchTerm,
     searchResults,
     handleSearchChange,
     handleAddToQueue,
     handleToggleFavorite,
+    handleToggleDisabled,
     loadMore,
+    isSongDisabled,
   };
 }; 

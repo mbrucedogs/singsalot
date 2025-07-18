@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { useAppSelector, selectHistoryArray } from '../redux';
 import { useSongOperations } from './useSongOperations';
 import { useToast } from './useToast';
+import { useDisabledSongs } from './useDisabledSongs';
 import type { Song } from '../types';
 
 const ITEMS_PER_PAGE = 20;
@@ -10,19 +11,21 @@ export const useHistory = () => {
   const allHistoryItems = useAppSelector(selectHistoryArray);
   const { addToQueue, toggleFavorite } = useSongOperations();
   const { showSuccess, showError } = useToast();
+  const { filterDisabledSongs, isSongDisabled, addDisabledSong, removeDisabledSong } = useDisabledSongs();
   
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Paginate the history items - show all items up to current page
+  // Filter out disabled songs and paginate
   const historyItems = useMemo(() => {
+    const filteredItems = filterDisabledSongs(allHistoryItems);
     const endIndex = currentPage * ITEMS_PER_PAGE;
-    return allHistoryItems.slice(0, endIndex);
-  }, [allHistoryItems, currentPage]);
+    return filteredItems.slice(0, endIndex);
+  }, [allHistoryItems, currentPage, filterDisabledSongs]);
 
   const hasMore = useMemo(() => {
-    // Only show "hasMore" if there are more items than currently loaded
-    return allHistoryItems.length > ITEMS_PER_PAGE && historyItems.length < allHistoryItems.length;
-  }, [historyItems.length, allHistoryItems.length]);
+    const filteredItems = filterDisabledSongs(allHistoryItems);
+    return filteredItems.length > ITEMS_PER_PAGE && historyItems.length < filteredItems.length;
+  }, [historyItems.length, allHistoryItems.length, filterDisabledSongs]);
 
   const loadMore = useCallback(() => {
     console.log('useHistory - loadMore called:', { hasMore, currentPage, allHistoryItemsLength: allHistoryItems.length });
@@ -49,14 +52,25 @@ export const useHistory = () => {
     }
   }, [toggleFavorite, showSuccess, showError]);
 
+  const handleToggleDisabled = useCallback(async (song: Song) => {
+    try {
+      if (isSongDisabled(song)) {
+        await removeDisabledSong(song);
+      } else {
+        await addDisabledSong(song);
+      }
+    } catch {
+      showError('Failed to update song disabled status');
+    }
+  }, [isSongDisabled, addDisabledSong, removeDisabledSong, showError]);
+
   return {
     historyItems,
-    allHistoryItems,
     hasMore,
     loadMore,
-    currentPage,
-    totalPages: Math.ceil(allHistoryItems.length / ITEMS_PER_PAGE),
     handleAddToQueue,
     handleToggleFavorite,
+    handleToggleDisabled,
+    isSongDisabled,
   };
 }; 

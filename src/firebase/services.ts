@@ -9,7 +9,7 @@ import {
   update
 } from 'firebase/database';
 import { database } from './config';
-import type { Song, QueueItem, Controller, Singer } from '../types';
+import type { Song, QueueItem, Controller, Singer, DisabledSong } from '../types';
 
 // Basic CRUD operations for controllers
 export const controllerService = {
@@ -317,5 +317,91 @@ export const settingsService = {
     });
     
     return () => off(settingsRef);
+  }
+};
+
+// Disabled songs management operations
+export const disabledSongsService = {
+  // Generate a hash for the song path to use as a Firebase-safe key
+  generateSongKey: (songPath: string): string => {
+    // Simple hash function for the path
+    let hash = 0;
+    for (let i = 0; i < songPath.length; i++) {
+      const char = songPath.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash; // Convert to 32-bit integer
+    }
+    return Math.abs(hash).toString(36); // Convert to base36 for shorter keys
+  },
+
+  // Add a song to the disabled list
+  addDisabledSong: async (controllerName: string, song: Song) => {
+    console.log('disabledSongsService.addDisabledSong called with:', { controllerName, song });
+    
+    if (!controllerName) {
+      throw new Error('Controller name is required');
+    }
+    
+    if (!song.path) {
+      throw new Error('Song path is required');
+    }
+    
+    if (!song.artist || !song.title) {
+      throw new Error('Song artist and title are required');
+    }
+    
+    const songKey = disabledSongsService.generateSongKey(song.path);
+    console.log('Generated song key:', songKey);
+    
+    const disabledSongRef = ref(database, `controllers/${controllerName}/disabledSongs/${songKey}`);
+    const disabledSong = {
+      path: song.path,
+      artist: song.artist,
+      title: song.title,
+      key: song.key,
+      disabledAt: new Date().toISOString(),
+    };
+    
+    console.log('Saving disabled song:', disabledSong);
+    await set(disabledSongRef, disabledSong);
+    console.log('Disabled song saved successfully');
+  },
+
+  // Remove a song from the disabled list
+  removeDisabledSong: async (controllerName: string, songPath: string) => {
+    const songKey = disabledSongsService.generateSongKey(songPath);
+    const disabledSongRef = ref(database, `controllers/${controllerName}/disabledSongs/${songKey}`);
+    await remove(disabledSongRef);
+  },
+
+  // Check if a song is disabled
+  isSongDisabled: async (controllerName: string, songPath: string): Promise<boolean> => {
+    const songKey = disabledSongsService.generateSongKey(songPath);
+    const disabledSongRef = ref(database, `controllers/${controllerName}/disabledSongs/${songKey}`);
+    const snapshot = await get(disabledSongRef);
+    return snapshot.exists();
+  },
+
+  // Get all disabled songs
+  getDisabledSongs: async (controllerName: string) => {
+    const disabledSongsRef = ref(database, `controllers/${controllerName}/disabledSongs`);
+    const snapshot = await get(disabledSongsRef);
+    return snapshot.exists() ? snapshot.val() : {};
+  },
+
+  // Get disabled song paths as a Set for fast lookup
+  getDisabledSongPaths: async (controllerName: string): Promise<Set<string>> => {
+    const disabledSongs = await disabledSongsService.getDisabledSongs(controllerName);
+    return new Set(Object.values(disabledSongs as Record<string, DisabledSong>).map((song) => song.path));
+  },
+
+  // Listen to disabled songs changes
+  subscribeToDisabledSongs: (controllerName: string, callback: (data: Record<string, DisabledSong>) => void) => {
+    const disabledSongsRef = ref(database, `controllers/${controllerName}/disabledSongs`);
+    onValue(disabledSongsRef, (snapshot) => {
+      callback(snapshot.exists() ? snapshot.val() : {});
+    });
+    
+    return () => off(disabledSongsRef);
   }
 }; 

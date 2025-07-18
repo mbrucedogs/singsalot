@@ -10,15 +10,27 @@ export const objectToArray = <T extends { key?: string }>(
   }));
 };
 
+// Filter out disabled songs from an array
+export const filterDisabledSongs = (songs: Song[], disabledSongPaths: Set<string>): Song[] => {
+  return songs.filter(song => !disabledSongPaths.has(song.path));
+};
+
 // Filter songs by search term with intelligent multi-word handling
-export const filterSongs = (songs: Song[], searchTerm: string): Song[] => {
-  if (!searchTerm.trim()) return songs;
+export const filterSongs = (songs: Song[], searchTerm: string, disabledSongPaths?: Set<string>): Song[] => {
+  let filteredSongs = songs;
+  
+  // First filter out disabled songs if disabledSongPaths is provided
+  if (disabledSongPaths) {
+    filteredSongs = filterDisabledSongs(songs, disabledSongPaths);
+  }
+  
+  if (!searchTerm.trim()) return filteredSongs;
   
   const terms = searchTerm.toLowerCase().split(/\s+/).filter(term => term.length > 0);
   
-  if (terms.length === 0) return songs;
+  if (terms.length === 0) return filteredSongs;
   
-  return songs.filter(song => {
+  return filteredSongs.filter(song => {
     const songTitle = song.title.toLowerCase();
     const songArtist = song.artist.toLowerCase();
     

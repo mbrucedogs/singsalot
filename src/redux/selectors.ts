@@ -30,9 +30,21 @@ export const selectSongsArray = createSelector(
   (songs) => sortSongsByArtistAndTitle(objectToArray(songs))
 );
 
+// Selector that filters songs and excludes disabled ones
+export const selectSongsArrayWithoutDisabled = createSelector(
+  [selectSongsArray, (_state: RootState, disabledSongPaths: Set<string>) => disabledSongPaths],
+  (songs, disabledSongPaths) => songs.filter(song => !disabledSongPaths.has(song.path))
+);
+
 export const selectFilteredSongs = createSelector(
   [selectSongsArray, (_state: RootState, searchTerm: string) => searchTerm],
   (songs, searchTerm) => filterSongs(songs, searchTerm)
+);
+
+// Enhanced filtered songs that also excludes disabled songs
+export const selectFilteredSongsWithoutDisabled = createSelector(
+  [selectSongsArray, (_state: RootState, searchTerm: string, disabledSongPaths: Set<string>) => ({ searchTerm, disabledSongPaths })],
+  (songs, { searchTerm, disabledSongPaths }) => filterSongs(songs, searchTerm, disabledSongPaths)
 );
 
 export const selectQueueArray = createSelector(
@@ -50,14 +62,32 @@ export const selectHistoryArray = createSelector(
   (history) => limitArray(sortHistoryByDate(objectToArray(history)), UI_CONSTANTS.HISTORY.MAX_ITEMS)
 );
 
+// History array without disabled songs
+export const selectHistoryArrayWithoutDisabled = createSelector(
+  [selectHistoryArray, (_state: RootState, disabledSongPaths: Set<string>) => disabledSongPaths],
+  (history, disabledSongPaths) => history.filter(song => !disabledSongPaths.has(song.path))
+);
+
 export const selectFavoritesArray = createSelector(
   [selectFavorites],
   (favorites) => sortSongsByArtistAndTitle(objectToArray(favorites))
 );
 
+// Favorites array without disabled songs
+export const selectFavoritesArrayWithoutDisabled = createSelector(
+  [selectFavoritesArray, (_state: RootState, disabledSongPaths: Set<string>) => disabledSongPaths],
+  (favorites, disabledSongPaths) => favorites.filter(song => !disabledSongPaths.has(song.path))
+);
+
 export const selectNewSongsArray = createSelector(
   [selectNewSongs],
   (newSongs) => sortSongsByArtistAndTitle(objectToArray(newSongs))
+);
+
+// New songs array without disabled songs
+export const selectNewSongsArrayWithoutDisabled = createSelector(
+  [selectNewSongsArray, (_state: RootState, disabledSongPaths: Set<string>) => disabledSongPaths],
+  (newSongs, disabledSongPaths) => newSongs.filter(song => !disabledSongPaths.has(song.path))
 );
 
 export const selectSingersArray = createSelector(
@@ -103,6 +133,15 @@ export const selectCanReorderQueue = createSelector(
 // Search-specific selectors
 export const selectSearchResults = createSelector(
   [selectFilteredSongs],
+  (filteredSongs) => ({
+    songs: filteredSongs,
+    count: filteredSongs.length,
+  })
+);
+
+// Enhanced search results that exclude disabled songs
+export const selectSearchResultsWithoutDisabled = createSelector(
+  [selectFilteredSongsWithoutDisabled],
   (filteredSongs) => ({
     songs: filteredSongs,
     count: filteredSongs.length,

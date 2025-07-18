@@ -14,8 +14,8 @@ interface LoginPromptProps {
 }
 
 const LoginPrompt: React.FC<LoginPromptProps> = ({ isAdmin, onComplete }) => {
-  const [singerName, setSingerName] = useState(isAdmin ? 'Admin' : 'Matt');
-  const [partyId, setPartyId] = useState('mbrucedogs-test');
+  const [singerName, setSingerName] = useState('');
+  const [partyId, setPartyId] = useState('');
   const [error, setError] = useState('');
   const dispatch = useAppDispatch();
 
@@ -59,7 +59,6 @@ const LoginPrompt: React.FC<LoginPromptProps> = ({ isAdmin, onComplete }) => {
       <div className="login-container">
         <div className="login-card">
           <div className="login-header">
-            <h1 className="login-title">Login</h1>
             <div className="app-brand">
               <div className="microphone-icon">
                 <IonIcon icon={micOutline} size='large'/>

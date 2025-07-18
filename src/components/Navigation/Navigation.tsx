@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { IonMenu, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonLabel, IonIcon } from '@ionic/react';
-import { list, search, heart, add, mic, documentText, time, trophy, people } from 'ionicons/icons';
+import { timeOutline, settingsOutline, listOutline, musicalNotesOutline, peopleOutline, peopleCircleOutline, heartOutline, searchOutline, starOutline } from 'ionicons/icons';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { PlayerControls } from '../common';
 
 const Navigation: React.FC = () => {
   const location = useLocation();
@@ -9,15 +10,16 @@ const Navigation: React.FC = () => {
   const [isLargeScreen, setIsLargeScreen] = useState(false);
 
   const navItems = [
-    { path: '/queue', label: 'Queue', icon: list },
-    { path: '/search', label: 'Search', icon: search },
-    { path: '/favorites', label: 'Favorites', icon: heart },
-    { path: '/new-songs', label: 'New Songs', icon: add },
-    { path: '/artists', label: 'Artists', icon: mic },
-    { path: '/song-lists', label: 'Song Lists', icon: documentText },
-    { path: '/history', label: 'History', icon: time },
-    { path: '/top-played', label: 'Top 100', icon: trophy },
-    { path: '/singers', label: 'Singers', icon: people },
+    { path: '/search', label: 'Search', icon: searchOutline },
+    { path: '/queue', label: 'Queue', icon: musicalNotesOutline },
+    { path: '/singers', label: 'Singers', icon: peopleCircleOutline },
+    { path: '/artists', label: 'Artists', icon: peopleOutline },
+    { path: '/top-played', label: 'Top 100 Played', icon: starOutline },
+    { path: '/favorites', label: 'Favorites', icon: heartOutline },
+    { path: '/history', label: 'History', icon: timeOutline },
+    { path: '/new-songs', label: 'New Songs', icon: listOutline },
+    { path: '/song-lists', label: 'Song Lists', icon: listOutline },
+    { path: '/settings', label: 'Settings', icon: settingsOutline },
   ];
 
   // Check screen size for responsive menu behavior
@@ -103,6 +105,11 @@ const Navigation: React.FC = () => {
             </div>
           ))}
         </nav>
+        
+        {/* Player Controls */}
+        <div style={{ marginTop: 'auto', padding: '16px' }}>
+          <PlayerControls variant="dark" />
+        </div>
       </div>
     );
   }
@@ -138,6 +145,11 @@ const Navigation: React.FC = () => {
             </IonItem>
           ))}
         </IonList>
+        
+        {/* Player Controls for Mobile */}
+        <div style={{ padding: '16px' }}>
+          <PlayerControls variant="dark" />
+        </div>
       </IonContent>
     </IonMenu>
   );

@@ -108,12 +108,14 @@ const Queue: React.FC = () => {
         subtitle={`${queueStats.totalSongs} song${queueStats.totalSongs !== 1 ? 's' : ''} in queue`}
       />
 
-      <div className="max-w-4xl mx-auto p-6">
-        {/* Player Controls - Only visible to admin users */}
-        <div className="mb-6">
-          <PlayerControls />
+      {/* Player Controls - Only visible to admin users */}
+      <div className="max-w-4xl mx-auto p-6 mb-6">
+        <div style={{ paddingLeft: '16px' }}>
+          <PlayerControls variant="dark" />
         </div>
+      </div>
 
+      <div className="max-w-4xl mx-auto p-6">
         {/* Queue List */}
         <InfiniteScrollList<QueueItem>
           items={queueItems}

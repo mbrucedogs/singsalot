@@ -1,6 +1,6 @@
 import React from 'react';
 import { IonCard, IonCardContent, IonChip, IonIcon } from '@ionic/react';
-import { play, pause, stop } from 'ionicons/icons';
+import { playOutline, pauseOutline, stopOutline, play, pause, stop } from 'ionicons/icons';
 import ActionButton from './ActionButton';
 import { useAppSelector } from '../../redux';
 import { selectPlayerState, selectIsAdmin, selectQueue } from '../../redux';
@@ -11,9 +11,10 @@ import { PlayerState } from '../../types';
 
 interface PlayerControlsProps {
   className?: string;
+  variant?: 'light' | 'dark';
 }
 
-const PlayerControls: React.FC<PlayerControlsProps> = ({ className = '' }) => {
+const PlayerControls: React.FC<PlayerControlsProps> = ({ className = '', variant = 'light' }) => {
   const playerState = useAppSelector(selectPlayerState);
   const isAdmin = useAppSelector(selectIsAdmin);
   const controllerName = useAppSelector(selectControllerName);
@@ -83,6 +84,88 @@ const PlayerControls: React.FC<PlayerControlsProps> = ({ className = '' }) => {
     }
   };
 
+  const getStatusText = () => {
+    switch (currentState) {
+      case PlayerState.playing:
+        return 'Currently Playing';
+      case PlayerState.paused:
+        return 'Currently Paused';
+      default:
+        return 'Currently Stopped';
+    }
+  };
+
+  // Dark mode variant
+  if (variant === 'dark') {
+    return (
+      <div className={`bg-black text-white ${className}`}>
+        {/* Status Text */}
+        <div style={{ padding: '0px 0px' }}>
+          <h3 className="text-lg font-bold">{getStatusText()}</h3>
+        </div>
+        
+        {/* Control Buttons */}
+        <div>
+          {currentState === PlayerState.playing ? (
+            <div 
+              className="flex items-center cursor-pointer hover:bg-gray-800"
+              style={{ padding: '12px 0px' }}
+              onClick={handlePause}
+            >
+              <IonIcon 
+                icon={pauseOutline} 
+                style={{ 
+                  marginRight: '12px',
+                  fontSize: '24px'
+                }} 
+              />
+              <span style={{ fontWeight: '500' }}>Pause</span>
+            </div>
+          ) : (
+            <div 
+              className="flex items-center cursor-pointer hover:bg-gray-800"
+              style={{ padding: '12px 0px' }}
+              onClick={handlePlay}
+            >
+              <IonIcon 
+                icon={playOutline} 
+                style={{ 
+                  marginRight: '12px',
+                  fontSize: '24px'
+                }} 
+              />
+              <span style={{ fontWeight: '500' }}>Play</span>
+            </div>
+          )}
+          
+          {currentState !== PlayerState.stopped && (
+            <div 
+              className="flex items-center cursor-pointer hover:bg-gray-800"
+              style={{ padding: '12px 0px' }}
+              onClick={handleStop}
+            >
+              <IonIcon 
+                icon={stopOutline} 
+                style={{ 
+                  marginRight: '12px',
+                  fontSize: '24px'
+                }} 
+              />
+              <span style={{ fontWeight: '500' }}>Stop</span>
+            </div>
+          )}
+        </div>
+        
+        {!hasSongsInQueue && (
+          <div style={{ padding: '12px 0px' }} className="text-xs text-gray-400">
+            Add songs to queue to enable playback controls
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // Light mode variant (original)
   return (
     <IonCard className={className}>
       <IonCardContent>
@@ -100,20 +183,18 @@ const PlayerControls: React.FC<PlayerControlsProps> = ({ className = '' }) => {
             <ActionButton
               onClick={handlePause}
               variant="primary"
-              size="lg"
+              size="sm"
             >
-              <IonIcon icon={pause} slot="start" />
-              Pause
+              <IonIcon icon={pause} slot="icon-only" />
             </ActionButton>
           ) : (
             <ActionButton
               onClick={handlePlay}
               variant="primary"
-              size="lg"
+              size="sm"
               disabled={!hasSongsInQueue}
             >
-              <IonIcon icon={play} slot="start" />
-              Play
+              <IonIcon icon={play} slot="icon-only" />
             </ActionButton>
           )}
           
@@ -123,8 +204,7 @@ const PlayerControls: React.FC<PlayerControlsProps> = ({ className = '' }) => {
               variant="danger"
               size="sm"
             >
-              <IonIcon icon={stop} slot="start" />
-              Stop
+              <IonIcon icon={stop} slot="icon-only" />
             </ActionButton>
           )}
         </div>

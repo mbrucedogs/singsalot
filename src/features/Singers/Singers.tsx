@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { IonItem, IonLabel, IonIcon, IonModal, IonHeader, IonToolbar, IonTitle, IonButton, IonContent, IonInput, IonLabel as IonInputLabel } from '@ionic/react';
 import { trash, add, close } from 'ionicons/icons';
-import { InfiniteScrollList, PageHeader } from '../../components/common';
+import { InfiniteScrollList, PageHeader, ActionButton } from '../../components/common';
 import { useSingers } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectSingers } from '../../redux';
@@ -51,15 +51,19 @@ const Singers: React.FC = () => {
         </h3>
       </IonLabel>
 
-      {/* Delete Icon (Admin Only) */}
+      {/* Delete Button (Admin Only) */}
       {isAdmin && (
-        <IonIcon 
-          icon={trash} 
-          slot="end" 
-          color="danger"
-          className="cursor-pointer"
-          onClick={() => handleRemoveSinger(singer)}
-        />
+        <div slot="end" className="flex items-center gap-2 ml-2">
+          <div onClick={(e) => e.stopPropagation()}>
+            <ActionButton
+              onClick={() => handleRemoveSinger(singer)}
+              variant="danger"
+              size="sm"
+            >
+              <IonIcon icon={trash} />
+            </ActionButton>
+          </div>
+        </div>
       )}
     </IonItem>
   );

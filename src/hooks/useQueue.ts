@@ -171,6 +171,76 @@ export const useQueue = () => {
     }
   }, [controllerName, queueItems, showSuccess, showError]);
 
+  const handleReorder = useCallback(async (oldIndex: number, newIndex: number) => {
+    console.log('handleReorder called with:', { oldIndex, newIndex });
+    console.log('Current queueItems:', queueItems);
+    console.log('Controller name:', controllerName);
+    
+    if (!controllerName || oldIndex === newIndex) {
+      console.log('Early return - conditions not met:', { 
+        controllerName: !!controllerName, 
+        oldIndex, 
+        newIndex 
+      });
+      return;
+    }
+
+    try {
+      const itemToMove = queueItems[oldIndex];
+      if (!itemToMove || !itemToMove.key) {
+        console.log('No item to move found');
+        showError('Cannot reorder item');
+        return;
+      }
+
+      console.log('Moving item:', {
+        item: { key: itemToMove.key, order: itemToMove.order },
+        fromIndex: oldIndex,
+        toIndex: newIndex
+      });
+
+      // Calculate the new order for the moved item
+      const newOrder = newIndex + 1;
+      
+      // Update all affected items' orders
+      const updatePromises: Promise<void>[] = [];
+      
+      if (oldIndex < newIndex) {
+        // Moving down: shift items between oldIndex and newIndex up by 1
+        for (let i = oldIndex + 1; i <= newIndex; i++) {
+          const item = queueItems[i];
+          if (item && item.key) {
+            updatePromises.push(
+              queueService.updateQueueItem(controllerName, item.key, { order: item.order - 1 })
+            );
+          }
+        }
+      } else {
+        // Moving up: shift items between newIndex and oldIndex down by 1
+        for (let i = newIndex; i < oldIndex; i++) {
+          const item = queueItems[i];
+          if (item && item.key) {
+            updatePromises.push(
+              queueService.updateQueueItem(controllerName, item.key, { order: item.order + 1 })
+            );
+          }
+        }
+      }
+      
+      // Update the moved item's order
+      updatePromises.push(
+        queueService.updateQueueItem(controllerName, itemToMove.key, { order: newOrder })
+      );
+
+      await Promise.all(updatePromises);
+      console.log('Reorder completed successfully');
+      showSuccess('Queue reordered successfully');
+    } catch (error) {
+      console.error('Failed to reorder queue:', error);
+      showError('Failed to reorder queue');
+    }
+  }, [controllerName, queueItems, showSuccess, showError]);
+
   return {
     queueItems,
     queueStats,
@@ -179,5 +249,6 @@ export const useQueue = () => {
     handleToggleFavorite,
     handleMoveUp,
     handleMoveDown,
+    handleReorder,
   };
 }; 

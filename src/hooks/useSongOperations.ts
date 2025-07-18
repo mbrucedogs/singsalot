@@ -16,7 +16,7 @@ export const useSongOperations = () => {
 
     try {
       // Calculate the next order by finding the highest order value and adding 1
-      const queueItems = Object.values(currentQueue);
+      const queueItems = Object.values(currentQueue) as QueueItem[];
       const maxOrder = queueItems.length > 0 
         ? Math.max(...queueItems.map(item => item.order || 0))
         : 0;

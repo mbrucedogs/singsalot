@@ -7,7 +7,10 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy:webapp": "npm run build && firebase use webapp && firebase deploy --only hosting",
+    "deploy:database": "firebase use sings-a-lot-database && firebase deploy --only database,functions",
+    "deploy:all": "npm run build && firebase use webapp && firebase deploy --only hosting && firebase use sings-a-lot-database && firebase deploy --only database,functions"
   },
   "dependencies": {
     "@ionic/core": "^8.6.5",

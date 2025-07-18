@@ -1,5 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit';
-import type { RootState, QueueItem, Singer, Song } from '../types';
+import type { RootState, QueueItem, Singer, Song, SongList } from '../types';
 import { 
   selectSongs, 
   selectQueue, 
@@ -108,7 +108,7 @@ export const selectSingersArray = createSelector(
 
 export const selectSongListArray = createSelector(
   [selectSongList],
-  (songList) => objectToArray(songList)
+  (songList) => (objectToArray(songList) as SongList[])
 );
 
 export const selectArtistsArray = createSelector(

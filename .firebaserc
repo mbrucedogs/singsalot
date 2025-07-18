@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "webapp": "sings-a-lot",
+    "sings-a-lot-database": "firebase-herse"
+  },
+  "targets": {},
+  "etags": {}
+}

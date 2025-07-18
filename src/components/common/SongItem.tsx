@@ -4,7 +4,7 @@ import { add, heart, heartOutline, trash } from 'ionicons/icons';
 import ActionButton from './ActionButton';
 import { useAppSelector } from '../../redux';
 import { selectQueue, selectFavorites } from '../../redux';
-import type { SongItemProps } from '../../types';
+import type { SongItemProps, QueueItem, Song } from '../../types';
 
 // Utility function to extract filename from path
 const extractFilename = (path: string): string => {
@@ -31,8 +31,8 @@ const SongItem: React.FC<SongItemProps> = ({
   const favorites = useAppSelector(selectFavorites);
   
   // Check if song is in queue or favorites based on path
-  const isInQueue = Object.values(queue).some(item => item.song.path === song.path);
-  const isInFavorites = Object.values(favorites).some(favSong => favSong.path === song.path);
+  const isInQueue = (Object.values(queue) as QueueItem[]).some(item => item.song.path === song.path);
+  const isInFavorites = (Object.values(favorites) as Song[]).some(favSong => favSong.path === song.path);
   const renderActionPanel = () => {
     const buttons = [];
 

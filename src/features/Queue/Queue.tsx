@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { IonButton, IonIcon, IonReorderGroup, IonReorder, IonItem, IonLabel, IonItemSliding, IonItemOptions, IonItemOption } from '@ionic/react';
-import { trash, reorderThreeOutline, reorderTwoOutline, playCircle } from 'ionicons/icons';
+import { trash, reorderThreeOutline, reorderTwoOutline } from 'ionicons/icons';
 import { ActionButton } from '../../components/common';
 import { useQueue } from '../../hooks';
 import { useAppSelector } from '../../redux';
@@ -18,7 +18,6 @@ const Queue: React.FC = () => {
   
   const {
     queueItems,
-    queueStats,
     canReorder,
     handleRemoveFromQueue,
   } = useQueue();

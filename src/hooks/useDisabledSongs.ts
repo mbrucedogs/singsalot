@@ -3,6 +3,7 @@ import { disabledSongsService } from '../firebase/services';
 import { useAppSelector } from '../redux';
 import { selectControllerName } from '../redux';
 import { useToast } from './useToast';
+import { debugLog } from '../utils/logger';
 import type { Song, DisabledSong } from '../types';
 
 export const useDisabledSongs = () => {
@@ -19,8 +20,16 @@ export const useDisabledSongs = () => {
     const loadDisabledSongs = async () => {
       try {
         setLoading(true);
+        debugLog('useDisabledSongs - loading disabled songs for controller:', controllerName);
+        
         const songs = await disabledSongsService.getDisabledSongs(controllerName);
         const paths = await disabledSongsService.getDisabledSongPaths(controllerName);
+        
+        debugLog('useDisabledSongs - loaded disabled songs:', {
+          songsCount: Object.keys(songs).length,
+          pathsCount: paths.size,
+          paths: Array.from(paths)
+        });
         
         setDisabledSongs(songs);
         setDisabledSongPaths(paths);
@@ -39,6 +48,11 @@ export const useDisabledSongs = () => {
       controllerName,
       (songs) => {
         try {
+          debugLog('useDisabledSongs - subscription update:', {
+            songsCount: Object.keys(songs).length,
+            songs: Object.values(songs).map((song: DisabledSong) => song.path)
+          });
+          
           setDisabledSongs(songs);
           setDisabledSongPaths(new Set(Object.values(songs).map((song: DisabledSong) => song.path)));
         } catch (error) {
@@ -53,6 +67,13 @@ export const useDisabledSongs = () => {
   // Check if a song is disabled
   const isSongDisabled = useCallback((song: Song): boolean => {
     const isDisabled = disabledSongPaths.has(song.path);
+    debugLog('isSongDisabled check:', { 
+      songTitle: song.title, 
+      songPath: song.path, 
+      isDisabled, 
+      disabledSongPathsSize: disabledSongPaths.size,
+      disabledSongPaths: Array.from(disabledSongPaths)
+    });
     return isDisabled;
   }, [disabledSongPaths]);
 

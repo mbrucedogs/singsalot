@@ -6,6 +6,7 @@ import { useSongLists } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectSongList } from '../../redux';
 import type { SongListSong, SongList, Song } from '../../types';
+import { debugLog } from '../../utils/logger';
 
 const SongLists: React.FC = () => {
   const {
@@ -143,7 +144,7 @@ const SongLists: React.FC = () => {
                   );
                 } else {
                   // Unavailable songs get a simple item
-                  console.log('Non-accordion item:', {
+                  debugLog('Non-accordion item:', {
                     title: songListSong.title,
                     artist: songListSong.artist,
                     index: index + 1

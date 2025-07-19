@@ -23,6 +23,7 @@ import {
   limitArray
 } from '../utils/dataProcessing';
 import { UI_CONSTANTS } from '../constants';
+import { debugLog } from '../utils/logger';
 
 // Enhanced selectors with data processing
 export const selectSongsArray = createSelector(
@@ -33,7 +34,23 @@ export const selectSongsArray = createSelector(
 // Selector that filters songs and excludes disabled ones
 export const selectSongsArrayWithoutDisabled = createSelector(
   [selectSongsArray, (_state: RootState, disabledSongPaths: Set<string>) => disabledSongPaths],
-  (songs, disabledSongPaths) => songs.filter(song => !disabledSongPaths.has(song.path))
+  (songs, disabledSongPaths) => {
+    debugLog('selectSongsArrayWithoutDisabled called:', {
+      songsLength: songs.length,
+      disabledSongPathsSize: disabledSongPaths.size,
+      disabledSongPaths: Array.from(disabledSongPaths)
+    });
+    
+    const filtered = songs.filter(song => !disabledSongPaths.has(song.path));
+    
+    debugLog('selectSongsArrayWithoutDisabled result:', {
+      before: songs.length,
+      after: filtered.length,
+      filteredCount: songs.length - filtered.length
+    });
+    
+    return filtered;
+  }
 );
 
 export const selectFilteredSongs = createSelector(

@@ -1,6 +1,7 @@
 import React from 'react';
 import { IonItem, IonIcon, IonChip } from '@ionic/react';
 import { TwoLineDisplay } from './TwoLineDisplay';
+import { NumberDisplay } from './NumberDisplay';
 
 interface ListItemProps {
   primaryText: string;
@@ -60,11 +61,7 @@ export const ListItem: React.FC<ListItemProps> = ({
     >
       {/* Number (if enabled) */}
       {showNumber && (
-        <div slot="start" className="ion-text-center" style={{ marginLeft: '-8px', marginRight: '12px' }}>
-          <div className="ion-text-bold ion-color-medium" style={{ fontSize: '1rem', minWidth: '2rem' }}>
-            {number}
-          </div>
-        </div>
+        <NumberDisplay number={number!} />
       )}
 
       {/* Main content */}

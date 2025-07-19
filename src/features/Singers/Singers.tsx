@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { IonItem, IonLabel, IonIcon, IonModal, IonHeader, IonToolbar, IonTitle, IonButton, IonContent, IonInput, IonLabel as IonInputLabel } from '@ionic/react';
 import { trash, add, close } from 'ionicons/icons';
-import { InfiniteScrollList, ActionButton } from '../../components/common';
+import { InfiniteScrollList, ActionButton, NumberDisplay } from '../../components/common';
 import { useSingers } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectSingers } from '../../redux';
@@ -47,11 +47,7 @@ const Singers: React.FC = () => {
   const renderSingerItem = (singer: Singer, index: number) => (
     <IonItem detail={false} style={{ '--padding-start': '0px', '--min-height': '60px' }}>
       {/* Order Number */}
-      <div slot="start" className="ion-text-center" style={{ marginLeft: '-8px', marginRight: '12px' }}>
-        <div className="ion-text-bold ion-color-medium" style={{ fontSize: '1rem', minWidth: '2rem' }}>
-          {index + 1}
-        </div>
-      </div>
+      <NumberDisplay number={index + 1} />
 
       {/* Singer Name */}
       <IonLabel>

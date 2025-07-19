@@ -4,7 +4,7 @@ import { trash, reorderThreeOutline, reorderTwoOutline } from 'ionicons/icons';
 import { useQueue } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectQueueLength, selectPlayerStateMemoized, selectIsAdmin, selectControllerName } from '../../redux';
-import { ActionButton } from '../../components/common';
+import { ActionButton, NumberDisplay } from '../../components/common';
 import { SongInfoDisplay } from '../../components/common/SongItem';
 import { queueService } from '../../firebase/services';
 import { debugLog } from '../../utils/logger';
@@ -107,11 +107,7 @@ const Queue: React.FC = () => {
           style={{ '--padding-start': '0px' }}
         >
           {/* Order Number */}
-          <div slot="start" className="ion-text-center" style={{ marginLeft: '-8px', marginRight: '12px' }}>
-            <div className="ion-text-bold ion-color-medium" style={{ fontSize: '1rem', minWidth: '2rem' }}>
-              {queueItem.order}
-            </div>
-          </div>
+          <NumberDisplay number={queueItem.order} />
 
           {/* Song Info with Singer Name on Top */}
           <IonLabel>
@@ -175,11 +171,7 @@ const Queue: React.FC = () => {
       <IonItemSliding key={firstItem.key}>
         <IonItem style={{ '--padding-start': '0px' }}>
           {/* Order Number */}
-          <div slot="start" className="ion-text-center" style={{ marginLeft: '-8px', marginRight: '12px' }}>
-            <div className="ion-text-bold ion-color-medium" style={{ fontSize: '1rem', minWidth: '2rem' }}>
-              {firstItem.order}
-            </div>
-          </div>
+          <NumberDisplay number={firstItem.order} />
 
           {/* Song Info with Singer Name on Top */}
           <IonLabel>

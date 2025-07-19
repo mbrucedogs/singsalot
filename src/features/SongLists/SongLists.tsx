@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useCallback } from 'react';
-import { IonItem, IonLabel, IonModal, IonHeader, IonToolbar, IonTitle, IonButton, IonIcon, IonChip, IonContent, IonList, IonAccordionGroup, IonAccordion } from '@ionic/react';
+import { IonItem, IonModal, IonHeader, IonToolbar, IonTitle, IonButton, IonIcon, IonChip, IonContent, IonList, IonAccordionGroup, IonAccordion } from '@ionic/react';
 import { close, list } from 'ionicons/icons';
-import { InfiniteScrollList, SongItem, ListItem } from '../../components/common';
+import { InfiniteScrollList, SongItem, ListItem, TwoLineDisplay, NumberDisplay } from '../../components/common';
 import { useSongLists } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectSongList } from '../../redux';
@@ -110,18 +110,13 @@ const SongLists: React.FC = () => {
                     <IonAccordion key={songKey} value={songKey}>
                       <IonItem slot="header" detail={false} button onClick={() => handleSongItemClick(songKey)}>
                         {/* Number */}
-                        <div slot="start" className="flex-shrink-0 w-12 h-12 flex items-center justify-center text-gray-600 font-medium">
-                          {index + 1})
-                        </div>
+                        <NumberDisplay number={index + 1} />
 
-                        <IonLabel>
-                          <div className="text-sm font-semibold text-gray-900">
-                            {songListSong.title}
-                          </div>
-                          <div className="text-sm italic text-gray-500">
-                            {songListSong.artist}
-                          </div>
-                        </IonLabel>
+                        {/* Use TwoLineDisplay for consistent formatting */}
+                        <TwoLineDisplay
+                          primaryText={songListSong.title}
+                          secondaryText={songListSong.artist}
+                        />
 
                         <IonChip slot="end" color="success">
                           {availableSongs.length} version{availableSongs.length !== 1 ? 's' : ''}
@@ -152,18 +147,15 @@ const SongLists: React.FC = () => {
                       className="opacity-50"
                     >
                       {/* Number */}
-                      <div slot="start" className="flex-shrink-0 w-12 h-12 flex items-center justify-center text-gray-600 font-medium">
-                        {index + 1})
-                      </div>
+                      <NumberDisplay number={index + 1} />
 
-                      <IonLabel>
-                        <div className="text-sm font-semibold text-gray-400">
-                          {songListSong.title}
-                        </div>
-                        <div className="text-sm italic text-gray-300">
-                          {songListSong.artist}
-                        </div>
-                      </IonLabel>
+                      {/* Use TwoLineDisplay for consistent formatting with disabled styling */}
+                      <TwoLineDisplay
+                        primaryText={songListSong.title}
+                        secondaryText={songListSong.artist}
+                        primaryColor="var(--ion-color-medium)"
+                        secondaryColor="var(--ion-color-light)"
+                      />
                     </IonItem>
                   );
                 }

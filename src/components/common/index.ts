@@ -5,4 +5,6 @@ export { default as ErrorBoundary } from './ErrorBoundary';
 export { default as InfiniteScrollList } from './InfiniteScrollList';
 export { default as PageHeader } from './PageHeader';
 export { default as SongItem } from './SongItem';
-export { default as PlayerControls } from './PlayerControls'; 
+export { default as PlayerControls } from './PlayerControls';
+export { default as SelectSinger } from './SelectSinger';
+export { default as SongInfo } from './SongInfo'; 

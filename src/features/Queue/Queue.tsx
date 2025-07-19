@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { IonButton, IonIcon, IonReorderGroup, IonReorder, IonItem, IonLabel, IonItemSliding, IonItemOptions, IonItemOption } from '@ionic/react';
+import { IonItem, IonLabel, IonItemSliding, IonItemOptions, IonItemOption, IonButton, IonIcon, IonReorderGroup, IonReorder } from '@ionic/react';
 import { trash, reorderThreeOutline, reorderTwoOutline } from 'ionicons/icons';
-import { ActionButton } from '../../components/common';
 import { useQueue } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectQueueLength, selectPlayerStateMemoized, selectIsAdmin, selectControllerName } from '../../redux';
-import { PlayerState } from '../../types';
+import { ActionButton } from '../../components/common';
+import { SongInfoDisplay } from '../../components/common/SongItem';
 import { queueService } from '../../firebase/services';
 import { debugLog } from '../../utils/logger';
+import { PlayerState } from '../../types';
 import type { QueueItem } from '../../types';
 
 type QueueMode = 'delete' | 'reorder';
@@ -101,27 +102,34 @@ const Queue: React.FC = () => {
     
     return (
       <IonItemSliding key={queueItem.key}>
-        <IonItem className={`${canReorder && queueMode === 'reorder' ? 'border-l-4 border-blue-200 bg-blue-50' : ''}`}>
+        <IonItem 
+          className={`${canReorder && queueMode === 'reorder' ? 'ion-border-start ion-border-primary ion-bg-primary-tint' : ''}`} 
+          style={{ '--padding-start': '0px' }}
+        >
           {/* Order Number */}
-          <div slot="start" className={`relative flex-shrink-0 w-12 h-12 flex items-center justify-center font-medium rounded-full bg-gray-100 text-gray-600 !border-none`}>
-            {queueItem.order}
+          <div slot="start" className="ion-text-center" style={{ marginLeft: '-8px', marginRight: '12px' }}>
+            <div className="ion-text-bold ion-color-medium" style={{ fontSize: '1rem', minWidth: '2rem' }}>
+              {queueItem.order}
+            </div>
           </div>
 
-          {/* Song Info */}
+          {/* Song Info with Singer Name on Top */}
           <IonLabel>
-            <p className="text-sm font-semibold truncate">
+            {/* Singer Name */}
+            <div className="ion-text-bold ion-color-primary">
               {queueItem.singer.name}
-            </p>
-            <h3 className="text-sm font-semibold truncate">
-              {queueItem.song.title}
-            </h3>
-            <p className="text-sm text-gray-500 truncate">
-              {queueItem.song.artist}
-            </p>
+            </div>
+            
+            {/* Song Info Display */}
+            <SongInfoDisplay 
+              song={queueItem.song} 
+              showPath={false}
+              showCount={false}
+            />
           </IonLabel>
 
           {/* Delete Button or Drag Handle */}
-          <div slot="end" className="flex items-center gap-2 ml-2">
+          <div slot="end" style={{ marginRight: '-16px' }}>
             {canDelete && (
               <div onClick={(e) => e.stopPropagation()}>
                 <ActionButton
@@ -134,7 +142,7 @@ const Queue: React.FC = () => {
               </div>
             )}
             {canReorder && queueMode === 'reorder' && (
-              <div className="text-gray-400">
+              <div className="ion-color-medium">
                 <IonIcon icon={reorderTwoOutline} size="large" />
               </div>
             )}
@@ -165,34 +173,37 @@ const Queue: React.FC = () => {
     
     return (
       <IonItemSliding key={firstItem.key}>
-        <IonItem>
+        <IonItem style={{ '--padding-start': '0px' }}>
           {/* Order Number */}
-          <div slot="start" className={`relative flex-shrink-0 w-12 h-12 flex items-center justify-center font-medium rounded-full bg-gray-100 text-gray-600 !border-none`}>
-            {firstItem.order}
+          <div slot="start" className="ion-text-center" style={{ marginLeft: '-8px', marginRight: '12px' }}>
+            <div className="ion-text-bold ion-color-medium" style={{ fontSize: '1rem', minWidth: '2rem' }}>
+              {firstItem.order}
+            </div>
           </div>
 
-          {/* Song Info */}
+          {/* Song Info with Singer Name on Top */}
           <IonLabel>
-            <p className="text-sm font-semibold truncate">
+            {/* Singer Name */}
+            <div className="ion-text-bold ion-color-primary">
               {firstItem.singer.name}
-            </p>
-            <h3 className="text-sm font-semibold truncate">
-              {firstItem.song.title}
-            </h3>
-            <p className="text-sm text-gray-500 truncate">
-              {firstItem.song.artist}
-            </p>
+            </div>
+            
+            {/* Song Info Display */}
+            <SongInfoDisplay 
+              song={firstItem.song} 
+              showPath={false}
+              showCount={false}
+            />
           </IonLabel>
 
           {/* Delete Button */}
-          <div slot="end" className="flex items-center gap-2 ml-2">
+          <div slot="end" style={{ marginRight: '-16px' }}>
             {canDeleteFirstItem && queueMode === 'delete' && (
               <div onClick={(e) => e.stopPropagation()}>
                 <ActionButton
                   onClick={() => handleRemoveFromQueue(firstItem)}
                   variant="danger"
                   size="sm"
-                  className="opacity-100"
                 >
                   <IonIcon icon={trash} />
                 </ActionButton>
@@ -218,22 +229,19 @@ const Queue: React.FC = () => {
 
   return (
     <>
-      <div className="flex justify-end items-center mb-4 pr-4 right-button-container">
-
+      <div className="ion-padding ion-text-end">
         {isAdmin && (
           <IonButton
             onClick={toggleQueueMode}
             fill="outline"
             size="small"
-            className="flex items-center gap-2"
           >
             <IonIcon icon={queueMode === 'delete' ? reorderThreeOutline : trash} />
           </IonButton>
         )}
       </div>
 
-    
-      <div className="max-w-4xl mx-auto p-6">
+      <div className="ion-padding">
         {/* First Item (Currently Playing) */}
         {renderFirstItem()}
 
@@ -241,13 +249,13 @@ const Queue: React.FC = () => {
         {canReorder && queueMode === 'reorder' ? (
           <IonReorderGroup disabled={false} onIonItemReorder={doReorder}>
             {listItems.map((queueItem, index) => (
-              <IonReorder key={queueItem.key} style={{ minHeight: '60px' }}>
+              <IonReorder key={queueItem.key}>
                 {renderQueueItem(queueItem, index)}
               </IonReorder>
             ))}
           </IonReorderGroup>
         ) : (
-          <div className="space-y-2">
+          <div>
             {listItems.map((queueItem, index) => renderQueueItem(queueItem, index))}
           </div>
         )}

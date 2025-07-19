@@ -60,12 +60,12 @@ const SongLists: React.FC = () => {
   const renderSongListItem = (songList: SongList) => (
     <IonItem button onClick={() => handleSongListClick(songList.key!)} detail={false}>
       <IonLabel>
-        <h3 className="text-sm font-medium text-gray-900">
+        <div className="text-sm font-medium text-gray-900">
           {songList.title}
-        </h3>
-        <p className="text-sm text-gray-500">
+        </div>
+        <div className="text-sm text-gray-500">
           {songList.songs.length} song{songList.songs.length !== 1 ? 's' : ''}
-        </p>
+        </div>
       </IonLabel>
       <IonIcon icon={list} slot="end" color="primary" />
     </IonItem>
@@ -120,12 +120,12 @@ const SongLists: React.FC = () => {
                         </div>
 
                         <IonLabel>
-                          <h3 className="text-sm font-medium text-gray-900">
-                            {songListSong.artist}
-                          </h3>
-                          <p className="text-sm text-gray-500">
+                          <div className="text-sm font-semibold text-gray-900">
                             {songListSong.title}
-                          </p>
+                          </div>
+                          <div className="text-sm italic text-gray-500">
+                            {songListSong.artist}
+                          </div>
                         </IonLabel>
 
                         <IonChip slot="end" color="success">
@@ -162,12 +162,12 @@ const SongLists: React.FC = () => {
                       </div>
 
                       <IonLabel>
-                        <h3 className="text-sm font-medium text-gray-400">
-                          {songListSong.artist}
-                        </h3>
-                        <p className="text-sm text-gray-300">
+                        <div className="text-sm font-semibold text-gray-400">
                           {songListSong.title}
-                        </p>
+                        </div>
+                        <div className="text-sm italic text-gray-300">
+                          {songListSong.artist}
+                        </div>
                       </IonLabel>
                     </IonItem>
                   );

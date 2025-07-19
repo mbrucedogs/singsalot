@@ -128,13 +128,22 @@ export interface ActionButtonProps {
 
 export interface SongItemProps {
   song: Song;
-  context: 'search' | 'queue' | 'history' | 'favorites' | 'topPlayed';
+  context: 'search' | 'queue' | 'favorites' | 'history' | 'songlists' | 'top100' | 'new';
   onAddToQueue?: () => void;
   onRemoveFromQueue?: () => void;
   onToggleFavorite?: () => void;
   onDelete?: () => void;
+  onSelectSinger?: () => void;
   isAdmin?: boolean;
   className?: string;
+  showActions?: boolean;
+  showPath?: boolean;
+  showCount?: boolean;
+  showInfoButton?: boolean;
+  showAddButton?: boolean;
+  showRemoveButton?: boolean;
+  showDeleteButton?: boolean;
+  showFavoriteButton?: boolean;
 }
 
 export interface LayoutProps {

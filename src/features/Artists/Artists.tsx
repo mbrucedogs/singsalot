@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { IonSearchbar, IonModal, IonHeader, IonToolbar, IonTitle, IonButton, IonIcon, IonContent } from '@ionic/react';
+import { IonSearchbar, IonModal, IonHeader, IonToolbar, IonTitle, IonButton, IonIcon, IonContent, IonItem } from '@ionic/react';
 import { close, list } from 'ionicons/icons';
-import { InfiniteScrollList, SongItem, ListItem } from '../../components/common';
+import { InfiniteScrollList, SongItem, ListItem, NumberDisplay } from '../../components/common';
 import { useArtists } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectSongs } from '../../redux';
@@ -81,8 +81,6 @@ const Artists: React.FC = () => {
         <IonModal 
           isOpen={!!selectedArtist} 
           onDidDismiss={handleCloseArtistSongs}
-          breakpoints={[0, 0.5, 0.8]}
-          initialBreakpoint={0.8}
         >
           <IonHeader>
             <IonToolbar>
@@ -94,16 +92,59 @@ const Artists: React.FC = () => {
           </IonHeader>
           
           <IonContent>
-            <div className="p-4">
-              {selectedArtistSongs.map((song) => (
-                <SongItem
-                  key={song.key}
-                  song={song}
-                  context="search"
-                  onAddToQueue={() => handleAddToQueue(song)}
-                  onToggleFavorite={() => handleToggleFavorite(song)}
-                />
-              ))}
+            <div style={{ padding: '10px' }}>
+              <InfiniteScrollList
+                items={selectedArtistSongs}
+                isLoading={false}
+                hasMore={false}
+                onLoadMore={() => {}}
+                renderItem={(song, index) => (
+                  <IonItem 
+                    key={song.key} 
+                    detail={false} 
+                    style={{ 
+                      '--min-height': '60px', 
+                      '--border-style': 'none',
+                      '--padding-start': '0',
+                      '--padding-end': '0',
+                      '--inner-padding-start': '0',
+                      '--inner-padding-end': '0',
+                      '--padding-top': '0',
+                      '--padding-bottom': '0',
+                      margin: '5px 0',
+                      display: 'flex',
+                      alignItems: 'center'
+                    }}
+                  >
+                    {/* Number */}
+                    <div style={{ 
+                      flexShrink: 0,
+                      display: 'flex',
+                      alignItems: 'center'
+                    }}>
+                      <NumberDisplay number={index + 1} />
+                    </div>
+                    
+                    {/* Song Item Content - placed directly after NumberDisplay like in ListItem */}
+                    <div style={{ 
+                      flex: 1,
+                      display: 'flex',
+                      alignItems: 'center'
+                    }}>
+                      <div style={{ width: '100%' }}>
+                        <SongItem
+                          song={song}
+                          context="search"
+                          onAddToQueue={() => handleAddToQueue(song)}
+                          onToggleFavorite={() => handleToggleFavorite(song)}
+                        />
+                      </div>
+                    </div>
+                  </IonItem>
+                )}
+                emptyTitle="No songs found"
+                emptyMessage="This artist has no songs in the catalog"
+              />
             </div>
           </IonContent>
         </IonModal>

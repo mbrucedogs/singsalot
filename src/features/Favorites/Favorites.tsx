@@ -1,5 +1,5 @@
-import React from 'react';
-import { InfiniteScrollList, SongItem } from '../../components/common';
+import React, { useState } from 'react';
+import { InfiniteScrollList, SongItem, SongInfo } from '../../components/common';
 import { useFavorites } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectFavorites } from '../../redux';
@@ -11,9 +11,11 @@ const Favorites: React.FC = () => {
     favoritesItems,
     hasMore,
     loadMore,
-    handleAddToQueue,
     handleToggleFavorite,
   } = useFavorites();
+
+  const [selectedSong, setSelectedSong] = useState<Song | null>(null);
+  const [isSongInfoOpen, setIsSongInfoOpen] = useState(false);
 
   const favorites = useAppSelector(selectFavorites);
   const favoritesCount = Object.keys(favorites).length;
@@ -21,6 +23,16 @@ const Favorites: React.FC = () => {
   // Debug logging
   debugLog('Favorites component - favorites count:', favoritesCount);
   debugLog('Favorites component - favorites items:', favoritesItems);
+
+  const handleSongInfo = (song: Song) => {
+    setSelectedSong(song);
+    setIsSongInfoOpen(true);
+  };
+
+  const handleCloseSongInfo = () => {
+    setIsSongInfoOpen(false);
+    setSelectedSong(null);
+  };
 
   return (
     <>
@@ -33,8 +45,10 @@ const Favorites: React.FC = () => {
           <SongItem
             song={song}
             context="favorites"
-            onAddToQueue={() => handleAddToQueue(song)}
-            onToggleFavorite={() => handleToggleFavorite(song)}
+            showInfoButton={true}
+            showAddButton={false}
+            onSelectSinger={() => handleSongInfo(song)}
+            onDelete={() => handleToggleFavorite(song)}
           />
         )}
         emptyTitle="No favorites yet"
@@ -42,6 +56,15 @@ const Favorites: React.FC = () => {
         loadingTitle="Loading favorites..."
         loadingMessage="Please wait while favorites data is being loaded"
       />
+
+      {/* Song Info Modal */}
+      {selectedSong && (
+        <SongInfo
+          isOpen={isSongInfoOpen}
+          onClose={handleCloseSongInfo}
+          song={selectedSong}
+        />
+      )}
     </>
   );
 };

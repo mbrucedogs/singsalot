@@ -217,6 +217,15 @@ const SongItem: React.FC<SongItemProps> = ({
   const isInQueue = (Object.values(queue) as QueueItem[]).some(item => item.song.path === song.path);
   const isInFavorites = (Object.values(favorites) as Song[]).some(favSong => favSong.path === song.path);
 
+  // Debug logging for favorites
+  console.log('SongItem render:', {
+    songTitle: song.title,
+    songPath: song.path,
+    favoritesCount: Object.keys(favorites).length,
+    isInFavorites,
+    favorites: (Object.values(favorites) as Song[]).map(f => f.path)
+  });
+
   // Default values based on context if not explicitly provided
   const shouldShowPath = showPath !== undefined ? showPath : context !== 'queue';
   const shouldShowCount = showCount !== undefined ? showCount : context === 'queue';

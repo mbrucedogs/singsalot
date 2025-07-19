@@ -7,14 +7,14 @@ import {
   add, heart, heartOutline, ban, checkmark, close, people
 } from 'ionicons/icons';
 import { useAppSelector } from '../../redux';
-import { selectIsAdmin, selectFavorites, selectSongs } from '../../redux';
+import { selectIsAdmin, selectFavorites, selectSongs, selectQueue } from '../../redux';
 import { useSongOperations } from '../../hooks/useSongOperations';
 import { useDisabledSongs } from '../../hooks/useDisabledSongs';
 import { useSelectSinger } from '../../hooks/useSelectSinger';
 import { useToast } from '../../hooks/useToast';
 import SelectSinger from './SelectSinger';
 import { SongInfoDisplay } from './SongItem';
-import type { Song } from '../../types';
+import type { Song, QueueItem } from '../../types';
 
 interface SongInfoProps {
   isOpen: boolean;
@@ -26,6 +26,7 @@ const SongInfo: React.FC<SongInfoProps> = ({ isOpen, onClose, song }) => {
   const isAdmin = useAppSelector(selectIsAdmin);
   const favorites = useAppSelector(selectFavorites);
   const allSongs = useAppSelector(selectSongs);
+  const queue = useAppSelector(selectQueue);
   const { toggleFavorite } = useSongOperations();
   const { isSongDisabled, addDisabledSong, removeDisabledSong } = useDisabledSongs();
   const { showSuccess, showError } = useToast();
@@ -40,6 +41,7 @@ const SongInfo: React.FC<SongInfoProps> = ({ isOpen, onClose, song }) => {
 
   const isInFavorites = (Object.values(favorites) as Song[]).some(favSong => favSong.path === song.path);
   const isDisabled = isSongDisabled(song);
+  const isInQueue = (Object.values(queue) as QueueItem[]).some(queueItem => queueItem.song && queueItem.song.path === song.path);
 
   const artistSongs = (Object.values(allSongs) as Song[]).filter(s => 
     s.artist.toLowerCase() === song.artist.toLowerCase() && s.path !== song.path
@@ -110,16 +112,18 @@ const SongInfo: React.FC<SongInfoProps> = ({ isOpen, onClose, song }) => {
             {/* Action Buttons */}
             <div className="flex flex-col items-center space-y-4">
               {/* Queue Song Button */}
-              <IonButton 
-                fill="solid" 
-                color="primary"
-                onClick={handleQueueSong}
-                className="h-12 w-80"
-                style={{ width: '320px' }}
-              >
-                <IonIcon icon={people} slot="start" />
-                Queue Song
-              </IonButton>
+              {!isInQueue && (
+                <IonButton 
+                  fill="solid" 
+                  color="primary"
+                  onClick={handleQueueSong}
+                  className="h-12 w-80"
+                  style={{ width: '320px' }}
+                >
+                  <IonIcon icon={people} slot="start" />
+                  Queue Song
+                </IonButton>
+              )}
 
               {/* Artist Songs Button */}
               <IonButton 

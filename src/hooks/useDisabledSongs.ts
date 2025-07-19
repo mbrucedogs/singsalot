@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from 'react';
 import { disabledSongsService } from '../firebase/services';
 import { useAppSelector } from '../redux';
 import { selectControllerName } from '../redux';
-import { debugLog } from '../utils/logger';
 import { useToast } from './useToast';
 import type { Song, DisabledSong } from '../types';
 
@@ -39,8 +38,21 @@ export const useDisabledSongs = () => {
     const unsubscribe = disabledSongsService.subscribeToDisabledSongs(
       controllerName,
       (songs) => {
-        setDisabledSongs(songs);
-        setDisabledSongPaths(new Set(Object.keys(songs).map(key => decodeURIComponent(key))));
+        // Only update if the data has actually changed
+        setDisabledSongs(prevSongs => {
+          if (JSON.stringify(prevSongs) !== JSON.stringify(songs)) {
+            return songs;
+          }
+          return prevSongs;
+        });
+        
+        setDisabledSongPaths(prevPaths => {
+          const newPaths = new Set(Object.values(songs).map((song: DisabledSong) => song.path));
+          if (JSON.stringify(Array.from(prevPaths)) !== JSON.stringify(Array.from(newPaths))) {
+            return newPaths;
+          }
+          return prevPaths;
+        });
       }
     );
 
@@ -49,7 +61,8 @@ export const useDisabledSongs = () => {
 
   // Check if a song is disabled
   const isSongDisabled = useCallback((song: Song): boolean => {
-    return disabledSongPaths.has(song.path);
+    const isDisabled = disabledSongPaths.has(song.path);
+    return isDisabled;
   }, [disabledSongPaths]);
 
   // Add a song to disabled list
@@ -67,7 +80,6 @@ export const useDisabledSongs = () => {
     }
 
     try {
-      debugLog('Adding disabled song:', { controllerName, song });
       await disabledSongsService.addDisabledSong(controllerName, song);
       showSuccess('Song marked as disabled');
     } catch (error) {

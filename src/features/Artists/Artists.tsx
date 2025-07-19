@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { IonSearchbar, IonItem, IonModal, IonHeader, IonToolbar, IonTitle, IonButton, IonIcon, IonContent } from '@ionic/react';
+import { IonSearchbar, IonModal, IonHeader, IonToolbar, IonTitle, IonButton, IonIcon, IonContent } from '@ionic/react';
 import { close, list } from 'ionicons/icons';
-import { InfiniteScrollList, SongItem, TwoLineDisplay } from '../../components/common';
+import { InfiniteScrollList, SongItem, ListItem } from '../../components/common';
 import { useArtists } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectSongs } from '../../redux';
@@ -42,13 +42,12 @@ const Artists: React.FC = () => {
 
   // Render artist item for InfiniteScrollList
   const renderArtistItem = (artist: string) => (
-    <IonItem button onClick={() => handleArtistClick(artist)} detail={false} style={{ '--min-height': '60px' }}>
-      <TwoLineDisplay
-        primaryText={artist}
-        secondaryText={`${getSongCountByArtist(artist)} song${getSongCountByArtist(artist) !== 1 ? 's' : ''}`}
-      />
-      <IonIcon icon={list} slot="end" color="primary" />
-    </IonItem>
+    <ListItem
+      primaryText={artist}
+      secondaryText={`${getSongCountByArtist(artist)} song${getSongCountByArtist(artist) !== 1 ? 's' : ''}`}
+      icon={list}
+      onClick={() => handleArtistClick(artist)}
+    />
   );
 
   return (

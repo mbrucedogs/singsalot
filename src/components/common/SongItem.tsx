@@ -35,7 +35,8 @@ export const SongInfoDisplay: React.FC<{
         style={{ 
           fontWeight: 'bold', 
           fontSize: '1rem', 
-          color: 'black'
+          color: 'var(--ion-color-dark)',
+          marginBottom: '4px'
         }}
       >
         {song.title}
@@ -45,7 +46,8 @@ export const SongInfoDisplay: React.FC<{
         style={{ 
           fontSize: '0.875rem', 
           fontStyle: 'italic', 
-          color: '#6b7280'
+          color: 'var(--ion-color-medium)',
+          marginBottom: '4px'
         }}
       >
         {song.artist}
@@ -56,7 +58,7 @@ export const SongInfoDisplay: React.FC<{
           className="ion-text-sm ion-color-medium"
           style={{ 
             fontSize: '0.75rem', 
-            color: '#9ca3af'
+            color: 'var(--ion-color-medium)'
           }}
         >
           {extractFilename(song.path)}
@@ -68,7 +70,7 @@ export const SongInfoDisplay: React.FC<{
           className="ion-text-sm ion-color-medium"
           style={{ 
             fontSize: '0.75rem', 
-            color: '#9ca3af'
+            color: 'var(--ion-color-medium)'
           }}
         >
           Played {song.count} times

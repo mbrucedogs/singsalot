@@ -44,6 +44,28 @@ ion-item.ion-activated {
   --color: var(--ion-color-primary-contrast);
 }
 
+/* List item press states for Artists, Top100, SongLists */
+ion-item.artist-item.ion-activated,
+ion-item.top100-item.ion-activated,
+ion-item.songlist-item.ion-activated,
+ion-item.list-item.ion-activated {
+  --background: rgba(var(--ion-color-primary-rgb), 0.1);
+  --color: var(--ion-color-dark);
+}
+
+ion-item.artist-item.ion-focused,
+ion-item.top100-item.ion-focused,
+ion-item.songlist-item.ion-focused,
+ion-item.list-item.ion-focused {
+  --background: rgba(var(--ion-color-primary-rgb), 0.05);
+  --color: var(--ion-color-dark);
+}
+
+/* Ensure icons remain visible during press states */
+ion-item.ion-activated ion-icon {
+  color: var(--ion-color-primary) !important;
+}
+
 /* Ensure mobile menu appears above other content */
 ion-menu {
   --z-index: 1000;

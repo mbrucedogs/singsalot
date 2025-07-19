@@ -16,8 +16,8 @@ interface TwoLineDisplayProps {
 export const TwoLineDisplay: React.FC<TwoLineDisplayProps> = ({
   primaryText,
   secondaryText,
-  primaryColor = 'black',
-  secondaryColor = '#6b7280',
+  primaryColor = 'var(--ion-color-dark)',
+  secondaryColor = 'var(--ion-color-medium)',
   primarySize = '1rem',
   secondarySize = '0.875rem'
 }) => {
@@ -30,7 +30,8 @@ export const TwoLineDisplay: React.FC<TwoLineDisplayProps> = ({
           fontWeight: 'bold', 
           fontSize: primarySize, 
           color: primaryColor,
-          lineHeight: '1.5'
+          lineHeight: '1.5',
+          marginBottom: '4px'
         }}
       >
         {primaryText}

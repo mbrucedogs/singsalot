@@ -108,27 +108,23 @@ const SongLists: React.FC = () => {
                   // Available songs get an accordion that expands
                   return (
                     <IonAccordion key={songKey} value={songKey}>
-                      <IonItem 
-                        slot="header" 
-                        detail={false} 
-                        button 
-                        onClick={() => handleSongItemClick(songKey)}
+                      <ListItem
+                        primaryText={songListSong.title}
+                        secondaryText={songListSong.artist}
+                        showNumber={true}
+                        number={index + 1}
+                        slot="header"
+                        detail={false}
+                        button={true}
                         className="list-item"
-                        style={{ '--min-height': '60px' }}
-                      >
-                        {/* Number */}
-                        <NumberDisplay number={index + 1} />
-
-                        {/* Use TwoLineDisplay for consistent formatting */}
-                        <TwoLineDisplay
-                          primaryText={songListSong.title}
-                          secondaryText={songListSong.artist}
-                        />
-
-                        <IonChip slot="end" color="primary">
-                          {availableSongs.length} version{availableSongs.length !== 1 ? 's' : ''}
-                        </IonChip>
-                      </IonItem>
+                        style={{ '--min-height': '60px' } as React.CSSProperties}
+                        onClick={() => handleSongItemClick(songKey)}
+                        endContent={
+                          <IonChip color="primary">
+                            {availableSongs.length} version{availableSongs.length !== 1 ? 's' : ''}
+                          </IonChip>
+                        }
+                      />
 
                       <div slot="content" className="bg-gray-50 border-l-4 border-primary">
                         <IonList>

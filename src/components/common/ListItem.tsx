@@ -16,6 +16,11 @@ interface ListItemProps {
   chip?: string;
   chipColor?: string;
   disabled?: boolean;
+  // Additional IonItem props that can be passed through
+  slot?: string;
+  detail?: boolean;
+  button?: boolean;
+  style?: React.CSSProperties;
 }
 
 export const ListItem: React.FC<ListItemProps> = ({
@@ -30,7 +35,11 @@ export const ListItem: React.FC<ListItemProps> = ({
   endContent,
   chip,
   chipColor = 'primary',
-  disabled = false
+  disabled = false,
+  slot,
+  detail = false,
+  button,
+  style
 }) => {
   const itemClassName = `list-item ${className}`.trim();
   
@@ -53,11 +62,12 @@ export const ListItem: React.FC<ListItemProps> = ({
   
   return (
     <IonItem 
-      button={!!onClick && !disabled}
+      button={button !== undefined ? button : (!!onClick && !disabled)}
       onClick={onClick}
-      detail={false}
+      detail={detail}
       className={itemClassName}
-      style={{ '--min-height': '60px' }}
+      style={{ '--min-height': '60px', ...style }}
+      slot={slot}
     >
       {/* Number (if enabled) */}
       {showNumber && (

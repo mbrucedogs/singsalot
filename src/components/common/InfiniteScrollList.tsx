@@ -12,6 +12,7 @@ interface InfiniteScrollListProps<T> {
   emptyMessage: string;
   loadingTitle?: string;
   loadingMessage?: string;
+  showItemCount?: boolean;
 }
 
 const InfiniteScrollList = <T extends string | { key?: string }>({
@@ -24,6 +25,7 @@ const InfiniteScrollList = <T extends string | { key?: string }>({
   emptyMessage,
   loadingTitle = "Loading...",
   loadingMessage = "Please wait while data is being loaded",
+  showItemCount = true,
 }: InfiniteScrollListProps<T>) => {
   const observerRef = useRef<HTMLDivElement>(null);
 
@@ -114,7 +116,7 @@ const InfiniteScrollList = <T extends string | { key?: string }>({
       </div>
 
       {/* Stats */}
-      {items.length > 0 && (
+      {items.length > 0 && showItemCount && (
         <div style={{ marginTop: '16px', marginBottom: '20px' }} className="text-sm text-gray-500 text-center">
           Showing {items.length} item{items.length !== 1 ? 's' : ''}
           {hasMore && ` • Scroll down to load more`}

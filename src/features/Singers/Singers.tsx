@@ -44,17 +44,25 @@ const Singers: React.FC = () => {
   debugLog('Singers component - singers:', singers);
 
   // Render singer item for InfiniteScrollList
-  const renderSingerItem = (singer: Singer) => (
-    <IonItem detail={false}>
+  const renderSingerItem = (singer: Singer, index: number) => (
+    <IonItem detail={false} style={{ '--padding-start': '0px', '--min-height': '60px' }}>
+      {/* Order Number */}
+      <div slot="start" className="ion-text-center" style={{ marginLeft: '-8px', marginRight: '12px' }}>
+        <div className="ion-text-bold ion-color-medium" style={{ fontSize: '1rem', minWidth: '2rem' }}>
+          {index + 1}
+        </div>
+      </div>
+
+      {/* Singer Name */}
       <IonLabel>
-        <h3 className="text-sm font-medium text-gray-900">
+        <div className="ion-text-bold ion-color-primary" style={{ lineHeight: '1.5', fontSize: '1rem' }}>
           {singer.name}
-        </h3>
+        </div>
       </IonLabel>
 
       {/* Delete Button (Admin Only) */}
       {isAdmin && (
-        <div slot="end" className="flex items-center gap-2 ml-2">
+        <div slot="end" style={{ marginRight: '-16px' }}>
           <div onClick={(e) => e.stopPropagation()}>
             <ActionButton
               onClick={() => handleRemoveSinger(singer)}
@@ -71,19 +79,18 @@ const Singers: React.FC = () => {
 
   return (
     <>
-      <div className="flex justify-end items-center mb-4 pr-4 right-button-container">
+      <div className="ion-padding ion-text-end">
         {isAdmin && (
           <IonButton 
             fill="clear" 
             onClick={handleOpenAddModal}
-            className="text-primary"
           >
             <IonIcon icon={add} slot="icon-only" size="large" />
           </IonButton>
         )}
       </div>
 
-      <div className="max-w-4xl mx-auto p-6">
+      <div className="ion-padding">
         <InfiniteScrollList<Singer>
           items={singers}
           isLoading={singersCount === 0}
@@ -94,6 +101,7 @@ const Singers: React.FC = () => {
           emptyMessage="Singers will appear here when they join the party"
           loadingTitle="Loading singers..."
           loadingMessage="Please wait while singers data is being loaded"
+          showItemCount={false}
         />
       </div>
 

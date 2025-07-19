@@ -1,10 +1,10 @@
 import React, { useState, useMemo, useCallback } from 'react';
-import { IonItem, IonLabel, IonChip, IonModal, IonHeader, IonToolbar, IonTitle, IonButton, IonIcon, IonContent, IonList } from '@ionic/react';
+import { IonItem, IonChip, IonModal, IonHeader, IonToolbar, IonTitle, IonButton, IonIcon, IonContent, IonList } from '@ionic/react';
 import { close, list } from 'ionicons/icons';
 import { useTopPlayed } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectTopPlayed, selectSongsArray } from '../../redux';
-import { InfiniteScrollList, SongItem } from '../../components/common';
+import { InfiniteScrollList, SongItem, TwoLineDisplay } from '../../components/common';
 import { filterSongs } from '../../utils/dataProcessing';
 import { debugLog } from '../../utils/logger';
 import { useSongOperations } from '../../hooks';
@@ -108,20 +108,19 @@ const Top100: React.FC = () => {
             button 
             onClick={() => handleTopPlayedClick(item)} 
             detail={false}
+            style={{ '--min-height': '60px' }}
           >
             {/* Number */}
-            <div slot="start" className="flex-shrink-0 w-12 h-12 flex items-center justify-center text-gray-600 font-medium">
-              {index + 1})
+            <div slot="start" className="ion-text-center" style={{ marginLeft: '-8px', marginRight: '12px' }}>
+              <div className="ion-text-bold ion-color-medium" style={{ fontSize: '1rem', minWidth: '2rem' }}>
+                {index + 1}
+              </div>
             </div>
 
-            <IonLabel>
-              <h3 className="text-sm font-medium text-gray-900">
-                {item.title}
-              </h3>
-              <p className="text-sm text-gray-500">
-                {item.artist}
-              </p>
-            </IonLabel>
+            <TwoLineDisplay
+              primaryText={item.title}
+              secondaryText={item.artist}
+            />
 
             <IonChip slot="end" color="primary">
               {item.count} plays

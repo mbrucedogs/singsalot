@@ -13,7 +13,7 @@ import { useDisabledSongs } from '../../hooks/useDisabledSongs';
 import { useSelectSinger } from '../../hooks/useSelectSinger';
 import { useToast } from '../../hooks/useToast';
 import SelectSinger from './SelectSinger';
-import SongItem from './SongItem';
+import { SongInfoDisplay } from './SongItem';
 import type { Song } from '../../types';
 
 interface SongInfoProps {
@@ -96,17 +96,15 @@ const SongInfo: React.FC<SongInfoProps> = ({ isOpen, onClose, song }) => {
         
         <IonContent>
           <div className="p-4">
-            {/* Song Information using SongItem component */}
+            {/* Song Information using SongInfoDisplay component */}
             <div className="mb-6">
-              <SongItem
-                song={song}
-                context="queue" // This context doesn't show any buttons
-                isAdmin={isAdmin}
-                showActions={false}
-                showPath={false}
-                showCount={false}
-                className="border-b border-gray-200 dark:border-gray-700"
-              />
+              <div style={{ padding: '16px', marginBottom: '20px' }}>
+                <SongInfoDisplay
+                  song={song}
+                  showPath={true}
+                  showCount={false}
+                />
+              </div>
             </div>
 
             {/* Action Buttons */}

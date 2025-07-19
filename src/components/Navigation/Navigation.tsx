@@ -128,7 +128,7 @@ const Navigation: React.FC = () => {
         
         {/* Player Controls */}
         <div style={{ marginTop: 'auto', padding: '16px' }}>
-          <PlayerControls />
+          <PlayerControls variant="dark" />
         </div>
       </div>
     );
@@ -184,7 +184,7 @@ const Navigation: React.FC = () => {
         
         {/* Player Controls for Mobile */}
         <div style={{ padding: '16px' }}>
-          <PlayerControls />
+          <PlayerControls variant="dark" />
         </div>
       </IonContent>
     </IonMenu>

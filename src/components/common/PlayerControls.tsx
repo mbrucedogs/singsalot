@@ -1,6 +1,6 @@
 import React from 'react';
 import { IonCard, IonCardContent, IonChip, IonIcon } from '@ionic/react';
-import { play, pause, stop, settingsOutline, pauseOutline, playOutline, stopOutline } from 'ionicons/icons';
+import { play, pause, stop, pauseOutline, playOutline, stopOutline } from 'ionicons/icons';
 import ActionButton from './ActionButton';
 import { useAppSelector } from '../../redux';
 import { selectPlayerState, selectIsAdmin, selectQueueLength, selectControllerName } from '../../redux';

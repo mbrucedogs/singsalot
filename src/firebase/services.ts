@@ -364,7 +364,15 @@ export const disabledSongsService = {
     };
     
     debugLog('Saving disabled song:', disabledSong);
-    await set(disabledSongRef, disabledSong);
+    
+    // Add timeout to prevent hanging
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error('Operation timed out')), 10000);
+    });
+    
+    const savePromise = set(disabledSongRef, disabledSong);
+    
+    await Promise.race([savePromise, timeoutPromise]);
     debugLog('Disabled song saved successfully');
   },
 
@@ -372,7 +380,15 @@ export const disabledSongsService = {
   removeDisabledSong: async (controllerName: string, songPath: string) => {
     const songKey = disabledSongsService.generateSongKey(songPath);
     const disabledSongRef = ref(database, `controllers/${controllerName}/disabledSongs/${songKey}`);
-    await remove(disabledSongRef);
+    
+    // Add timeout to prevent hanging
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error('Operation timed out')), 10000);
+    });
+    
+    const removePromise = remove(disabledSongRef);
+    
+    await Promise.race([removePromise, timeoutPromise]);
   },
 
   // Check if a song is disabled

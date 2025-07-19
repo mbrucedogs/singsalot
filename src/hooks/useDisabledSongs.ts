@@ -38,21 +38,12 @@ export const useDisabledSongs = () => {
     const unsubscribe = disabledSongsService.subscribeToDisabledSongs(
       controllerName,
       (songs) => {
-        // Only update if the data has actually changed
-        setDisabledSongs(prevSongs => {
-          if (JSON.stringify(prevSongs) !== JSON.stringify(songs)) {
-            return songs;
-          }
-          return prevSongs;
-        });
-        
-        setDisabledSongPaths(prevPaths => {
-          const newPaths = new Set(Object.values(songs).map((song: DisabledSong) => song.path));
-          if (JSON.stringify(Array.from(prevPaths)) !== JSON.stringify(Array.from(newPaths))) {
-            return newPaths;
-          }
-          return prevPaths;
-        });
+        try {
+          setDisabledSongs(songs);
+          setDisabledSongPaths(new Set(Object.values(songs).map((song: DisabledSong) => song.path)));
+        } catch (error) {
+          console.error('Error updating disabled songs state:', error);
+        }
       }
     );
 

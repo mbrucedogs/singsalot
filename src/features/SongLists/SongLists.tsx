@@ -140,6 +140,12 @@ const SongLists: React.FC = () => {
                   );
                 } else {
                   // Unavailable songs get a simple item
+                  console.log('Non-accordion item:', {
+                    title: songListSong.title,
+                    artist: songListSong.artist,
+                    index: index + 1
+                  });
+                  
                   return (
                     <IonItem 
                       key={songKey}
@@ -154,7 +160,7 @@ const SongLists: React.FC = () => {
                         primaryText={songListSong.title}
                         secondaryText={songListSong.artist}
                         primaryColor="var(--ion-color-medium)"
-                        secondaryColor="var(--ion-color-light)"
+                        secondaryColor="var(--ion-color-medium)"
                       />
                     </IonItem>
                   );

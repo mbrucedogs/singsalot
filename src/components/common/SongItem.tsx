@@ -4,6 +4,7 @@ import { add, heart, heartOutline, trash, informationCircle } from 'ionicons/ico
 import ActionButton from './ActionButton';
 import { useAppSelector } from '../../redux';
 import { selectQueue, selectFavorites } from '../../redux';
+import { debugLog } from '../../utils/logger';
 import type { SongItemProps, QueueItem, Song } from '../../types';
 
 // Utility function to extract filename from path
@@ -218,7 +219,7 @@ const SongItem: React.FC<SongItemProps> = ({
   const isInFavorites = (Object.values(favorites) as Song[]).some(favSong => favSong.path === song.path);
 
   // Debug logging for favorites
-  console.log('SongItem render:', {
+  debugLog('SongItem render:', {
     songTitle: song.title,
     songPath: song.path,
     favoritesCount: Object.keys(favorites).length,

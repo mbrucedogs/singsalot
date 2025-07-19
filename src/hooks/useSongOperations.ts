@@ -2,9 +2,10 @@ import { useCallback } from 'react';
 import { useAppSelector } from '../redux';
 import { selectControllerName, selectCurrentSinger, selectQueueObject } from '../redux';
 import { queueService, favoritesService } from '../firebase/services';
-import type { Song, QueueItem } from '../types';
 import { ref, get } from 'firebase/database';
 import { database } from '../firebase/config';
+import { debugLog } from '../utils/logger';
+import type { Song, QueueItem } from '../types';
 
 export const useSongOperations = () => {
   const controllerName = useAppSelector(selectControllerName);
@@ -59,14 +60,14 @@ export const useSongOperations = () => {
     }
 
     try {
-      console.log('toggleFavorite called for song:', song.title, song.path);
+      debugLog('toggleFavorite called for song:', song.title, song.path);
       
       // Check if the song is currently in favorites by looking it up
       const favoritesRef = ref(database, `controllers/${controllerName}/favorites`);
       const snapshot = await get(favoritesRef);
       const favorites = snapshot.exists() ? snapshot.val() : {};
       
-      console.log('Current favorites:', favorites);
+      debugLog('Current favorites:', favorites);
       
       // Find if this song is already in favorites by matching the path
       const existingFavoriteKey = Object.keys(favorites).find(key => {
@@ -74,19 +75,19 @@ export const useSongOperations = () => {
         return favoriteSong && favoriteSong.path === song.path;
       });
 
-      console.log('Existing favorite key:', existingFavoriteKey);
+      debugLog('Existing favorite key:', existingFavoriteKey);
 
       if (existingFavoriteKey) {
         // Remove from favorites
-        console.log('Removing from favorites');
+        debugLog('Removing from favorites');
         await favoritesService.removeFromFavorites(controllerName, existingFavoriteKey);
       } else {
         // Add to favorites
-        console.log('Adding to favorites');
+        debugLog('Adding to favorites');
         await favoritesService.addToFavorites(controllerName, song);
       }
       
-      console.log('toggleFavorite completed');
+      debugLog('toggleFavorite completed');
     } catch (error) {
       console.error('Failed to toggle favorite:', error);
       throw error;

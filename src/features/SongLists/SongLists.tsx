@@ -86,8 +86,8 @@ const SongLists: React.FC = () => {
         <IonModal 
           isOpen={!!finalSelectedList} 
           onDidDismiss={handleCloseSongList}
-          breakpoints={[0, 0.5, 0.8]}
-          initialBreakpoint={0.8}
+          breakpoints={[0, 0.5, 0.8, 1.0]}
+          initialBreakpoint={1.0}
         >
           <IonHeader>
             <IonToolbar>

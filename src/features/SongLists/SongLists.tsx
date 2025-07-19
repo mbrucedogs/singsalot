@@ -108,7 +108,14 @@ const SongLists: React.FC = () => {
                   // Available songs get an accordion that expands
                   return (
                     <IonAccordion key={songKey} value={songKey}>
-                      <IonItem slot="header" detail={false} button onClick={() => handleSongItemClick(songKey)}>
+                      <IonItem 
+                        slot="header" 
+                        detail={false} 
+                        button 
+                        onClick={() => handleSongItemClick(songKey)}
+                        className="list-item"
+                        style={{ '--min-height': '60px' }}
+                      >
                         {/* Number */}
                         <NumberDisplay number={index + 1} />
 
@@ -118,7 +125,7 @@ const SongLists: React.FC = () => {
                           secondaryText={songListSong.artist}
                         />
 
-                        <IonChip slot="end" color="success">
+                        <IonChip slot="end" color="primary">
                           {availableSongs.length} version{availableSongs.length !== 1 ? 's' : ''}
                         </IonChip>
                       </IonItem>

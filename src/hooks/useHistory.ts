@@ -12,21 +12,38 @@ export const useHistory = () => {
   const allHistoryItems = useAppSelector(selectHistoryArray);
   const { addToQueue, toggleFavorite } = useSongOperations();
   const { showSuccess, showError } = useToast();
-  const { filterDisabledSongs, isSongDisabled, addDisabledSong, removeDisabledSong } = useDisabledSongs();
+  const { disabledSongPaths, isSongDisabled, addDisabledSong, removeDisabledSong, loading: disabledSongsLoading } = useDisabledSongs();
   
   const [currentPage, setCurrentPage] = useState(1);
 
   // Filter out disabled songs and paginate
   const historyItems = useMemo(() => {
-    const filteredItems = filterDisabledSongs(allHistoryItems);
+    // Don't return any results if disabled songs are still loading
+    if (disabledSongsLoading) {
+      debugLog('useHistory - disabled songs still loading, returning empty array');
+      return [];
+    }
+
+    // Filter out disabled songs first
+    const filteredItems = allHistoryItems.filter(song => !disabledSongPaths.has(song.path));
     const endIndex = currentPage * ITEMS_PER_PAGE;
+    
+    debugLog('useHistory - filtering history:', {
+      totalHistory: allHistoryItems.length,
+      afterDisabledFilter: filteredItems.length,
+      currentPage,
+      endIndex
+    });
+    
     return filteredItems.slice(0, endIndex);
-  }, [allHistoryItems, currentPage, filterDisabledSongs]);
+  }, [allHistoryItems, currentPage, disabledSongPaths, disabledSongsLoading]);
 
   const hasMore = useMemo(() => {
-    const filteredItems = filterDisabledSongs(allHistoryItems);
+    if (disabledSongsLoading) return false;
+    
+    const filteredItems = allHistoryItems.filter(song => !disabledSongPaths.has(song.path));
     return filteredItems.length > ITEMS_PER_PAGE && historyItems.length < filteredItems.length;
-  }, [historyItems.length, allHistoryItems.length, filterDisabledSongs]);
+  }, [historyItems.length, allHistoryItems, disabledSongPaths, disabledSongsLoading]);
 
   const loadMore = useCallback(() => {
     debugLog('useHistory - loadMore called:', { hasMore, currentPage, allHistoryItemsLength: allHistoryItems.length });

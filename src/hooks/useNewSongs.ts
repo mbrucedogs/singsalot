@@ -12,21 +12,38 @@ export const useNewSongs = () => {
   const allNewSongsItems = useAppSelector(selectNewSongsArray);
   const { addToQueue, toggleFavorite } = useSongOperations();
   const { showSuccess, showError } = useToast();
-  const { filterDisabledSongs, isSongDisabled, addDisabledSong, removeDisabledSong } = useDisabledSongs();
+  const { disabledSongPaths, isSongDisabled, addDisabledSong, removeDisabledSong, loading: disabledSongsLoading } = useDisabledSongs();
   
   const [currentPage, setCurrentPage] = useState(1);
 
   // Filter out disabled songs and paginate
   const newSongsItems = useMemo(() => {
-    const filteredItems = filterDisabledSongs(allNewSongsItems);
+    // Don't return any results if disabled songs are still loading
+    if (disabledSongsLoading) {
+      debugLog('useNewSongs - disabled songs still loading, returning empty array');
+      return [];
+    }
+
+    // Filter out disabled songs first
+    const filteredItems = allNewSongsItems.filter(song => !disabledSongPaths.has(song.path));
     const endIndex = currentPage * ITEMS_PER_PAGE;
+    
+    debugLog('useNewSongs - filtering new songs:', {
+      totalNewSongs: allNewSongsItems.length,
+      afterDisabledFilter: filteredItems.length,
+      currentPage,
+      endIndex
+    });
+    
     return filteredItems.slice(0, endIndex);
-  }, [allNewSongsItems, currentPage, filterDisabledSongs]);
+  }, [allNewSongsItems, currentPage, disabledSongPaths, disabledSongsLoading]);
 
   const hasMore = useMemo(() => {
-    const filteredItems = filterDisabledSongs(allNewSongsItems);
+    if (disabledSongsLoading) return false;
+    
+    const filteredItems = allNewSongsItems.filter(song => !disabledSongPaths.has(song.path));
     return filteredItems.length > ITEMS_PER_PAGE && newSongsItems.length < filteredItems.length;
-  }, [newSongsItems.length, allNewSongsItems.length, filterDisabledSongs]);
+  }, [newSongsItems.length, allNewSongsItems, disabledSongPaths, disabledSongsLoading]);
 
   const loadMore = useCallback(() => {
     debugLog('useNewSongs - loadMore called:', { hasMore, currentPage, allNewSongsItemsLength: allNewSongsItems.length });

@@ -12,21 +12,38 @@ export const useFavorites = () => {
   const allFavoritesItems = useAppSelector(selectFavoritesArray);
   const { addToQueue, toggleFavorite } = useSongOperations();
   const { showSuccess, showError } = useToast();
-  const { filterDisabledSongs, isSongDisabled, addDisabledSong, removeDisabledSong } = useDisabledSongs();
+  const { disabledSongPaths, isSongDisabled, addDisabledSong, removeDisabledSong, loading: disabledSongsLoading } = useDisabledSongs();
   
   const [currentPage, setCurrentPage] = useState(1);
 
   // Filter out disabled songs and paginate
   const favoritesItems = useMemo(() => {
-    const filteredItems = filterDisabledSongs(allFavoritesItems);
+    // Don't return any results if disabled songs are still loading
+    if (disabledSongsLoading) {
+      debugLog('useFavorites - disabled songs still loading, returning empty array');
+      return [];
+    }
+
+    // Filter out disabled songs first
+    const filteredItems = allFavoritesItems.filter(song => !disabledSongPaths.has(song.path));
     const endIndex = currentPage * ITEMS_PER_PAGE;
+    
+    debugLog('useFavorites - filtering favorites:', {
+      totalFavorites: allFavoritesItems.length,
+      afterDisabledFilter: filteredItems.length,
+      currentPage,
+      endIndex
+    });
+    
     return filteredItems.slice(0, endIndex);
-  }, [allFavoritesItems, currentPage, filterDisabledSongs]);
+  }, [allFavoritesItems, currentPage, disabledSongPaths, disabledSongsLoading]);
 
   const hasMore = useMemo(() => {
-    const filteredItems = filterDisabledSongs(allFavoritesItems);
+    if (disabledSongsLoading) return false;
+    
+    const filteredItems = allFavoritesItems.filter(song => !disabledSongPaths.has(song.path));
     return filteredItems.length > ITEMS_PER_PAGE && favoritesItems.length < filteredItems.length;
-  }, [favoritesItems.length, allFavoritesItems.length, filterDisabledSongs]);
+  }, [favoritesItems.length, allFavoritesItems, disabledSongPaths, disabledSongsLoading]);
 
   const loadMore = useCallback(() => {
     debugLog('useFavorites - loadMore called:', { hasMore, currentPage, allFavoritesItemsLength: allFavoritesItems.length });

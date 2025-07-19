@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { IonItem, IonLabel, IonModal, IonHeader, IonToolbar, IonTitle, IonButton, IonIcon, IonChip, IonContent, IonList, IonAccordionGroup, IonAccordion } from '@ionic/react';
 import { close, list } from 'ionicons/icons';
-import { InfiniteScrollList, SongItem } from '../../components/common';
+import { InfiniteScrollList, SongItem, ListItem } from '../../components/common';
 import { useSongLists } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectSongList } from '../../redux';
@@ -58,17 +58,12 @@ const SongLists: React.FC = () => {
 
   // Render song list item for InfiniteScrollList
   const renderSongListItem = (songList: SongList) => (
-    <IonItem button onClick={() => handleSongListClick(songList.key!)} detail={false}>
-      <IonLabel>
-        <div className="text-sm font-medium text-gray-900">
-          {songList.title}
-        </div>
-        <div className="text-sm text-gray-500">
-          {songList.songs.length} song{songList.songs.length !== 1 ? 's' : ''}
-        </div>
-      </IonLabel>
-      <IonIcon icon={list} slot="end" color="primary" />
-    </IonItem>
+    <ListItem 
+      primaryText={songList.title}
+      secondaryText={`${songList.songs.length} song${songList.songs.length !== 1 ? 's' : ''}`}
+      icon={list}
+      onClick={() => handleSongListClick(songList.key!)}
+    />
   );
 
   return (

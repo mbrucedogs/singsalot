@@ -17,6 +17,8 @@ const extractFilename = (path: string): string => {
 };
 
 // Song Information Display Component
+// NOTE: The first two lines (title and artist) should match the styling of TwoLineDisplay component
+// If you change the styling here, also update TwoLineDisplay to keep them in sync
 export const SongInfoDisplay: React.FC<{ 
   song: Song; 
   showPath?: boolean;

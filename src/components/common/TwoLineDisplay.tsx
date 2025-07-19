@@ -10,6 +10,9 @@ interface TwoLineDisplayProps {
   secondarySize?: string;
 }
 
+// Two Line Display Component
+// NOTE: This component should match the styling of the first two lines (title and artist) in SongInfoDisplay
+// If you change the styling here, also update SongInfoDisplay to keep them in sync
 export const TwoLineDisplay: React.FC<TwoLineDisplayProps> = ({
   primaryText,
   secondaryText,

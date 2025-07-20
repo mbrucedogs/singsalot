@@ -53,7 +53,8 @@ const History: React.FC = () => {
                 song={song}
                 context="history"
                 onAddToQueue={() => handleAddToQueue(song)}
-                onDelete={() => handleDeleteFromHistory(song)}
+                onSelectSinger={() => {}} // Info button functionality
+                onDeleteItem={() => handleDeleteFromHistory(song)}
                 isAdmin={isAdmin}
                 showAddButton={true}
                 showInfoButton={true}

@@ -47,8 +47,9 @@ const Favorites: React.FC = () => {
             context="favorites"
             showInfoButton={true}
             showAddButton={false}
+            showDeleteButton={true}
             onSelectSinger={() => handleSongInfo(song)}
-            onDelete={() => handleToggleFavorite(song)}
+            onDeleteItem={() => handleToggleFavorite(song)}
           />
         )}
         emptyTitle="No favorites yet"

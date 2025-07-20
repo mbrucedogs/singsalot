@@ -132,7 +132,7 @@ export interface SongItemProps {
   onAddToQueue?: () => void;
   onRemoveFromQueue?: () => void;
   onToggleFavorite?: () => void;
-  onDelete?: () => void;
+  onDeleteItem?: () => void;
   onSelectSinger?: () => void;
   isAdmin?: boolean;
   className?: string;

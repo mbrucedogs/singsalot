@@ -94,7 +94,7 @@ export const SongActionButtons: React.FC<{
   onAddToQueue?: () => void;
   onRemoveFromQueue?: () => void;
   onToggleFavorite?: () => void;
-  onDelete?: () => void;
+  onDeleteItem?: () => void;
   onSelectSinger?: () => void;
 }> = ({
   isAdmin,
@@ -108,7 +108,7 @@ export const SongActionButtons: React.FC<{
   onAddToQueue,
   onRemoveFromQueue,
   onToggleFavorite,
-  onDelete,
+  onDeleteItem,
   onSelectSinger
 }) => {
   const buttons = [];
@@ -155,12 +155,12 @@ export const SongActionButtons: React.FC<{
     );
   }
 
-  // Delete from Favorites button
-  if (showDeleteButton && onDelete) {
+  // Delete button (generic - can be used for favorites, history, etc.)
+  if (showDeleteButton && onDeleteItem) {
     buttons.push(
       <ActionButton
         key="delete"
-        onClick={onDelete}
+        onClick={onDeleteItem}
         variant="danger"
         size="sm"
       >
@@ -197,7 +197,7 @@ const SongItem: React.FC<SongItemProps> = ({
   onAddToQueue,
   onRemoveFromQueue,
   onToggleFavorite,
-  onDelete,
+  onDeleteItem,
   onSelectSinger,
   isAdmin = false,
   className = '',
@@ -260,7 +260,7 @@ const SongItem: React.FC<SongItemProps> = ({
             onAddToQueue={onAddToQueue}
             onRemoveFromQueue={onRemoveFromQueue}
             onToggleFavorite={onToggleFavorite}
-            onDelete={onDelete}
+            onDeleteItem={onDeleteItem}
             onSelectSinger={onSelectSinger}
           />
         </div>

@@ -17,7 +17,6 @@ const Artists: React.FC = () => {
     getSongsByArtist,
     getSongCountByArtist,
     handleAddToQueue,
-    handleToggleFavorite,
   } = useArtists();
 
   const songs = useAppSelector(selectSongs);
@@ -136,7 +135,10 @@ const Artists: React.FC = () => {
                           song={song}
                           context="search"
                           onAddToQueue={() => handleAddToQueue(song)}
-                          onToggleFavorite={() => handleToggleFavorite(song)}
+                          onSelectSinger={() => {}} // Info button functionality
+                          showAddButton={true}
+                          showInfoButton={true}
+                          showFavoriteButton={false}
                         />
                       </div>
                     </div>

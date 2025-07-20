@@ -24,7 +24,7 @@ const Top100: React.FC = () => {
   const topPlayed = useAppSelector(selectTopPlayed);
   const topPlayedCount = Object.keys(topPlayed).length;
   const allSongs = useAppSelector(selectSongsArray);
-  const { addToQueue, toggleFavorite } = useSongOperations();
+  const { addToQueue } = useSongOperations();
   const { showSuccess, showError } = useToast();
   const [selectedTopPlayed, setSelectedTopPlayed] = useState<TopPlayed | null>(null);
 
@@ -70,14 +70,7 @@ const Top100: React.FC = () => {
     }
   }, [addToQueue, showSuccess, showError]);
 
-  const handleToggleFavorite = useCallback(async (song: Song) => {
-    try {
-      await toggleFavorite(song);
-      showSuccess(song.favorite ? 'Removed from favorites' : 'Added to favorites');
-    } catch {
-      showError('Failed to update favorites');
-    }
-  }, [toggleFavorite, showSuccess, showError]);
+
 
   // Use real Firebase data from the hook
   const displayItems = topPlayedItems;
@@ -148,7 +141,10 @@ const Top100: React.FC = () => {
                 song={song}
                 context="search"
                 onAddToQueue={() => handleAddToQueue(song)}
-                onToggleFavorite={() => handleToggleFavorite(song)}
+                onSelectSinger={() => {}} // Info button functionality
+                showAddButton={true}
+                showInfoButton={true}
+                showFavoriteButton={false}
               />
             ))}
           </IonList>

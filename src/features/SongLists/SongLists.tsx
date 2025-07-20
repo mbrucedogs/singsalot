@@ -16,7 +16,6 @@ const SongLists: React.FC = () => {
     loadMore,
     checkSongAvailability,
     handleAddToQueue,
-    handleToggleFavorite,
   } = useSongLists();
 
   const songListData = useAppSelector(selectSongList);
@@ -133,7 +132,10 @@ const SongLists: React.FC = () => {
                               song={song}
                               context="search"
                               onAddToQueue={() => handleAddToQueue(song)}
-                              onToggleFavorite={() => handleToggleFavorite(song)}
+                              onSelectSinger={() => {}} // Info button functionality
+                              showAddButton={true}
+                              showInfoButton={true}
+                              showFavoriteButton={false}
                             />
                           ))}
                         </IonList>

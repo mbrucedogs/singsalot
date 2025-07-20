@@ -2,7 +2,22 @@
 
 ---
 
+## 🚀 How to Use This PRD
+
+**For AI Implementation:** When you read this PRD, please:
+1. **Read the entire document completely** - it contains comprehensive technical specifications
+2. **Ask the 7 implementation questions** from Section 29 to determine platform/framework choices
+3. **Follow the implementation checklist** from Section 29 for the complete build process
+4. **Preserve all business logic** while adapting UI to the chosen framework
+5. **Use the exact specifications** for data flows, service APIs, and error handling
+
+**For Human Developers:** This PRD contains complete technical specifications including data flows, state management, service APIs, component architecture, error handling, and performance optimizations. It's designed for 100% accuracy when building from scratch.
+
+---
+
 > **Note:** This PRD is structured for platform-agnostic use. Each feature is described with platform-independent requirements, followed by a 'Web Implementation Details' section for web-specific behaviors. For future platforms (iOS, Android, etc.), add corresponding implementation details under each feature. This ensures the PRD can be used as the single source of truth for any platform.
+>
+> **Toolset/Framework Sections:** Each platform implementation includes explicit toolset/framework choices with rationale. This preserves the "why" behind current choices while enabling seamless migration to new technologies. When migrating, replace the toolset section while keeping the core requirements intact.
 
 ---
 
@@ -26,6 +41,69 @@ This document defines the functional, technical, and UX requirements for the Kar
 - Performance - Memoized selectors and optimized hooks
 - Type Safety - Full TypeScript coverage throughout
 - The codebase needs to follow the Single Responsibility Principle perfectly - each file has one clear purpose!
+
+---
+
+## 2.5️⃣ Toolset & Framework Choices
+
+### **Current Web Implementation Toolset:**
+
+#### **Core Framework: React 18 + TypeScript**
+- **Why:** Component-based architecture, strong ecosystem, excellent TypeScript support
+- **Migration Note:** Can be replaced with any component-based framework (Vue, Svelte, etc.)
+
+#### **State Management: Redux Toolkit**
+- **Why:** Centralized state management, predictable state updates, excellent dev tools
+- **Key Requirements:** Must support real-time sync, optimistic updates, and complex state relationships
+- **Migration Note:** Can be replaced with Zustand, Jotai, Valtio, or any state management solution that supports:
+  - Centralized state
+  - Real-time updates
+  - Optimistic updates
+  - Complex selectors
+
+#### **UI Framework: Ionic React**
+- **Why:** Mobile-first design, native feel, excellent accessibility, built-in components
+- **Key Requirements:** Must support responsive design, touch interactions, and accessibility
+- **Migration Note:** Can be replaced with any UI framework that provides:
+  - Responsive components
+  - Touch-optimized interactions
+  - Accessibility support
+  - Modal/dialog components
+  - List components with infinite scroll
+
+#### **Styling: Tailwind CSS**
+- **Why:** Utility-first CSS, rapid development, consistent design system
+- **Migration Note:** Can be replaced with any CSS solution (CSS Modules, Styled Components, etc.)
+
+#### **Build Tool: Vite**
+- **Why:** Fast development server, optimized builds, excellent TypeScript support
+- **Migration Note:** Can be replaced with any modern build tool (Webpack, Parcel, etc.)
+
+#### **Backend: Firebase Realtime Database**
+- **Why:** Real-time sync, simple setup, excellent for collaborative apps
+- **Key Requirements:** Must support real-time listeners, offline capabilities, and complex queries
+- **Migration Note:** Can be replaced with any real-time database (Supabase, AWS AppSync, etc.)
+
+#### **Cloud Functions: Firebase Functions**
+- **Why:** Serverless, integrates with Firebase, automatic scaling
+- **Migration Note:** Can be replaced with any serverless platform (AWS Lambda, Vercel Functions, etc.)
+
+### **Architecture Patterns:**
+
+#### **Service Layer Pattern**
+- **Why:** Separation of concerns, testable business logic, reusable across components
+- **Implementation:** All Firebase operations abstracted into service modules
+- **Migration Note:** Must maintain service layer pattern regardless of backend choice
+
+#### **Hook Pattern**
+- **Why:** Reusable business logic, separation of UI and logic, testable
+- **Implementation:** Custom hooks for each feature (useQueue, useSearch, etc.)
+- **Migration Note:** Can be replaced with any pattern that separates business logic from UI
+
+#### **Component Composition**
+- **Why:** Reusable components, clear separation of concerns, maintainable
+- **Implementation:** Common components (SongItem, ActionButton, etc.) used across features
+- **Migration Note:** Must maintain component composition regardless of framework choice
 
 ---
 
@@ -241,6 +319,7 @@ controllers: {
     history: Record<string, Song>,
     topPlayed: Record<string, TopPlayed>,
     newSongs: Record<string, Song>,
+    disabledSongs: Record<string, DisabledSong>,
     player: { 
       queue: Record<string, QueueItem>,
       settings: Settings,
@@ -258,6 +337,41 @@ controllers: {
 - **Real-time Updates:** Subscribes to specific nodes for incremental updates
 - **Key Management:** Uses sequential numerical keys for queue items
 - **Auto-initialization:** Creates empty controller structure if none exists
+
+**Empty Controller Structure:**
+```json
+{
+  "favorites": {},
+  "history": {},
+  "topPlayed": {},
+  "newSongs": {},
+  "disabledSongs": {},
+  "player": {
+    "queue": {},
+    "settings": {
+      "autoadvance": false,
+      "userpick": false
+    },
+    "singers": {},
+    "state": {
+      "state": "stopped"
+    }
+  },
+  "songList": {},
+  "songs": {}
+}
+```
+
+**Key Generation Rules:**
+- **Queue Items:** Sequential numerical keys (0, 1, 2, ...)
+- **Top Played:** `sanitizedArtist_sanitizedTitle` (lowercase, trimmed, invalid chars replaced with `_`)
+- **Disabled Songs:** Hash of song path (simple character-based hash)
+- **Singers:** Firebase push IDs (auto-generated)
+
+**Character Sanitization for Top Played Keys:**
+- Replace invalid Firebase characters `[.#$/[\]]` with `_`
+- Convert to lowercase and trim whitespace
+- Format: `${sanitizedArtist}_${sanitizedTitle}`
 
 ---
 
@@ -783,10 +897,35 @@ import type { Song, QueueItem } from '../types';
 
 ## 🔟 Cloud Function Design — Top Played
 
+### **Automatic Top Played Calculation:**
 - **Trigger:** Firebase Cloud Function triggered when song added to `history`
-- **Action:** Increments play count in `/controllers/{controllerName}/topPlayed/{songId}`
+- **Action:** Recalculates entire top played list based on history aggregation
 - **Benefits:** Non-blocking updates, real-time popularity tracking
 - **Data Structure:** Stores artist, title, and count for each popular song
+
+### **Key Generation Logic:**
+- **Format:** `sanitizedArtist_sanitizedTitle`
+- **Sanitization:** Replace invalid Firebase characters `[.#$/[\]]` with `_`
+- **Processing:** Convert to lowercase and trim whitespace
+- **Example:** "AC/DC" + "Back in Black" → "ac_dc_back_in_black"
+
+### **Aggregation Algorithm:**
+- **Group By:** Artist + Title combination (case-insensitive)
+- **Count Logic:** Sum all `count` values for same artist/title
+- **Sorting:** Sort by count descending, limit to top 100
+- **Data Structure:** Convert array back to object format for Firebase
+
+### **Manual Recalculation Function:**
+- **Function Name:** `recalculateTopPlayed`
+- **Trigger:** Manual HTTP callable function
+- **Purpose:** Data migration, initial setup, or data repair
+- **Input:** `{ controllerName: string }`
+- **Output:** Success/failure status with message
+
+### **Error Handling:**
+- **Validation:** Require controllerName parameter
+- **Empty Data:** Return empty topPlayed if no history exists
+- **Logging:** Console logs for debugging and monitoring
 
 ---
 
@@ -934,6 +1073,50 @@ All permissions, validation, and business logic are enforced in the client appli
 - **Key Migration:** Automatic cleanup of inconsistent keys (migrate push ID keys to sequential numerical keys)
 - **Order Validation:** Queue items maintain sequential order (1, 2, 3, etc.) with automatic cleanup
 - **Controller Structure:** Complete controller object loaded on initial connection with empty initialization if not exists
+
+### **Queue Key Migration Logic:**
+- **Cleanup Function:** `cleanupQueueKeys()` migrates push ID keys to sequential numerical keys
+- **Key Validation:** Regex pattern `/^\d+$/` to identify numerical keys
+- **Migration Strategy:** Find push ID keys, assign sequential keys, update Firebase atomically
+
+### **Queue Order Calculation:**
+- **Order Logic:** `Math.max(...queueItems.map(item => item.order || 0)) + 1`
+- **Fallback Handling:** Use `|| 0` for missing order values
+- **Auto-Fix:** Check for inconsistencies on every queue update and fix automatically
+
+### **Disabled Songs Implementation:**
+- **Hash Function:** Simple character-based hash for Firebase-safe keys
+- **Hash Algorithm:** `((hash << 5) - hash) + charCodeAt(i)` converted to base36
+- **Timeout Handling:** 10-second timeout for all disabled song operations
+- **Validation:** Required fields (controller name, song path, artist, title)
+- **Integration:** Filter disabled songs from all search results
+
+### **Search Algorithm Details:**
+- **Multi-word Logic:** AND logic for multiple terms, OR logic for single term
+- **Term Processing:** Split on whitespace, filter empty terms
+- **Matching:** Case-insensitive includes check on title and artist
+- **Disabled Filtering:** Exclude disabled songs from all results
+- **Loading States:** Don't show results while disabled songs are loading
+
+### **Authentication Validation:**
+- **Controller Existence Check:** Verify controller exists in Firebase before login
+- **Error Messages:** "Invalid Party Id. Please check your Party Id and try again."
+- **Field Validation:** Both Party ID and singer name required and trimmed
+
+### **Singer Name Validation:**
+- **Case-insensitive Comparison:** `.toLowerCase()` for duplicate checking
+- **Trim Validation:** Remove whitespace from singer names
+- **Unique Constraint:** Prevent duplicate singer names (case-insensitive)
+
+### **Error Handling & Timeouts:**
+- **Timeout Values:** 10-second timeout for Firebase operations
+- **Specific Error Messages:** "Singer already exists", "Controller not found", etc.
+- **Error Recovery:** Handle specific error types with appropriate user feedback
+
+### **Redux Store Configuration:**
+- **Serializable Check:** Disabled for development (`serializableCheck: false`)
+- **Immutable Check:** Ignored paths for large data objects
+- **Middleware Configuration:** Specific Redux Toolkit settings for performance
 
 ### **Firebase Services Architecture:**
 - **Service Layer Pattern:** All Firebase operations abstracted into service modules:
@@ -1219,6 +1402,815 @@ const validateFirebaseConfig = () => {
 - **Validation:** Implement runtime validation for critical configuration
 - **Fallbacks:** Provide sensible default values for all variables
 - **Security:** Never commit sensitive values to version control
+
+---
+
+## 23️⃣ Complete Data Flow Diagrams
+
+### **Authentication Flow:**
+```
+1. User enters Party ID + Name
+2. Validate Party ID exists in Firebase
+3. If valid: dispatch setAuth action
+4. If invalid: show error message "Invalid Party Id. Please check your Party Id and try again."
+5. On auth success: initialize Firebase sync
+6. Load complete controller object
+7. If controller doesn't exist: create empty structure
+8. Clean up admin URL parameter if present
+```
+
+### **Queue Operations Flow:**
+```
+Add to Queue:
+1. User clicks "Add to Queue" on song
+2. Validate controller name and current singer exist
+3. Calculate next order: Math.max(existingOrders) + 1
+4. Create queue item with sequential key
+5. Call queueService.addToQueue()
+6. Firebase updates in real-time
+7. All clients receive updated queue
+8. Show success toast
+
+Remove from Queue:
+1. User clicks remove (admin only, when not playing)
+2. Validate admin permissions and playback state
+3. Call queueService.removeFromQueue()
+4. Firebase removes item
+5. All clients receive updated queue
+6. Show success toast
+
+Reorder Queue:
+1. Admin clicks reorder buttons
+2. Validate admin permissions and playback state
+3. Calculate new order values for affected items
+4. Update all affected items atomically with Promise.all()
+5. Firebase updates in real-time
+6. All clients receive updated queue
+7. Show success toast
+```
+
+### **Search Flow:**
+```
+1. User types in search input
+2. Debounce 300ms before processing
+3. If < 2 characters: show all songs (filtered by disabled songs)
+4. If >= 2 characters: filter songs by search term
+5. Apply multi-word logic (AND for multiple terms, OR for single term)
+6. Filter out disabled songs
+7. Paginate results (20 items per page)
+8. Show results with infinite scroll
+9. Reset to page 1 when search term changes
+```
+
+### **Real-time Sync Flow:**
+```
+1. User authenticates successfully
+2. FirebaseProvider initializes
+3. Subscribe to controller node: `controllers/${controllerName}`
+4. On data change: dispatch setController action
+5. Redux updates state
+6. Components re-render with new data
+7. On unmount: cleanup Firebase listeners
+```
+
+---
+
+## 24️⃣ State Management Architecture
+
+### **Redux State Tree Structure:**
+```typescript
+{
+  auth: {
+    data: {
+      authenticated: boolean,
+      singer: string,
+      isAdmin: boolean,
+      controller: string
+    } | null,
+    loading: boolean,
+    error: string | null
+  },
+  controller: {
+    data: {
+      favorites: Record<string, Song>,
+      history: Record<string, Song>,
+      topPlayed: Record<string, TopPlayed>,
+      newSongs: Record<string, Song>,
+      disabledSongs: Record<string, DisabledSong>,
+      player: {
+        queue: Record<string, QueueItem>,
+        settings: {
+          autoadvance: boolean,
+          userpick: boolean
+        },
+        singers: Record<string, Singer>,
+        state: {
+          state: PlayerState
+        }
+      },
+      songList: Record<string, SongList>,
+      songs: Record<string, Song>
+    } | null,
+    loading: boolean,
+    error: string | null,
+    lastUpdated: number | null
+  }
+}
+```
+
+### **Key Selectors (Memoized):**
+```typescript
+// Authentication
+selectIsAuthenticated: (state) => state.auth.data?.authenticated
+selectControllerName: (state) => state.auth.data?.controller
+selectCurrentSinger: (state) => state.auth.data?.singer
+selectIsAdmin: (state) => state.auth.data?.isAdmin
+
+// Controller Data
+selectController: (state) => state.controller.data
+selectSongs: (state) => state.controller.data?.songs
+selectQueue: (state) => state.controller.data?.player.queue
+selectFavorites: (state) => state.controller.data?.favorites
+selectHistory: (state) => state.controller.data?.history
+selectTopPlayed: (state) => state.controller.data?.topPlayed
+selectNewSongs: (state) => state.controller.data?.newSongs
+selectDisabledSongs: (state) => state.controller.data?.disabledSongs
+selectSettings: (state) => state.controller.data?.player.settings
+selectSingers: (state) => state.controller.data?.player.singers
+selectPlayerState: (state) => state.controller.data?.player.state
+
+// Derived Data
+selectSongsArray: createSelector([selectSongs], (songs) => 
+  sortSongsByArtistAndTitle(objectToArray(songs))
+)
+selectQueueWithUserInfo: createSelector([selectQueue, selectCurrentSinger], (queue, currentSinger) => 
+  addUserInfoToQueue(queue, currentSinger)
+)
+selectQueueLength: createSelector([selectQueue], (queue) => 
+  Object.keys(queue || {}).length
+)
+```
+
+### **Action Types:**
+```typescript
+// Auth Actions
+setAuth: Authentication
+setLoading: boolean
+setError: string
+clearError: void
+logout: void
+updateSinger: string
+setAdminStatus: boolean
+
+// Controller Actions
+setController: Controller
+updateSongs: Record<string, Song>
+updateQueue: Record<string, QueueItem>
+updateFavorites: Record<string, Song>
+updateHistory: Record<string, Song>
+updateTopPlayed: Record<string, TopPlayed>
+clearError: void
+resetController: void
+```
+
+---
+
+## 25️⃣ Service Layer API Specifications
+
+### **Controller Service:**
+```typescript
+controllerService.getController(controllerName: string): Promise<Controller | null>
+- Validates: controllerName is non-empty string
+- Returns: Complete controller object or null if not exists
+- Throws: Error if Firebase operation fails
+- Timeout: None (Firebase handles)
+
+controllerService.setController(controllerName: string, data: Controller): Promise<void>
+- Validates: controllerName and data are provided
+- Action: Overwrites entire controller object
+- Returns: void
+- Throws: Error if Firebase operation fails
+- Timeout: None (Firebase handles)
+
+controllerService.updateController(controllerName: string, updates: Partial<Controller>): Promise<void>
+- Validates: controllerName and updates are provided
+- Action: Updates specific parts of controller
+- Returns: void
+- Throws: Error if Firebase operation fails
+- Timeout: None (Firebase handles)
+
+controllerService.subscribeToController(controllerName: string, callback: (data: Controller | null) => void): () => void
+- Validates: controllerName and callback are provided
+- Action: Sets up real-time listener
+- Returns: Unsubscribe function
+- Throws: Error if listener setup fails
+- Timeout: None (Firebase handles)
+```
+
+### **Queue Service:**
+```typescript
+queueService.addToQueue(controllerName: string, queueItem: Omit<QueueItem, 'key'>): Promise<{ key: string }>
+- Validates: controllerName, queueItem with required fields
+- Calculates: Next sequential key (Math.max(existingKeys) + 1)
+- Action: Adds item to queue with sequential key
+- Returns: { key: string } with the new key
+- Throws: Error if validation fails or Firebase operation fails
+- Timeout: None (Firebase handles)
+
+queueService.removeFromQueue(controllerName: string, queueItemKey: string): Promise<void>
+- Validates: controllerName and queueItemKey are provided
+- Action: Removes item from queue
+- Returns: void
+- Throws: Error if Firebase operation fails
+- Timeout: None (Firebase handles)
+
+queueService.updateQueueItem(controllerName: string, queueItemKey: string, updates: Partial<QueueItem>): Promise<void>
+- Validates: controllerName, queueItemKey, and updates are provided
+- Action: Updates specific fields of queue item
+- Returns: void
+- Throws: Error if Firebase operation fails
+- Timeout: None (Firebase handles)
+
+queueService.cleanupQueueKeys(controllerName: string): Promise<void>
+- Validates: controllerName is provided
+- Action: Migrates push ID keys to sequential numerical keys
+- Logic: Find non-numerical keys, assign sequential keys, update atomically
+- Returns: void
+- Throws: Error if migration fails
+- Timeout: None (Firebase handles)
+
+queueService.subscribeToQueue(controllerName: string, callback: (data: Record<string, QueueItem>) => void): () => void
+- Validates: controllerName and callback are provided
+- Action: Sets up real-time listener for queue changes
+- Returns: Unsubscribe function
+- Throws: Error if listener setup fails
+- Timeout: None (Firebase handles)
+```
+
+### **Disabled Songs Service:**
+```typescript
+disabledSongsService.generateSongKey(songPath: string): string
+- Validates: songPath is non-empty string
+- Algorithm: Simple hash function ((hash << 5) - hash) + charCodeAt(i)
+- Returns: Base36 string for Firebase-safe key
+- Throws: None (pure function)
+
+disabledSongsService.addDisabledSong(controllerName: string, song: Song): Promise<void>
+- Validates: controllerName, song.path, song.artist, song.title
+- Action: Adds song to disabled list with hash key
+- Returns: void
+- Throws: Error if validation fails or Firebase operation fails
+- Timeout: 10 seconds
+
+disabledSongsService.removeDisabledSong(controllerName: string, songPath: string): Promise<void>
+- Validates: controllerName and songPath are provided
+- Action: Removes song from disabled list
+- Returns: void
+- Throws: Error if Firebase operation fails
+- Timeout: 10 seconds
+
+disabledSongsService.isSongDisabled(controllerName: string, songPath: string): Promise<boolean>
+- Validates: controllerName and songPath are provided
+- Action: Checks if song is in disabled list
+- Returns: boolean
+- Throws: Error if Firebase operation fails
+- Timeout: 10 seconds
+
+disabledSongsService.getDisabledSongs(controllerName: string): Promise<Record<string, DisabledSong>>
+- Validates: controllerName is provided
+- Action: Gets all disabled songs
+- Returns: Record of disabled songs
+- Throws: Error if Firebase operation fails
+- Timeout: 10 seconds
+
+disabledSongsService.getDisabledSongPaths(controllerName: string): Promise<Set<string>>
+- Validates: controllerName is provided
+- Action: Gets disabled song paths as Set for fast lookup
+- Returns: Set of disabled song paths
+- Throws: Error if Firebase operation fails
+- Timeout: 10 seconds
+
+disabledSongsService.subscribeToDisabledSongs(controllerName: string, callback: (data: Record<string, DisabledSong>) => void): () => void
+- Validates: controllerName and callback are provided
+- Action: Sets up real-time listener for disabled songs
+- Returns: Unsubscribe function
+- Throws: Error if listener setup fails
+- Timeout: None (Firebase handles)
+```
+
+### **Singer Service:**
+```typescript
+singerService.addSinger(controllerName: string, singerName: string): Promise<{ key: string }>
+- Validates: controllerName and singerName are non-empty, trimmed
+- Checks: Case-insensitive duplicate prevention
+- Action: Adds singer with current timestamp
+- Returns: { key: string } with Firebase push key
+- Throws: Error if validation fails, duplicate exists, or Firebase operation fails
+- Timeout: None (Firebase handles)
+
+singerService.removeSinger(controllerName: string, singerName: string): Promise<void>
+- Validates: controllerName and singerName are provided
+- Action: Removes singer and their queue items
+- Returns: void
+- Throws: Error if Firebase operation fails
+- Timeout: None (Firebase handles)
+
+singerService.subscribeToSingers(controllerName: string, callback: (data: Record<string, Singer>) => void): () => void
+- Validates: controllerName and callback are provided
+- Action: Sets up real-time listener for singers
+- Returns: Unsubscribe function
+- Throws: Error if listener setup fails
+- Timeout: None (Firebase handles)
+```
+
+### **Player Service:**
+```typescript
+playerService.updatePlayerStateValue(controllerName: string, state: PlayerState): Promise<void>
+- Validates: controllerName and state are provided
+- Action: Updates player state
+- Returns: void
+- Throws: Error if Firebase operation fails
+- Timeout: None (Firebase handles)
+
+playerService.subscribeToPlayerState(controllerName: string, callback: (data: Player) => void): () => void
+- Validates: controllerName and callback are provided
+- Action: Sets up real-time listener for player state
+- Returns: Unsubscribe function
+- Throws: Error if listener setup fails
+- Timeout: None (Firebase handles)
+```
+
+---
+
+## 26️⃣ Component Architecture Specifications
+
+### **SongItem Component:**
+```typescript
+interface SongItemProps {
+  song: Song;
+  context: 'search' | 'queue' | 'history' | 'favorites' | 'topPlayed' | 'newSongs';
+  onAddToQueue?: (song: Song) => void;
+  onRemoveFromQueue?: (queueItem: QueueItem) => void;
+  onToggleFavorite?: (song: Song) => void;
+  onDelete?: (song: Song) => void;
+  onSelectSinger?: (song: Song) => void;
+  isAdmin?: boolean;
+  className?: string;
+  showActions?: boolean;
+  showPath?: boolean;
+  showCount?: boolean;
+  showInfoButton?: boolean;
+  showAddButton?: boolean;
+  showRemoveButton?: boolean;
+  showDeleteButton?: boolean;
+  showFavoriteButton?: boolean;
+}
+
+Event Flow:
+1. User clicks action button
+2. Component calls prop function (e.g., onAddToQueue)
+3. Hook handles business logic (useSongOperations)
+4. Service updates Firebase (queueService.addToQueue)
+5. Real-time listener updates Redux
+6. Component re-renders with new data
+7. Toast notification shows success/error
+```
+
+### **InfiniteScrollList Component:**
+```typescript
+interface InfiniteScrollListProps {
+  items: any[];
+  context: 'search' | 'queue' | 'history' | 'favorites' | 'topPlayed' | 'newSongs';
+  isLoading: boolean;
+  hasMore: boolean;
+  onLoadMore: () => void;
+  renderItem: (item: any, index: number) => React.ReactNode;
+  className?: string;
+  debug?: boolean;
+}
+
+Behavior:
+1. Renders items with renderItem function
+2. Shows loading spinner when isLoading && items.length === 0
+3. Shows empty state when items.length === 0 && !isLoading
+4. Shows load more trigger when hasMore && items.length > 0
+5. Uses Intersection Observer to detect when user scrolls to bottom 10%
+6. Calls onLoadMore when trigger is visible
+7. Cleans up observer on unmount
+```
+
+### **ActionButton Component:**
+```typescript
+interface ActionButtonProps {
+  onClick: () => void;
+  children: React.ReactNode;
+  variant?: 'primary' | 'secondary' | 'danger';
+  size?: 'sm' | 'md' | 'lg';
+  disabled?: boolean;
+  icon?: string;
+  className?: string;
+}
+
+Behavior:
+1. Renders button with variant styling
+2. Shows icon if provided
+3. Disables button when disabled prop is true
+4. Calls onClick when clicked
+5. Supports different sizes and variants
+```
+
+### **PlayerControls Component:**
+```typescript
+interface PlayerControlsProps {
+  className?: string;
+  variant?: 'light' | 'dark';
+}
+
+Behavior:
+1. Only renders for admin users (selectIsAdmin)
+2. Shows current player state with color-coded badge
+3. Play button: disabled when queue is empty
+4. Pause button: only shown when playing
+5. Stop button: only shown when playing or paused
+6. Calls playerService.updatePlayerStateValue on button clicks
+7. Shows success/error toasts for feedback
+```
+
+### **Component Hierarchy:**
+```
+App
+├── ErrorBoundary
+├── FirebaseProvider
+├── Router
+├── AuthInitializer
+├── Layout
+│   ├── Navigation
+│   └── Routes
+│       ├── Search
+│       │   └── InfiniteScrollList
+│       │       └── SongItem
+│       ├── Queue
+│       │   ├── PlayerControls
+│       │   └── InfiniteScrollList
+│       │       └── SongItem
+│       ├── Favorites
+│       │   └── InfiniteScrollList
+│       │       └── SongItem
+│       ├── History
+│       │   └── InfiniteScrollList
+│       │       └── SongItem
+│       ├── TopPlayed
+│       │   └── InfiniteScrollList
+│       │       └── SongItem
+│       ├── NewSongs
+│       │   └── InfiniteScrollList
+│       │       └── SongItem
+│       ├── Artists
+│       │   └── ArtistModal
+│       ├── SongLists
+│       │   └── SongListModal
+│       ├── Singers
+│       └── Settings
+└── Toast (global)
+```
+
+---
+
+## 27️⃣ Error Handling Matrix
+
+### **Network Errors:**
+```
+Firebase Connection Lost:
+- Detection: onValue error callback
+- Action: Show connection status indicator
+- Recovery: Automatic retry with exponential backoff
+- User Feedback: "Connection lost. Retrying..."
+
+Firebase Timeout (10s):
+- Detection: Promise.race with timeout
+- Action: Show error toast
+- Recovery: Allow manual retry
+- User Feedback: "Operation timed out. Please try again."
+
+Network Unavailable:
+- Detection: navigator.onLine or fetch error
+- Action: Show offline indicator
+- Recovery: Queue operations for when online
+- User Feedback: "You're offline. Changes will sync when connected."
+```
+
+### **Validation Errors:**
+```
+Party ID Invalid:
+- Detection: Firebase get() returns null
+- Action: Show error message
+- Recovery: Allow user to retry
+- User Feedback: "Invalid Party Id. Please check your Party Id and try again."
+
+Singer Name Empty:
+- Detection: singerName.trim().length === 0
+- Action: Highlight input field
+- Recovery: Prevent form submission
+- User Feedback: "Singer name cannot be empty"
+
+Singer Already Exists:
+- Detection: Case-insensitive name comparison
+- Action: Show error toast
+- Recovery: Allow user to choose different name
+- User Feedback: "Singer already exists"
+
+Required Fields Missing:
+- Detection: Check for undefined/null values
+- Action: Highlight missing fields
+- Recovery: Prevent operation
+- User Feedback: "Please fill in all required fields"
+```
+
+### **Permission Errors:**
+```
+Admin Action by Non-Admin:
+- Detection: selectIsAdmin === false
+- Action: Hide admin-only UI elements
+- Recovery: Show permission error
+- User Feedback: "Only admins can perform this action"
+
+Delete During Playback:
+- Detection: playerState.state === 'playing'
+- Action: Disable delete buttons
+- Recovery: Allow delete when stopped/paused
+- User Feedback: "Cannot delete while playing"
+```
+
+### **Concurrent Conflicts:**
+```
+Queue Reorder Conflict:
+- Detection: Order values don't match expected sequence
+- Action: Auto-fix order values
+- Recovery: Update all items with sequential order
+- User Feedback: "Queue order has been corrected"
+
+Singer Add Conflict:
+- Detection: Duplicate name (case-insensitive)
+- Action: Prevent addition
+- Recovery: Show error message
+- User Feedback: "Singer already exists"
+
+Settings Change Conflict:
+- Detection: Multiple users changing settings simultaneously
+- Action: Last write wins
+- Recovery: Show conflict notification
+- User Feedback: "Settings updated by another user"
+```
+
+### **Data Corruption:**
+```
+Invalid Queue Order:
+- Detection: Order values not sequential (1, 2, 3, ...)
+- Action: Auto-fix order values
+- Recovery: Update all items with correct order
+- User Feedback: "Queue order has been corrected"
+
+Missing Required Fields:
+- Detection: Required fields are undefined/null
+- Action: Use default values or skip item
+- Recovery: Log error and continue
+- User Feedback: "Some data could not be loaded"
+
+Invalid Firebase Keys:
+- Detection: Non-numerical keys in queue
+- Action: Run cleanupQueueKeys()
+- Recovery: Migrate to sequential keys
+- User Feedback: "Queue has been updated"
+```
+
+---
+
+## 28️⃣ Performance Specifications
+
+### **Memoization Rules:**
+```typescript
+// Redux Selectors (Always Memoize)
+selectSongsArray: createSelector([selectSongs], (songs) => 
+  sortSongsByArtistAndTitle(objectToArray(songs))
+)
+
+selectQueueWithUserInfo: createSelector([selectQueue, selectCurrentSinger], (queue, currentSinger) => 
+  addUserInfoToQueue(queue, currentSinger)
+)
+
+// Component Props (Memoize Expensive Calculations)
+const filteredSongs = useMemo(() => 
+  filterSongs(allSongs, searchTerm, disabledSongPaths), 
+  [allSongs, searchTerm, disabledSongPaths]
+)
+
+// Event Handlers (Use useCallback for Async Operations)
+const handleAddToQueue = useCallback(async (song: Song) => {
+  await addToQueue(song);
+}, [addToQueue]);
+
+const handleRemoveFromQueue = useCallback(async (queueItem: QueueItem) => {
+  await removeFromQueue(queueItem);
+}, [removeFromQueue]);
+```
+
+### **Bundle Splitting Strategy:**
+```typescript
+// Route-based Splitting
+const Search = lazy(() => import('./features/Search/Search'));
+const Queue = lazy(() => import('./features/Queue/Queue'));
+const Favorites = lazy(() => import('./features/Favorites/Favorites'));
+const History = lazy(() => import('./features/History/History'));
+const TopPlayed = lazy(() => import('./features/TopPlayed/Top100'));
+const NewSongs = lazy(() => import('./features/NewSongs/NewSongs'));
+const Artists = lazy(() => import('./features/Artists/Artists'));
+const SongLists = lazy(() => import('./features/SongLists/SongLists'));
+const Singers = lazy(() => import('./features/Singers/Singers'));
+const Settings = lazy(() => import('./features/Settings/Settings'));
+
+// Component-based Splitting
+const ArtistModal = lazy(() => import('./components/common/ArtistModal'));
+const SongListModal = lazy(() => import('./components/common/SongListModal'));
+
+// Vendor Splitting
+// Third-party libraries (Ionic, Firebase) in separate chunks
+```
+
+### **Virtual Scrolling (Future Implementation):**
+```typescript
+// For lists with 1000+ items
+interface VirtualScrollConfig {
+  itemHeight: number;
+  overscan: number;
+  containerHeight: number;
+}
+
+// Only render visible items + buffer
+const visibleItems = items.slice(startIndex, endIndex + overscan);
+```
+
+### **Image Optimization:**
+```typescript
+// Lazy load images
+const LazyImage = ({ src, alt, ...props }) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [isInView, setIsInView] = useState(false);
+  
+  useEffect(() => {
+    if (isInView) {
+      const img = new Image();
+      img.onload = () => setIsLoaded(true);
+      img.src = src;
+    }
+  }, [isInView, src]);
+  
+  return (
+    <div>
+      {!isLoaded && <Skeleton />}
+      {isInView && <img src={src} alt={alt} {...props} />}
+    </div>
+  );
+};
+```
+
+### **Firebase Optimization:**
+```typescript
+// Specific node subscriptions instead of full controller
+const queueRef = ref(database, `controllers/${controllerName}/player/queue`);
+const favoritesRef = ref(database, `controllers/${controllerName}/favorites`);
+
+// Batch operations for multiple updates
+const updates = {};
+updates[`controllers/${controllerName}/player/queue/${key1}`] = item1;
+updates[`controllers/${controllerName}/player/queue/${key2}`] = item2;
+await update(ref(database), updates);
+```
+
+### **Memory Management:**
+```typescript
+// Cleanup listeners on unmount
+useEffect(() => {
+  const unsubscribe = subscribeToQueue(controllerName, callback);
+  return () => unsubscribe();
+}, [controllerName]);
+
+// Cleanup observers
+useEffect(() => {
+  const observer = new IntersectionObserver(callback, options);
+  observer.observe(element);
+  return () => observer.disconnect();
+}, []);
+```
+
+---
+
+## 29️⃣ Implementation Guide for New Projects
+
+### **Quick Start Questions for Implementation:**
+
+When starting a new implementation, ask these questions to determine the approach:
+
+#### **1. Platform Target:**
+- **Web:** Browser-based application
+- **iOS:** Native iOS app (Swift/SwiftUI)
+- **Android:** Native Android app (Kotlin/Jetpack Compose)
+- **Cross-platform:** Single codebase for multiple platforms (Flutter, React Native)
+
+#### **2. Framework Choice (Based on Platform):**
+- **Web:** React, Vue, Svelte, Angular
+- **iOS:** SwiftUI, UIKit
+- **Android:** Jetpack Compose, Views
+- **Cross-platform:** Flutter, React Native
+
+#### **3. State Management:**
+- **Centralized:** Redux, Zustand, Pinia, Jotai
+- **Local:** React Context, Vue Composition API
+- **Platform-specific:** SwiftUI @State, Jetpack Compose StateFlow
+
+#### **4. UI Framework:**
+- **Web:** Ionic, Chakra UI, Material UI, Ant Design
+- **Native:** Platform-specific components
+- **Cross-platform:** Framework-specific UI libraries
+
+#### **5. Backend/Data:**
+- **Firebase:** Realtime Database, Firestore
+- **Supabase:** PostgreSQL with real-time
+- **AWS:** AppSync, DynamoDB
+- **Custom:** REST API with WebSockets
+
+#### **6. Build Tool:**
+- **Web:** Vite, Webpack, Parcel
+- **iOS:** Xcode
+- **Android:** Android Studio
+- **Cross-platform:** Framework-specific tools
+
+#### **7. Styling:**
+- **Web:** Tailwind CSS, CSS Modules, Styled Components
+- **Native:** Platform-specific styling
+- **Cross-platform:** Framework-specific styling
+
+### **Implementation Checklist:**
+
+#### **Phase 1: Project Setup**
+- [ ] Create project with chosen framework/tools
+- [ ] Set up Firebase/backend configuration
+- [ ] Configure state management
+- [ ] Set up routing/navigation
+- [ ] Configure build tools and deployment
+
+#### **Phase 2: Core Architecture**
+- [ ] Implement service layer (all Firebase operations)
+- [ ] Set up state management (Redux slices/selectors)
+- [ ] Create base components (SongItem, ActionButton, etc.)
+- [ ] Implement authentication flow
+- [ ] Set up real-time sync
+
+#### **Phase 3: Feature Implementation**
+- [ ] Search functionality with disabled songs filtering
+- [ ] Queue management with sequential keys
+- [ ] Favorites system
+- [ ] History tracking
+- [ ] Top played with cloud functions
+- [ ] Singer management
+- [ ] Player controls
+- [ ] Settings and disabled songs
+- [ ] Artists and song lists
+
+#### **Phase 4: Error Handling & Performance**
+- [ ] Implement error handling matrix
+- [ ] Add performance optimizations
+- [ ] Set up bundle splitting
+- [ ] Add loading states and empty states
+- [ ] Implement infinite scroll
+
+#### **Phase 5: Testing & Polish**
+- [ ] Test all business logic
+- [ ] Verify real-time sync
+- [ ] Test error scenarios
+- [ ] Performance testing
+- [ ] UI/UX polish
+
+### **Key Implementation Notes:**
+
+#### **Must Preserve (Regardless of Framework):**
+- **Business Logic:** All validation rules, calculations, and data flows
+- **Service Layer:** All Firebase operations with exact signatures
+- **State Structure:** Same data organization and relationships
+- **Error Handling:** All error scenarios and recovery strategies
+- **Performance:** Memoization, bundle splitting, and optimization patterns
+
+#### **Can Replace (Framework-Specific):**
+- **UI Components:** Replace with framework-equivalent components
+- **State Management Library:** Replace Redux with framework-appropriate solution
+- **Styling:** Replace Tailwind with framework-appropriate styling
+- **Build Tools:** Replace Vite with framework-appropriate build system
+
+#### **Critical Success Factors:**
+- **Follow data flow diagrams exactly**
+- **Implement all service functions with exact signatures**
+- **Maintain same state structure and relationships**
+- **Handle all error scenarios from the matrix**
+- **Preserve all business logic and validation rules**
 
 ---
 

@@ -17,7 +17,7 @@ These files are intended for:
 | `PRD.md` | **Complete Product Requirements Document** — platform-agnostic business logic, technical specifications, data flows, service APIs, component architecture, error handling, and performance optimizations. **Self-guiding for AI implementation.** |
 | `types.ts` | Reference TypeScript interfaces used for modeling app objects. **Not imported into app runtime code.** |
 | `firebase_schema.json` | Example Firebase Realtime Database structure for understanding data relationships and CRUD operations. |
-| `design/` | **UI/UX Design Assets** — mockups and visual references for different platforms and features. |
+| `platforms/web/design/` | **Web UI/UX Design Assets** — mockups and visual references for web platform features. |
 
 ---
 
@@ -38,7 +38,7 @@ Simply say **"Read this PRD"** in any new chat. The PRD contains:
 
 ### **For New Implementations:**
 1. **Read the PRD completely** - it contains comprehensive specifications
-2. **Review design assets** in `design/` folder for visual reference
+2. **Review design assets** in `platforms/web/design/` folder for visual reference
 3. **Answer implementation questions** from Section 29
 4. **Follow the implementation checklist** for complete build process
 5. **Preserve business logic** while adapting UI to chosen framework
@@ -48,24 +48,24 @@ Simply say **"Read this PRD"** in any new chat. The PRD contains:
 ## 📋 Key Features of the Updated PRD
 
 ### **Platform-Agnostic Design:**
-- **Core requirements** separated from implementation details
-- **Framework-specific sections** clearly marked
-- **Migration guidance** for different platforms
-- **Toolset rationale** for informed technology choices
+- **Core business logic** completely separated from implementation details
+- **Firebase architecture** and data models for any platform
+- **Cross-platform references** to platform-specific PRDs
+- **Universal business rules** that apply to all implementations
 
 ### **Complete Technical Specifications:**
-- **Data flow diagrams** for all operations
-- **State management architecture** with exact structure
-- **Service layer APIs** with function signatures
-- **Component architecture** with interfaces and behavior
-- **Error handling matrix** for all scenarios
-- **Performance specifications** with optimization patterns
+- **Firebase data structure** and relationships
+- **Business logic patterns** and validation rules
+- **Real-time synchronization** requirements
+- **User role permissions** and access control
+- **Error handling scenarios** and recovery patterns
+- **Performance requirements** and optimization guidelines
 
 ### **Implementation Guide:**
-- **7 key questions** to determine platform/framework
-- **5-phase implementation checklist**
-- **Must preserve vs. can replace** guidelines
-- **Critical success factors** for accurate builds
+- **Platform selection questions** to determine technology stack
+- **5-phase implementation checklist** for complete builds
+- **Business logic preservation** guidelines
+- **Critical success factors** for accurate implementations
 
 ### **Design Assets:**
 - **Visual mockups** for all major features and screens
@@ -110,8 +110,8 @@ Simply say **"Read this PRD"** in any new chat. The PRD contains:
 
 ## 🎨 Design Assets Reference
 
-### **Current Design Assets:**
-Located in `design/web/` folder with comprehensive mockups for all features:
+### **Current Web Design Assets:**
+Located in `platforms/web/design/` folder with comprehensive mockups for all features:
 
 #### **Core Navigation & Layout:**
 - `00-web-layout.JPG` - Overall web layout structure
@@ -159,12 +159,17 @@ Located in `design/web/` folder with comprehensive mockups for all features:
 
 ### **Future Platform Design Structure:**
 ```
-design/
-├── web/          # Current web mockups
-├── ios/          # Future iOS designs
-├── android/      # Future Android designs
-├── tablet/       # Future tablet designs
-└── desktop/      # Future desktop designs
+docs/platforms/
+├── web/
+│   └── design/   # Current web mockups
+├── ios/
+│   └── design/   # Future iOS designs
+├── android/
+│   └── design/   # Future Android designs
+├── tablet/
+│   └── design/   # Future tablet designs
+└── desktop/
+    └── design/   # Future desktop designs
 ```
 
 ### **Using Design Assets:**

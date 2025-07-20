@@ -1,131 +1,214 @@
-# 🎤 Karaoke Web App — Product Requirements Document (PRD)
+# 🎤 Karaoke App — Product Requirements Document (PRD)
 
 ---
 
-## 1️⃣ Purpose  
-
-This document defines the functional, technical, and UX requirements for the Karaoke Web App, designed for **in-home party use**.  
-The app leverages **Firebase Realtime Database** for real-time synchronization, with all business logic and validation handled **client-side**.
+> **Note:** This PRD is structured for platform-agnostic use. Each feature is described with platform-independent requirements, followed by a 'Web Implementation Details' section for web-specific behaviors. For future platforms (iOS, Android, etc.), add corresponding implementation details under each feature. This ensures the PRD can be used as the single source of truth for any platform.
 
 ---
 
-## 2️⃣ Scope & Business Objectives  
+## 1️⃣ Purpose
 
-- 🎯 Deliver a single-session karaoke experience where users connect to a controller and manage/search songs.  
-- ✅ Use Firebase for real-time multi-user sync of queues, history, and playback state.  
-- ✅ Prioritize fast performance, reusable modular architecture, and clear business logic separation.  
-- ✅ Enable adding songs from multiple entry points (search, history, top played, favorites, new songs, artists, song lists).  
-- ✅ Ensure graceful handling of Firebase sync issues using retry patterns and partial node updates.
-- ✅ True Separation of Concerns - UI components only handle presentation
-- ✅ Reusable Business Logic - Hooks can be used across components
-- ✅ Testable Code - Business logic separated from UI
-- ✅ Maintainable - Changes to logic don't affect UI
-- ✅ Performance - Memoized selectors and optimized hooks
-- ✅ Type Safety - Full TypeScript coverage throughout
-- ✅ The codebase needs to follow the Single Responsibility Principle perfectly - each file has one clear purpose!
+This document defines the functional, technical, and UX requirements for the Karaoke App, designed for **in-home party use**. The app leverages **Firebase Realtime Database** for real-time synchronization, with all business logic and validation handled **client-side**.
 
 ---
 
-## 3️⃣ User Roles & Permissions  
+## 2️⃣ Scope & Business Objectives
 
-| Role         | Search Songs | Add Songs | Delete Songs | Reorder Queue | Playback Control | Manage Singers | View All Features |
-|--------------|---------------|-----------|--------------|----------------|------------------|----------------|-------------------|
-| **Host/Admin** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **Singer/User** | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ✅ |
-
-**Additional Permissions:**
-- **Admin Access:** Available via URL parameter `?admin=true`
-- **Queue Management:** Only admins can reorder queue items using up/down arrows
-- **First Item Protection:** First queue item cannot be deleted while playing (only when stopped/paused)
-- **Singer Auto-Add:** Singers are automatically added to the singers list when they join
-
----
-
-## 4️⃣ Feature Overview  
-
-### **Authentication & Session Management:**
-- **Login Flow:** Simple form-based authentication with Party ID and singer name
-- **Admin Mode:** Special admin access via URL parameter with enhanced privileges
-- **Session Persistence:** Authentication state managed in Redux with automatic logout on page reload
-- **Controller Connection:** Users connect to specific controller/party sessions
-
-### **Search:**  
-- **Local Search:** Redux-managed search on preloaded song catalog
-- **Real-time Results:** Instant search results as user types
-- **Infinite Scroll:** Paginated results with automatic loading
-- **Context Actions:** Common song item view with context-based action panel
-
-### **Queue Management:**  
-- **Real-time Sync:** Shared queue synchronized across all connected clients
-- **Admin Controls:** Only admins can reorder using up/down arrow buttons
-- **User Actions:** All users can delete songs (except first item when playing)
-- **Order Management:** Sequential order system with automatic cleanup of inconsistent keys
-- **Duplicate Prevention:** Based on `path` field of each song
-- **Singer Attribution:** Each queue item shows which singer added it
-
-### **Favorites:**  
-- **Real-time Sync:** Shared favorites list synchronized across all clients
-- **Universal Access:** Anyone can add/remove favorites
-- **Duplicate Prevention:** Based on `path` field of each song
-- **Infinite Scroll:** Paginated display with automatic loading
-
-### **New Songs:**  
-- **Latest Additions:** Shows recently added songs from the `newSongs` node
-- **Real-time Updates:** Automatically syncs when new songs are added
-- **Infinite Scroll:** Paginated display with automatic loading
-
-### **Artists:**  
-- **Artist Browse:** Browse songs by artist with search functionality
-- **Modal View:** Click artist to see all their songs in a modal
-- **Song Count:** Shows number of songs per artist
-- **Infinite Scroll:** Paginated artist list with automatic loading
-
-### **Song Lists:**  
-- **Predefined Lists:** Curated song lists with specific themes or collections
-- **Song Matching:** Automatically matches list songs to available catalog
-- **Expandable View:** Click to expand and see available song versions
-- **Modal Interface:** Full-screen modal for viewing list contents
-- **Availability Status:** Shows which songs are available in the catalog
-
-### **History Tracking:**  
-- **Play History:** Songs automatically added to history when played
-- **Date Display:** Shows when each song was last played
-- **Append-only:** History is append-only, shared across all clients
-- **Infinite Scroll:** Paginated display with automatic loading
-
-### **Top Played:**  
-- **Popular Songs:** Generated by Firebase Cloud Function based on history
-- **Play Count:** Shows number of times each song has been played
-- **Real-time Updates:** Automatically updates when new plays are recorded
-- **Infinite Scroll:** Paginated display with automatic loading
-
-### **Singer Management:**  
-- **Admin Control:** Only admins can add/remove singers
-- **Auto-Add:** Singers automatically added when they join the session
-- **View Access:** All users can view the current singers list
-- **Last Login:** Tracks when each singer last joined
-
-### **Playback Control:**  
-- **Admin Only:** Playback controls only visible to admin users
-- **State Sync:** Playback state synced to all clients using the `player.state` node
-- **Player States:** Playing, Paused, Stopped (mapped to PlayerState enum)
-- **Queue Integration:** Controls work with the current queue
-
-### **Error Handling & Sync:**  
-- **Retry Patterns:** Graceful handling of Firebase sync failures
-- **Full Load:** Complete controller object loaded on initial connection
-- **Incremental Updates:** Subsequent updates target specific child nodes
-- **Connection Status:** Real-time connection status monitoring
-- **Empty State Handling:** Graceful handling of missing or empty data
+- Deliver a single-session karaoke experience where users connect to a controller and manage/search songs.
+- Use Firebase for real-time multi-user sync of queues, history, and playback state.
+- Prioritize fast performance, reusable modular architecture, and clear business logic separation.
+- Enable adding songs from multiple entry points (search, history, top played, favorites, new songs, artists, song lists).
+- Ensure graceful handling of Firebase sync issues using retry patterns and partial node updates.
+- True Separation of Concerns - UI components only handle presentation
+- Reusable Business Logic - Hooks can be used across components
+- Testable Code - Business logic separated from UI
+- Maintainable - Changes to logic don't affect UI
+- Performance - Memoized selectors and optimized hooks
+- Type Safety - Full TypeScript coverage throughout
+- The codebase needs to follow the Single Responsibility Principle perfectly - each file has one clear purpose!
 
 ---
 
-## 5️⃣ Data Models  
+## 3️⃣ User Roles & Permissions
 
-Data models are defined externally in:  
-> [`types.ts`](./types.ts)  
+**Requirements (Platform-Agnostic):**
+- Two roles: Host/Admin and Singer/User.
+- Only admins can reorder or delete queue items, control playback, and manage singers.
+- Admin access is a privileged mode (see platform details for how it's triggered).
+- First queue item cannot be deleted while playing (only when stopped/paused).
+- Singers are automatically added to the singers list when they join.
 
-This file contains TypeScript interfaces describing:  
+**Web Implementation Details:**
+- Admin access is triggered by a URL parameter (`?admin=true`) and removed from the URL after login.
+- Session is lost on browser reload.
+
+---
+
+## 4️⃣ Feature Overview
+
+### Authentication & Session Management
+**Requirements (Platform-Agnostic):**
+- Login requires both Party ID and singer name.
+- Party ID is validated against the backend before login is allowed.
+- Authentication state is managed in the app state and lost on app reload (unless platform supports persistence).
+
+**Web Implementation Details:**
+- Admin access via URL parameter (`?admin=true`), removed after login.
+- Session is lost on browser reload.
+
+### Search
+**Requirements (Platform-Agnostic):**
+- Local search on preloaded song catalog.
+- Instant search results as user types.
+- Paginated/infinite scroll results.
+- Context actions for each song (add to queue, favorite, etc).
+
+**Web Implementation Details:**
+- Uses Ionic InfiniteScrollList for pagination.
+
+### Queue Management
+**Requirements (Platform-Agnostic):**
+- Shared queue synchronized across all clients.
+- Queue items must always use sequential numerical keys (0, 1, 2, ...).
+- The system must automatically fix any inconsistencies in order values or keys on every update.
+- Queue reordering must be atomic; when two items are swapped, both order values are updated in a single operation.
+- Only admins can reorder or delete queue items, and only when playback is stopped or paused.
+- Duplicate songs are prevented in the queue by checking the song’s `path`.
+- Each queue item shows which singer added it.
+
+**Web Implementation Details:**
+- Queue reordering and deletion are exposed via UI controls only visible to admins.
+- UI uses drag handles and swipe actions (Ionic components) for reordering and deletion.
+
+### Favorites
+**Requirements (Platform-Agnostic):**
+- Shared favorites list synchronized across all clients.
+- Anyone can add/remove favorites.
+- Duplicate prevention by song `path`.
+- Paginated/infinite scroll display.
+
+**Web Implementation Details:**
+- Uses Ionic InfiniteScrollList for pagination.
+
+### New Songs
+**Requirements (Platform-Agnostic):**
+- Shows recently added songs from the `newSongs` node.
+- Real-time updates and infinite scroll.
+
+**Web Implementation Details:**
+- Uses Ionic InfiniteScrollList for pagination.
+
+### Artists
+**Requirements (Platform-Agnostic):**
+- Browse songs by artist with search functionality.
+- Modal view for all songs by an artist.
+- Song count per artist.
+- Paginated/infinite scroll artist list.
+
+**Web Implementation Details:**
+- Uses Ionic modals and InfiniteScrollList.
+
+### Song Lists
+**Requirements (Platform-Agnostic):**
+- Predefined song lists with themes/collections.
+- Song matching to catalog.
+- Expandable view for available versions.
+- Modal interface for viewing list contents.
+- Shows which songs are available in the catalog.
+
+**Web Implementation Details:**
+- Uses Ionic modals and InfiniteScrollList.
+
+### History Tracking
+**Requirements (Platform-Agnostic):**
+- Songs automatically added to history when played.
+- Shows when each song was last played.
+- Append-only, shared across all clients.
+- Paginated/infinite scroll display.
+
+**Web Implementation Details:**
+- Uses Ionic InfiniteScrollList for pagination.
+
+### Top Played
+**Requirements (Platform-Agnostic):**
+- Popular songs generated by backend based on history.
+- Shows play count for each song.
+- Real-time updates and infinite scroll.
+
+**Web Implementation Details:**
+- Uses Ionic InfiniteScrollList for pagination.
+
+### Singer Management
+**Requirements (Platform-Agnostic):**
+- Only admins can add or remove singers.
+- Singer names must be unique and non-empty.
+- Singers are automatically added to the list when they join.
+- All users can view the current singers list.
+- Tracks when each singer last joined.
+
+**Web Implementation Details:**
+- Singer management UI is available only to admins via the settings page.
+
+### Playback Control
+**Requirements (Platform-Agnostic):**
+- Only admins can control playback (play, pause, stop).
+- Play button is disabled if the queue is empty.
+- UI state (play/pause/stop) must reflect the current player state.
+
+**Web Implementation Details:**
+- Player controls are only rendered for admins.
+- State-based UI: play/pause/stop buttons shown/hidden based on current state.
+
+### Error Handling & Sync
+**Requirements (Platform-Agnostic):**
+- Graceful handling of sync failures with retry patterns.
+- Full controller object loaded on initial connection.
+- Incremental updates target specific child nodes.
+- Real-time connection status monitoring.
+- Graceful handling of missing or empty data.
+
+**Web Implementation Details:**
+- Uses web-specific toast notifications and error boundaries.
+
+### Disabled Songs
+**Requirements (Platform-Agnostic):**
+- Admins can disable or enable songs.
+- Disabled songs are stored using a hash of the song path for key safety.
+
+**Web Implementation Details:**
+- Disabled songs are managed via a modal dialog with search and filter capabilities.
+
+### Settings
+**Requirements (Platform-Agnostic):**
+- Only admins can change player settings (autoadvance, userpick).
+
+**Web Implementation Details:**
+- Debug logging is a web-only feature, toggled via the settings page.
+
+### Navigation
+**Requirements (Platform-Agnostic):**
+- Admin-only pages (e.g., settings) must be hidden from non-admin users.
+
+**Web Implementation Details:**
+- Navigation adapts based on admin status; settings page is only visible to admins.
+
+### UI/UX & Platform-Specifics
+**Requirements (Platform-Agnostic):**
+- All business logic, validation, and permissions must be enforced at the application level, not just in the UI.
+
+**Web Implementation Details:**
+- The web implementation uses Ionic React and Tailwind CSS for UI.
+- Features like infinite scroll, swipe actions, modals, and toasts are implemented using Ionic components.
+- Session persistence, URL parameter handling, and debug logging are web-specific.
+
+---
+
+## 5️⃣ Data Models
+
+Data models are defined externally in:
+> [`types.ts`](./types.ts)
+
+This file contains TypeScript interfaces describing:
 - `Song` — Core song data with artist, title, path, and metadata
 - `QueueItem` — Queue entries with order, singer, and song data
 - `Singer` — User information with name and last login
@@ -145,10 +228,10 @@ This file contains TypeScript interfaces describing:
 
 ---
 
-## 6️⃣ Firebase Realtime Database Structure  
+## 6️⃣ Firebase Realtime Database Structure
 
-Defined externally in:  
-> [`firebase_schema.json`](./firebase_schema.json)  
+Defined externally in:
+> [`firebase_schema.json`](./firebase_schema.json)
 
 **Complete Structure:**
 ```json
@@ -178,143 +261,107 @@ controllers: {
 
 ---
 
-## 7️⃣ UI/UX Behavior  
+## 7️⃣ UI/UX Behavior
 
-### **Design System:**
-- **Responsive Design:** Works on all device sizes (mobile, tablet, desktop)
-- **Light/Dark Mode:** Support for both themes (implementation pending)
-- **Modern UI:** Clean, intuitive interface with consistent styling
-- **Accessibility:** Keyboard navigation and screen reader support
+**Requirements (Platform-Agnostic):**
+- Responsive design that works on all device sizes.
+- Support for light/dark mode themes.
+- Modern, clean, intuitive interface with consistent styling.
+- Accessibility support (keyboard navigation, screen readers).
+- Tab-based navigation with clear active states.
+- Consistent empty state views for all lists.
+- Loading states with spinner animations.
+- Toast notifications for success/error feedback.
+- Consistent button styling with variants.
+- Reusable song display with context-aware actions.
+- Infinite scroll for automatic loading of additional content.
+- Context-specific behavior for different screens (search, queue, history, etc.).
+- Admin-specific UI elements (playback controls, queue reorder, singer management).
 
-### **Navigation:**
-- **Tab-based Navigation:** Horizontal navigation bar with icons
-- **Active States:** Clear indication of current page
-- **Breadcrumbs:** Context-aware navigation (implementation pending)
-
-### **Common Components:**
-- **Empty State View:** Consistent empty state for all lists
-- **Loading States:** Spinner animations during data loading
-- **Toast Notifications:** Success/error feedback for user actions
-- **Action Buttons:** Consistent button styling with variants
-- **Song Items:** Reusable song display with context-aware actions
-- **Infinite Scroll:** Automatic loading of additional content
-
-### **Context-Specific Behavior:**
-- **Search Context:** Add to queue, toggle favorite actions
-- **Queue Context:** Remove from queue, reorder (admin), toggle favorite
-- **History Context:** Add to queue, toggle favorite, show play date
-- **Favorites Context:** Add to queue, remove from favorites
-- **Artist Context:** Modal view with all artist songs
-- **Song List Context:** Expandable song matching with availability status
-
-### **Admin-Specific UI:**
-- **Playback Controls:** Only visible to admin users
-- **Queue Reorder:** Up/down arrow buttons for queue management
-- **Singer Management:** Add/remove singer functionality
-- **Enhanced Permissions:** Visual indicators for admin capabilities
+**Web Implementation Details:**
+- Uses Ionic React components for responsive design and accessibility.
+- Horizontal navigation bar with icons.
+- Toast notifications positioned at top-right corner.
+- Modal views for artist songs and song lists.
+- Drag handles and swipe actions for queue management.
 
 ---
 
-## 8️⃣ UI Rules & Constraints  
+## 8️⃣ UI Rules & Constraints
+
+**Requirements (Platform-Agnostic):**
 
 ### **Queue Management Rules:**
-- **Admin-Only Reordering:** Only admin users can reorder queue items using up/down arrows
-- **First Item Protection:** First queue item cannot be deleted while playing (only when stopped/paused)
-- **Reorder Constraints:** 
-  - Items with `order > 2` can move up (↑ button visible)
-  - Items with `order > 1` AND `order < queue.length` can move down (↓ button visible)
-  - First item (order = 1) cannot be moved up
-  - Last item cannot be moved down
-- **Sequential Ordering:** Queue items must maintain sequential order (1, 2, 3, etc.)
-- **Order Validation:** Automatic cleanup of inconsistent order values on queue initialization
-- **Key Management:** Queue items use sequential numerical keys (0, 1, 2, etc.)
+- Only admin users can reorder queue items.
+- First queue item cannot be deleted while playing (only when stopped/paused).
+- Reorder constraints: items not at top/bottom can move up/down.
+- Queue items must maintain sequential order (1, 2, 3, etc.).
+- Automatic cleanup of inconsistent order values on queue initialization.
+- Queue items use sequential numerical keys (0, 1, 2, etc.).
 
 ### **Playback Control Rules:**
-- **Admin-Only Visibility:** Player controls only visible to admin users (`isAdmin = true`)
-- **Queue Dependency:** Play button is disabled when queue is empty (`hasSongsInQueue = false`)
-- **State-Based Controls:**
-  - When `playing`: Show pause button, hide play button
-  - When `paused` or `stopped`: Show play button, hide pause button
-  - When `playing` or `paused`: Show stop button
-  - When `stopped`: Hide stop button
-- **State Display:** Current player state shown with color-coded badges (green=playing, yellow=paused, gray=stopped)
+- Player controls only visible to admin users.
+- Play button is disabled when queue is empty.
+- State-based controls: play/pause/stop buttons shown/hidden based on current state.
+- Current player state must be clearly displayed.
 
 ### **Search Rules:**
-- **Minimum Search Length:** Search only activates after 2+ characters (`MIN_SEARCH_LENGTH = 2`)
-- **Debounce Delay:** 300ms delay before search execution (`DEBOUNCE_DELAY = 300`)
-- **Search Scope:** Searches both song title and artist fields (case-insensitive)
-- **Empty Search:** When search term is empty or too short, shows all songs
-- **Page Reset:** Search resets to page 1 when search term changes
+- Search only activates after 2+ characters.
+- Debounce delay before search execution.
+- Search scope includes both song title and artist fields (case-insensitive).
+- Empty search shows all songs.
+- Search resets to page 1 when search term changes.
 
 ### **Pagination & Infinite Scroll Rules:**
-- **Items Per Page:** 20 items loaded per page (`ITEMS_PER_PAGE = 20`)
-- **Load More Logic:** Only shows "load more" when there are more items than currently displayed
-- **Intersection Observer:** Triggers load more when user scrolls to bottom 10% of list
-- **Page State:** Each feature maintains its own page state independently
-
-### **Mandatory List Pagination Requirements:**
-- **All Lists Must Use InfiniteScrollList:** Every list in the application MUST use the `InfiniteScrollList` component to prevent UI blocking
-- **No Direct Array Rendering:** Never render large arrays directly in components - always use pagination
-- **Consistent Page Size:** All lists use exactly 20 items per page (`ITEMS_PER_PAGE = 20`)
-- **Progressive Loading:** Items are loaded progressively as user scrolls, not all at once
-- **Intersection Observer Threshold:** 10% threshold for triggering load more (`threshold: 0.1`)
-- **Loading State Management:** Show loading spinner only when no items are loaded yet
-- **HasMore Calculation:** Only show "load more" when `currentItems.length < totalItems.length`
-- **Page Reset on Search:** Reset to page 1 when search term changes
-- **Independent Page States:** Each feature (Search, History, Favorites, etc.) maintains separate page state
-- **Memory Optimization:** Only render currently visible items plus buffer for smooth scrolling
-- **Performance Monitoring:** Log render times and intersection detection for debugging
-- **Error Handling:** Graceful handling of load more failures with retry options
-- **Accessibility:** Ensure infinite scroll works with keyboard navigation and screen readers
-
-### **InfiniteScrollList Component Rules:**
-- **Required Props:** All lists must provide `items`, `isLoading`, `hasMore`, `onLoadMore`
-- **Context Support:** Must support all contexts: 'search', 'queue', 'history', 'topPlayed', 'favorites'
-- **Loading States:** 
-  - Show spinner when `isLoading && items.length === 0`
-  - Show empty state when `items.length === 0 && !isLoading`
-  - Show load more trigger when `hasMore && items.length > 0`
-- **Observer Management:** Automatic cleanup of intersection observers on unmount
-- **Debug Information:** Optional debug info display for development
-- **Extra Content Support:** Allow custom content rendering per item
-- **Admin Controls:** Pass through admin status for context-specific actions
+- 20 items loaded per page.
+- Load more logic only shows when there are more items than currently displayed.
+- Triggers load more when user scrolls to bottom 10% of list.
+- Each feature maintains its own page state independently.
+- All lists must use pagination to prevent UI blocking.
+- Progressive loading of items as user scrolls.
+- Loading state management with spinner when no items are loaded yet.
+- Page reset on search term changes.
+- Memory optimization for smooth scrolling.
+- Error handling for load more failures.
+- Accessibility support for infinite scroll.
 
 ### **Toast Notification Rules:**
-- **Duration Settings:**
-  - Success messages: 3 seconds (`SUCCESS: 3000`)
-  - Error messages: 5 seconds (`ERROR: 5000`)
-  - Info messages: 3 seconds (`INFO: 3000`)
-- **Auto-dismiss:** Toasts automatically disappear after duration
-- **Manual Dismiss:** Users can manually close toasts with × button
-- **Stacking:** Multiple toasts can be displayed simultaneously
-- **Position:** Fixed position at top-right corner with z-index 50
+- Duration settings: Success/Info 3 seconds, Error 5 seconds.
+- Auto-dismiss after duration.
+- Manual dismiss option.
+- Multiple toasts can be displayed simultaneously.
 
 ### **Authentication Rules:**
-- **Admin Access:** Available via URL parameter `?admin=true`
-- **URL Cleanup:** Admin parameter removed from URL after successful authentication
-- **Session Persistence:** Authentication state lost on page reload (requires re-login)
-- **Required Fields:** Both Party ID and singer name required for login
-- **Admin Default:** Admin mode pre-fills singer name as "Admin"
+- Admin access is a privileged mode (see platform details for implementation).
+- Session persistence behavior varies by platform.
+- Both Party ID and singer name required for login.
 
 ### **Data Display Rules:**
-- **Loading States:** Show spinner when data count is 0
-- **Empty States:** Show empty state when data exists but filtered results are empty
-- **Debug Information:** Show data counts and loading status in development
-- **User Attribution:** Show "(You)" indicator for current user's queue items
-- **Availability Status:** Show "Not available in catalog" for unmatched song list items
+- Loading states with spinner when data count is 0.
+- Empty states when data exists but filtered results are empty.
+- Debug information display for development.
+- User attribution indicators for current user's queue items.
+- Availability status for unmatched song list items.
 
 ### **Action Button Rules:**
-- **Context-Based Actions:** Different actions available based on context (search, queue, history, etc.)
-- **Permission-Based Visibility:** Actions hidden based on user role (admin vs regular user)
-- **State-Based Disabling:** Buttons disabled based on current state (e.g., play button when queue empty)
-- **Confirmation Feedback:** All actions show success/error toast notifications
+- Context-based actions for different screens.
+- Permission-based visibility based on user role.
+- State-based disabling of buttons.
+- Confirmation feedback for all actions.
 
 ### **Modal & Overlay Rules:**
-- **Artist Modal:** Full-screen modal for viewing artist songs
-- **Song List Modal:** Full-screen modal with expandable song sections
-- **Z-Index Management:** Modals use high z-index (9999) to appear above all content
-- **Backdrop:** Semi-transparent black backdrop (50% opacity)
-- **Close Actions:** Modal can be closed via close button or backdrop click
+- Modal views for artist songs and song lists.
+- Proper backdrop and close actions.
+
+**Web Implementation Details:**
+- Admin access via URL parameter (`?admin=true`), removed after authentication.
+- Session lost on page reload.
+- Uses Ionic InfiniteScrollList component for pagination.
+- Toast notifications positioned at top-right corner with z-index 50.
+- Modals use high z-index (9999) with semi-transparent backdrop.
+- Admin mode pre-fills singer name as "Admin".
+- Intersection Observer API for infinite scroll detection.
+- Debug information display for development builds.
 
 ### **Error Handling Rules:**
 - **Error Boundaries:** React error boundaries catch component-level errors
@@ -355,7 +402,7 @@ controllers: {
 
 ---
 
-## 9️⃣ Codebase Organization & File Structure  
+## 9️⃣ Codebase Organization & File Structure
 
 ### **Folder Structure & Purpose:**
 
@@ -734,7 +781,7 @@ import type { Song, QueueItem } from '../types';
 
 ---
 
-## 🔟 Cloud Function Design — Top Played  
+## 🔟 Cloud Function Design — Top Played
 
 - **Trigger:** Firebase Cloud Function triggered when song added to `history`
 - **Action:** Increments play count in `/controllers/{controllerName}/topPlayed/{songId}`
@@ -743,7 +790,7 @@ import type { Song, QueueItem } from '../types';
 
 ---
 
-## 11️⃣ External Reference Files  
+## 11️⃣ External Reference Files
 
 | File | Purpose |
 |------|---------|
@@ -753,11 +800,11 @@ import type { Song, QueueItem } from '../types';
 
 ---
 
-## 12️⃣ Data Access Model & Validation  
+## 12️⃣ Data Access Model & Validation
 
-> **Client-Controlled Access Model**  
+> **Client-Controlled Access Model**
 
-This app does **not** use Firebase Realtime Database Security Rules.  
+This app does **not** use Firebase Realtime Database Security Rules.
 All permissions, validation, and business logic are enforced in the client application.
 
 ### **Enforced Client-Side:**
@@ -774,14 +821,14 @@ All permissions, validation, and business logic are enforced in the client appli
 - **Data Integrity:** Type checking, required field validation
 - **State Management:** Redux state consistency, error handling
 
-**Assumed Environment:**  
+**Assumed Environment:**
 - The app is used in trusted, in-home scenarios with controlled participants
 - Open Firebase access is considered acceptable for this use case
 - All users are trusted participants in the karaoke session
 
 ---
 
-## 13️⃣ Performance & Optimization  
+## 13️⃣ Performance & Optimization
 
 ### **State Management:**
 - **Redux Toolkit:** Efficient state management with immutable updates
@@ -816,7 +863,7 @@ All permissions, validation, and business logic are enforced in the client appli
 
 ---
 
-## 14️⃣ Error Handling & Resilience  
+## 14️⃣ Error Handling & Resilience
 
 ### **Firebase Connection:**
 - **Connection Monitoring:** Real-time connection status tracking
@@ -838,7 +885,7 @@ All permissions, validation, and business logic are enforced in the client appli
 
 ---
 
-## 15️⃣ Testing Strategy  
+## 15️⃣ Testing Strategy
 
 ### **Unit Testing:**
 - **Hook Testing:** Business logic hooks with isolated testing
@@ -860,7 +907,7 @@ All permissions, validation, and business logic are enforced in the client appli
 
 ---
 
-## 16️⃣ Deployment & Environment  
+## 16️⃣ Deployment & Environment
 
 ### **Build Configuration:**
 - **Vite:** Fast build tool with hot module replacement
@@ -880,7 +927,7 @@ All permissions, validation, and business logic are enforced in the client appli
 
 ---
 
-## 17️⃣ Firebase Implementation Patterns  
+## 17️⃣ Firebase Implementation Patterns
 
 ### **Key Management & Data Structure:**
 - **Sequential Numerical Keys:** Queue items use sequential numerical keys (0, 1, 2, etc.) instead of Firebase push IDs
@@ -969,7 +1016,7 @@ All permissions, validation, and business logic are enforced in the client appli
 
 ---
 
-## 18️⃣ Critical Implementation Notes  
+## 18️⃣ Critical Implementation Notes
 
 ### **DO NOT CHANGE These Patterns:**
 - **Queue Key Management:** Sequential numerical keys (0, 1, 2, etc.) - changing this will break queue functionality
@@ -1004,9 +1051,9 @@ All permissions, validation, and business logic are enforced in the client appli
 
 ---
 
-## ✅ Summary  
+## ✅ Summary
 
-This PRD serves as the comprehensive source of truth for application logic, Firebase data flow, and feature requirements.  
+This PRD serves as the comprehensive source of truth for application logic, Firebase data flow, and feature requirements.
 It works alongside `types.ts` and `firebase_schema.json` to inform both human developers and AI tools for accurate implementation.
 
 **Key Success Metrics:**
@@ -1018,7 +1065,7 @@ It works alongside `types.ts` and `firebase_schema.json` to inform both human de
 
 ---
 
-## 19️⃣ Environment Configuration & .env.local Setup  
+## 19️⃣ Environment Configuration & .env.local Setup
 
 ### **Environment File Structure:**
 The application uses Vite's built-in environment variable support with the following file structure:
@@ -1175,7 +1222,7 @@ const validateFirebaseConfig = () => {
 
 ---
 
-## 20️⃣ Third-Party UI Library - Ionic React  
+## 20️⃣ Third-Party UI Library - Ionic React
 
 ### **Current UI Implementation:**
 The application currently uses **Tailwind CSS** for styling with custom components. While functional, this approach requires significant custom development for responsive design and native platform feel.
@@ -1395,7 +1442,7 @@ No complex choices, no multiple libraries, no over-engineering. Just one library
 
 ---
 
-## 21️⃣ Design Folder & Mockups  
+## 21️⃣ Design Folder & Mockups
 
 ### **Design Folder Contents:**
 The `/docs/design/` folder contains UI/UX mockups that were created using an **older version of Ionic** to demonstrate the intended layout and user experience.

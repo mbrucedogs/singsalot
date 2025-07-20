@@ -4,12 +4,16 @@ import { debugLog } from '../utils/logger';
 import { useSongOperations } from './useSongOperations';
 import { useToast } from './useToast';
 import { useDisabledSongs } from './useDisabledSongs';
+import { historyService } from '../firebase/services';
+import { useAppSelector as useAppSelectorRedux } from '../redux';
+import { selectControllerName } from '../redux';
 import type { Song } from '../types';
 
 const ITEMS_PER_PAGE = 20;
 
 export const useHistory = () => {
   const allHistoryItems = useAppSelector(selectHistoryArray);
+  const controllerName = useAppSelectorRedux(selectControllerName);
   const { addToQueue, toggleFavorite } = useSongOperations();
   const { showSuccess, showError } = useToast();
   const { disabledSongPaths, isSongDisabled, addDisabledSong, removeDisabledSong, loading: disabledSongsLoading } = useDisabledSongs();
@@ -82,6 +86,20 @@ export const useHistory = () => {
     }
   }, [isSongDisabled, addDisabledSong, removeDisabledSong, showError]);
 
+  const handleDeleteFromHistory = useCallback(async (song: Song) => {
+    if (!controllerName || !song.key) {
+      showError('Cannot delete history item - missing data');
+      return;
+    }
+
+    try {
+      await historyService.removeFromHistory(controllerName, song.key);
+      showSuccess('Removed from history');
+    } catch {
+      showError('Failed to remove from history');
+    }
+  }, [controllerName, showSuccess, showError]);
+
   return {
     historyItems,
     hasMore,
@@ -89,6 +107,7 @@ export const useHistory = () => {
     handleAddToQueue,
     handleToggleFavorite,
     handleToggleDisabled,
+    handleDeleteFromHistory,
     isSongDisabled,
   };
 }; 

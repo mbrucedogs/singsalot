@@ -4,7 +4,7 @@ import { time } from 'ionicons/icons';
 import { InfiniteScrollList, SongItem } from '../../components/common';
 import { useHistory } from '../../hooks';
 import { useAppSelector } from '../../redux';
-import { selectHistory } from '../../redux';
+import { selectHistory, selectIsAdmin } from '../../redux';
 import { debugLog } from '../../utils/logger';
 import { formatDate } from '../../utils/dataProcessing';
 import type { Song } from '../../types';
@@ -15,10 +15,11 @@ const History: React.FC = () => {
     hasMore,
     loadMore,
     handleAddToQueue,
-    handleToggleFavorite,
+    handleDeleteFromHistory,
   } = useHistory();
 
   const history = useAppSelector(selectHistory);
+  const isAdmin = useAppSelector(selectIsAdmin);
   const historyCount = Object.keys(history).length;
 
   // Debug logging
@@ -52,7 +53,12 @@ const History: React.FC = () => {
                 song={song}
                 context="history"
                 onAddToQueue={() => handleAddToQueue(song)}
-                onToggleFavorite={() => handleToggleFavorite(song)}
+                onDelete={() => handleDeleteFromHistory(song)}
+                isAdmin={isAdmin}
+                showAddButton={true}
+                showInfoButton={true}
+                showDeleteButton={true}
+                showFavoriteButton={false}
               />
             </div>
             {renderExtraContent(song)}

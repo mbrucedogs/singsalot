@@ -12,7 +12,6 @@ const NewSongs: React.FC = () => {
     hasMore,
     loadMore,
     handleAddToQueue,
-    handleToggleFavorite,
   } = useNewSongs();
 
   const newSongsArray = useAppSelector(selectNewSongsArray);
@@ -34,7 +33,9 @@ const NewSongs: React.FC = () => {
             song={song}
             context="search"
             onAddToQueue={() => handleAddToQueue(song)}
-            onToggleFavorite={() => handleToggleFavorite(song)}
+            showAddButton={true}
+            showInfoButton={true}
+            showFavoriteButton={false}
           />
         )}
         emptyTitle="No new songs"

@@ -13,7 +13,6 @@ const Search: React.FC = () => {
     searchResults,
     handleSearchChange,
     handleAddToQueue,
-    handleToggleFavorite,
     loadMore,
   } = useSearch();
   
@@ -65,9 +64,11 @@ const Search: React.FC = () => {
               song={song}
               context="search"
               onAddToQueue={() => handleAddToQueue(song)}
-              onToggleFavorite={() => handleToggleFavorite(song)}
               onSelectSinger={() => openSongInfo(song)}
               isAdmin={isAdmin}
+              showAddButton={true}
+              showInfoButton={true}
+              showFavoriteButton={false}
             />
           )}
           emptyTitle={searchTerm ? "No songs found" : "No songs available"}

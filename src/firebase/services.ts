@@ -166,6 +166,12 @@ export const historyService = {
     return await push(historyRef, song);
   },
 
+  // Remove song from history
+  removeFromHistory: async (controllerName: string, historyItemKey: string) => {
+    const historyItemRef = ref(database, `controllers/${controllerName}/history/${historyItemKey}`);
+    await remove(historyItemRef);
+  },
+
   // Listen to history changes
   subscribeToHistory: (controllerName: string, callback: (data: Record<string, Song>) => void) => {
     const historyRef = ref(database, `controllers/${controllerName}/history`);

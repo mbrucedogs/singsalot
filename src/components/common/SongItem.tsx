@@ -232,11 +232,11 @@ const SongItem: React.FC<SongItemProps> = ({
   const shouldShowCount = showCount !== undefined ? showCount : context === 'queue';
   
   // Default values for action buttons based on context if not explicitly provided
-  const shouldShowInfoButton = showInfoButton !== undefined ? showInfoButton : context !== 'queue';
-  const shouldShowAddButton = showAddButton !== undefined ? showAddButton : context !== 'queue';
+  const shouldShowInfoButton = showInfoButton !== undefined ? showInfoButton : ['search', 'history'].includes(context);
+  const shouldShowAddButton = showAddButton !== undefined ? showAddButton : ['search', 'history'].includes(context);
   const shouldShowRemoveButton = showRemoveButton !== undefined ? showRemoveButton : context === 'queue' && isAdmin;
-  const shouldShowDeleteButton = showDeleteButton !== undefined ? showDeleteButton : context === 'favorites';
-  const shouldShowFavoriteButton = showFavoriteButton !== undefined ? showFavoriteButton : context !== 'favorites';
+  const shouldShowDeleteButton = showDeleteButton !== undefined ? showDeleteButton : context === 'history' && isAdmin;
+  const shouldShowFavoriteButton = showFavoriteButton !== undefined ? showFavoriteButton : false; // Disabled for all contexts
 
   return (
     <IonItem className={className}>

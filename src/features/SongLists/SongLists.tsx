@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { IonItem, IonModal, IonHeader, IonToolbar, IonTitle, IonButton, IonIcon, IonChip, IonContent, IonList, IonAccordionGroup, IonAccordion } from '@ionic/react';
 import { close, list } from 'ionicons/icons';
-import { InfiniteScrollList, SongItem, ListItem, TwoLineDisplay, NumberDisplay } from '../../components/common';
+import { InfiniteScrollList, SongItem, ListItem, TwoLineDisplay, NumberDisplay, SongInfo } from '../../components/common';
 import { useSongLists } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectSongList } from '../../redux';
@@ -22,6 +22,8 @@ const SongLists: React.FC = () => {
   const songListCount = Object.keys(songListData).length;
   const [selectedSongList, setSelectedSongList] = useState<string | null>(null);
   const [expandedSongKey, setExpandedSongKey] = useState<string | null>(null);
+  const [selectedSong, setSelectedSong] = useState<Song | null>(null);
+  const [isSongInfoOpen, setIsSongInfoOpen] = useState(false);
 
 
 
@@ -38,6 +40,16 @@ const SongLists: React.FC = () => {
   const handleSongItemClick = useCallback((songKey: string) => {
     setExpandedSongKey(expandedSongKey === songKey ? null : songKey);
   }, [expandedSongKey]);
+
+  const handleSongInfo = useCallback((song: Song) => {
+    setSelectedSong(song);
+    setIsSongInfoOpen(true);
+  }, []);
+
+  const handleCloseSongInfo = useCallback(() => {
+    setIsSongInfoOpen(false);
+    setSelectedSong(null);
+  }, []);
 
   const finalSelectedList = selectedSongList
     ? allSongLists.find(list => list.key === selectedSongList)
@@ -132,7 +144,7 @@ const SongLists: React.FC = () => {
                               song={song}
                               context="search"
                               onAddToQueue={() => handleAddToQueue(song)}
-                              onSelectSinger={() => {}} // Info button functionality
+                              onSelectSinger={() => handleSongInfo(song)}
                               showAddButton={true}
                               showInfoButton={true}
                               showFavoriteButton={false}
@@ -173,6 +185,15 @@ const SongLists: React.FC = () => {
             </IonAccordionGroup>
           </IonContent>
         </IonModal>
+
+        {/* Song Info Modal */}
+        {selectedSong && (
+          <SongInfo
+            isOpen={isSongInfoOpen}
+            onClose={handleCloseSongInfo}
+            song={selectedSong}
+          />
+        )}
       </div>
     </>
   );

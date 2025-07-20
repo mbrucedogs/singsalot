@@ -1,5 +1,5 @@
 import React from 'react';
-import { InfiniteScrollList, SongItem } from '../../components/common';
+import { InfiniteScrollList, SongItem, SongInfo } from '../../components/common';
 import { useNewSongs } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectNewSongsArray } from '../../redux';
@@ -16,10 +16,22 @@ const NewSongs: React.FC = () => {
 
   const newSongsArray = useAppSelector(selectNewSongsArray);
   const newSongsCount = newSongsArray.length;
+  const [selectedSong, setSelectedSong] = React.useState<Song | null>(null);
+  const [isSongInfoOpen, setIsSongInfoOpen] = React.useState(false);
 
   // Debug logging
   debugLog('NewSongs component - new songs count:', newSongsCount);
   debugLog('NewSongs component - new songs items:', newSongsItems);
+
+  const handleSongInfo = (song: Song) => {
+    setSelectedSong(song);
+    setIsSongInfoOpen(true);
+  };
+
+  const handleCloseSongInfo = () => {
+    setIsSongInfoOpen(false);
+    setSelectedSong(null);
+  };
 
   return (
     <>
@@ -33,6 +45,7 @@ const NewSongs: React.FC = () => {
             song={song}
             context="search"
             onAddToQueue={() => handleAddToQueue(song)}
+            onSelectSinger={() => handleSongInfo(song)}
             showAddButton={true}
             showInfoButton={true}
             showFavoriteButton={false}
@@ -43,6 +56,15 @@ const NewSongs: React.FC = () => {
         loadingTitle="Loading new songs..."
         loadingMessage="Please wait while new songs data is being loaded"
       />
+
+      {/* Song Info Modal */}
+      {selectedSong && (
+        <SongInfo
+          isOpen={isSongInfoOpen}
+          onClose={handleCloseSongInfo}
+          song={selectedSong}
+        />
+      )}
     </>
   );
 };

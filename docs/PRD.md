@@ -21,13 +21,13 @@
 
 ---
 
-## 1️⃣ Purpose
+## 1. Purpose
 
 This document defines the functional, technical, and UX requirements for the Karaoke App, designed for **in-home party use**. The app leverages **Firebase Realtime Database** for real-time synchronization, with all business logic and validation handled **client-side**.
 
 ---
 
-## 2️⃣ Scope & Business Objectives
+## 2. Scope & Business Objectives
 
 - Deliver a single-session karaoke experience where users connect to a controller and manage/search songs.
 - Use Firebase for real-time multi-user sync of queues, history, and playback state.
@@ -107,7 +107,7 @@ This document defines the functional, technical, and UX requirements for the Kar
 
 ---
 
-## 3️⃣ User Roles & Permissions
+## 3. User Roles & Permissions
 
 **Requirements (Platform-Agnostic):**
 - Two roles: Host/Admin and Singer/User.
@@ -122,7 +122,7 @@ This document defines the functional, technical, and UX requirements for the Kar
 
 ---
 
-## 4️⃣ Feature Overview
+## 4. Feature Overview
 
 ### Authentication & Session Management
 **Requirements (Platform-Agnostic):**
@@ -281,7 +281,7 @@ This document defines the functional, technical, and UX requirements for the Kar
 
 ---
 
-## 5️⃣ Data Models
+## 5. Data Models
 
 Data models are defined externally in:
 > [`types.ts`](./types.ts)
@@ -306,7 +306,7 @@ This file contains TypeScript interfaces describing:
 
 ---
 
-## 6️⃣ Firebase Realtime Database Structure
+## 6. Firebase Realtime Database Structure
 
 Defined externally in:
 > [`firebase_schema.json`](./firebase_schema.json)
@@ -375,7 +375,7 @@ controllers: {
 
 ---
 
-## 7️⃣ UI/UX Behavior
+## 7. UI/UX Behavior
 
 **Requirements (Platform-Agnostic):**
 - Responsive design that works on all device sizes.
@@ -401,7 +401,7 @@ controllers: {
 
 ---
 
-## 8️⃣ UI Rules & Constraints
+## 8. UI Rules & Constraints
 
 **Requirements (Platform-Agnostic):**
 
@@ -516,7 +516,7 @@ controllers: {
 
 ---
 
-## 9️⃣ Codebase Organization & File Structure
+## 9. Codebase Organization & File Structure
 
 ### **Folder Structure & Purpose:**
 
@@ -929,7 +929,7 @@ import type { Song, QueueItem } from '../types';
 
 ---
 
-## 11️⃣ External Reference Files
+## 11. External Reference Files
 
 | File | Purpose |
 |------|---------|
@@ -939,7 +939,7 @@ import type { Song, QueueItem } from '../types';
 
 ---
 
-## 12️⃣ Data Access Model & Validation
+## 12. Data Access Model & Validation
 
 > **Client-Controlled Access Model**
 
@@ -967,7 +967,7 @@ All permissions, validation, and business logic are enforced in the client appli
 
 ---
 
-## 13️⃣ Performance & Optimization
+## 13. Performance & Optimization
 
 ### **State Management:**
 - **Redux Toolkit:** Efficient state management with immutable updates
@@ -1002,7 +1002,7 @@ All permissions, validation, and business logic are enforced in the client appli
 
 ---
 
-## 14️⃣ Error Handling & Resilience
+## 14. Error Handling & Resilience
 
 ### **Firebase Connection:**
 - **Connection Monitoring:** Real-time connection status tracking
@@ -1024,7 +1024,7 @@ All permissions, validation, and business logic are enforced in the client appli
 
 ---
 
-## 15️⃣ Testing Strategy
+## 15. Testing Strategy
 
 ### **Unit Testing:**
 - **Hook Testing:** Business logic hooks with isolated testing
@@ -1046,7 +1046,7 @@ All permissions, validation, and business logic are enforced in the client appli
 
 ---
 
-## 16️⃣ Deployment & Environment
+## 16. Deployment & Environment
 
 ### **Build Configuration:**
 - **Vite:** Fast build tool with hot module replacement
@@ -1066,7 +1066,7 @@ All permissions, validation, and business logic are enforced in the client appli
 
 ---
 
-## 17️⃣ Firebase Implementation Patterns
+## 17. Firebase Implementation Patterns
 
 ### **Key Management & Data Structure:**
 - **Sequential Numerical Keys:** Queue items use sequential numerical keys (0, 1, 2, etc.) instead of Firebase push IDs
@@ -1199,7 +1199,7 @@ All permissions, validation, and business logic are enforced in the client appli
 
 ---
 
-## 18️⃣ Critical Implementation Notes
+## 18. Critical Implementation Notes
 
 ### **DO NOT CHANGE These Patterns:**
 - **Queue Key Management:** Sequential numerical keys (0, 1, 2, etc.) - changing this will break queue functionality
@@ -1248,7 +1248,7 @@ It works alongside `types.ts` and `firebase_schema.json` to inform both human de
 
 ---
 
-## 19️⃣ Environment Configuration & .env.local Setup
+## 19. Environment Configuration & .env.local Setup
 
 ### **Environment File Structure:**
 The application uses Vite's built-in environment variable support with the following file structure:
@@ -1405,7 +1405,7 @@ const validateFirebaseConfig = () => {
 
 ---
 
-## 23️⃣ Complete Data Flow Diagrams
+## 23. Complete Data Flow Diagrams
 
 ### **Authentication Flow:**
 ```
@@ -1475,7 +1475,7 @@ Reorder Queue:
 
 ---
 
-## 24️⃣ State Management Architecture
+## 24. State Management Architecture
 
 ### **Redux State Tree Structure:**
 ```typescript
@@ -1575,7 +1575,7 @@ resetController: void
 
 ---
 
-## 25️⃣ Service Layer API Specifications
+## 25. Service Layer API Specifications
 
 ### **Controller Service:**
 ```typescript
@@ -1742,7 +1742,7 @@ playerService.subscribeToPlayerState(controllerName: string, callback: (data: Pl
 
 ---
 
-## 26️⃣ Component Architecture Specifications
+## 26. Component Architecture Specifications
 
 ### **SongItem Component:**
 ```typescript
@@ -1876,7 +1876,7 @@ App
 
 ---
 
-## 27️⃣ Error Handling Matrix
+## 27. Error Handling Matrix
 
 ### **Network Errors:**
 ```
@@ -1985,7 +1985,7 @@ Invalid Firebase Keys:
 
 ---
 
-## 28️⃣ Performance Specifications
+## 28. Performance Specifications
 
 ### **Memoization Rules:**
 ```typescript
@@ -2104,7 +2104,7 @@ useEffect(() => {
 
 ---
 
-## 29️⃣ Implementation Guide for New Projects
+## 29. Implementation Guide for New Projects
 
 ### **Quick Start Questions for Implementation:**
 
@@ -2214,7 +2214,7 @@ When starting a new implementation, ask these questions to determine the approac
 
 ---
 
-## 20️⃣ Third-Party UI Library - Ionic React
+## 20. Third-Party UI Library - Ionic React
 
 ### **Current UI Implementation:**
 The application currently uses **Tailwind CSS** for styling with custom components. While functional, this approach requires significant custom development for responsive design and native platform feel.
@@ -2434,7 +2434,7 @@ No complex choices, no multiple libraries, no over-engineering. Just one library
 
 ---
 
-## 21️⃣ Design Assets & Visual Reference
+## 21. Design Assets & Visual Reference
 
 ### **Design Assets Location:**
 The `/docs/design/` folder contains comprehensive UI/UX mockups and visual references for different platforms and features.
@@ -2628,5 +2628,5 @@ The mockups provide excellent guidance for the intended user experience, but the
 
 ---
 
-## 22️⃣ Development Setup & Configuration
+## 22. Development Setup & Configuration
 

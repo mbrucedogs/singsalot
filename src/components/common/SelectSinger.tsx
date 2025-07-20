@@ -7,15 +7,15 @@ import {
   IonContent, 
   IonList, 
   IonItem, 
-  IonLabel, 
-  IonButton, 
-  IonIcon 
+  IonLabel
 } from '@ionic/react';
-import { close } from 'ionicons/icons';
 import { useAppSelector } from '../../redux';
 import { selectSingersArray, selectControllerName, selectQueueObject } from '../../redux';
 import { queueService } from '../../firebase/services';
 import { useToast } from '../../hooks/useToast';
+import { ActionButton } from './index';
+import { ActionButtonVariant, ActionButtonSize, ActionButtonIconSlot } from '../../types';
+import { Icons } from '../../constants';
 import type { Song, Singer, QueueItem } from '../../types';
 
 interface SelectSingerProps {
@@ -76,9 +76,13 @@ const SelectSinger: React.FC<SelectSingerProps> = ({ isOpen, onClose, song }) =>
       <IonHeader>
         <IonToolbar>
           <IonTitle>Select Singer</IonTitle>
-          <IonButton slot="end" fill="clear" onClick={onClose}>
-            <IonIcon icon={close} />
-          </IonButton>
+          <ActionButton
+            onClick={onClose}
+            variant={ActionButtonVariant.SECONDARY}
+            size={ActionButtonSize.SMALL}
+            icon={Icons.CLOSE}
+            iconSlot={ActionButtonIconSlot.ICON_ONLY}
+          />
         </IonToolbar>
       </IonHeader>
       

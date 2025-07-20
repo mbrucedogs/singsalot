@@ -1,7 +1,9 @@
 import React from 'react';
 import { IonCard, IonCardContent, IonChip, IonIcon } from '@ionic/react';
-import { play, pause, stop, pauseOutline, playOutline, stopOutline } from 'ionicons/icons';
+import { pauseOutline, playOutline, stopOutline } from 'ionicons/icons';
 import ActionButton from './ActionButton';
+import { ActionButtonVariant, ActionButtonSize, ActionButtonIconSlot } from '../../types';
+import { Icons } from '../../constants';
 import { useAppSelector } from '../../redux';
 import { selectPlayerState, selectIsAdmin, selectQueueLength, selectControllerName } from '../../redux';
 import { playerService } from '../../firebase/services';
@@ -190,30 +192,30 @@ const PlayerControls: React.FC<PlayerControlsProps> = ({ className = '', variant
           {currentState === PlayerState.playing ? (
             <ActionButton
               onClick={handlePause}
-              variant="primary"
-              size="sm"
-            >
-              <IonIcon icon={pause} slot="icon-only" />
-            </ActionButton>
+              variant={ActionButtonVariant.PRIMARY}
+              size={ActionButtonSize.SMALL}
+              icon={Icons.PAUSE}
+              iconSlot={ActionButtonIconSlot.ICON_ONLY}
+            />
           ) : (
             <ActionButton
               onClick={handlePlay}
-              variant="primary"
-              size="sm"
+              variant={ActionButtonVariant.PRIMARY}
+              size={ActionButtonSize.SMALL}
+              icon={Icons.PLAY}
+              iconSlot={ActionButtonIconSlot.ICON_ONLY}
               disabled={!hasSongsInQueue}
-            >
-              <IonIcon icon={play} slot="icon-only" />
-            </ActionButton>
+            />
           )}
           
           {currentState !== PlayerState.stopped && (
             <ActionButton
               onClick={handleStop}
-              variant="danger"
-              size="sm"
-            >
-              <IonIcon icon={stop} slot="icon-only" />
-            </ActionButton>
+              variant={ActionButtonVariant.DANGER}
+              size={ActionButtonSize.SMALL}
+              icon={Icons.STOP}
+              iconSlot={ActionButtonIconSlot.ICON_ONLY}
+            />
           )}
         </div>
         

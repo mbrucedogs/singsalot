@@ -1,11 +1,12 @@
 import React from 'react';
-import { IonItem, IonLabel, IonIcon } from '@ionic/react';
-import { add, heart, heartOutline, trash, informationCircle } from 'ionicons/icons';
+import { IonItem, IonLabel } from '@ionic/react';
 import ActionButton from './ActionButton';
 import { useAppSelector } from '../../redux';
 import { selectQueue, selectFavorites } from '../../redux';
 import { debugLog } from '../../utils/logger';
 import type { SongItemProps, QueueItem, Song } from '../../types';
+import { ActionButtonVariant, ActionButtonSize, ActionButtonIconSlot } from '../../types';
+import { Icons } from '../../constants';
 
 // Utility function to extract filename from path
 const extractFilename = (path: string): string => {
@@ -119,11 +120,11 @@ export const SongActionButtons: React.FC<{
       <ActionButton
         key="info"
         onClick={onSelectSinger}
-        variant="secondary"
-        size="sm"
-      >
-        <IonIcon icon={informationCircle} />
-      </ActionButton>
+        variant={ActionButtonVariant.SECONDARY}
+        size={ActionButtonSize.SMALL}
+        icon={Icons.INFORMATION_CIRCLE}
+        iconSlot={ActionButtonIconSlot.ICON_ONLY}
+      />
     );
   }
 
@@ -133,11 +134,11 @@ export const SongActionButtons: React.FC<{
       <ActionButton
         key="add"
         onClick={onAddToQueue || (() => {})}
-        variant="primary"
-        size="sm"
-      >
-        <IonIcon icon={add} />
-      </ActionButton>
+        variant={ActionButtonVariant.PRIMARY}
+        size={ActionButtonSize.SMALL}
+        icon={Icons.ADD}
+        iconSlot={ActionButtonIconSlot.ICON_ONLY}
+      />
     );
   }
 
@@ -147,11 +148,11 @@ export const SongActionButtons: React.FC<{
       <ActionButton
         key="remove"
         onClick={onRemoveFromQueue}
-        variant="danger"
-        size="sm"
-      >
-        <IonIcon icon={trash} />
-      </ActionButton>
+        variant={ActionButtonVariant.DANGER}
+        size={ActionButtonSize.SMALL}
+        icon={Icons.TRASH}
+        iconSlot={ActionButtonIconSlot.ICON_ONLY}
+      />
     );
   }
 
@@ -161,11 +162,11 @@ export const SongActionButtons: React.FC<{
       <ActionButton
         key="delete"
         onClick={onDeleteItem}
-        variant="danger"
-        size="sm"
-      >
-        <IonIcon icon={trash} />
-      </ActionButton>
+        variant={ActionButtonVariant.DANGER}
+        size={ActionButtonSize.SMALL}
+        icon={Icons.TRASH}
+        iconSlot={ActionButtonIconSlot.ICON_ONLY}
+      />
     );
   }
 
@@ -175,11 +176,11 @@ export const SongActionButtons: React.FC<{
       <ActionButton
         key="favorite"
         onClick={onToggleFavorite || (() => {})}
-        variant={isInFavorites ? 'danger' : 'secondary'}
-        size="sm"
-      >
-        <IonIcon icon={isInFavorites ? heart : heartOutline} />
-      </ActionButton>
+        variant={isInFavorites ? ActionButtonVariant.DANGER : ActionButtonVariant.SECONDARY}
+        size={ActionButtonSize.SMALL}
+        icon={isInFavorites ? Icons.HEART : Icons.HEART_OUTLINE}
+        iconSlot={ActionButtonIconSlot.ICON_ONLY}
+      />
     );
   }
 

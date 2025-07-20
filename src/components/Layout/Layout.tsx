@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
-import { IonApp, IonHeader, IonToolbar, IonTitle, IonContent, IonMenuButton, IonIcon } from '@ionic/react';
-import { logOut } from 'ionicons/icons';
+import { IonApp, IonHeader, IonToolbar, IonTitle, IonContent, IonMenuButton } from '@ionic/react';
 import { logout } from '../../redux/authSlice';
 import { ActionButton } from '../common';
+import { ActionButtonVariant, ActionButtonSize, ActionButtonIconSlot } from '../../types';
+import { Icons } from '../../constants';
 import Navigation from '../Navigation/Navigation';
 import { getPageTitle } from '../../utils/routeUtils';
 import type { LayoutProps } from '../../types';
@@ -65,11 +66,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             <div slot="end">
               <ActionButton
                 onClick={handleLogout}
-                variant="secondary"
-                size="sm"
-              >
-                <IonIcon icon={logOut} />
-              </ActionButton>
+                variant={ActionButtonVariant.SECONDARY}
+                size={ActionButtonSize.SMALL}
+                icon={Icons.LOGOUT}
+                iconSlot={ActionButtonIconSlot.ICON_ONLY}
+              />
             </div>
           </IonToolbar>
         </IonHeader>

@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { IonItem, IonLabel, IonIcon, IonModal, IonHeader, IonToolbar, IonTitle, IonButton, IonContent, IonInput, IonLabel as IonInputLabel } from '@ionic/react';
-import { trash, add, close } from 'ionicons/icons';
+import { IonItem, IonLabel, IonModal, IonHeader, IonToolbar, IonTitle, IonButton, IonContent, IonInput, IonLabel as IonInputLabel } from '@ionic/react';
 import { InfiniteScrollList, ActionButton, NumberDisplay } from '../../components/common';
 import { useSingers } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectSingers } from '../../redux';
 import { debugLog } from '../../utils/logger';
 import type { Singer } from '../../types';
+import { ActionButtonVariant, ActionButtonSize, ActionButtonIconSlot } from '../../types';
+import { Icons } from '../../constants';
 
 const Singers: React.FC = () => {
   const {
@@ -59,15 +60,13 @@ const Singers: React.FC = () => {
       {/* Delete Button (Admin Only) */}
       {isAdmin && (
         <div slot="end" style={{ marginRight: '-16px' }}>
-          <div onClick={(e) => e.stopPropagation()}>
-            <ActionButton
-              onClick={() => handleRemoveSinger(singer)}
-              variant="danger"
-              size="sm"
-            >
-              <IonIcon icon={trash} />
-            </ActionButton>
-          </div>
+          <ActionButton
+            onClick={() => handleRemoveSinger(singer)}
+            variant={ActionButtonVariant.DANGER}
+            size={ActionButtonSize.SMALL}
+            icon={Icons.TRASH}
+            iconSlot={ActionButtonIconSlot.ICON_ONLY}
+          />
         </div>
       )}
     </IonItem>
@@ -77,12 +76,14 @@ const Singers: React.FC = () => {
     <>
       <div className="ion-padding ion-text-end">
         {isAdmin && (
-          <IonButton 
-            fill="clear" 
+          <ActionButton
             onClick={handleOpenAddModal}
-          >
-            <IonIcon icon={add} slot="icon-only" size="large" />
-          </IonButton>
+            variant={ActionButtonVariant.PRIMARY}
+            size={ActionButtonSize.SMALL}
+            icon={Icons.ADD}
+            iconSlot={ActionButtonIconSlot.ICON_ONLY}
+            fill="clear"
+          />
         )}
       </div>
 
@@ -111,9 +112,13 @@ const Singers: React.FC = () => {
         <IonHeader>
           <IonToolbar>
             <IonTitle>Add New Singer</IonTitle>
-            <IonButton slot="end" fill="clear" onClick={handleCloseAddModal}>
-              <IonIcon icon={close} />
-            </IonButton>
+            <ActionButton
+              onClick={handleCloseAddModal}
+              variant={ActionButtonVariant.SECONDARY}
+              size={ActionButtonSize.SMALL}
+              icon={Icons.CLOSE}
+              iconSlot={ActionButtonIconSlot.ICON_ONLY}
+            />
           </IonToolbar>
         </IonHeader>
         

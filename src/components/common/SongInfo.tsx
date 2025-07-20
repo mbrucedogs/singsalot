@@ -4,7 +4,7 @@ import {
   IonButton, IonIcon, IonList, IonItem, IonLabel
 } from '@ionic/react';
 import { 
-  add, heart, heartOutline, ban, checkmark, close, people
+  add, heart, heartOutline, ban, checkmark, people
 } from 'ionicons/icons';
 import { useAppSelector } from '../../redux';
 import { selectIsAdmin, selectFavorites, selectSongs, selectQueue } from '../../redux';
@@ -13,6 +13,9 @@ import { useDisabledSongs } from '../../hooks/useDisabledSongs';
 import { useSelectSinger } from '../../hooks/useSelectSinger';
 import { useToast } from '../../hooks/useToast';
 import SelectSinger from './SelectSinger';
+import { ActionButton } from './index';
+import { ActionButtonVariant, ActionButtonSize, ActionButtonIconSlot } from '../../types';
+import { Icons } from '../../constants';
 import { SongInfoDisplay } from './SongItem';
 import type { Song, QueueItem } from '../../types';
 
@@ -90,9 +93,13 @@ const SongInfo: React.FC<SongInfoProps> = ({ isOpen, onClose, song }) => {
         <IonHeader>
           <IonToolbar>
             <IonTitle>Song Info</IonTitle>
-            <IonButton slot="end" fill="clear" onClick={onClose}>
-              <IonIcon icon={close} />
-            </IonButton>
+            <ActionButton
+              onClick={onClose}
+              variant={ActionButtonVariant.SECONDARY}
+              size={ActionButtonSize.SMALL}
+              icon={Icons.CLOSE}
+              iconSlot={ActionButtonIconSlot.ICON_ONLY}
+            />
           </IonToolbar>
         </IonHeader>
         
@@ -186,9 +193,13 @@ const SongInfo: React.FC<SongInfoProps> = ({ isOpen, onClose, song }) => {
         <IonHeader>
           <IonToolbar>
             <IonTitle>Songs by {song.artist}</IonTitle>
-            <IonButton slot="end" fill="clear" onClick={() => setShowArtistSongs(false)}>
-              <IonIcon icon={close} />
-            </IonButton>
+            <ActionButton
+              onClick={() => setShowArtistSongs(false)}
+              variant={ActionButtonVariant.SECONDARY}
+              size={ActionButtonSize.SMALL}
+              icon={Icons.CLOSE}
+              iconSlot={ActionButtonIconSlot.ICON_ONLY}
+            />
           </IonToolbar>
         </IonHeader>
         

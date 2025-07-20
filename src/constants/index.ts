@@ -80,4 +80,78 @@ export const FEATURES = {
   ENABLE_HISTORY: true,
   ENABLE_TOP_PLAYED: true,
   ENABLE_ADMIN_CONTROLS: true,
-} as const; 
+} as const;
+
+import { 
+  add, 
+  trash, 
+  close, 
+  ban, 
+  checkmark,
+  searchOutline,
+  musicalNotesOutline,
+  peopleCircleOutline,
+  peopleOutline,
+  starOutline,
+  heart,
+  heartOutline,
+  timeOutline,
+  listOutline,
+  settingsOutline,
+  play,
+  playOutline,
+  pause,
+  pauseOutline,
+  stop,
+  stopOutline,
+  reorderThreeOutline,
+  reorderTwoOutline,
+  informationCircle,
+  logOut,
+  micOutline,
+  time,
+  list
+} from 'ionicons/icons';
+
+// Icon constants for better type safety and autocomplete
+export const Icons = {
+  // Action icons
+  ADD: add,
+  TRASH: trash,
+  CLOSE: close,
+  BAN: ban,
+  CHECKMARK: checkmark,
+  
+  // Navigation icons
+  SEARCH: searchOutline,
+  MUSIC_NOTES: musicalNotesOutline,
+  PEOPLE: peopleCircleOutline,
+  PEOPLE_OUTLINE: peopleOutline,
+  STAR: starOutline,
+  HEART: heart,
+  HEART_OUTLINE: heartOutline,
+  TIME: timeOutline,
+  LIST: listOutline,
+  SETTINGS: settingsOutline,
+  
+  // Player controls
+  PLAY: play,
+  PLAY_OUTLINE: playOutline,
+  PAUSE: pause,
+  PAUSE_OUTLINE: pauseOutline,
+  STOP: stop,
+  STOP_OUTLINE: stopOutline,
+  
+  // UI icons
+  REORDER_THREE: reorderThreeOutline,
+  REORDER_TWO: reorderTwoOutline,
+  INFORMATION_CIRCLE: informationCircle,
+  LOGOUT: logOut,
+  MIC: micOutline,
+  
+  // Status icons
+  TIME_SIMPLE: time,
+  LIST_SIMPLE: list
+} as const;
+
+export type IconType = typeof Icons[keyof typeof Icons]; 

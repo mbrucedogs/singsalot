@@ -1,22 +1,27 @@
 import React from 'react';
-import { IonButton } from '@ionic/react';
+import { IonButton, IonIcon } from '@ionic/react';
 import type { ActionButtonProps } from '../../types';
+import { ActionButtonVariant, ActionButtonSize, ActionButtonIconSlot, ActionButtonIconSize } from '../../types';
 
 const ActionButton: React.FC<ActionButtonProps> = ({
   onClick,
   children,
-  variant = 'primary',
-  size = 'md',
+  variant = ActionButtonVariant.PRIMARY,
+  size = ActionButtonSize.MEDIUM,
   disabled = false,
-  className = ''
+  className = '',
+  icon,
+  iconSlot = ActionButtonIconSlot.START,
+  iconSize = ActionButtonIconSize.LARGE,
+  fill = 'solid'
 }) => {
   const getVariant = () => {
     switch (variant) {
-      case 'primary':
+      case ActionButtonVariant.PRIMARY:
         return 'primary';
-      case 'secondary':
+      case ActionButtonVariant.SECONDARY:
         return 'medium';
-      case 'danger':
+      case ActionButtonVariant.DANGER:
         return 'danger';
       default:
         return 'primary';
@@ -25,11 +30,11 @@ const ActionButton: React.FC<ActionButtonProps> = ({
 
   const getSize = () => {
     switch (size) {
-      case 'sm':
+      case ActionButtonSize.SMALL:
         return 'small';
-      case 'md':
+      case ActionButtonSize.MEDIUM:
         return 'default';
-      case 'lg':
+      case ActionButtonSize.LARGE:
         return 'large';
       default:
         return 'default';
@@ -40,11 +45,24 @@ const ActionButton: React.FC<ActionButtonProps> = ({
     <IonButton
       onClick={onClick}
       disabled={disabled}
-      fill="solid"
+      fill={fill}
       color={getVariant()}
       size={getSize()}
       className={className}
+      style={{
+        minWidth: '40px',
+        minHeight: '40px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}
     >
+      {icon && <IonIcon 
+        icon={icon} 
+        slot={iconSlot} 
+        size={typeof iconSize === 'number' ? undefined : iconSize}
+        style={typeof iconSize === 'number' ? { fontSize: `${iconSize}px` } : undefined}
+      />}
       {children}
     </IonButton>
   );

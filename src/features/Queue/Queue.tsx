@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { IonItem, IonLabel, IonItemSliding, IonItemOptions, IonItemOption, IonButton, IonIcon, IonReorderGroup, IonReorder } from '@ionic/react';
-import { trash, reorderThreeOutline, reorderTwoOutline, list } from 'ionicons/icons';
+import { IonItem, IonLabel, IonItemSliding, IonItemOptions, IonItemOption, IonIcon, IonReorderGroup, IonReorder } from '@ionic/react';
+import { reorderThreeOutline, reorderTwoOutline, list } from 'ionicons/icons';
 import { useQueue } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectQueueLength, selectPlayerStateMemoized, selectIsAdmin, selectControllerName } from '../../redux';
 import { ActionButton, NumberDisplay, EmptyState } from '../../components/common';
+import { ActionButtonVariant, ActionButtonSize, ActionButtonIconSlot } from '../../types';
+import { Icons } from '../../constants';
 import { SongInfoDisplay } from '../../components/common/SongItem';
 import { queueService } from '../../firebase/services';
 import { debugLog } from '../../utils/logger';
@@ -130,11 +132,11 @@ const Queue: React.FC = () => {
               <div onClick={(e) => e.stopPropagation()}>
                 <ActionButton
                   onClick={() => handleRemoveFromQueue(queueItem)}
-                  variant="danger"
-                  size="sm"
-                >
-                  <IonIcon icon={trash} />
-                </ActionButton>
+                  variant={ActionButtonVariant.DANGER}
+                  size={ActionButtonSize.SMALL}
+                  icon={Icons.TRASH}
+                  iconSlot={ActionButtonIconSlot.ICON_ONLY}
+                />
               </div>
             )}
             {canReorder && queueMode === 'reorder' && (
@@ -152,7 +154,7 @@ const Queue: React.FC = () => {
               color="danger" 
               onClick={() => handleRemoveFromQueue(queueItem)}
             >
-              <IonIcon icon={trash} slot="icon-only" />
+              <IonIcon icon={Icons.TRASH} slot="icon-only" />
             </IonItemOption>
           </IonItemOptions>
         )}
@@ -194,11 +196,11 @@ const Queue: React.FC = () => {
               <div onClick={(e) => e.stopPropagation()}>
                 <ActionButton
                   onClick={() => handleRemoveFromQueue(firstItem)}
-                  variant="danger"
-                  size="sm"
-                >
-                  <IonIcon icon={trash} />
-                </ActionButton>
+                  variant={ActionButtonVariant.DANGER}
+                  size={ActionButtonSize.SMALL}
+                  icon={Icons.TRASH}
+                  iconSlot={ActionButtonIconSlot.ICON_ONLY}
+                />
               </div>
             )}
           </div>
@@ -211,7 +213,7 @@ const Queue: React.FC = () => {
               color="danger" 
               onClick={() => handleRemoveFromQueue(firstItem)}
             >
-              <IonIcon icon={trash} slot="icon-only"/>
+              <IonIcon icon={Icons.TRASH} slot="icon-only"/>
             </IonItemOption>
           </IonItemOptions>
         )}
@@ -234,13 +236,14 @@ const Queue: React.FC = () => {
     <>
       <div className="ion-padding ion-text-end">
         {isAdmin && (
-          <IonButton
+          <ActionButton
             onClick={toggleQueueMode}
+            variant={ActionButtonVariant.SECONDARY}
+            size={ActionButtonSize.SMALL}
+            icon={queueMode === 'delete' ? reorderThreeOutline : Icons.TRASH}
+            iconSlot={ActionButtonIconSlot.ICON_ONLY}
             fill="outline"
-            size="small"
-          >
-            <IonIcon icon={queueMode === 'delete' ? reorderThreeOutline : trash} />
-          </IonButton>
+          />
         )}
       </div>
 

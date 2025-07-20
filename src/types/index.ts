@@ -117,13 +117,49 @@ export interface ToastProps {
   onClose: () => void;
 }
 
+// ActionButton constants
+export const ActionButtonVariant = {
+  PRIMARY: 'primary',
+  SECONDARY: 'secondary',
+  DANGER: 'danger'
+} as const;
+
+export const ActionButtonSize = {
+  SMALL: 'sm',
+  MEDIUM: 'md',
+  LARGE: 'lg'
+} as const;
+
+export const ActionButtonIconSlot = {
+  START: 'start',
+  END: 'end',
+  ICON_ONLY: 'icon-only'
+} as const;
+
+export const ActionButtonIconSize = {
+  SMALL: 18,
+  MEDIUM: 20,
+  LARGE: 22
+} as const;
+
+export type ActionButtonVariantType = typeof ActionButtonVariant[keyof typeof ActionButtonVariant];
+export type ActionButtonSizeType = typeof ActionButtonSize[keyof typeof ActionButtonSize];
+export type ActionButtonIconSlotType = typeof ActionButtonIconSlot[keyof typeof ActionButtonIconSlot];
+export type ActionButtonIconSizeType = typeof ActionButtonIconSize[keyof typeof ActionButtonIconSize];
+
+import type { IconType } from '../constants';
+
 export interface ActionButtonProps {
   onClick: () => void;
-  children: React.ReactNode;
-  variant?: 'primary' | 'secondary' | 'danger';
-  size?: 'sm' | 'md' | 'lg';
+  children?: React.ReactNode;
+  variant?: ActionButtonVariantType;
+  size?: ActionButtonSizeType;
   disabled?: boolean;
   className?: string;
+  icon?: IconType;
+  iconSlot?: ActionButtonIconSlotType;
+  iconSize?: ActionButtonIconSizeType;
+  fill?: 'solid' | 'outline' | 'clear';
 }
 
 export interface SongItemProps {

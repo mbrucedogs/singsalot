@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonList, IonItem, IonLabel, IonToggle, IonButton, IonIcon, IonModal, IonSearchbar } from '@ionic/react';
-import { ban, trash } from 'ionicons/icons';
+import { ban } from 'ionicons/icons';
 import { useAppSelector } from '../../redux';
 import { selectIsAdmin, selectSettings } from '../../redux';
 import { useDisabledSongs } from '../../hooks';
 import { InfiniteScrollList, ActionButton } from '../../components/common';
+import { ActionButtonVariant, ActionButtonSize, ActionButtonIconSlot } from '../../types';
+import { Icons } from '../../constants';
 import { filterSongs } from '../../utils/dataProcessing';
 import { setDebugEnabled, isDebugEnabled, debugLog } from '../../utils/logger';
 import type { Song, DisabledSong } from '../../types';
@@ -181,11 +183,11 @@ const Settings: React.FC = () => {
                     <div onClick={(e) => e.stopPropagation()}>
                       <ActionButton
                         onClick={() => handleRemoveDisabledSong(song)}
-                        variant="danger"
-                        size="sm"
-                      >
-                        <IonIcon icon={trash} />
-                      </ActionButton>
+                        variant={ActionButtonVariant.DANGER}
+                        size={ActionButtonSize.SMALL}
+                        icon={Icons.TRASH}
+                        iconSlot={ActionButtonIconSlot.ICON_ONLY}
+                      />
                     </div>
                   </div>
                 </IonItem>

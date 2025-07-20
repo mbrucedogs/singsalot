@@ -1,14 +1,16 @@
 import React, { useState, useMemo, useCallback } from 'react';
-import { IonChip, IonModal, IonHeader, IonToolbar, IonTitle, IonButton, IonIcon, IonContent, IonList } from '@ionic/react';
-import { close, list } from 'ionicons/icons';
+import { IonChip, IonModal, IonHeader, IonToolbar, IonTitle, IonIcon, IonContent, IonList } from '@ionic/react';
+import { list } from 'ionicons/icons';
 import { useTopPlayed } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectTopPlayed, selectSongsArray } from '../../redux';
-import { InfiniteScrollList, SongItem, ListItem, SongInfo } from '../../components/common';
+import { InfiniteScrollList, SongItem, ListItem, SongInfo, ActionButton } from '../../components/common';
 import { filterSongs } from '../../utils/dataProcessing';
 import { debugLog } from '../../utils/logger';
 import { useSongOperations } from '../../hooks';
 import { useToast } from '../../hooks';
+import { ActionButtonVariant, ActionButtonSize, ActionButtonIconSlot } from '../../types';
+import { Icons } from '../../constants';
 import type { TopPlayed, Song } from '../../types';
 
 const Top100: React.FC = () => {
@@ -139,9 +141,13 @@ const Top100: React.FC = () => {
         <IonHeader>
           <IonToolbar>
             <IonTitle>{selectedTopPlayed?.artist}</IonTitle>
-            <IonButton slot="end" fill="clear" onClick={handleCloseModal}>
-              <IonIcon icon={close} />
-            </IonButton>
+                    <ActionButton
+          onClick={handleCloseModal}
+          variant={ActionButtonVariant.SECONDARY}
+          size={ActionButtonSize.SMALL}
+          icon={Icons.CLOSE}
+          iconSlot={ActionButtonIconSlot.ICON_ONLY}
+        />
           </IonToolbar>
         </IonHeader>
         

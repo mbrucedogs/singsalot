@@ -73,18 +73,21 @@ const SelectSinger: React.FC<SelectSingerProps> = ({ isOpen, onClose, song }) =>
       breakpoints={[0, 0.5, 0.8]}
       initialBreakpoint={0.8}
     >
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Select Singer</IonTitle>
-          <ActionButton
-            onClick={onClose}
-            variant={ActionButtonVariant.SECONDARY}
-            size={ActionButtonSize.SMALL}
-            icon={Icons.CLOSE}
-            iconSlot={ActionButtonIconSlot.ICON_ONLY}
-          />
-        </IonToolbar>
-      </IonHeader>
+              <IonHeader>
+          <IonToolbar>
+            <IonTitle>Select Singer</IonTitle>
+            <div slot="end">
+              <ActionButton
+                onClick={onClose}
+                variant={ActionButtonVariant.SECONDARY}
+                size={ActionButtonSize.SMALL}
+                icon={Icons.CLOSE}
+                iconSlot={ActionButtonIconSlot.ICON_ONLY}
+                fill="clear"
+              />
+            </div>
+          </IonToolbar>
+        </IonHeader>
       
       <IonContent>
         {/* Song Information */}

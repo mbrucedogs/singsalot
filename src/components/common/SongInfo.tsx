@@ -93,13 +93,16 @@ const SongInfo: React.FC<SongInfoProps> = ({ isOpen, onClose, song }) => {
         <IonHeader>
           <IonToolbar>
             <IonTitle>Song Info</IonTitle>
-            <ActionButton
-              onClick={onClose}
-              variant={ActionButtonVariant.SECONDARY}
-              size={ActionButtonSize.SMALL}
-              icon={Icons.CLOSE}
-              iconSlot={ActionButtonIconSlot.ICON_ONLY}
-            />
+            <div slot="end">
+              <ActionButton
+                onClick={onClose}
+                variant={ActionButtonVariant.SECONDARY}
+                size={ActionButtonSize.SMALL}
+                icon={Icons.CLOSE}
+                iconSlot={ActionButtonIconSlot.ICON_ONLY}
+                fill="clear"
+              />
+            </div>
           </IonToolbar>
         </IonHeader>
         

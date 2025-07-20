@@ -2434,43 +2434,77 @@ No complex choices, no multiple libraries, no over-engineering. Just one library
 
 ---
 
-## 21️⃣ Design Folder & Mockups
+## 21️⃣ Design Assets & Visual Reference
 
-### **Design Folder Contents:**
-The `/docs/design/` folder contains UI/UX mockups that were created using an **older version of Ionic** to demonstrate the intended layout and user experience.
+### **Design Assets Location:**
+The `/docs/design/` folder contains comprehensive UI/UX mockups and visual references for different platforms and features.
 
-#### **Mockup Files:**
+### **Current Web Design Assets:**
+Located in `/docs/design/web/` with 30+ mockups covering all features:
+
+#### **Core Navigation & Layout:**
 - `00-web-layout.JPG` - Overall web layout structure
 - `01-Login.png` - Login screen design
-- `02-menu.jpeg` - Navigation menu layout
-- `02-queue-delete.png` - Queue management with delete functionality
+- `02-menu.jpeg`, `02a-menu.jpeg`, `02b-menu.png`, `02c-menu.jpeg` - Navigation menu variations
+
+#### **Queue Management:**
+- `02-queue.png` - Main queue view
+- `02-queue-delete.png` - Queue with delete functionality
 - `02-queue-drag.png` - Queue reordering with drag and drop
 - `02-queue-sorting.png` - Queue sorting interface
-- `02-queue.png` - Main queue view
-- `03-menu current page and non-admin.png` - Navigation with current page indicators
-- `03-menu playing (admin).png` - Admin view during playback
-- `03-menu.png` - General menu layout
-- `04-search typing .png` - Search interface with typing
-- `04-search-song info.png` - Search results with song information
+
+#### **Search & Discovery:**
 - `04-search.png` - Main search interface
-- `05-singers add.png` - Singer management interface
+- `04-search typing .png` - Search with typing interaction
+- `04-search-song info.png` - Search results with song information
+
+#### **User Management:**
 - `05-singers.png` - Singer list view
+- `05-singers add.png` - Singer management interface
+
+#### **Content Browsing:**
 - `06-artists .png` - Artist browse interface
 - `06-artists (not admin).png` - Non-admin artist view
 - `06-artists search.png` - Artist search functionality
 - `06-artists songs.png` - Artist songs list
+
+#### **User Features:**
 - `07-favorites.png` - Favorites management
 - `08-history.png` - Play history view
-- `09- song lists songs expand.png` - Song lists with expandable sections
-- `09-song lists - songs.png` - Song lists with song details
 - `09-songs list.png` - Main song lists view
+- `09-song lists - songs.png` - Song lists with song details
+- `09- song lists songs expand.png` - Song lists with expandable sections
+
+#### **Admin Features:**
 - `10-Settings.png` - Settings interface
 - `11-top 100.png` - Top played songs
-- `12-favorite lists.png` - Favorite lists management
 - `12-favorites .png` - Favorites view
+- `12-favorite lists.png` - Favorite lists management
 
-### **Important Note About Ionic Versions:**
-The mockups were created using an **older version of Ionic** and may not reflect the current Ionic React component API or styling. However, they serve as valuable reference for:
+#### **Menu States:**
+- `03-menu.png` - General menu layout
+- `03-menu current page and non-admin.png` - Navigation with current page indicators
+- `03-menu playing (admin).png` - Admin view during playback
+
+### **Future Platform Design Structure:**
+```
+design/
+├── web/          # Current web mockups (30+ files)
+├── ios/          # Future iOS designs (SwiftUI/UIKit)
+├── android/      # Future Android designs (Jetpack Compose/Views)
+├── tablet/       # Future tablet designs (iPad/Android tablets)
+└── desktop/      # Future desktop designs (Windows/macOS)
+```
+
+### **Design Asset Guidelines:**
+- **Reference during implementation** for visual accuracy
+- **Understand UX patterns** and interaction flows
+- **Guide UI component design** and layout decisions
+- **Ensure consistency** across different implementations
+- **Validate feature completeness** against visual requirements
+
+### **Important Note About Current Web Mockups:**
+The web mockups were created using an **older version of Ionic** and may not reflect the current Ionic React component API or styling. However, they serve as valuable reference for:
 
 #### **Layout Intent:**
 - **Overall Structure:** How the app should be organized

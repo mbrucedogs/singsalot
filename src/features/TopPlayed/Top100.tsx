@@ -141,13 +141,16 @@ const Top100: React.FC = () => {
         <IonHeader>
           <IonToolbar>
             <IonTitle>{selectedTopPlayed?.artist}</IonTitle>
-                    <ActionButton
-          onClick={handleCloseModal}
-          variant={ActionButtonVariant.SECONDARY}
-          size={ActionButtonSize.SMALL}
-          icon={Icons.CLOSE}
-          iconSlot={ActionButtonIconSlot.ICON_ONLY}
-        />
+            <div slot="end">
+              <ActionButton
+                onClick={handleCloseModal}
+                variant={ActionButtonVariant.SECONDARY}
+                size={ActionButtonSize.SMALL}
+                icon={Icons.CLOSE}
+                iconSlot={ActionButtonIconSlot.ICON_ONLY}
+                fill="clear"
+              />
+            </div>
           </IonToolbar>
         </IonHeader>
         

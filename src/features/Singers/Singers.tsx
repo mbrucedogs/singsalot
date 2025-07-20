@@ -74,20 +74,20 @@ const Singers: React.FC = () => {
 
   return (
     <>
-      <div className="ion-padding ion-text-end">
-        {isAdmin && (
-          <ActionButton
-            onClick={handleOpenAddModal}
-            variant={ActionButtonVariant.PRIMARY}
-            size={ActionButtonSize.SMALL}
-            icon={Icons.ADD}
-            iconSlot={ActionButtonIconSlot.ICON_ONLY}
-            fill="clear"
-          />
-        )}
-      </div>
-
       <div className="ion-padding">
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1rem' }}>
+          {isAdmin && (
+            <ActionButton
+              onClick={handleOpenAddModal}
+              variant={ActionButtonVariant.PRIMARY}
+              size={ActionButtonSize.SMALL}
+              icon={Icons.ADD}
+              iconSlot={ActionButtonIconSlot.ICON_ONLY}
+              fill="solid"
+            />
+          )}
+        </div>
+
         <InfiniteScrollList<Singer>
           items={singers}
           isLoading={singersCount === 0}
@@ -112,13 +112,16 @@ const Singers: React.FC = () => {
         <IonHeader>
           <IonToolbar>
             <IonTitle>Add New Singer</IonTitle>
-            <ActionButton
-              onClick={handleCloseAddModal}
-              variant={ActionButtonVariant.SECONDARY}
-              size={ActionButtonSize.SMALL}
-              icon={Icons.CLOSE}
-              iconSlot={ActionButtonIconSlot.ICON_ONLY}
-            />
+            <div slot="end">
+              <ActionButton
+                onClick={handleCloseAddModal}
+                variant={ActionButtonVariant.SECONDARY}
+                size={ActionButtonSize.SMALL}
+                icon={Icons.CLOSE}
+                iconSlot={ActionButtonIconSlot.ICON_ONLY}
+                fill="clear"
+              />
+            </div>
           </IonToolbar>
         </IonHeader>
         

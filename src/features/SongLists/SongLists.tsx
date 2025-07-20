@@ -1,7 +1,9 @@
 import React, { useState, useMemo, useCallback } from 'react';
-import { IonItem, IonModal, IonHeader, IonToolbar, IonTitle, IonButton, IonIcon, IonChip, IonContent, IonList, IonAccordionGroup, IonAccordion } from '@ionic/react';
-import { close, list } from 'ionicons/icons';
-import { InfiniteScrollList, SongItem, ListItem, TwoLineDisplay, NumberDisplay, SongInfo } from '../../components/common';
+import { IonItem, IonModal, IonHeader, IonToolbar, IonTitle, IonChip, IonContent, IonList, IonAccordionGroup, IonAccordion } from '@ionic/react';
+import { list } from 'ionicons/icons';
+import { InfiniteScrollList, SongItem, ListItem, TwoLineDisplay, NumberDisplay, SongInfo, ActionButton } from '../../components/common';
+import { ActionButtonVariant, ActionButtonSize, ActionButtonIconSlot } from '../../types';
+import { Icons } from '../../constants';
 import { useSongLists } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectSongList } from '../../redux';
@@ -101,9 +103,16 @@ const SongLists: React.FC = () => {
           <IonHeader>
             <IonToolbar>
               <IonTitle>{finalSelectedList?.title}</IonTitle>
-              <IonButton slot="end" fill="clear" onClick={handleCloseSongList}>
-                <IonIcon icon={close} />
-              </IonButton>
+              <div slot="end">
+                <ActionButton
+                  onClick={handleCloseSongList}
+                  variant={ActionButtonVariant.SECONDARY}
+                  size={ActionButtonSize.SMALL}
+                  icon={Icons.CLOSE}
+                  iconSlot={ActionButtonIconSlot.ICON_ONLY}
+                  fill="clear"
+                />
+              </div>
             </IonToolbar>
           </IonHeader>
           

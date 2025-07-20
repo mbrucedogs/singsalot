@@ -234,20 +234,20 @@ const Queue: React.FC = () => {
 
   return (
     <>
-      <div className="ion-padding ion-text-end">
-        {isAdmin && (
-          <ActionButton
-            onClick={toggleQueueMode}
-            variant={ActionButtonVariant.SECONDARY}
-            size={ActionButtonSize.SMALL}
-            icon={queueMode === 'delete' ? reorderThreeOutline : Icons.TRASH}
-            iconSlot={ActionButtonIconSlot.ICON_ONLY}
-            fill="outline"
-          />
-        )}
-      </div>
-
       <div className="ion-padding">
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1rem' }}>
+          {isAdmin && (
+            <ActionButton
+              onClick={toggleQueueMode}
+              variant={ActionButtonVariant.SECONDARY}
+              size={ActionButtonSize.SMALL}
+              icon={queueMode === 'delete' ? reorderThreeOutline : Icons.TRASH}
+              iconSlot={ActionButtonIconSlot.ICON_ONLY}
+              fill="outline"
+            />
+          )}
+        </div>
+
         {/* First Item (Currently Playing) */}
         {renderFirstItem()}
 

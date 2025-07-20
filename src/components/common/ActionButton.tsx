@@ -41,6 +41,8 @@ const ActionButton: React.FC<ActionButtonProps> = ({
     }
   };
 
+  const isIconOnly = icon && iconSlot === ActionButtonIconSlot.ICON_ONLY && !children;
+  
   return (
     <IonButton
       onClick={onClick}
@@ -50,11 +52,14 @@ const ActionButton: React.FC<ActionButtonProps> = ({
       size={getSize()}
       className={className}
       style={{
-        minWidth: '40px',
+        minWidth: isIconOnly ? '40px' : '40px',
         minHeight: '40px',
+        width: isIconOnly ? '40px' : 'auto',
+        height: isIconOnly ? '40px' : 'auto',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        padding: isIconOnly ? '0' : undefined
       }}
     >
       {icon && <IonIcon 

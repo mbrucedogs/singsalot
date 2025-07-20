@@ -134,13 +134,16 @@ const Settings: React.FC = () => {
           <IonHeader>
             <IonToolbar>
               <IonTitle>Disabled Songs ({filteredDisabledSongs.length})</IonTitle>
-              <IonButton 
-                slot="end" 
-                fill="clear" 
-                onClick={() => setShowDisabledSongsModal(false)}
-              >
-                Close
-              </IonButton>
+              <div slot="end">
+                <ActionButton
+                  onClick={() => setShowDisabledSongsModal(false)}
+                  variant={ActionButtonVariant.SECONDARY}
+                  size={ActionButtonSize.SMALL}
+                  icon={Icons.CLOSE}
+                  iconSlot={ActionButtonIconSlot.ICON_ONLY}
+                  fill="clear"
+                />
+              </div>
             </IonToolbar>
           </IonHeader>
           

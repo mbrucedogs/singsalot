@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { IonSearchbar, IonModal, IonHeader, IonToolbar, IonTitle, IonButton, IonIcon, IonContent, IonItem } from '@ionic/react';
-import { close, list } from 'ionicons/icons';
-import { InfiniteScrollList, SongItem, ListItem, NumberDisplay, SongInfo } from '../../components/common';
+import { IonSearchbar, IonModal, IonHeader, IonToolbar, IonTitle, IonContent, IonItem } from '@ionic/react';
+import { list } from 'ionicons/icons';
+import { InfiniteScrollList, SongItem, ListItem, NumberDisplay, SongInfo, ActionButton } from '../../components/common';
+import { ActionButtonVariant, ActionButtonSize, ActionButtonIconSlot } from '../../types';
+import { Icons } from '../../constants';
 import { useArtists } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectSongs } from '../../redux';
@@ -97,9 +99,16 @@ const Artists: React.FC = () => {
           <IonHeader>
             <IonToolbar>
               <IonTitle>Songs by {selectedArtist}</IonTitle>
-              <IonButton slot="end" fill="clear" onClick={handleCloseArtistSongs}>
-                <IonIcon icon={close} />
-              </IonButton>
+              <div slot="end">
+                <ActionButton
+                  onClick={handleCloseArtistSongs}
+                  variant={ActionButtonVariant.SECONDARY}
+                  size={ActionButtonSize.SMALL}
+                  icon={Icons.CLOSE}
+                  iconSlot={ActionButtonIconSlot.ICON_ONLY}
+                  fill="clear"
+                />
+              </div>
             </IonToolbar>
           </IonHeader>
           

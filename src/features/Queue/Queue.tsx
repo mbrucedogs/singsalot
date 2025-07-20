@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { IonItem, IonLabel, IonItemSliding, IonItemOptions, IonItemOption, IonButton, IonIcon, IonReorderGroup, IonReorder } from '@ionic/react';
-import { trash, reorderThreeOutline, reorderTwoOutline } from 'ionicons/icons';
+import { trash, reorderThreeOutline, reorderTwoOutline, list } from 'ionicons/icons';
 import { useQueue } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectQueueLength, selectPlayerStateMemoized, selectIsAdmin, selectControllerName } from '../../redux';
-import { ActionButton, NumberDisplay } from '../../components/common';
+import { ActionButton, NumberDisplay, EmptyState } from '../../components/common';
 import { SongInfoDisplay } from '../../components/common/SongItem';
 import { queueService } from '../../firebase/services';
 import { debugLog } from '../../utils/logger';
@@ -218,6 +218,17 @@ const Queue: React.FC = () => {
       </IonItemSliding>
     );
   };
+
+  // Show empty state if no items in queue
+  if (queueItems.length === 0) {
+    return (
+      <EmptyState
+        title="Queue is Empty"
+        message="No songs are currently in the queue. Add some songs to get started!"
+        icon={<IonIcon icon={list} size="large" />}
+      />
+    );
+  }
 
   return (
     <>

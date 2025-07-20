@@ -98,9 +98,9 @@ const Navigation: React.FC = () => {
                 alignItems: 'center',
                 padding: '12px 16px',
                 cursor: 'pointer',
-                backgroundColor: location.pathname === item.path ? 'var(--ion-color-primary-tint)' : 'transparent',
-                color: location.pathname === item.path ? 'var(--ion-color-primary)' : 'var(--ion-text-color)',
-                borderRight: location.pathname === item.path ? '2px solid var(--ion-color-primary)' : 'none',
+                backgroundColor: location.pathname === item.path ? 'var(--ion-color-primary)' : 'transparent',
+                color: location.pathname === item.path ? 'white' : 'var(--ion-text-color)',
+                borderRight: location.pathname === item.path ? '2px solid var(--ion-color-primary-shade)' : 'none',
                 transition: 'background-color 0.2s, color 0.2s'
               }}
               onMouseEnter={(e) => {
@@ -175,8 +175,24 @@ const Navigation: React.FC = () => {
               button
               onClick={() => handleNavigation(item.path)}
               className={location.pathname === item.path ? 'ion-activated' : ''}
+              style={{
+                '--color': location.pathname === item.path ? 'white' : 'var(--ion-text-color)',
+                '--color-activated': 'white',
+                '--color-focused': 'white',
+                '--color-hover': location.pathname === item.path ? 'white' : 'var(--ion-color-primary)',
+                '--background': location.pathname === item.path ? 'var(--ion-color-primary)' : 'transparent',
+                '--background-activated': 'var(--ion-color-primary-shade)',
+                '--background-focused': 'var(--ion-color-primary-shade)',
+                '--background-hover': location.pathname === item.path ? 'var(--ion-color-primary-shade)' : 'var(--ion-color-light)'
+              } as React.CSSProperties}
             >
-              <IonIcon icon={item.icon} slot="start" />
+              <IonIcon 
+                icon={item.icon} 
+                slot="start" 
+                style={{
+                  color: location.pathname === item.path ? 'white' : 'var(--ion-text-color)'
+                }}
+              />
               <IonLabel>{item.label}</IonLabel>
             </IonItem>
           ))}

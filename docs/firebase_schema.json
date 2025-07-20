@@ -1,6 +1,15 @@
 {
     "controllers": {
       "mbrucedogs": {
+        "disabledSongs":{
+          "srhm9f": {
+            "artist": "'Til Tuesday",
+            "disabledAt": "2025-07-20T16:36:14.120Z",
+            "key": "13651",
+            "path": "z://MP4\\Let's Sing Karaoke\\'Til Tuesday - Voices Carry (Karaoke & Lyrics).mp4",
+            "title": "Voices Carry"
+          }
+        },
         "favorites": [
           {
             "artist": "Michael Jackson",

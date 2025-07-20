@@ -7,15 +7,7 @@ import { useDisabledSongs } from '../../hooks';
 import { InfiniteScrollList, ActionButton } from '../../components/common';
 import { filterSongs } from '../../utils/dataProcessing';
 import { setDebugEnabled, isDebugEnabled, debugLog } from '../../utils/logger';
-import type { Song } from '../../types';
-
-interface DisabledSongDisplay {
-  key?: string;
-  path: string;
-  artist: string;
-  title: string;
-  disabledAt: string;
-}
+import type { Song, DisabledSong } from '../../types';
 
 const Settings: React.FC = () => {
   const isAdmin = useAppSelector(selectIsAdmin);
@@ -30,7 +22,7 @@ const Settings: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
 
   // Convert disabled songs object to array for display
-  const disabledSongsArray: DisabledSongDisplay[] = Object.entries(disabledSongs).map(([key, disabledSong]) => ({
+  const disabledSongsArray: DisabledSong[] = Object.entries(disabledSongs).map(([key, disabledSong]) => ({
     key: disabledSong.key || key,
     path: disabledSong.path,
     artist: disabledSong.artist,
@@ -39,8 +31,8 @@ const Settings: React.FC = () => {
   }));
 
   // Filter disabled songs by search term
-  const filteredDisabledSongs: DisabledSongDisplay[] = searchTerm.trim() 
-    ? filterSongs(disabledSongsArray, searchTerm) as DisabledSongDisplay[]
+  const filteredDisabledSongs: DisabledSong[] = searchTerm.trim() 
+    ? filterSongs(disabledSongsArray, searchTerm) as DisabledSong[]
     : disabledSongsArray;
 
   const handleToggleSetting = async (setting: string, value: boolean) => {
@@ -52,7 +44,7 @@ const Settings: React.FC = () => {
     setDebugEnabled(enabled);
   };
 
-  const handleRemoveDisabledSong = async (song: DisabledSongDisplay) => {
+  const handleRemoveDisabledSong = async (song: DisabledSong) => {
     // Create a minimal song object with the path for removal
     const songForRemoval: Song = {
       path: song.path,
@@ -163,7 +155,7 @@ const Settings: React.FC = () => {
             </div>
 
             {/* Disabled Songs List */}
-            <InfiniteScrollList<DisabledSongDisplay>
+            <InfiniteScrollList<DisabledSong>
               items={filteredDisabledSongs}
               isLoading={loading}
               hasMore={false}

@@ -1,15 +1,14 @@
 import React, { useState, useMemo, useCallback } from 'react';
-import { IonChip, IonModal, IonHeader, IonToolbar, IonTitle, IonIcon, IonContent, IonList } from '@ionic/react';
+import { IonChip, IonModal, IonIcon, IonContent, IonList } from '@ionic/react';
 import { list } from 'ionicons/icons';
 import { useTopPlayed } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectTopPlayed, selectSongsArray } from '../../redux';
-import { InfiniteScrollList, SongItem, ListItem, ActionButton } from '../../components/common';
+import { InfiniteScrollList, SongItem, ListItem, ModalHeader } from '../../components/common';
 import { filterSongs } from '../../utils/dataProcessing';
 import { debugLog } from '../../utils/logger';
 
-import { ActionButtonVariant, ActionButtonSize, ActionButtonIconSlot } from '../../types';
-import { Icons } from '../../constants';
+
 import type { TopPlayed } from '../../types';
 
 const Top100: React.FC = () => {
@@ -117,21 +116,7 @@ const Top100: React.FC = () => {
         breakpoints={[0, 0.5, 0.8]}
         initialBreakpoint={0.8}
       >
-        <IonHeader>
-          <IonToolbar>
-            <IonTitle>{selectedTopPlayed?.artist}</IonTitle>
-            <div slot="end">
-              <ActionButton
-                onClick={handleCloseModal}
-                variant={ActionButtonVariant.SECONDARY}
-                size={ActionButtonSize.SMALL}
-                icon={Icons.CLOSE}
-                iconSlot={ActionButtonIconSlot.ICON_ONLY}
-                fill="clear"
-              />
-            </div>
-          </IonToolbar>
-        </IonHeader>
+        <ModalHeader title={selectedTopPlayed?.artist || ''} onClose={handleCloseModal} />
         
         <IonContent>
           <IonList>

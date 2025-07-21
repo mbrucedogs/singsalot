@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { IonItem, IonLabel, IonModal, IonHeader, IonToolbar, IonTitle, IonButton, IonContent, IonInput, IonLabel as IonInputLabel } from '@ionic/react';
-import { InfiniteScrollList, ActionButton, NumberDisplay } from '../../components/common';
+import { IonItem, IonLabel, IonModal, IonButton, IonContent, IonInput, IonLabel as IonInputLabel } from '@ionic/react';
+import { InfiniteScrollList, ActionButton, NumberDisplay, ModalHeader } from '../../components/common';
 import { useSingers } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectSingers } from '../../redux';
@@ -109,21 +109,7 @@ const Singers: React.FC = () => {
         breakpoints={[0, 0.5, 0.8]}
         initialBreakpoint={0.8}
       >
-        <IonHeader>
-          <IonToolbar>
-            <IonTitle>Add New Singer</IonTitle>
-            <div slot="end">
-              <ActionButton
-                onClick={handleCloseAddModal}
-                variant={ActionButtonVariant.SECONDARY}
-                size={ActionButtonSize.SMALL}
-                icon={Icons.CLOSE}
-                iconSlot={ActionButtonIconSlot.ICON_ONLY}
-                fill="clear"
-              />
-            </div>
-          </IonToolbar>
-        </IonHeader>
+        <ModalHeader title="Add New Singer" onClose={handleCloseAddModal} />
         
         <IonContent className="ion-padding">
           <div>

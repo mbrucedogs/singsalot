@@ -9,4 +9,5 @@ export { default as SongInfo } from './SongInfo';
 export { default as Toast } from './Toast';
 export { TwoLineDisplay } from './TwoLineDisplay';
 export { ListItem } from './ListItem';
-export { NumberDisplay } from './NumberDisplay'; 
+export { NumberDisplay } from './NumberDisplay';
+export { ModalHeader } from './ModalHeader'; 

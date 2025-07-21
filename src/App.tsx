@@ -5,7 +5,7 @@ import TopPlayed from './features/TopPlayed/Top100';
 import { FirebaseProvider } from './firebase/FirebaseProvider';
 import { ErrorBoundary } from './components/common';
 import { AuthInitializer } from './components/Auth';
-import { SongInfoProvider } from './components/common/SongInfoProvider';
+import { ModalProvider } from './components/common/ModalProvider';
 
 function App() {
   return (
@@ -13,7 +13,7 @@ function App() {
       <FirebaseProvider>
         <Router>
           <AuthInitializer>
-            <SongInfoProvider>
+            <ModalProvider>
               <Layout>
                 <Routes>
                   <Route path="/" element={<Navigate to="/queue" replace />} />
@@ -30,7 +30,7 @@ function App() {
                   <Route path="*" element={<Navigate to="/queue" replace />} />
                 </Routes>
               </Layout>
-            </SongInfoProvider>
+            </ModalProvider>
           </AuthInitializer>
         </Router>
       </FirebaseProvider>

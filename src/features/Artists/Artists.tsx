@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-import { IonSearchbar, IonModal, IonHeader, IonToolbar, IonTitle, IonContent, IonItem } from '@ionic/react';
+import { IonSearchbar, IonModal, IonContent, IonItem } from '@ionic/react';
 import { list } from 'ionicons/icons';
-import { InfiniteScrollList, SongItem, ListItem, NumberDisplay, ActionButton } from '../../components/common';
-import { ActionButtonVariant, ActionButtonSize, ActionButtonIconSlot } from '../../types';
-import { Icons } from '../../constants';
+import { InfiniteScrollList, SongItem, ListItem, NumberDisplay, ModalHeader } from '../../components/common';
 import { useArtists } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectSongs } from '../../redux';
@@ -82,21 +80,7 @@ const Artists: React.FC = () => {
           isOpen={!!selectedArtist} 
           onDidDismiss={handleCloseArtistSongs}
         >
-          <IonHeader>
-            <IonToolbar>
-              <IonTitle>Songs by {selectedArtist}</IonTitle>
-              <div slot="end">
-                <ActionButton
-                  onClick={handleCloseArtistSongs}
-                  variant={ActionButtonVariant.SECONDARY}
-                  size={ActionButtonSize.SMALL}
-                  icon={Icons.CLOSE}
-                  iconSlot={ActionButtonIconSlot.ICON_ONLY}
-                  fill="clear"
-                />
-              </div>
-            </IonToolbar>
-          </IonHeader>
+          <ModalHeader title={`Songs by ${selectedArtist}`} onClose={handleCloseArtistSongs} />
           
           <IonContent>
             <div style={{ padding: '10px' }}>

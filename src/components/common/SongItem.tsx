@@ -5,7 +5,7 @@ import { useAppSelector } from '../../redux';
 import { selectQueue, selectFavorites } from '../../redux';
 import { useSongOperations } from '../../hooks/useSongOperations';
 import { useToast } from '../../hooks/useToast';
-import { useSongInfo } from '../../hooks/useSongInfoContext';
+import { useModal } from '../../hooks/useModalContext';
 import { debugLog } from '../../utils/logger';
 import type { SongItemProps, QueueItem, Song } from '../../types';
 import { ActionButtonVariant, ActionButtonSize, ActionButtonIconSlot } from '../../types';
@@ -217,7 +217,7 @@ const SongItem: React.FC<SongItemProps> = ({
   // Get song operations and hooks
   const { addToQueue, removeFromQueue, toggleFavorite } = useSongOperations();
   const { showSuccess, showError } = useToast();
-  const { openSongInfo } = useSongInfo();
+  const { openSongInfo } = useModal();
   
   // Check if song is in queue or favorites based on path
   const isInQueue = (Object.values(queue) as QueueItem[]).some(item => item.song.path === song.path);

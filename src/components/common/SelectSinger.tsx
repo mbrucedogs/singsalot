@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import { 
   IonModal, 
-  IonHeader, 
-  IonToolbar, 
-  IonTitle, 
   IonContent, 
   IonList, 
   IonItem, 
@@ -13,9 +10,7 @@ import { useAppSelector } from '../../redux';
 import { selectSingersArray, selectControllerName, selectQueueObject } from '../../redux';
 import { queueService } from '../../firebase/services';
 import { useToast } from '../../hooks/useToast';
-import { ActionButton } from './index';
-import { ActionButtonVariant, ActionButtonSize, ActionButtonIconSlot } from '../../types';
-import { Icons } from '../../constants';
+import { ModalHeader } from './ModalHeader';
 import type { Song, Singer, QueueItem } from '../../types';
 
 interface SelectSingerProps {
@@ -72,22 +67,10 @@ const SelectSinger: React.FC<SelectSingerProps> = ({ isOpen, onClose, song }) =>
       onDidDismiss={onClose}
       breakpoints={[0, 0.5, 0.8]}
       initialBreakpoint={0.8}
+      keepContentsMounted={false}
+      backdropDismiss={true}
     >
-              <IonHeader>
-          <IonToolbar>
-            <IonTitle>Select Singer</IonTitle>
-            <div slot="end">
-              <ActionButton
-                onClick={onClose}
-                variant={ActionButtonVariant.SECONDARY}
-                size={ActionButtonSize.SMALL}
-                icon={Icons.CLOSE}
-                iconSlot={ActionButtonIconSlot.ICON_ONLY}
-                fill="clear"
-              />
-            </div>
-          </IonToolbar>
-        </IonHeader>
+                    <ModalHeader title="Select Singer" onClose={onClose} />
       
       <IonContent>
         {/* Song Information */}

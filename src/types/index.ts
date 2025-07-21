@@ -160,6 +160,7 @@ export interface ActionButtonProps {
   iconSlot?: ActionButtonIconSlotType;
   iconSize?: ActionButtonIconSizeType;
   fill?: 'solid' | 'outline' | 'clear';
+  'aria-label'?: string;
 }
 
 export interface SongItemProps {
@@ -196,3 +197,7 @@ export interface RootState {
     error: string | null;
   };
 } 
+
+// Modal types
+export { ModalType } from './modal';
+export type { ModalViewType, ModalState, ModalContextType, ModalItem } from './modal';

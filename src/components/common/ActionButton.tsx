@@ -13,7 +13,8 @@ const ActionButton: React.FC<ActionButtonProps> = ({
   icon,
   iconSlot = ActionButtonIconSlot.START,
   iconSize = ActionButtonIconSize.LARGE,
-  fill = 'solid'
+  fill = 'solid',
+  'aria-label': ariaLabel
 }) => {
   const getVariant = () => {
     switch (variant) {
@@ -51,6 +52,7 @@ const ActionButton: React.FC<ActionButtonProps> = ({
       color={getVariant()}
       size={getSize()}
       className={className}
+      aria-label={ariaLabel}
       style={{
         minWidth: isIconOnly ? '40px' : '40px',
         minHeight: '40px',

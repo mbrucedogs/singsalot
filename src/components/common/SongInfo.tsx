@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { 
-  IonModal, IonHeader, IonToolbar, IonTitle, IonContent, 
+  IonModal, IonContent, 
   IonButton, IonIcon, IonList, IonItem, IonLabel
 } from '@ionic/react';
 import { 
@@ -10,12 +10,10 @@ import { useAppSelector } from '../../redux';
 import { selectIsAdmin, selectFavorites, selectSongs, selectQueue } from '../../redux';
 import { useSongOperations } from '../../hooks/useSongOperations';
 import { useDisabledSongs } from '../../hooks/useDisabledSongs';
-import { useSelectSinger } from '../../hooks/useSelectSinger';
+import { useModal } from '../../hooks/useModalContext';
 import { useToast } from '../../hooks/useToast';
-import SelectSinger from './SelectSinger';
-import { ActionButton } from './index';
-import { ActionButtonVariant, ActionButtonSize, ActionButtonIconSlot } from '../../types';
-import { Icons } from '../../constants';
+
+import { ModalHeader } from './ModalHeader';
 import { SongInfoDisplay } from './SongItem';
 import type { Song, QueueItem } from '../../types';
 
@@ -34,12 +32,7 @@ const SongInfo: React.FC<SongInfoProps> = ({ isOpen, onClose, song }) => {
   const { isSongDisabled, addDisabledSong, removeDisabledSong } = useDisabledSongs();
   const { showSuccess, showError } = useToast();
   
-  const { 
-    isOpen: isSelectSingerOpen, 
-    selectedSong: selectSingerSong, 
-    openSelectSinger, 
-    closeSelectSinger 
-  } = useSelectSinger();
+  const { openSelectSinger } = useModal();
   const [showArtistSongs, setShowArtistSongs] = useState(false);
 
   const isInFavorites = (Object.values(favorites) as Song[]).some(favSong => favSong.path === song.path);
@@ -89,22 +82,10 @@ const SongInfo: React.FC<SongInfoProps> = ({ isOpen, onClose, song }) => {
         onDidDismiss={onClose}
         breakpoints={[0, 0.5, 0.8]}
         initialBreakpoint={0.8}
+        keepContentsMounted={false}
+        backdropDismiss={true}
       >
-        <IonHeader>
-          <IonToolbar>
-            <IonTitle>Song Info</IonTitle>
-            <div slot="end">
-              <ActionButton
-                onClick={onClose}
-                variant={ActionButtonVariant.SECONDARY}
-                size={ActionButtonSize.SMALL}
-                icon={Icons.CLOSE}
-                iconSlot={ActionButtonIconSlot.ICON_ONLY}
-                fill="clear"
-              />
-            </div>
-          </IonToolbar>
-        </IonHeader>
+        <ModalHeader title="Song Info" onClose={onClose} />
         
         <IonContent>
           <div className="p-4">
@@ -177,15 +158,6 @@ const SongInfo: React.FC<SongInfoProps> = ({ isOpen, onClose, song }) => {
         </IonContent>
       </IonModal>
 
-      {/* Select Singer Modal */}
-      {selectSingerSong && (
-        <SelectSinger
-          isOpen={isSelectSingerOpen}
-          onClose={closeSelectSinger}
-          song={selectSingerSong}
-        />
-      )}
-
       {/* Artist Songs Modal */}
       <IonModal 
         isOpen={showArtistSongs} 
@@ -193,18 +165,10 @@ const SongInfo: React.FC<SongInfoProps> = ({ isOpen, onClose, song }) => {
         breakpoints={[0, 0.5, 0.8]}
         initialBreakpoint={0.8}
       >
-        <IonHeader>
-          <IonToolbar>
-            <IonTitle>Songs by {song.artist}</IonTitle>
-            <ActionButton
-              onClick={() => setShowArtistSongs(false)}
-              variant={ActionButtonVariant.SECONDARY}
-              size={ActionButtonSize.SMALL}
-              icon={Icons.CLOSE}
-              iconSlot={ActionButtonIconSlot.ICON_ONLY}
-            />
-          </IonToolbar>
-        </IonHeader>
+        <ModalHeader 
+          title={`Songs by ${song.artist}`} 
+          onClose={() => setShowArtistSongs(false)} 
+        />
         
         <IonContent>
           <div className="p-4">

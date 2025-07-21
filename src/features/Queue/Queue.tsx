@@ -8,7 +8,7 @@ import { ActionButton, NumberDisplay, EmptyState } from '../../components/common
 import { ActionButtonVariant, ActionButtonSize, ActionButtonIconSlot } from '../../types';
 import { Icons } from '../../constants';
 import { SongInfoDisplay } from '../../components/common/SongItem';
-import { debugLog } from '../../utils/logger';
+import { useDebugLogging } from '../../hooks';
 import type { QueueItem } from '../../types';
 
 const Queue: React.FC = () => {
@@ -32,12 +32,17 @@ const Queue: React.FC = () => {
 
   const queueCount = useAppSelector(selectQueueLength);
 
-  // Debug logging
-  debugLog('Queue component - queue count:', queueCount);
-  debugLog('Queue component - queue items:', queueItems);
-  debugLog('Queue component - canReorder:', canReorder);
-  debugLog('Queue component - queueMode:', queueMode);
-  debugLog('Queue component - canDeleteItems:', canDeleteItems);
+  // Use unified debug logging
+  const { logData } = useDebugLogging({ componentName: 'Queue' });
+
+  // Log component data
+  logData({
+    'queue count': queueCount,
+    'queue items': queueItems,
+    'canReorder': canReorder,
+    'queueMode': queueMode,
+    'canDeleteItems': canDeleteItems,
+  });
 
 
   // Update list items when queue changes
@@ -56,8 +61,7 @@ const Queue: React.FC = () => {
   };
 
   // Render queue item
-  const renderQueueItem = (queueItem: QueueItem, index: number) => {
-    debugLog(`Queue item ${index}: order=${queueItem.order}, key=${queueItem.key}`);
+  const renderQueueItem = (queueItem: QueueItem) => {
     const canDelete = canDeleteItems && queueMode === 'delete'; // Only allow delete in delete mode
     
     return (
@@ -211,15 +215,15 @@ const Queue: React.FC = () => {
         {/* Queue List with Reorder */}
         {canReorder && queueMode === 'reorder' ? (
           <IonReorderGroup disabled={false} onIonItemReorder={doReorder}>
-            {listItems.map((queueItem, index) => (
+                          {listItems.map((queueItem) => (
               <IonReorder key={queueItem.key}>
-                {renderQueueItem(queueItem, index)}
+                {renderQueueItem(queueItem)}
               </IonReorder>
             ))}
           </IonReorderGroup>
         ) : (
           <div>
-            {listItems.map((queueItem, index) => renderQueueItem(queueItem, index))}
+            {listItems.map((queueItem) => renderQueueItem(queueItem))}
           </div>
         )}
       </div>

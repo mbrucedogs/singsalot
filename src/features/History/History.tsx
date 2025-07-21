@@ -2,10 +2,9 @@ import React from 'react';
 import { IonChip, IonIcon } from '@ionic/react';
 import { time } from 'ionicons/icons';
 import { InfiniteScrollList, SongItem } from '../../components/common';
-import { useHistory } from '../../hooks';
+import { useHistory, useDebugLogging } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectHistory, selectIsAdmin } from '../../redux';
-import { debugLog } from '../../utils/logger';
 import { formatDate } from '../../utils/dataProcessing';
 import type { Song } from '../../types';
 
@@ -20,9 +19,15 @@ const History: React.FC = () => {
   const history = useAppSelector(selectHistory);
   const isAdmin = useAppSelector(selectIsAdmin);
   const historyCount = Object.keys(history).length;
-  // Debug logging
-  debugLog('History component - history count:', historyCount);
-  debugLog('History component - history items:', historyItems);
+  
+  // Use unified debug logging
+  const { logData } = useDebugLogging({ componentName: 'History' });
+  
+  // Log component data
+  logData({
+    'history count': historyCount,
+    'history items': historyItems,
+  });
 
   // Render extra content for history items (play date)
   const renderExtraContent = (item: Song) => {

@@ -13,5 +13,6 @@ export { useSongLists } from './useSongLists';
 export { useDisabledSongs } from './useDisabledSongs';
 export { useActions } from './useActions';
 export { usePagination } from './usePagination';
+export { useDebugLogging } from './useDebugLogging';
 
 export { useSongInfo } from './useSongInfo'; 

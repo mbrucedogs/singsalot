@@ -1,10 +1,9 @@
 import React from 'react';
 import { IonSearchbar } from '@ionic/react';
 import { InfiniteScrollList, SongItem } from '../../components/common';
-import { useSearch } from '../../hooks';
+import { useSearch, useDebugLogging } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectIsAdmin, selectSongs } from '../../redux';
-import { debugLog } from '../../utils/logger';
 import type { Song } from '../../types';
 
 const Search: React.FC = () => {
@@ -19,22 +18,16 @@ const Search: React.FC = () => {
   const songs = useAppSelector(selectSongs);
   const songsCount = Object.keys(songs).length;
 
-  // Performance monitoring
-  React.useEffect(() => {
-    const startTime = performance.now();
-    
-    return () => {
-      const endTime = performance.now();
-      const renderTime = endTime - startTime;
-      debugLog(`Search component render time: ${renderTime.toFixed(2)}ms`);
-    };
-  });
+  // Use unified debug logging
+  const { logData } = useDebugLogging({ componentName: 'Search' });
 
-  // Debug logging
-  debugLog('Search component - songs count:', songsCount);
-  debugLog('Search component - search results:', searchResults);
-  debugLog('Search component - search term:', searchTerm);
-  debugLog('Search component - showing:', searchResults.songs.length, 'of', searchResults.count);
+  // Log component data
+  logData({
+    'songs count': songsCount,
+    'search results': searchResults,
+    'search term': searchTerm,
+    'showing': `${searchResults.songs.length} of ${searchResults.count}`,
+  });
 
   return (
     <>

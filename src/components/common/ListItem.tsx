@@ -67,44 +67,43 @@ export const ListItem = React.memo(forwardRef<HTMLIonItemElement, GenericListIte
       slot={slot}
       style={style}
     >
-      {showNumber && number !== undefined && (
-        <IonLabel slot="start" className="flex-shrink-0 mr-4">
-          <div className="text-lg font-bold text-gray-500">
-            {number}
-          </div>
-        </IonLabel>
-      )}
-      
-      <IonLabel>
-        <div 
-          className="ion-text-bold"
-          style={{ 
-            fontWeight: 'bold', 
-            fontSize: '1rem', 
-            color: 'var(--ion-color-dark)',
-            marginBottom: '4px'
-          }}
-        >
-          {primaryText}
-        </div>
-        {secondaryText && (
+      <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+        {showNumber && number !== undefined && (
+          <IonLabel slot="start" className="flex-shrink-0 mr-4" style={{ flex: '0 0 auto' }}>
+            <div className="text-lg font-bold text-gray-500">
+              {number}
+            </div>
+          </IonLabel>
+        )}
+        <IonLabel style={{ flex: '1 1 0%', margin: '0 10px' }}>
           <div 
-            className="ion-text-italic ion-color-medium"
+            className="ion-text-bold"
             style={{ 
-              fontSize: '0.875rem', 
-              fontStyle: 'italic', 
-              color: 'var(--ion-color-medium)',
+              fontWeight: 'bold', 
+              fontSize: '1rem', 
+              color: 'var(--ion-color-dark)',
               marginBottom: '4px'
             }}
           >
-            {secondaryText}
+            {primaryText}
           </div>
-        )}
-      </IonLabel>
-      
-      {children}
-      {endContent}
-      
+          {secondaryText && (
+            <div 
+              className="ion-text-italic ion-color-medium"
+              style={{ 
+                fontSize: '0.875rem', 
+                fontStyle: 'italic', 
+                color: 'var(--ion-color-medium)',
+                marginBottom: '4px'
+              }}
+            >
+              {secondaryText}
+            </div>
+          )}
+        </IonLabel>
+        <div style={{ flex: '0 0 auto' }}>{children}</div>
+        <div style={{ flex: '0 0 auto' }}>{endContent}</div>
+      </div>
       {showChevron && (
         <IonIcon 
           slot="end" 

@@ -36,6 +36,7 @@ export interface QueueItem extends Keyable {
 export interface Settings {
   autoadvance: boolean;
   userpick: boolean;
+  showToasts?: boolean;
 }
 
 export interface Singer extends Keyable {

@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonList, IonItem, IonLabel, IonToggle, IonButton, IonIcon, IonModal, IonSearchbar } from '@ionic/react';
 import { ban } from 'ionicons/icons';
 import { useAppSelector } from '../../redux';
-import { selectIsAdmin, selectSettings } from '../../redux';
+import { selectIsAdmin, selectSettings, updateController, selectControllerName } from '../../redux';
+import { useDispatch } from 'react-redux';
+import { settingsService } from '../../firebase/services';
 import { useDisabledSongs } from '../../hooks';
 import { InfiniteScrollList, ActionButton, SongItem } from '../../components/common';
 import { ActionButtonVariant, ActionButtonSize, ActionButtonIconSlot } from '../../types';
@@ -14,6 +16,7 @@ import type { Song, DisabledSong } from '../../types';
 const Settings: React.FC = () => {
   const isAdmin = useAppSelector(selectIsAdmin);
   const playerSettings = useAppSelector(selectSettings);
+  const dispatch = useDispatch();
   const { 
     disabledSongs, 
     loading, 
@@ -22,6 +25,8 @@ const Settings: React.FC = () => {
   
   const [showDisabledSongsModal, setShowDisabledSongsModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const controllerNameRedux = useAppSelector(selectControllerName);
+  const existingPlayer = useAppSelector(state => state.controller.data?.player) || {};
 
   // Convert disabled songs object to array for display
   const disabledSongsArray: DisabledSong[] = Object.entries(disabledSongs).map(([key, disabledSong]) => ({
@@ -38,8 +43,23 @@ const Settings: React.FC = () => {
     : disabledSongsArray;
 
   const handleToggleSetting = async (setting: string, value: boolean) => {
-    // This would need to be implemented with the settings service
     debugLog(`Toggle ${setting} to ${value}`);
+    const controllerName = controllerNameRedux;
+    if (controllerName) {
+      await settingsService.updateSetting(controllerName, setting, value);
+      dispatch(updateController({
+        controllerName,
+        updates: {
+          player: {
+            ...existingPlayer,
+            settings: {
+              ...existingPlayer.settings,
+              [setting]: value
+            }
+          }
+        }
+      }));
+    }
   };
 
   const handleToggleDebug = (enabled: boolean) => {
@@ -86,6 +106,14 @@ const Settings: React.FC = () => {
                   slot="end"
                   checked={playerSettings?.userpick || false}
                   onIonChange={(e) => handleToggleSetting('userpick', e.detail.checked)}
+                />
+              </IonItem>
+              <IonItem>
+                <IonLabel>Show Toasts</IonLabel>
+                <IonToggle
+                  slot="end"
+                  checked={playerSettings?.showToasts ?? true}
+                  onIonChange={(e) => handleToggleSetting('showToasts', e.detail.checked)}
                 />
               </IonItem>
               <IonItem>

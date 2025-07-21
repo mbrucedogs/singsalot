@@ -11,6 +11,8 @@ import { selectSingersArray, selectControllerName, selectQueueObject } from '../
 import { queueService } from '../../firebase/services';
 import { useToast } from '../../hooks/useToast';
 import { ModalHeader } from './ModalHeader';
+import { NumberDisplay } from './NumberDisplay';
+import { SongInfoDisplay } from './SongItem';
 import type { Song, Singer, QueueItem } from '../../types';
 
 interface SelectSingerProps {
@@ -75,29 +77,40 @@ const SelectSinger: React.FC<SelectSingerProps> = ({ isOpen, onClose, song }) =>
       <IonContent>
         {/* Song Information */}
         <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-          <h2 className="text-lg font-semibold mb-2">{song.title}</h2>
-          <p className="text-sm text-gray-600 dark:text-gray-400 italic mb-1">{song.artist}</p>
-          <p className="text-xs text-gray-500 dark:text-gray-500">{song.path}</p>
+          <div style={{ padding: '16px', marginBottom: '20px' }}>
+            <SongInfoDisplay 
+              song={song} 
+              showPath={true}
+              showCount={false}
+            />
+          </div>
         </div>
 
         {/* Singers List */}
-        <IonList>
-          {singers.map((singer) => (
-            <IonItem 
-              key={singer.key} 
-              button 
-              onClick={() => handleSelectSinger(singer)}
-              disabled={isLoading}
-            >
-              <IonLabel>
-                <h2>{singer.name}</h2>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  Last login: {new Date(singer.lastLogin).toLocaleDateString()}
-                </p>
-              </IonLabel>
-            </IonItem>
-          ))}
-        </IonList>
+        <div style={{ padding: '16px', marginBottom: '20px' }}>
+          <IonList>
+            {singers.map((singer, index) => (
+              <IonItem 
+                key={singer.key} 
+                button 
+                onClick={() => handleSelectSinger(singer)}
+                disabled={isLoading}
+                detail={false}
+                style={{ '--padding-start': '0px', '--min-height': '60px' }}
+              >
+                {/* Order Number */}
+                <NumberDisplay number={index + 1} />
+
+                {/* Singer Name */}
+                <IonLabel>
+                  <div className="ion-text-bold ion-color-primary" style={{ lineHeight: '1.5', fontSize: '1rem' }}>
+                    {singer.name}
+                  </div>
+                </IonLabel>
+              </IonItem>
+            ))}
+          </IonList>
+        </div>
 
         {singers.length === 0 && (
           <div className="p-4 text-center text-gray-500 dark:text-gray-400">

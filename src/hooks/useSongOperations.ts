@@ -22,6 +22,11 @@ export const useSongOperations = () => {
     try {
       // Calculate the next order by finding the highest order value and adding 1
       const queueItems = Object.values(currentQueue) as QueueItem[];
+      // Prevent duplicate song/singer pairs
+      const duplicate = queueItems.find(item => item.song.path === song.path && item.singer.name === currentSinger);
+      if (duplicate) {
+        throw new Error('This song is already in the queue for this singer.');
+      }
       const maxOrder = queueItems.length > 0 
         ? Math.max(...queueItems.map(item => item.order || 0))
         : 0;

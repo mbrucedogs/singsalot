@@ -167,7 +167,7 @@ export const historyService = {
     const numericKeys = Object.keys(currentHistory)
       .map((key) => parseInt(key, 10))
       .filter((num) => !isNaN(num));
-    const nextKey = numericKeys.length > 0 ? Math.max(...numericKeys) + 1 : 1;
+    const nextKey = numericKeys.length > 0 ? Math.max(...numericKeys) + 1 : 0;
     const nextKeyStr = String(nextKey);
     const newHistoryRef = ref(database, `controllers/${controllerName}/history/${nextKeyStr}`);
     await set(newHistoryRef, song);
@@ -201,7 +201,7 @@ export const favoritesService = {
     const numericKeys = Object.keys(currentFavorites)
       .map((key) => parseInt(key, 10))
       .filter((num) => !isNaN(num));
-    const nextKey = numericKeys.length > 0 ? Math.max(...numericKeys) + 1 : 1;
+    const nextKey = numericKeys.length > 0 ? Math.max(...numericKeys) + 1 : 0;
     const nextKeyStr = String(nextKey);
     const newFavoriteRef = ref(database, `controllers/${controllerName}/favorites/${nextKeyStr}`);
     await set(newFavoriteRef, song);
@@ -247,7 +247,7 @@ export const singerService = {
     const numericKeys = Object.keys(currentSingers)
       .map((key) => parseInt(key, 10))
       .filter((num) => !isNaN(num));
-    const nextKey = numericKeys.length > 0 ? Math.max(...numericKeys) + 1 : 1;
+    const nextKey = numericKeys.length > 0 ? Math.max(...numericKeys) + 1 : 0;
     const nextKeyStr = String(nextKey);
     
     // Create new singer with current timestamp

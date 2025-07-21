@@ -37,7 +37,7 @@ const SongInfo: React.FC<SongInfoProps> = ({ isOpen, onClose, song }) => {
   const isInQueue = (Object.values(queue) as QueueItem[]).some(queueItem => queueItem.song && queueItem.song.path === song.path);
 
   const artistSongs = (Object.values(allSongs) as Song[]).filter(s => 
-    s.artist.toLowerCase() === song.artist.toLowerCase() && s.path !== song.path
+    (s.artist || '').toLowerCase() === (song.artist || '').toLowerCase() && s.path !== song.path
   );
 
   const handleQueueSong = () => {

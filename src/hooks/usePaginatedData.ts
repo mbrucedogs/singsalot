@@ -49,11 +49,11 @@ export const usePaginatedData = <T>(
     // Simple search implementation - can be overridden by passing filtered items
     return allItems.filter((item: T) => {
       if (typeof item === 'string') {
-        return item.toLowerCase().includes(searchTerm.toLowerCase());
+        return (item || '').toLowerCase().includes((searchTerm || '').toLowerCase());
       }
       if (typeof item === 'object' && item !== null) {
         return Object.values(item as Record<string, unknown>).some(value => 
-          String(value).toLowerCase().includes(searchTerm.toLowerCase())
+          String(value || '').toLowerCase().includes((searchTerm || '').toLowerCase())
         );
       }
       return false;

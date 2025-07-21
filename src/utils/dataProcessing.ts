@@ -29,13 +29,13 @@ export const filterSongs = (songs: Song[], searchTerm: string, disabledSongPaths
   
   if (!searchTerm.trim()) return filteredSongs;
   
-  const terms = searchTerm.toLowerCase().split(/\s+/).filter(term => term.length > 0);
+  const terms = (searchTerm || '').toLowerCase().split(/\s+/).filter(term => term.length > 0);
   
   if (terms.length === 0) return filteredSongs;
   
   return filteredSongs.filter(song => {
-    const songTitle = song.title.toLowerCase();
-    const songArtist = song.artist.toLowerCase();
+    const songTitle = (song.title || '').toLowerCase();
+    const songArtist = (song.artist || '').toLowerCase();
     
     // If only one term, use OR logic (title OR artist)
     if (terms.length === 1) {

@@ -15,7 +15,7 @@ export const useArtists = () => {
     const countsMap = new Map<string, number>();
     
     allSongs.forEach(song => {
-      const artist = song.artist.toLowerCase();
+      const artist = (song.artist || '').toLowerCase();
       if (!songsMap.has(artist)) {
         songsMap.set(artist, []);
         countsMap.set(artist, 0);
@@ -34,12 +34,12 @@ export const useArtists = () => {
 
   // Get songs by artist (now using cached data)
   const getSongsByArtist = useCallback((artistName: string) => {
-    return songsByArtist.songsMap.get(artistName.toLowerCase()) || [];
+    return songsByArtist.songsMap.get((artistName || '').toLowerCase()) || [];
   }, [songsByArtist.songsMap]);
 
   // Get song count by artist (now using cached data)
   const getSongCountByArtist = useCallback((artistName: string) => {
-    return songsByArtist.countsMap.get(artistName.toLowerCase()) || 0;
+    return songsByArtist.countsMap.get((artistName || '').toLowerCase()) || 0;
   }, [songsByArtist.countsMap]);
 
   return {

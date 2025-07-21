@@ -22,8 +22,8 @@ export const useSongLists = () => {
     
     // Search for songs by artist and title
     const matchingSongs = allSongs.filter(song => 
-      song.artist.toLowerCase() === songListSong.artist.toLowerCase() &&
-      song.title.toLowerCase() === songListSong.title.toLowerCase()
+      (song.artist || '').toLowerCase() === (songListSong.artist || '').toLowerCase() &&
+      (song.title || '').toLowerCase() === (songListSong.title || '').toLowerCase()
     );
     
     return matchingSongs;

@@ -2,7 +2,6 @@ import {
   ref, 
   get, 
   set, 
-  push, 
   remove, 
   onValue, 
   off,
@@ -163,7 +162,16 @@ export const historyService = {
   // Add song to history
   addToHistory: async (controllerName: string, song: Omit<Song, 'key'>) => {
     const historyRef = ref(database, `controllers/${controllerName}/history`);
-    return await push(historyRef, song);
+    const historySnapshot = await get(historyRef);
+    const currentHistory = historySnapshot.exists() ? historySnapshot.val() : {};
+    const numericKeys = Object.keys(currentHistory)
+      .map((key) => parseInt(key, 10))
+      .filter((num) => !isNaN(num));
+    const nextKey = numericKeys.length > 0 ? Math.max(...numericKeys) + 1 : 1;
+    const nextKeyStr = String(nextKey);
+    const newHistoryRef = ref(database, `controllers/${controllerName}/history/${nextKeyStr}`);
+    await set(newHistoryRef, song);
+    return { key: nextKeyStr };
   },
 
   // Remove song from history
@@ -188,7 +196,16 @@ export const favoritesService = {
   // Add song to favorites
   addToFavorites: async (controllerName: string, song: Omit<Song, 'key'>) => {
     const favoritesRef = ref(database, `controllers/${controllerName}/favorites`);
-    return await push(favoritesRef, song);
+    const favoritesSnapshot = await get(favoritesRef);
+    const currentFavorites = favoritesSnapshot.exists() ? favoritesSnapshot.val() : {};
+    const numericKeys = Object.keys(currentFavorites)
+      .map((key) => parseInt(key, 10))
+      .filter((num) => !isNaN(num));
+    const nextKey = numericKeys.length > 0 ? Math.max(...numericKeys) + 1 : 1;
+    const nextKeyStr = String(nextKey);
+    const newFavoriteRef = ref(database, `controllers/${controllerName}/favorites/${nextKeyStr}`);
+    await set(newFavoriteRef, song);
+    return { key: nextKeyStr };
   },
 
   // Remove song from favorites
@@ -226,17 +243,24 @@ export const singerService = {
       throw new Error('Singer already exists');
     }
     
+    // Find the next available numeric key
+    const numericKeys = Object.keys(currentSingers)
+      .map((key) => parseInt(key, 10))
+      .filter((num) => !isNaN(num));
+    const nextKey = numericKeys.length > 0 ? Math.max(...numericKeys) + 1 : 1;
+    const nextKeyStr = String(nextKey);
+    
     // Create new singer with current timestamp
     const newSinger: Omit<Singer, 'key'> = {
       name: singerName,
       lastLogin: new Date().toISOString()
     };
     
-    // Add to singers list
-    const newSingerRef = push(singersRef);
+    // Add to singers list with numeric key
+    const newSingerRef = ref(database, `controllers/${controllerName}/player/singers/${nextKeyStr}`);
     await set(newSingerRef, newSinger);
     
-    return { key: newSingerRef.key };
+    return { key: nextKeyStr };
   },
 
   // Remove singer and all their queue items

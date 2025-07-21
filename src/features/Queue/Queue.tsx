@@ -1,48 +1,43 @@
 import React, { useState, useEffect } from 'react';
 import { IonItem, IonLabel, IonItemSliding, IonItemOptions, IonItemOption, IonIcon, IonReorderGroup, IonReorder } from '@ionic/react';
 import { reorderThreeOutline, reorderTwoOutline, list } from 'ionicons/icons';
-import { useQueue } from '../../hooks';
+import { useQueue, useActions } from '../../hooks';
 import { useAppSelector } from '../../redux';
-import { selectQueueLength, selectPlayerStateMemoized, selectIsAdmin, selectControllerName } from '../../redux';
+import { selectQueueLength } from '../../redux';
 import { ActionButton, NumberDisplay, EmptyState } from '../../components/common';
 import { ActionButtonVariant, ActionButtonSize, ActionButtonIconSlot } from '../../types';
 import { Icons } from '../../constants';
 import { SongInfoDisplay } from '../../components/common/SongItem';
-import { queueService } from '../../firebase/services';
 import { debugLog } from '../../utils/logger';
-import { PlayerState } from '../../types';
 import type { QueueItem } from '../../types';
 
-type QueueMode = 'delete' | 'reorder';
-
 const Queue: React.FC = () => {
-  const [queueMode, setQueueMode] = useState<QueueMode>('delete');
   const [listItems, setListItems] = useState<QueueItem[]>([]);
   
   const {
     queueItems,
-    canReorder,
     handleRemoveFromQueue,
   } = useQueue();
 
+  const {
+    queueMode,
+    canDeleteItems,
+    canDeleteFirstItem,
+    toggleQueueMode,
+    handleReorder,
+  } = useActions();
+
+  // Check if reordering is allowed
+  const canReorder = canDeleteItems && queueItems.length > 1;
+
   const queueCount = useAppSelector(selectQueueLength);
-  const playerState = useAppSelector(selectPlayerStateMemoized);
-  const isAdmin = useAppSelector(selectIsAdmin);
-  const controllerName = useAppSelector(selectControllerName);
 
   // Debug logging
   debugLog('Queue component - queue count:', queueCount);
   debugLog('Queue component - queue items:', queueItems);
-  debugLog('Queue component - player state:', playerState);
-  debugLog('Queue component - isAdmin:', isAdmin);
   debugLog('Queue component - canReorder:', canReorder);
   debugLog('Queue component - queueMode:', queueMode);
-
-  // Check if items can be deleted (admin can delete any item when not playing)
-  const canDeleteItems = isAdmin && (playerState?.state === PlayerState.stopped || playerState?.state === PlayerState.paused);
-  
   debugLog('Queue component - canDeleteItems:', canDeleteItems);
-  debugLog('Queue component - canReorder:', canReorder);
 
 
   // Update list items when queue changes
@@ -55,52 +50,15 @@ const Queue: React.FC = () => {
     }
   }, [queueItems]);
 
-  // Toggle between modes
-  const toggleQueueMode = () => {
-    setQueueMode(prevMode => prevMode === 'delete' ? 'reorder' : 'delete');
-  };
-
   // Handle reorder event from IonReorderGroup
   const doReorder = async (event: CustomEvent) => {
-    debugLog('Reorder event:', event.detail);
-    const { from, to, complete } = event.detail;
-    
-    if (listItems && controllerName) {
-      const copy = [...listItems];
-      const draggedItem = copy.splice(from, 1)[0];
-      copy.splice(to, 0, draggedItem);
-      
-      // Complete the reorder animation
-      complete();
-      
-      // Create the new queue order (first item + reordered items)
-      const newQueueItems = [queueItems[0], ...copy];
-      debugLog('New queue order:', newQueueItems);
-      
-      try {
-        // Update all items with their new order values
-        const updatePromises = newQueueItems.map((item, index) => {
-          const newOrder = index + 1;
-          if (item.key && item.order !== newOrder) {
-            debugLog(`Updating item ${item.key} from order ${item.order} to ${newOrder}`);
-            return queueService.updateQueueItem(controllerName, item.key, { order: newOrder });
-          }
-          return Promise.resolve();
-        });
-        
-        await Promise.all(updatePromises);
-        debugLog('Queue reorder completed successfully');
-      } catch (error) {
-        console.error('Failed to reorder queue:', error);
-        // You might want to show an error toast here
-      }
-    }
+    await handleReorder(event, queueItems);
   };
 
   // Render queue item
   const renderQueueItem = (queueItem: QueueItem, index: number) => {
     debugLog(`Queue item ${index}: order=${queueItem.order}, key=${queueItem.key}`);
-    const canDelete = isAdmin && queueMode === 'delete'; // Only allow delete in delete mode
+    const canDelete = canDeleteItems && queueMode === 'delete'; // Only allow delete in delete mode
     
     return (
       <IonItemSliding key={queueItem.key}>
@@ -167,7 +125,6 @@ const Queue: React.FC = () => {
     if (queueItems.length === 0) return null;
     
     const firstItem = queueItems[0];
-    const canDeleteFirstItem = isAdmin && (playerState?.state === PlayerState.stopped || playerState?.state === PlayerState.paused);
     
     return (
       <IonItemSliding key={firstItem.key}>
@@ -236,7 +193,7 @@ const Queue: React.FC = () => {
     <>
       <div className="ion-padding">
         <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1rem' }}>
-          {isAdmin && (
+          {canDeleteItems && (
             <ActionButton
               onClick={toggleQueueMode}
               variant={ActionButtonVariant.SECONDARY}

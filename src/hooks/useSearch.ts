@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo } from 'react';
 import { useAppSelector, selectSongsArray } from '../redux';
-import { useActionHandlers } from './useActionHandlers';
+import { useActions } from './useActions';
 import { useDisabledSongs } from './useDisabledSongs';
 import { UI_CONSTANTS } from '../constants';
 import { filterSongs } from '../utils/dataProcessing';
@@ -11,7 +11,7 @@ const ITEMS_PER_PAGE = 20;
 export const useSearch = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const { handleAddToQueue, handleToggleFavorite, handleToggleDisabled, isSongDisabled } = useActionHandlers();
+  const { handleAddToQueue, handleToggleFavorite, handleToggleDisabled, isSongDisabled } = useActions();
   const { disabledSongPaths, loading: disabledSongsLoading } = useDisabledSongs();
 
   // Get all songs from Redux (this is memoized)

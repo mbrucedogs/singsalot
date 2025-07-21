@@ -1,14 +1,14 @@
 import { useCallback, useMemo, useState } from 'react';
 import { useAppSelector, selectHistoryArray } from '../redux';
 import { debugLog } from '../utils/logger';
-import { useActionHandlers } from './useActionHandlers';
+import { useActions } from './useActions';
 import { useDisabledSongs } from './useDisabledSongs';
 
 const ITEMS_PER_PAGE = 20;
 
 export const useHistory = () => {
   const allHistoryItems = useAppSelector(selectHistoryArray);
-  const { handleAddToQueue, handleToggleFavorite, handleToggleDisabled, handleDeleteFromHistory, isSongDisabled } = useActionHandlers();
+  const { handleAddToQueue, handleToggleFavorite, handleToggleDisabled, handleDeleteFromHistory, isSongDisabled } = useActions();
   const { disabledSongPaths, loading: disabledSongsLoading } = useDisabledSongs();
   
   const [currentPage, setCurrentPage] = useState(1);

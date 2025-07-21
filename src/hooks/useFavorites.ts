@@ -1,14 +1,14 @@
 import { useCallback, useMemo, useState } from 'react';
 import { useAppSelector, selectFavoritesArray } from '../redux';
 import { debugLog } from '../utils/logger';
-import { useActionHandlers } from './useActionHandlers';
+import { useActions } from './useActions';
 import { useDisabledSongs } from './useDisabledSongs';
 
 const ITEMS_PER_PAGE = 20;
 
 export const useFavorites = () => {
   const allFavoritesItems = useAppSelector(selectFavoritesArray);
-  const { handleAddToQueue, handleToggleFavorite, handleToggleDisabled, isSongDisabled } = useActionHandlers();
+  const { handleAddToQueue, handleToggleFavorite, handleToggleDisabled, isSongDisabled } = useActions();
   const { disabledSongPaths, loading: disabledSongsLoading } = useDisabledSongs();
   
   const [currentPage, setCurrentPage] = useState(1);

@@ -3,8 +3,7 @@ import { IonItem, IonLabel } from '@ionic/react';
 import ActionButton from './ActionButton';
 import { useAppSelector } from '../../redux';
 import { selectQueue, selectFavorites } from '../../redux';
-import { useSongOperations } from '../../hooks/useSongOperations';
-import { useToast } from '../../hooks/useToast';
+import { useActions } from '../../hooks/useActions';
 import { useModal } from '../../hooks/useModalContext';
 import { debugLog } from '../../utils/logger';
 import type { SongItemProps, QueueItem, Song } from '../../types';
@@ -214,9 +213,8 @@ const SongItem: React.FC<SongItemProps> = ({
   const queue = useAppSelector(selectQueue);
   const favorites = useAppSelector(selectFavorites);
   
-  // Get song operations and hooks
-  const { addToQueue, removeFromQueue, toggleFavorite } = useSongOperations();
-  const { showSuccess, showError } = useToast();
+  // Get unified action handlers
+  const { handleAddToQueue, handleToggleFavorite, handleRemoveFromQueue } = useActions();
   const { openSongInfo } = useModal();
   
   // Check if song is in queue or favorites based on path
@@ -248,33 +246,21 @@ const SongItem: React.FC<SongItemProps> = ({
   const shouldShowDeleteButton = showDeleteButton !== undefined ? showDeleteButton : context === 'history' && isAdmin;
   const shouldShowFavoriteButton = showFavoriteButton !== undefined ? showFavoriteButton : false; // Disabled for all contexts
 
-  // Handle song operations internally
-  const handleAddToQueue = async () => {
-    try {
-      await addToQueue(song);
-      showSuccess('Song added to queue');
-    } catch {
-      showError('Failed to add song to queue');
-    }
+  // Create wrapper functions for the unified handlers
+  const handleAddToQueueClick = async () => {
+    await handleAddToQueue(song);
   };
 
-  const handleRemoveFromQueue = async () => {
+  const handleToggleFavoriteClick = async () => {
+    await handleToggleFavorite(song);
+  };
+
+  const handleRemoveFromQueueClick = async () => {
     if (!queueItemKey) return;
-    
-    try {
-      await removeFromQueue(queueItemKey);
-      showSuccess('Song removed from queue');
-    } catch {
-      showError('Failed to remove song from queue');
-    }
-  };
-
-  const handleToggleFavorite = async () => {
-    try {
-      await toggleFavorite(song);
-      showSuccess(isInFavorites ? 'Removed from favorites' : 'Added to favorites');
-    } catch {
-      showError('Failed to update favorites');
+    // Find the queue item by key
+    const queueItem = (Object.values(queue) as QueueItem[]).find(item => item.key === queueItemKey);
+    if (queueItem) {
+      await handleRemoveFromQueue(queueItem);
     }
   };
 
@@ -302,9 +288,9 @@ const SongItem: React.FC<SongItemProps> = ({
             showDeleteButton={shouldShowDeleteButton}
             showFavoriteButton={shouldShowFavoriteButton}
             onDeleteItem={onDeleteItem}
-            onAddToQueue={context === 'queue' ? handleRemoveFromQueue : handleAddToQueue}
-            onRemoveFromQueue={context === 'queue' ? handleRemoveFromQueue : onDeleteItem}
-            onToggleFavorite={context === 'favorites' ? onDeleteItem : handleToggleFavorite}
+            onAddToQueue={context === 'queue' ? handleRemoveFromQueueClick : handleAddToQueueClick}
+            onRemoveFromQueue={context === 'queue' ? handleRemoveFromQueueClick : onDeleteItem}
+            onToggleFavorite={context === 'favorites' ? onDeleteItem : handleToggleFavoriteClick}
             onShowSongInfo={handleSelectSinger}
           />
         </div>

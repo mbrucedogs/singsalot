@@ -8,7 +8,7 @@ import {
 } from 'ionicons/icons';
 import { useAppSelector } from '../../redux';
 import { selectIsAdmin, selectFavorites, selectSongs, selectQueue } from '../../redux';
-import { useActionHandlers } from '../../hooks/useActionHandlers';
+import { useActions } from '../../hooks/useActions';
 import { useModal } from '../../hooks/useModalContext';
 
 import { ModalHeader } from './ModalHeader';
@@ -26,7 +26,7 @@ const SongInfo: React.FC<SongInfoProps> = ({ isOpen, onClose, song }) => {
   const favorites = useAppSelector(selectFavorites);
   const allSongs = useAppSelector(selectSongs);
   const queue = useAppSelector(selectQueue);
-  const { handleToggleFavorite, handleToggleDisabled, isSongDisabled } = useActionHandlers();
+  const { handleToggleFavorite, handleToggleDisabled, isSongDisabled } = useActions();
   
   const { openSelectSinger } = useModal();
   const [showArtistSongs, setShowArtistSongs] = useState(false);

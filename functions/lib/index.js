@@ -34,8 +34,8 @@ exports.updateTopPlayedOnHistoryChange = functions.database
             if (historySong && historySong.artist && historySong.title) {
                 // Create a unique key based on artist and title (case-insensitive)
                 // Replace invalid Firebase key characters with underscores
-                const sanitizedArtist = historySong.artist.toLowerCase().trim().replace(/[.#$/[\]]/g, '_');
-                const sanitizedTitle = historySong.title.toLowerCase().trim().replace(/[.#$/[\]]/g, '_');
+                const sanitizedArtist = String(historySong.artist || '').toLowerCase().trim().replace(/[.#$/[\]]/g, '_');
+                const sanitizedTitle = String(historySong.title || '').toLowerCase().trim().replace(/[.#$/[\]]/g, '_');
                 const key = `${sanitizedArtist}_${sanitizedTitle}`;
                 if (aggregation[key]) {
                     // Increment count for existing song
@@ -107,8 +107,8 @@ exports.recalculateTopPlayed = functions.https.onCall(async (data, context) => {
             if (historySong && historySong.artist && historySong.title) {
                 // Create a unique key based on artist and title (case-insensitive)
                 // Replace invalid Firebase key characters with underscores
-                const sanitizedArtist = historySong.artist.toLowerCase().trim().replace(/[.#$/[\]]/g, '_');
-                const sanitizedTitle = historySong.title.toLowerCase().trim().replace(/[.#$/[\]]/g, '_');
+                const sanitizedArtist = String(historySong.artist || '').toLowerCase().trim().replace(/[.#$/[\]]/g, '_');
+                const sanitizedTitle = String(historySong.title || '').toLowerCase().trim().replace(/[.#$/[\]]/g, '_');
                 const key = `${sanitizedArtist}_${sanitizedTitle}`;
                 if (aggregation[key]) {
                     // Increment count for existing song

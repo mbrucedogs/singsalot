@@ -5,6 +5,7 @@ import { useAppSelector } from '../../redux';
 import { selectNewSongsArray } from '../../redux';
 import { debugLog } from '../../utils/logger';
 import type { Song } from '../../types';
+import { SongItemContext } from '../../types';
 
 const NewSongs: React.FC = () => {
   const {
@@ -30,7 +31,7 @@ const NewSongs: React.FC = () => {
         renderItem={(song) => (
           <SongItem
             song={song}
-            context="search"
+            context={SongItemContext.SEARCH}
             showAddButton={true}
             showInfoButton={true}
             showFavoriteButton={false}

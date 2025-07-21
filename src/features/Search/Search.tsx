@@ -5,6 +5,7 @@ import { useSearch, useDebugLogging } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectIsAdmin, selectSongs } from '../../redux';
 import type { Song } from '../../types';
+import { SongItemContext } from '../../types';
 
 const Search: React.FC = () => {
   const {
@@ -52,7 +53,7 @@ const Search: React.FC = () => {
           renderItem={(song) => (
             <SongItem
               song={song}
-              context="search"
+              context={SongItemContext.SEARCH}
               isAdmin={isAdmin}
               showAddButton={true}
               showInfoButton={true}

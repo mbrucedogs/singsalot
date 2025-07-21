@@ -7,6 +7,7 @@ import { useActions } from '../../hooks/useActions';
 import { useModal } from '../../hooks/useModalContext';
 import { debugLog } from '../../utils/logger';
 import type { SongItemProps, QueueItem, Song } from '../../types';
+import { SongItemContext } from '../../types';
 import { ActionButtonVariant, ActionButtonSize, ActionButtonIconSlot } from '../../types';
 import { Icons } from '../../constants';
 
@@ -226,7 +227,7 @@ const SongItem: React.FC<SongItemProps> = React.memo(({
 
   // Find queue item key for removal (only needed for queue context)
   const queueItemKey = useMemo(() => 
-    context === 'queue' 
+    context === SongItemContext.QUEUE 
       ? (Object.entries(queue) as [string, QueueItem][]).find(([, item]) => item.song.path === song.path)?.[0]
       : null,
     [context, queue, song.path]
@@ -242,14 +243,14 @@ const SongItem: React.FC<SongItemProps> = React.memo(({
   });
 
   // Default values based on context if not explicitly provided
-  const shouldShowPath = showPath !== undefined ? showPath : context !== 'queue';
-  const shouldShowCount = showCount !== undefined ? showCount : context === 'queue';
+  const shouldShowPath = showPath !== undefined ? showPath : context !== SongItemContext.QUEUE;
+  const shouldShowCount = showCount !== undefined ? showCount : context === SongItemContext.QUEUE;
   
   // Default values for action buttons based on context if not explicitly provided
-  const shouldShowInfoButton = showInfoButton !== undefined ? showInfoButton : ['search', 'history'].includes(context);
-  const shouldShowAddButton = showAddButton !== undefined ? showAddButton : ['search', 'history'].includes(context);
-  const shouldShowRemoveButton = showRemoveButton !== undefined ? showRemoveButton : context === 'queue' && isAdmin;
-  const shouldShowDeleteButton = showDeleteButton !== undefined ? showDeleteButton : context === 'history' && isAdmin;
+  const shouldShowInfoButton = showInfoButton !== undefined ? showInfoButton : [SongItemContext.SEARCH, SongItemContext.HISTORY].includes(context);
+  const shouldShowAddButton = showAddButton !== undefined ? showAddButton : [SongItemContext.SEARCH, SongItemContext.HISTORY].includes(context);
+  const shouldShowRemoveButton = showRemoveButton !== undefined ? showRemoveButton : context === SongItemContext.QUEUE && isAdmin;
+  const shouldShowDeleteButton = showDeleteButton !== undefined ? showDeleteButton : context === SongItemContext.HISTORY && isAdmin;
   const shouldShowFavoriteButton = showFavoriteButton !== undefined ? showFavoriteButton : false; // Disabled for all contexts
 
   // Memoized handler functions for performance
@@ -295,9 +296,9 @@ const SongItem: React.FC<SongItemProps> = React.memo(({
             showDeleteButton={shouldShowDeleteButton}
             showFavoriteButton={shouldShowFavoriteButton}
             onDeleteItem={onDeleteItem}
-            onAddToQueue={context === 'queue' ? handleRemoveFromQueueClick : handleAddToQueueClick}
-            onRemoveFromQueue={context === 'queue' ? handleRemoveFromQueueClick : onDeleteItem}
-            onToggleFavorite={context === 'favorites' ? onDeleteItem : handleToggleFavoriteClick}
+            onAddToQueue={context === SongItemContext.QUEUE ? handleRemoveFromQueueClick : handleAddToQueueClick}
+            onRemoveFromQueue={context === SongItemContext.QUEUE ? handleRemoveFromQueueClick : onDeleteItem}
+            onToggleFavorite={context === SongItemContext.FAVORITES ? onDeleteItem : handleToggleFavoriteClick}
             onShowSongInfo={handleSelectSinger}
           />
         </div>

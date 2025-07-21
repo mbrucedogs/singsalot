@@ -7,6 +7,7 @@ import { useAppSelector } from '../../redux';
 import { selectHistory, selectIsAdmin } from '../../redux';
 import { formatDate } from '../../utils/dataProcessing';
 import type { Song } from '../../types';
+import { SongItemContext } from '../../types';
 
 const History: React.FC = () => {
   const {
@@ -54,7 +55,7 @@ const History: React.FC = () => {
             <div className="flex-1">
               <SongItem
                 song={song}
-                context="history"
+                context={SongItemContext.HISTORY}
                 onDeleteItem={() => handleDeleteFromHistory(song)}
                 isAdmin={isAdmin}
                 showAddButton={true}

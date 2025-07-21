@@ -7,6 +7,7 @@ import { useAppSelector } from '../../redux';
 import { selectSongList } from '../../redux';
 import type { SongListSong, SongList, Song } from '../../types';
 import { debugLog } from '../../utils/logger';
+import { SongItemContext } from '../../types';
 
 const SongLists: React.FC = () => {
   const {
@@ -124,7 +125,7 @@ const SongLists: React.FC = () => {
                             <SongItem
                               key={song.key || `${song.title}-${song.artist}-${sidx}`}
                               song={song}
-                              context="search"
+                              context={SongItemContext.SEARCH}
                               showAddButton={true}
                               showInfoButton={true}
                               showFavoriteButton={false}

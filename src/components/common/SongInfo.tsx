@@ -14,6 +14,7 @@ import { useModal } from '../../hooks/useModalContext';
 import { ModalHeader, InfiniteScrollList, SongItem } from './index';
 import { SongInfoDisplay } from './SongItem';
 import type { Song, QueueItem } from '../../types';
+import { SongItemContext } from '../../types';
 
 interface SongInfoProps {
   isOpen: boolean;
@@ -160,7 +161,7 @@ const SongInfo: React.FC<SongInfoProps> = ({ isOpen, onClose, song }) => {
             renderItem={(song) => (
               <SongItem
                 song={song}
-                context="search"
+                context={SongItemContext.SEARCH}
                 showAddButton={true}
                 showInfoButton={true}
                 showFavoriteButton={false}

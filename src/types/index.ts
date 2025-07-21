@@ -164,9 +164,19 @@ export interface ActionButtonProps {
   'aria-label'?: string;
 }
 
+export enum SongItemContext {
+  SEARCH = 'search',
+  QUEUE = 'queue',
+  FAVORITES = 'favorites',
+  HISTORY = 'history',
+  SONGLISTS = 'songlists',
+  TOP100 = 'top100',
+  NEW = 'new',
+}
+
 export interface SongItemProps {
   song: Song;
-  context: 'search' | 'queue' | 'favorites' | 'history' | 'songlists' | 'top100' | 'new';
+  context: SongItemContext;
   onDeleteItem?: () => void;
   isAdmin?: boolean;
   className?: string;

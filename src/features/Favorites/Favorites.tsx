@@ -5,6 +5,7 @@ import { useAppSelector } from '../../redux';
 import { selectFavorites } from '../../redux';
 import { debugLog } from '../../utils/logger';
 import type { Song } from '../../types';
+import { SongItemContext } from '../../types';
 
 const Favorites: React.FC = () => {
   const {
@@ -31,7 +32,7 @@ const Favorites: React.FC = () => {
         renderItem={(song) => (
           <SongItem
             song={song}
-            context="favorites"
+            context={SongItemContext.FAVORITES}
             showInfoButton={true}
             showAddButton={false}
             showDeleteButton={true}

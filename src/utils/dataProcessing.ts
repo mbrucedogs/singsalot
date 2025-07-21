@@ -70,17 +70,16 @@ export const sortTopPlayedByCount = (songs: TopPlayed[]): TopPlayed[] => {
 // Sort songs by artist then title (case insensitive)
 export const sortSongsByArtistAndTitle = (songs: Song[]): Song[] => {
   const sortedSongs = [...songs].sort((a, b) => {
-    // First sort by artist (case insensitive)
-    const artistA = a.artist.toLowerCase();
-    const artistB = b.artist.toLowerCase();
+    // Defensive: treat missing artist/title as empty string
+    const artistA = (a.artist || '').toLowerCase();
+    const artistB = (b.artist || '').toLowerCase();
     
     if (artistA !== artistB) {
       return artistA.localeCompare(artistB);
     }
     
-    // If artists are the same, sort by title (case insensitive)
-    const titleA = a.title.toLowerCase();
-    const titleB = b.title.toLowerCase();
+    const titleA = (a.title || '').toLowerCase();
+    const titleB = (b.title || '').toLowerCase();
     return titleA.localeCompare(titleB);
   });
 

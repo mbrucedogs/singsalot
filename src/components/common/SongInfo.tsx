@@ -78,6 +78,7 @@ const SongInfo: React.FC<SongInfoProps> = ({ isOpen, onClose, song }) => {
                   song={song}
                   showPath={true}
                   showCount={false}
+                  showFullPath={true}
                 />
               </div>
             </div>

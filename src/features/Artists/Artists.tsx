@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { IonSearchbar, IonModal, IonContent, IonItem } from '@ionic/react';
+import { IonSearchbar, IonModal, IonContent } from '@ionic/react';
 import { list } from 'ionicons/icons';
-import { InfiniteScrollList, SongItem, ListItem, NumberDisplay, ModalHeader } from '../../components/common';
+import { InfiniteScrollList, SongItem, ListItem, ModalHeader } from '../../components/common';
 import { useArtists } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectSongs } from '../../redux';
@@ -83,61 +83,23 @@ const Artists: React.FC = () => {
           <ModalHeader title={`Songs by ${selectedArtist}`} onClose={handleCloseArtistSongs} />
           
           <IonContent>
-            <div style={{ padding: '10px' }}>
-              <InfiniteScrollList
-                items={selectedArtistSongs}
-                isLoading={false}
-                hasMore={false}
-                onLoadMore={() => {}}
-                renderItem={(song, index) => (
-                  <IonItem 
-                    key={song.key} 
-                    detail={false} 
-                    style={{ 
-                      '--min-height': '60px', 
-                      '--border-style': 'none',
-                      '--padding-start': '0',
-                      '--padding-end': '0',
-                      '--inner-padding-start': '0',
-                      '--inner-padding-end': '0',
-                      '--padding-top': '0',
-                      '--padding-bottom': '0',
-                      margin: '5px 0',
-                      display: 'flex',
-                      alignItems: 'center'
-                    }}
-                  >
-                    {/* Number */}
-                    <div style={{ 
-                      flexShrink: 0,
-                      display: 'flex',
-                      alignItems: 'center'
-                    }}>
-                      <NumberDisplay number={index + 1} />
-                    </div>
-                    
-                    {/* Song Item Content - placed directly after NumberDisplay like in ListItem */}
-                    <div style={{ 
-                      flex: 1,
-                      display: 'flex',
-                      alignItems: 'center'
-                    }}>
-                      <div style={{ width: '100%' }}>
-                        <SongItem
-                          song={song}
-                          context="search"
-                          showAddButton={true}
-                          showInfoButton={true}
-                          showFavoriteButton={false}
-                        />
-                      </div>
-                    </div>
-                  </IonItem>
-                )}
-                emptyTitle="No songs found"
-                emptyMessage="This artist has no songs in the catalog"
-              />
-            </div>
+            <InfiniteScrollList
+              items={selectedArtistSongs}
+              isLoading={false}
+              hasMore={false}
+              onLoadMore={() => {}}
+              renderItem={(song) => (
+                <SongItem
+                  song={song}
+                  context="search"
+                  showAddButton={true}
+                  showInfoButton={true}
+                  showFavoriteButton={false}
+                />
+              )}
+              emptyTitle="No songs found"
+              emptyMessage="This artist has no songs in the catalog"
+            />
           </IonContent>
         </IonModal>
 

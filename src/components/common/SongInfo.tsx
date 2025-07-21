@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   IonModal, IonContent, 
-  IonButton, IonIcon, IonList, IonItem, IonLabel
+  IonButton, IonIcon
 } from '@ionic/react';
 import { 
   add, heart, heartOutline, ban, checkmark, people
@@ -11,7 +11,7 @@ import { selectIsAdmin, selectFavorites, selectSongs, selectQueue } from '../../
 import { useActions } from '../../hooks/useActions';
 import { useModal } from '../../hooks/useModalContext';
 
-import { ModalHeader } from './ModalHeader';
+import { ModalHeader, InfiniteScrollList, SongItem } from './index';
 import { SongInfoDisplay } from './SongItem';
 import type { Song, QueueItem } from '../../types';
 
@@ -152,24 +152,23 @@ const SongInfo: React.FC<SongInfoProps> = ({ isOpen, onClose, song }) => {
         />
         
         <IonContent>
-          <div className="p-4">
-            {artistSongs.length > 0 ? (
-              <IonList>
-                {artistSongs.map((artistSong) => (
-                  <IonItem key={artistSong.path}>
-                    <IonLabel>
-                      <div className="text-base font-bold">{artistSong.title}</div>
-                      <div className="text-sm text-gray-500 dark:text-gray-400">{artistSong.path}</div>
-                    </IonLabel>
-                  </IonItem>
-                ))}
-              </IonList>
-            ) : (
-              <div className="p-4 text-center text-gray-500 dark:text-gray-400">
-                No other songs found by this artist
-              </div>
+          <InfiniteScrollList
+            items={artistSongs}
+            isLoading={false}
+            hasMore={false}
+            onLoadMore={() => {}}
+            renderItem={(song) => (
+              <SongItem
+                song={song}
+                context="search"
+                showAddButton={true}
+                showInfoButton={true}
+                showFavoriteButton={false}
+              />
             )}
-          </div>
+            emptyTitle="No songs found"
+            emptyMessage="No other songs found by this artist"
+          />
         </IonContent>
       </IonModal>
     </>

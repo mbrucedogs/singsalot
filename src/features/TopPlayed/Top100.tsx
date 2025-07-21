@@ -114,8 +114,6 @@ const Top100: React.FC = () => {
       <IonModal 
         isOpen={!!selectedTopPlayed} 
         onDidDismiss={handleCloseModal}
-        breakpoints={[0, 0.5, 0.8]}
-        initialBreakpoint={0.8}
       >
         <ModalHeader title={selectedTopPlayed?.artist || ''} onClose={handleCloseModal} />
         

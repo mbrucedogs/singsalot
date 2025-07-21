@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { IonItem, IonModal, IonChip, IonContent, IonList, IonAccordionGroup, IonAccordion } from '@ionic/react';
-import { list } from 'ionicons/icons';
+
 import { InfiniteScrollList, SongItem, ListItem, TwoLineDisplay, NumberDisplay, ModalHeader } from '../../components/common';
 import { useSongLists } from '../../hooks';
 import { useAppSelector } from '../../redux';
@@ -63,7 +63,6 @@ const SongLists: React.FC = () => {
     <ListItem 
       primaryText={songList.title}
       secondaryText={`${songList.songs.length} song${songList.songs.length !== 1 ? 's' : ''}`}
-      icon={list}
       onClick={() => handleSongListClick(songList.key!)}
     />
   );

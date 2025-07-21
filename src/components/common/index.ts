@@ -8,6 +8,7 @@ export { default as SongItem, SongInfoDisplay, SongActionButtons } from './SongI
 export { default as SongInfo } from './SongInfo';
 export { default as Toast } from './Toast';
 export { TwoLineDisplay } from './TwoLineDisplay';
-export { ListItem } from './ListItem';
+export { default as ListItem } from './ListItem';
 export { NumberDisplay } from './NumberDisplay';
-export { ModalHeader } from './ModalHeader'; 
+export { ModalHeader } from './ModalHeader';
+export { default as VirtualizedList } from './VirtualizedList'; 

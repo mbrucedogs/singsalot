@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { IonSearchbar, IonModal, IonContent } from '@ionic/react';
-import { list } from 'ionicons/icons';
+
 import { InfiniteScrollList, SongItem, ListItem, ModalHeader } from '../../components/common';
 import { useArtists } from '../../hooks';
 import { useAppSelector } from '../../redux';
@@ -43,7 +43,6 @@ const Artists: React.FC = () => {
     <ListItem
       primaryText={artist}
       secondaryText={`${getSongCountByArtist(artist)} song${getSongCountByArtist(artist) !== 1 ? 's' : ''}`}
-      icon={list}
       onClick={() => handleArtistClick(artist)}
     />
   );

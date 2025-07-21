@@ -20,4 +20,7 @@ export { useSongInfo } from './useSongInfo';
 // Composable hooks for common patterns
 export { useFilteredSongs } from './useFilteredSongs';
 export { usePaginatedData } from './usePaginatedData';
-export { useErrorHandler } from './useErrorHandler'; 
+export { useErrorHandler } from './useErrorHandler';
+
+// Performance optimization hooks
+export { usePerformanceMonitor } from './usePerformanceMonitor'; 

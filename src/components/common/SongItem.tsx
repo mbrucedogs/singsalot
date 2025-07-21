@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { IonItem, IonLabel } from '@ionic/react';
 import ActionButton from './ActionButton';
 import { useAppSelector } from '../../redux';
@@ -27,7 +27,7 @@ export const SongInfoDisplay: React.FC<{
   song: Song; 
   showPath?: boolean;
   showCount?: boolean;
-}> = ({ 
+}> = React.memo(({ 
   song, 
   showPath = false,
   showCount = false
@@ -82,7 +82,7 @@ export const SongInfoDisplay: React.FC<{
       )}
     </IonLabel>
   );
-};
+});
 
 // Action Buttons Component
 export const SongActionButtons: React.FC<{
@@ -99,9 +99,7 @@ export const SongActionButtons: React.FC<{
   onRemoveFromQueue?: () => void;
   onToggleFavorite?: () => void;
   onShowSongInfo?: () => void;
-}> = ({
-  isAdmin,
-  isInQueue,
+}> = React.memo(({
   isInFavorites,
   showInfoButton = false,
   showAddButton = false,
@@ -114,9 +112,8 @@ export const SongActionButtons: React.FC<{
   onToggleFavorite,
   onShowSongInfo
 }) => {
-  const buttons = [];
+  const buttons: React.ReactNode[] = [];
 
-  // Info button
   if (showInfoButton && onShowSongInfo) {
     buttons.push(
       <ActionButton
@@ -130,8 +127,7 @@ export const SongActionButtons: React.FC<{
     );
   }
 
-  // Add to Queue button
-  if (showAddButton && !isInQueue && onAddToQueue) {
+  if (showAddButton && onAddToQueue) {
     buttons.push(
       <ActionButton
         key="add"
@@ -144,8 +140,7 @@ export const SongActionButtons: React.FC<{
     );
   }
 
-  // Remove from Queue button
-  if (showRemoveButton && isAdmin && onRemoveFromQueue) {
+  if (showRemoveButton && onRemoveFromQueue) {
     buttons.push(
       <ActionButton
         key="remove"
@@ -158,7 +153,6 @@ export const SongActionButtons: React.FC<{
     );
   }
 
-  // Delete button (generic - can be used for favorites, history, etc.)
   if (showDeleteButton && onDeleteItem) {
     buttons.push(
       <ActionButton
@@ -172,7 +166,6 @@ export const SongActionButtons: React.FC<{
     );
   }
 
-  // Toggle Favorite button
   if (showFavoriteButton && onToggleFavorite) {
     buttons.push(
       <ActionButton
@@ -191,10 +184,10 @@ export const SongActionButtons: React.FC<{
       {buttons}
     </div>
   ) : null;
-};
+});
 
 // Main SongItem Component
-const SongItem: React.FC<SongItemProps> = ({
+const SongItem: React.FC<SongItemProps> = React.memo(({
   song,
   context,
   onDeleteItem,
@@ -217,14 +210,24 @@ const SongItem: React.FC<SongItemProps> = ({
   const { handleAddToQueue, handleToggleFavorite, handleRemoveFromQueue } = useActions();
   const { openSongInfo } = useModal();
   
-  // Check if song is in queue or favorites based on path
-  const isInQueue = (Object.values(queue) as QueueItem[]).some(item => item.song.path === song.path);
-  const isInFavorites = (Object.values(favorites) as Song[]).some(favSong => favSong.path === song.path);
+  // Memoized computations for performance
+  const isInQueue = useMemo(() => 
+    (Object.values(queue) as QueueItem[]).some(item => item.song.path === song.path),
+    [queue, song.path]
+  );
+  
+  const isInFavorites = useMemo(() => 
+    (Object.values(favorites) as Song[]).some(favSong => favSong.path === song.path),
+    [favorites, song.path]
+  );
 
   // Find queue item key for removal (only needed for queue context)
-  const queueItemKey = context === 'queue' 
-    ? (Object.entries(queue) as [string, QueueItem][]).find(([, item]) => item.song.path === song.path)?.[0]
-    : null;
+  const queueItemKey = useMemo(() => 
+    context === 'queue' 
+      ? (Object.entries(queue) as [string, QueueItem][]).find(([, item]) => item.song.path === song.path)?.[0]
+      : null,
+    [context, queue, song.path]
+  );
 
   // Debug logging for favorites
   debugLog('SongItem render:', {
@@ -246,27 +249,27 @@ const SongItem: React.FC<SongItemProps> = ({
   const shouldShowDeleteButton = showDeleteButton !== undefined ? showDeleteButton : context === 'history' && isAdmin;
   const shouldShowFavoriteButton = showFavoriteButton !== undefined ? showFavoriteButton : false; // Disabled for all contexts
 
-  // Create wrapper functions for the unified handlers
-  const handleAddToQueueClick = async () => {
+  // Memoized handler functions for performance
+  const handleAddToQueueClick = useCallback(async () => {
     await handleAddToQueue(song);
-  };
+  }, [handleAddToQueue, song]);
 
-  const handleToggleFavoriteClick = async () => {
+  const handleToggleFavoriteClick = useCallback(async () => {
     await handleToggleFavorite(song);
-  };
+  }, [handleToggleFavorite, song]);
 
-  const handleRemoveFromQueueClick = async () => {
+  const handleRemoveFromQueueClick = useCallback(async () => {
     if (!queueItemKey) return;
     // Find the queue item by key
     const queueItem = (Object.values(queue) as QueueItem[]).find(item => item.key === queueItemKey);
     if (queueItem) {
       await handleRemoveFromQueue(queueItem);
     }
-  };
+  }, [queueItemKey, queue, handleRemoveFromQueue]);
 
-  const handleSelectSinger = () => {
+  const handleSelectSinger = useCallback(() => {
     openSongInfo(song);
-  };
+  }, [openSongInfo, song]);
 
   return (
     <IonItem className={className}>
@@ -297,6 +300,6 @@ const SongItem: React.FC<SongItemProps> = ({
       )}
     </IonItem>
   );
-};
+});
 
-export default SongItem; 
+export default SongItem;

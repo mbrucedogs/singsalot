@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { useAppSelector, selectSongListArray, selectSongsArray } from '../redux';
 import { useActions } from './useActions';
-import { usePagination } from './usePagination';
+import { usePaginatedData } from './index';
 import type { SongListSong } from '../types';
 
 export const useSongLists = () => {
@@ -9,8 +9,10 @@ export const useSongLists = () => {
   const allSongs = useAppSelector(selectSongsArray);
   const { handleAddToQueue, handleToggleFavorite } = useActions();
 
-  // Use unified pagination hook
-  const pagination = usePagination(allSongLists);
+  // Use the composable pagination hook
+  const pagination = usePaginatedData(allSongLists, {
+    itemsPerPage: 20 // Default pagination size
+  });
 
   // Check if a song exists in the catalog
   const checkSongAvailability = useCallback((songListSong: SongListSong) => {
@@ -37,5 +39,6 @@ export const useSongLists = () => {
     checkSongAvailability,
     handleAddToQueue,
     handleToggleFavorite,
+    isLoading: pagination.isLoading,
   };
 }; 

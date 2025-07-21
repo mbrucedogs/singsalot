@@ -1,15 +1,13 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useAppSelector, selectArtistsArray, selectSongsArray } from '../redux';
 import { useActions } from './useActions';
-import { usePagination } from './usePagination';
+import { usePaginatedData } from './index';
 import type { Song } from '../types';
 
 export const useArtists = () => {
   const allArtists = useAppSelector(selectArtistsArray);
   const allSongs = useAppSelector(selectSongsArray);
   const { handleAddToQueue, handleToggleFavorite } = useActions();
-  
-  const [searchTerm, setSearchTerm] = useState('');
 
   // Pre-compute songs by artist and song counts for performance
   const songsByArtist = useMemo(() => {
@@ -29,18 +27,10 @@ export const useArtists = () => {
     return { songsMap, countsMap };
   }, [allSongs]);
 
-  // Filter artists by search term
-  const filteredArtists = useMemo(() => {
-    if (!searchTerm.trim()) return allArtists;
-    
-    const term = searchTerm.toLowerCase();
-    return allArtists.filter(artist => 
-      artist.toLowerCase().includes(term)
-    );
-  }, [allArtists, searchTerm]);
-
-  // Use unified pagination hook
-  const pagination = usePagination(filteredArtists);
+  // Use the composable pagination hook
+  const pagination = usePaginatedData(allArtists, {
+    itemsPerPage: 20 // Default pagination size
+  });
 
   // Get songs by artist (now using cached data)
   const getSongsByArtist = useCallback((artistName: string) => {
@@ -52,23 +42,19 @@ export const useArtists = () => {
     return songsByArtist.countsMap.get(artistName.toLowerCase()) || 0;
   }, [songsByArtist.countsMap]);
 
-  const handleSearchChange = useCallback((value: string) => {
-    setSearchTerm(value);
-    pagination.resetPage(); // Reset to first page when searching
-  }, [pagination]);
-
   return {
     artists: pagination.items,
-    allArtists: filteredArtists,
-    searchTerm,
+    allArtists: pagination.searchTerm ? pagination.items : allArtists,
+    searchTerm: pagination.searchTerm,
     hasMore: pagination.hasMore,
     loadMore: pagination.loadMore,
     currentPage: pagination.currentPage,
     totalPages: pagination.totalPages,
-    handleSearchChange,
+    handleSearchChange: pagination.setSearchTerm,
     getSongsByArtist,
     getSongCountByArtist,
     handleAddToQueue,
     handleToggleFavorite,
+    isLoading: pagination.isLoading,
   };
 }; 

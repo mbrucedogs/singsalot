@@ -1,22 +1,15 @@
 import { useCallback, useMemo, useState } from 'react';
 import { useAppSelector, selectHistoryArray } from '../redux';
 import { debugLog } from '../utils/logger';
-import { useSongOperations } from './useSongOperations';
-import { useToast } from './useToast';
+import { useActionHandlers } from './useActionHandlers';
 import { useDisabledSongs } from './useDisabledSongs';
-import { historyService } from '../firebase/services';
-import { useAppSelector as useAppSelectorRedux } from '../redux';
-import { selectControllerName } from '../redux';
-import type { Song } from '../types';
 
 const ITEMS_PER_PAGE = 20;
 
 export const useHistory = () => {
   const allHistoryItems = useAppSelector(selectHistoryArray);
-  const controllerName = useAppSelectorRedux(selectControllerName);
-  const { addToQueue, toggleFavorite } = useSongOperations();
-  const { showSuccess, showError } = useToast();
-  const { disabledSongPaths, isSongDisabled, addDisabledSong, removeDisabledSong, loading: disabledSongsLoading } = useDisabledSongs();
+  const { handleAddToQueue, handleToggleFavorite, handleToggleDisabled, handleDeleteFromHistory, isSongDisabled } = useActionHandlers();
+  const { disabledSongPaths, loading: disabledSongsLoading } = useDisabledSongs();
   
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -55,50 +48,6 @@ export const useHistory = () => {
       setCurrentPage(prev => prev + 1);
     }
   }, [hasMore, currentPage, allHistoryItems.length]);
-
-  const handleAddToQueue = useCallback(async (song: Song) => {
-    try {
-      await addToQueue(song);
-      showSuccess('Song added to queue');
-    } catch {
-      showError('Failed to add song to queue');
-    }
-  }, [addToQueue, showSuccess, showError]);
-
-  const handleToggleFavorite = useCallback(async (song: Song) => {
-    try {
-      await toggleFavorite(song);
-      showSuccess(song.favorite ? 'Removed from favorites' : 'Added to favorites');
-    } catch {
-      showError('Failed to update favorites');
-    }
-  }, [toggleFavorite, showSuccess, showError]);
-
-  const handleToggleDisabled = useCallback(async (song: Song) => {
-    try {
-      if (isSongDisabled(song)) {
-        await removeDisabledSong(song);
-      } else {
-        await addDisabledSong(song);
-      }
-    } catch {
-      showError('Failed to update song disabled status');
-    }
-  }, [isSongDisabled, addDisabledSong, removeDisabledSong, showError]);
-
-  const handleDeleteFromHistory = useCallback(async (song: Song) => {
-    if (!controllerName || !song.key) {
-      showError('Cannot delete history item - missing data');
-      return;
-    }
-
-    try {
-      await historyService.removeFromHistory(controllerName, song.key);
-      showSuccess('Removed from history');
-    } catch {
-      showError('Failed to remove from history');
-    }
-  }, [controllerName, showSuccess, showError]);
 
   return {
     historyItems,

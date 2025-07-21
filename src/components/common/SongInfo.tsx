@@ -8,10 +8,8 @@ import {
 } from 'ionicons/icons';
 import { useAppSelector } from '../../redux';
 import { selectIsAdmin, selectFavorites, selectSongs, selectQueue } from '../../redux';
-import { useSongOperations } from '../../hooks/useSongOperations';
-import { useDisabledSongs } from '../../hooks/useDisabledSongs';
+import { useActionHandlers } from '../../hooks/useActionHandlers';
 import { useModal } from '../../hooks/useModalContext';
-import { useToast } from '../../hooks/useToast';
 
 import { ModalHeader } from './ModalHeader';
 import { SongInfoDisplay } from './SongItem';
@@ -28,9 +26,7 @@ const SongInfo: React.FC<SongInfoProps> = ({ isOpen, onClose, song }) => {
   const favorites = useAppSelector(selectFavorites);
   const allSongs = useAppSelector(selectSongs);
   const queue = useAppSelector(selectQueue);
-  const { toggleFavorite } = useSongOperations();
-  const { isSongDisabled, addDisabledSong, removeDisabledSong } = useDisabledSongs();
-  const { showSuccess, showError } = useToast();
+  const { handleToggleFavorite, handleToggleDisabled, isSongDisabled } = useActionHandlers();
   
   const { openSelectSinger } = useModal();
   const [showArtistSongs, setShowArtistSongs] = useState(false);
@@ -51,27 +47,12 @@ const SongInfo: React.FC<SongInfoProps> = ({ isOpen, onClose, song }) => {
     setShowArtistSongs(true);
   };
 
-  const handleToggleFavorite = async () => {
-    try {
-      await toggleFavorite(song);
-      showSuccess(isInFavorites ? 'Removed from favorites' : 'Added to favorites');
-    } catch {
-      showError('Failed to update favorites');
-    }
+  const handleToggleFavoriteClick = async () => {
+    await handleToggleFavorite(song);
   };
 
-  const handleToggleDisabled = async () => {
-    try {
-      if (isDisabled) {
-        await removeDisabledSong(song);
-        showSuccess('Song enabled');
-      } else {
-        await addDisabledSong(song);
-        showSuccess('Song disabled');
-      }
-    } catch {
-      showError('Failed to update song status');
-    }
+  const handleToggleDisabledClick = async () => {
+    await handleToggleDisabled(song);
   };
 
   return (
@@ -132,7 +113,7 @@ const SongInfo: React.FC<SongInfoProps> = ({ isOpen, onClose, song }) => {
               <IonButton 
                 fill="solid" 
                 color={isInFavorites ? "danger" : "primary"}
-                onClick={handleToggleFavorite}
+                onClick={handleToggleFavoriteClick}
                 className="h-12 w-80"
                 style={{ width: '320px' }}
               >
@@ -145,7 +126,7 @@ const SongInfo: React.FC<SongInfoProps> = ({ isOpen, onClose, song }) => {
                 <IonButton 
                   fill="solid" 
                   color={isDisabled ? "success" : "warning"}
-                  onClick={handleToggleDisabled}
+                  onClick={handleToggleDisabledClick}
                   className="h-12 w-80"
                   style={{ width: '320px' }}
                 >

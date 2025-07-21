@@ -1,21 +1,18 @@
 import { useState, useCallback, useMemo } from 'react';
 import { useAppSelector, selectSongsArray } from '../redux';
-import { useSongOperations } from './useSongOperations';
-import { useToast } from './useToast';
+import { useActionHandlers } from './useActionHandlers';
 import { useDisabledSongs } from './useDisabledSongs';
 import { UI_CONSTANTS } from '../constants';
 import { filterSongs } from '../utils/dataProcessing';
 import { debugLog } from '../utils/logger';
-import type { Song } from '../types';
 
 const ITEMS_PER_PAGE = 20;
 
 export const useSearch = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const { addToQueue, toggleFavorite } = useSongOperations();
-  const { showSuccess, showError } = useToast();
-  const { disabledSongPaths, addDisabledSong, removeDisabledSong, isSongDisabled, loading: disabledSongsLoading } = useDisabledSongs();
+  const { handleAddToQueue, handleToggleFavorite, handleToggleDisabled, isSongDisabled } = useActionHandlers();
+  const { disabledSongPaths, loading: disabledSongsLoading } = useDisabledSongs();
 
   // Get all songs from Redux (this is memoized)
   const allSongs = useAppSelector(selectSongsArray);
@@ -85,36 +82,6 @@ export const useSearch = () => {
       setCurrentPage(prev => prev + 1);
     }
   }, [searchResults.hasMore]);
-
-  const handleAddToQueue = useCallback(async (song: Song) => {
-    try {
-      await addToQueue(song);
-      showSuccess('Song added to queue');
-    } catch {
-      showError('Failed to add song to queue');
-    }
-  }, [addToQueue, showSuccess, showError]);
-
-  const handleToggleFavorite = useCallback(async (song: Song) => {
-    try {
-      await toggleFavorite(song);
-      showSuccess(song.favorite ? 'Removed from favorites' : 'Added to favorites');
-    } catch {
-      showError('Failed to update favorites');
-    }
-  }, [toggleFavorite, showSuccess, showError]);
-
-  const handleToggleDisabled = useCallback(async (song: Song) => {
-    try {
-      if (isSongDisabled(song)) {
-        await removeDisabledSong(song);
-      } else {
-        await addDisabledSong(song);
-      }
-    } catch {
-      showError('Failed to update song disabled status');
-    }
-  }, [isSongDisabled, addDisabledSong, removeDisabledSong, showError]);
 
   return {
     searchTerm,

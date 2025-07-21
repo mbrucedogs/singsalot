@@ -11,5 +11,6 @@ export { useArtists } from './useArtists';
 export { useSingers } from './useSingers';
 export { useSongLists } from './useSongLists';
 export { useDisabledSongs } from './useDisabledSongs';
+export { useActionHandlers } from './useActionHandlers';
 
 export { useSongInfo } from './useSongInfo'; 

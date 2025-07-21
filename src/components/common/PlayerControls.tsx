@@ -87,6 +87,9 @@ const PlayerControls: React.FC<PlayerControlsProps> = ({ className = '', variant
   };
 
   const getStatusText = () => {
+    if (!hasSongsInQueue) {
+      return 'No songs in queue';
+    }
     switch (currentState) {
       case PlayerState.playing:
         return 'Currently Playing';
@@ -113,62 +116,60 @@ const PlayerControls: React.FC<PlayerControlsProps> = ({ className = '', variant
             {getStatusText()}
           </span>
         </div>
-        
         {/* Control Buttons */}
-        {currentState === PlayerState.playing ? (
-          <div 
-            className="flex items-center cursor-pointer hover:bg-gray-800"
-            style={{ padding: '12px 0px' }}
-            onClick={handlePause}
-          >
-            <IonIcon 
-              icon={pauseOutline} 
-              style={{ 
-                marginRight: '12px',
-                fontSize: '20px'
-              }} 
-            />
-            <span style={{ fontWeight: '500' }}>Pause</span>
-          </div>
-        ) : (
-          <div 
-            className="flex items-center cursor-pointer hover:bg-gray-800"
-            style={{ padding: '12px 0px' }}
-            onClick={handlePlay}
-          >
-            <IonIcon 
-              icon={playOutline} 
-              style={{ 
-                marginRight: '12px',
-                fontSize: '20px'
-              }} 
-            />
-            <span style={{ fontWeight: '500' }}>Play</span>
-          </div>
+        {hasSongsInQueue && (
+          <>
+            {currentState === PlayerState.playing ? (
+              <div 
+                className="flex items-center cursor-pointer hover:bg-gray-800"
+                style={{ padding: '12px 0px' }}
+                onClick={handlePause}
+              >
+                <IonIcon 
+                  icon={pauseOutline} 
+                  style={{ 
+                    marginRight: '12px',
+                    fontSize: '20px'
+                  }} 
+                />
+                <span style={{ fontWeight: '500' }}>Pause</span>
+              </div>
+            ) : (
+              <div 
+                className="flex items-center cursor-pointer hover:bg-gray-800"
+                style={{ padding: '12px 0px' }}
+                onClick={handlePlay}
+              >
+                <IonIcon 
+                  icon={playOutline} 
+                  style={{ 
+                    marginRight: '12px',
+                    fontSize: '20px'
+                  }} 
+                />
+                <span style={{ fontWeight: '500' }}>Play</span>
+              </div>
+            )}
+            {currentState !== PlayerState.stopped && (
+              <div 
+                className="flex items-center cursor-pointer hover:bg-gray-800"
+                style={{ padding: '12px 0px' }}
+                onClick={handleStop}
+              >
+                <IonIcon 
+                  icon={stopOutline} 
+                  style={{ 
+                    marginRight: '12px',
+                    fontSize: '20px'
+                  }} 
+                />
+                <span style={{ fontWeight: '500' }}>Stop</span>
+              </div>
+            )}
+          </>
         )}
-        
-        {currentState !== PlayerState.stopped && (
-          <div 
-            className="flex items-center cursor-pointer hover:bg-gray-800"
-            style={{ padding: '12px 0px' }}
-            onClick={handleStop}
-          >
-            <IonIcon 
-              icon={stopOutline} 
-              style={{ 
-                marginRight: '12px',
-                fontSize: '20px'
-              }} 
-            />
-            <span style={{ fontWeight: '500' }}>Stop</span>
-          </div>
-        )}
-        
         {!hasSongsInQueue && (
-          <div style={{ 
-            padding: '12px 0px',
-            marginLeft: '32px' // Align with text after icon
-          }} className="text-xs text-gray-400">
+          <div style={{ padding: '12px 0px', marginLeft: 0 }} className="text-xs text-gray-400">
             Add songs to queue to enable playback controls
           </div>
         )}
@@ -187,42 +188,42 @@ const PlayerControls: React.FC<PlayerControlsProps> = ({ className = '', variant
             </IonChip>
           </div>
         </div>
-        
-        <div className="mt-4 flex items-center justify-center space-x-3">
-          {currentState === PlayerState.playing ? (
-            <ActionButton
-              onClick={handlePause}
-              variant={ActionButtonVariant.PRIMARY}
-              size={ActionButtonSize.SMALL}
-              icon={Icons.PAUSE}
-              iconSlot={ActionButtonIconSlot.ICON_ONLY}
-            />
-          ) : (
-            <ActionButton
-              onClick={handlePlay}
-              variant={ActionButtonVariant.PRIMARY}
-              size={ActionButtonSize.SMALL}
-              icon={Icons.PLAY}
-              iconSlot={ActionButtonIconSlot.ICON_ONLY}
-              disabled={!hasSongsInQueue}
-            />
-          )}
-          
-          {currentState !== PlayerState.stopped && (
-            <ActionButton
-              onClick={handleStop}
-              variant={ActionButtonVariant.DANGER}
-              size={ActionButtonSize.SMALL}
-              icon={Icons.STOP}
-              iconSlot={ActionButtonIconSlot.ICON_ONLY}
-            />
-          )}
-        </div>
-        
+        {/* Only show controls if there are songs in the queue */}
+        {hasSongsInQueue && (
+          <div className="mt-4 flex items-center justify-center space-x-3">
+            {currentState === PlayerState.playing ? (
+              <ActionButton
+                onClick={handlePause}
+                variant={ActionButtonVariant.PRIMARY}
+                size={ActionButtonSize.SMALL}
+                icon={Icons.PAUSE}
+                iconSlot={ActionButtonIconSlot.ICON_ONLY}
+              />
+            ) : (
+              <ActionButton
+                onClick={handlePlay}
+                variant={ActionButtonVariant.PRIMARY}
+                size={ActionButtonSize.SMALL}
+                icon={Icons.PLAY}
+                iconSlot={ActionButtonIconSlot.ICON_ONLY}
+                disabled={!hasSongsInQueue}
+              />
+            )}
+            {currentState !== PlayerState.stopped && (
+              <ActionButton
+                onClick={handleStop}
+                variant={ActionButtonVariant.DANGER}
+                size={ActionButtonSize.SMALL}
+                icon={Icons.STOP}
+                iconSlot={ActionButtonIconSlot.ICON_ONLY}
+              />
+            )}
+          </div>
+        )}
         <div className="mt-3 text-xs text-center">
           Admin controls - Only visible to admin users
           {!hasSongsInQueue && (
-            <div className="mt-1 text-orange-600">
+            <div className="mt-1 text-orange-600" style={{ marginLeft: 0 }}>
               Add songs to queue to enable playback controls
             </div>
           )}

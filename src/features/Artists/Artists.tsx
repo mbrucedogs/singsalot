@@ -6,6 +6,7 @@ import { useArtists } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectSongs } from '../../redux';
 import { debugLog } from '../../utils/logger';
+import { SongItemContext } from '../../types';
 
 
 const Artists: React.FC = () => {
@@ -90,7 +91,7 @@ const Artists: React.FC = () => {
               renderItem={(song) => (
                 <SongItem
                   song={song}
-                  context="search"
+                  context={SongItemContext.SEARCH}
                   showAddButton={true}
                   showInfoButton={true}
                   showFavoriteButton={false}

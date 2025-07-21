@@ -21,7 +21,9 @@ const PlayerControls: React.FC<PlayerControlsProps> = ({ className = '', variant
   const playerState = useAppSelector(selectPlayerState);
   const queueLength = useAppSelector(selectQueueLength);
   const controllerName = useAppSelector(selectControllerName);
-  const { showSuccess, showError } = useToast();
+  const toast = useToast();
+  const showSuccess = toast?.showSuccess;
+  const showError = toast?.showError;
 
   // Debug logging
   debugLog('PlayerControls - playerState:', playerState);
@@ -33,10 +35,10 @@ const PlayerControls: React.FC<PlayerControlsProps> = ({ className = '', variant
     
     try {
       await playerService.updatePlayerStateValue(controllerName, PlayerState.playing);
-      showSuccess('Playback started');
+      if (showSuccess) showSuccess('Playback started');
     } catch (error) {
       console.error('Failed to start playback:', error);
-      showError('Failed to start playback');
+      if (showError) showError('Failed to start playback');
     }
   };
 
@@ -45,10 +47,10 @@ const PlayerControls: React.FC<PlayerControlsProps> = ({ className = '', variant
     
     try {
       await playerService.updatePlayerStateValue(controllerName, PlayerState.paused);
-      showSuccess('Playback paused');
+      if (showSuccess) showSuccess('Playback paused');
     } catch (error) {
       console.error('Failed to pause playback:', error);
-      showError('Failed to pause playback');
+      if (showError) showError('Failed to pause playback');
     }
   };
 
@@ -57,10 +59,10 @@ const PlayerControls: React.FC<PlayerControlsProps> = ({ className = '', variant
     
     try {
       await playerService.updatePlayerStateValue(controllerName, PlayerState.stopped);
-      showSuccess('Playback stopped');
+      if (showSuccess) showSuccess('Playback stopped');
     } catch (error) {
       console.error('Failed to stop playback:', error);
-      showError('Failed to stop playback');
+      if (showError) showError('Failed to stop playback');
     }
   };
 

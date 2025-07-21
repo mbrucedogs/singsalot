@@ -18,7 +18,6 @@ interface GenericListItemProps {
   button?: boolean;
   style?: React.CSSProperties;
   endContent?: React.ReactNode;
-  showSeparator?: boolean;
 }
 
 // Generic ListItem component for different types of data
@@ -36,7 +35,6 @@ export const ListItem = React.memo(forwardRef<HTMLIonItemElement, GenericListIte
   button = false,
   style,
   endContent,
-  showSeparator, // keep for API compatibility, but not used
 }, ref) => {
   return (
     <IonItem

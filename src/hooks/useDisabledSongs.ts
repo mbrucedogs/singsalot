@@ -11,7 +11,9 @@ export const useDisabledSongs = () => {
   const [disabledSongs, setDisabledSongs] = useState<Record<string, DisabledSong>>({});
   const [loading, setLoading] = useState(true);
   const controllerName = useAppSelector(selectControllerName);
-  const { showSuccess, showError } = useToast();
+  const toast = useToast();
+  const showSuccess = toast?.showSuccess;
+  const showError = toast?.showError;
 
   // Load disabled songs on mount and subscribe to changes
   useEffect(() => {
@@ -35,7 +37,7 @@ export const useDisabledSongs = () => {
         setDisabledSongPaths(paths);
       } catch (error) {
         console.error('Error loading disabled songs:', error);
-        showError('Failed to load disabled songs');
+        if (showError) showError('Failed to load disabled songs');
       } finally {
         setLoading(false);
       }
@@ -81,22 +83,22 @@ export const useDisabledSongs = () => {
   const addDisabledSong = useCallback(async (song: Song) => {
     if (!controllerName) {
       console.error('No controller name available');
-      showError('No controller name available');
+      if (showError) showError('No controller name available');
       return;
     }
 
     if (!song.path) {
       console.error('Song has no path:', song);
-      showError('Song has no path');
+      if (showError) showError('Song has no path');
       return;
     }
 
     try {
       await disabledSongsService.addDisabledSong(controllerName, song);
-      showSuccess('Song marked as disabled');
+      if (showSuccess) showSuccess('Song marked as disabled');
     } catch (error) {
       console.error('Error adding disabled song:', error);
-      showError(`Failed to mark song as disabled: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      if (showError) showError(`Failed to mark song as disabled: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }, [controllerName, showSuccess, showError]);
 
@@ -106,10 +108,10 @@ export const useDisabledSongs = () => {
 
     try {
       await disabledSongsService.removeDisabledSong(controllerName, song.path);
-      showSuccess('Song re-enabled');
+      if (showSuccess) showSuccess('Song re-enabled');
     } catch (error) {
       console.error('Error removing disabled song:', error);
-      showError('Failed to re-enable song');
+      if (showError) showError('Failed to re-enable song');
     }
   }, [controllerName, showSuccess, showError]);
 

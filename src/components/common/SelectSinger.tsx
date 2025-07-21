@@ -25,12 +25,14 @@ const SelectSinger: React.FC<SelectSingerProps> = ({ isOpen, onClose, song }) =>
   const singers = useAppSelector(selectSingersArray);
   const controllerName = useAppSelector(selectControllerName);
   const currentQueue = useAppSelector(selectQueueObject);
-  const { showSuccess, showError } = useToast();
+  const toast = useToast();
+  const showSuccess = toast?.showSuccess;
+  const showError = toast?.showError;
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSelectSinger = async (singer: Singer) => {
     if (!controllerName) {
-      showError('Controller not found');
+      if (showError) showError('Controller not found');
       return;
     }
 
@@ -53,11 +55,11 @@ const SelectSinger: React.FC<SelectSingerProps> = ({ isOpen, onClose, song }) =>
       };
 
       await queueService.addToQueue(controllerName, queueItem);
-      showSuccess(`${song.title} added to queue for ${singer.name}`);
+      if (showSuccess) showSuccess(`${song.title} added to queue for ${singer.name}`);
       onClose();
     } catch (error) {
       console.error('Failed to add song to queue:', error);
-      showError('Failed to add song to queue');
+      if (showError) showError('Failed to add song to queue');
     } finally {
       setIsLoading(false);
     }

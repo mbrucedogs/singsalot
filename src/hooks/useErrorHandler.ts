@@ -15,7 +15,8 @@ interface ErrorHandlerResult {
 }
 
 export const useErrorHandler = (defaultOptions: ErrorHandlerOptions = {}): ErrorHandlerResult => {
-  const { showError } = useToast();
+  const toast = useToast();
+  const showError = toast?.showError;
   
   const defaultErrorOptions: Required<ErrorHandlerOptions> = {
     showToast: true,
@@ -45,9 +46,7 @@ export const useErrorHandler = (defaultOptions: ErrorHandlerOptions = {}): Error
     }
     
     // Show toast if enabled
-    if (opts.showToast) {
-      showError(displayMessage);
-    }
+    if (opts.showToast && showError) showError(displayMessage);
   }, [defaultErrorOptions, showError]);
 
   const handleAsyncError = useCallback(async <T>(

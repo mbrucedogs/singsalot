@@ -10,6 +10,7 @@ import { debugLog } from '../../utils/logger';
 
 
 import type { TopPlayed } from '../../types';
+import { SongItemContext } from '../../types';
 
 const Top100: React.FC = () => {
   debugLog('Top100 component - RENDERING START');
@@ -124,7 +125,7 @@ const Top100: React.FC = () => {
               <SongItem
                 key={song.key || `${song.title}-${song.artist}`}
                 song={song}
-                context="search"
+                context={SongItemContext.SEARCH}
                 showAddButton={true}
                 showInfoButton={true}
                 showFavoriteButton={false}

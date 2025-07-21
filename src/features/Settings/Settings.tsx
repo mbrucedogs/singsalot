@@ -4,7 +4,6 @@ import { ban } from 'ionicons/icons';
 import { useAppSelector } from '../../redux';
 import { selectIsAdmin, selectSettings, updateController, selectControllerName } from '../../redux';
 import { useDispatch } from 'react-redux';
-import { settingsService } from '../../firebase/services';
 import { useDisabledSongs } from '../../hooks';
 import { InfiniteScrollList, ActionButton, SongItem } from '../../components/common';
 import { ActionButtonVariant, ActionButtonSize, ActionButtonIconSlot } from '../../types';
@@ -12,6 +11,9 @@ import { Icons } from '../../constants';
 import { filterSongs } from '../../utils/dataProcessing';
 import { setDebugEnabled, isDebugEnabled, debugLog } from '../../utils/logger';
 import type { Song, DisabledSong } from '../../types';
+import { SongItemContext } from '../../types';
+import type { Controller } from '../../types';
+import { PlayerState } from '../../types';
 
 const Settings: React.FC = () => {
   const isAdmin = useAppSelector(selectIsAdmin);
@@ -26,7 +28,15 @@ const Settings: React.FC = () => {
   const [showDisabledSongsModal, setShowDisabledSongsModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const controllerNameRedux = useAppSelector(selectControllerName);
-  const existingPlayer = useAppSelector(state => state.controller.data?.player) || {};
+  const existingPlayer = (useAppSelector(state => state.controller.data?.player) || {}) as Partial<Controller['player']>;
+
+  // Provide default values for required properties
+  const updatedPlayer = {
+    queue: existingPlayer.queue || {},
+    settings: existingPlayer.settings || { autoadvance: false, userpick: false },
+    singers: existingPlayer.singers || {},
+    state: existingPlayer.state || { state: PlayerState.stopped },
+  };
 
   // Convert disabled songs object to array for display
   const disabledSongsArray: DisabledSong[] = Object.entries(disabledSongs).map(([key, disabledSong]) => ({
@@ -46,16 +56,15 @@ const Settings: React.FC = () => {
     debugLog(`Toggle ${setting} to ${value}`);
     const controllerName = controllerNameRedux;
     if (controllerName) {
-      await settingsService.updateSetting(controllerName, setting, value);
+      // @ts-expect-error: Redux Thunk type mismatch workaround
       dispatch(updateController({
         controllerName,
         updates: {
           player: {
-            ...existingPlayer,
-            settings: {
-              ...existingPlayer.settings,
-              [setting]: value
-            }
+            queue: updatedPlayer.queue,
+            settings: { ...updatedPlayer.settings, [setting]: value },
+            singers: updatedPlayer.singers,
+            state: updatedPlayer.state,
           }
         }
       }));
@@ -198,7 +207,7 @@ const Settings: React.FC = () => {
                   <div className="flex-1">
                     <SongItem
                       song={song}
-                      context="history"
+                      context={SongItemContext.HISTORY}
                       showDeleteButton={true}
                       showInfoButton={false}
                       showAddButton={false}

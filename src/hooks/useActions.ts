@@ -18,7 +18,9 @@ export const useActions = () => {
   const playerState = useAppSelector(selectPlayerStateMemoized);
   const isAdmin = useAppSelector(selectIsAdmin);
   const { addToQueue, removeFromQueue, toggleFavorite } = useSongOperations();
-  const { showSuccess, showError } = useToast();
+  const toast = useToast();
+  const showSuccess = toast?.showSuccess;
+  const showError = toast?.showError;
   const { isSongDisabled, addDisabledSong, removeDisabledSong } = useDisabledSongs();
 
   // Queue permissions
@@ -29,9 +31,9 @@ export const useActions = () => {
   const handleAddToQueue = useCallback(async (song: Song) => {
     try {
       await addToQueue(song);
-      showSuccess('Song added to queue');
+      if (showSuccess) showSuccess('Song added to queue');
     } catch {
-      showError('Failed to add song to queue');
+      if (showError) showError('Failed to add song to queue');
     }
   }, [addToQueue, showSuccess, showError]);
 
@@ -40,18 +42,18 @@ export const useActions = () => {
     
     try {
       await removeFromQueue(queueItem.key);
-      showSuccess('Song removed from queue');
+      if (showSuccess) showSuccess('Song removed from queue');
     } catch {
-      showError('Failed to remove song from queue');
+      if (showError) showError('Failed to remove song from queue');
     }
   }, [removeFromQueue, showSuccess, showError]);
 
   const handleToggleFavorite = useCallback(async (song: Song) => {
     try {
       await toggleFavorite(song);
-      showSuccess(song.favorite ? 'Removed from favorites' : 'Added to favorites');
+      if (showSuccess) showSuccess(song.favorite ? 'Removed from favorites' : 'Added to favorites');
     } catch {
-      showError('Failed to update favorites');
+      if (showError) showError('Failed to update favorites');
     }
   }, [toggleFavorite, showSuccess, showError]);
 
@@ -59,27 +61,27 @@ export const useActions = () => {
     try {
       if (isSongDisabled(song)) {
         await removeDisabledSong(song);
-        showSuccess('Song enabled');
+        if (showSuccess) showSuccess('Song enabled');
       } else {
         await addDisabledSong(song);
-        showSuccess('Song disabled');
+        if (showSuccess) showSuccess('Song disabled');
       }
     } catch {
-      showError('Failed to update song disabled status');
+      if (showError) showError('Failed to update song disabled status');
     }
   }, [isSongDisabled, addDisabledSong, removeDisabledSong, showSuccess, showError]);
 
   const handleDeleteFromHistory = useCallback(async (song: Song) => {
     if (!controllerName || !song.key) {
-      showError('Cannot delete history item - missing data');
+      if (showError) showError('Cannot delete history item - missing data');
       return;
     }
 
     try {
       await historyService.removeFromHistory(controllerName, song.key);
-      showSuccess('Removed from history');
+      if (showSuccess) showSuccess('Removed from history');
     } catch {
-      showError('Failed to remove from history');
+      if (showError) showError('Failed to remove from history');
     }
   }, [controllerName, showSuccess, showError]);
 
@@ -94,7 +96,7 @@ export const useActions = () => {
     const { from, to, complete } = event.detail;
     
     if (!controllerName) {
-      showError('Cannot reorder - controller not available');
+      if (showError) showError('Cannot reorder - controller not available');
       return;
     }
 
@@ -123,10 +125,10 @@ export const useActions = () => {
       
       await Promise.all(updatePromises);
       debugLog('Queue reorder completed successfully');
-      showSuccess('Queue reordered successfully');
+      if (showSuccess) showSuccess('Queue reordered successfully');
     } catch (error) {
       console.error('Failed to reorder queue:', error);
-      showError('Failed to reorder queue');
+      if (showError) showError('Failed to reorder queue');
     }
   }, [controllerName, showSuccess, showError]);
 

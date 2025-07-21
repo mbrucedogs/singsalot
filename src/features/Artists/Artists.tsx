@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { IonSearchbar, IonModal, IonHeader, IonToolbar, IonTitle, IonContent, IonItem } from '@ionic/react';
 import { list } from 'ionicons/icons';
-import { InfiniteScrollList, SongItem, ListItem, NumberDisplay, SongInfo, ActionButton } from '../../components/common';
+import { InfiniteScrollList, SongItem, ListItem, NumberDisplay, ActionButton } from '../../components/common';
 import { ActionButtonVariant, ActionButtonSize, ActionButtonIconSlot } from '../../types';
 import { Icons } from '../../constants';
 import { useArtists } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectSongs } from '../../redux';
 import { debugLog } from '../../utils/logger';
-import type { Song } from '../../types';
+
 
 const Artists: React.FC = () => {
   const {
@@ -19,15 +19,11 @@ const Artists: React.FC = () => {
     handleSearchChange,
     getSongsByArtist,
     getSongCountByArtist,
-    handleAddToQueue,
   } = useArtists();
 
   const songs = useAppSelector(selectSongs);
   const songsCount = Object.keys(songs).length;
   const [selectedArtist, setSelectedArtist] = useState<string | null>(null);
-  const [selectedSong, setSelectedSong] = useState<Song | null>(null);
-  const [isSongInfoOpen, setIsSongInfoOpen] = useState(false);
-
   // Debug logging
   debugLog('Artists component - artists count:', artists.length);
   debugLog('Artists component - selected artist:', selectedArtist);
@@ -40,16 +36,6 @@ const Artists: React.FC = () => {
 
   const handleCloseArtistSongs = () => {
     setSelectedArtist(null);
-  };
-
-  const handleSongInfo = (song: Song) => {
-    setSelectedSong(song);
-    setIsSongInfoOpen(true);
-  };
-
-  const handleCloseSongInfo = () => {
-    setIsSongInfoOpen(false);
-    setSelectedSong(null);
   };
 
   const selectedArtistSongs = selectedArtist ? getSongsByArtist(selectedArtist) : [];
@@ -156,8 +142,6 @@ const Artists: React.FC = () => {
                         <SongItem
                           song={song}
                           context="search"
-                          onAddToQueue={() => handleAddToQueue(song)}
-                          onSelectSinger={() => handleSongInfo(song)}
                           showAddButton={true}
                           showInfoButton={true}
                           showFavoriteButton={false}
@@ -173,14 +157,6 @@ const Artists: React.FC = () => {
           </IonContent>
         </IonModal>
 
-        {/* Song Info Modal */}
-        {selectedSong && (
-          <SongInfo
-            isOpen={isSongInfoOpen}
-            onClose={handleCloseSongInfo}
-            song={selectedSong}
-          />
-        )}
       </div>
     </>
   );

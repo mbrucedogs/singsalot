@@ -4,14 +4,13 @@ import { list } from 'ionicons/icons';
 import { useTopPlayed } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectTopPlayed, selectSongsArray } from '../../redux';
-import { InfiniteScrollList, SongItem, ListItem, SongInfo, ActionButton } from '../../components/common';
+import { InfiniteScrollList, SongItem, ListItem, ActionButton } from '../../components/common';
 import { filterSongs } from '../../utils/dataProcessing';
 import { debugLog } from '../../utils/logger';
-import { useSongOperations } from '../../hooks';
-import { useToast } from '../../hooks';
+
 import { ActionButtonVariant, ActionButtonSize, ActionButtonIconSlot } from '../../types';
 import { Icons } from '../../constants';
-import type { TopPlayed, Song } from '../../types';
+import type { TopPlayed } from '../../types';
 
 const Top100: React.FC = () => {
   debugLog('Top100 component - RENDERING START');
@@ -26,11 +25,8 @@ const Top100: React.FC = () => {
   const topPlayed = useAppSelector(selectTopPlayed);
   const topPlayedCount = Object.keys(topPlayed).length;
   const allSongs = useAppSelector(selectSongsArray);
-  const { addToQueue } = useSongOperations();
-  const { showSuccess, showError } = useToast();
   const [selectedTopPlayed, setSelectedTopPlayed] = useState<TopPlayed | null>(null);
-  const [selectedSong, setSelectedSong] = useState<Song | null>(null);
-  const [isSongInfoOpen, setIsSongInfoOpen] = useState(false);
+
 
   debugLog('Top100 component - Redux data:', { topPlayedCount, topPlayedItems: topPlayedItems.length });
 
@@ -42,15 +38,7 @@ const Top100: React.FC = () => {
     setSelectedTopPlayed(null);
   }, []);
 
-  const handleSongInfo = useCallback((song: Song) => {
-    setSelectedSong(song);
-    setIsSongInfoOpen(true);
-  }, []);
 
-  const handleCloseSongInfo = useCallback(() => {
-    setIsSongInfoOpen(false);
-    setSelectedSong(null);
-  }, []);
 
   // Find songs that match the selected top played item
   const selectedSongs = useMemo(() => {
@@ -74,15 +62,6 @@ const Top100: React.FC = () => {
     
     return filteredSongs;
   }, [selectedTopPlayed, allSongs]);
-
-  const handleAddToQueue = useCallback(async (song: Song) => {
-    try {
-      await addToQueue(song);
-      showSuccess('Song added to queue');
-    } catch {
-      showError('Failed to add song to queue');
-    }
-  }, [addToQueue, showSuccess, showError]);
 
 
 
@@ -161,8 +140,6 @@ const Top100: React.FC = () => {
                 key={song.key || `${song.title}-${song.artist}`}
                 song={song}
                 context="search"
-                onAddToQueue={() => handleAddToQueue(song)}
-                onSelectSinger={() => handleSongInfo(song)}
                 showAddButton={true}
                 showInfoButton={true}
                 showFavoriteButton={false}
@@ -172,14 +149,6 @@ const Top100: React.FC = () => {
         </IonContent>
       </IonModal>
 
-      {/* Song Info Modal */}
-      {selectedSong && (
-        <SongInfo
-          isOpen={isSongInfoOpen}
-          onClose={handleCloseSongInfo}
-          song={selectedSong}
-        />
-      )}
     </>
   );
 };

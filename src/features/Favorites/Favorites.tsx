@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { InfiniteScrollList, SongItem, SongInfo } from '../../components/common';
+import React from 'react';
+import { InfiniteScrollList, SongItem } from '../../components/common';
 import { useFavorites } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectFavorites } from '../../redux';
@@ -14,25 +14,12 @@ const Favorites: React.FC = () => {
     handleToggleFavorite,
   } = useFavorites();
 
-  const [selectedSong, setSelectedSong] = useState<Song | null>(null);
-  const [isSongInfoOpen, setIsSongInfoOpen] = useState(false);
-
   const favorites = useAppSelector(selectFavorites);
   const favoritesCount = Object.keys(favorites).length;
 
   // Debug logging
   debugLog('Favorites component - favorites count:', favoritesCount);
   debugLog('Favorites component - favorites items:', favoritesItems);
-
-  const handleSongInfo = (song: Song) => {
-    setSelectedSong(song);
-    setIsSongInfoOpen(true);
-  };
-
-  const handleCloseSongInfo = () => {
-    setIsSongInfoOpen(false);
-    setSelectedSong(null);
-  };
 
   return (
     <>
@@ -48,7 +35,6 @@ const Favorites: React.FC = () => {
             showInfoButton={true}
             showAddButton={false}
             showDeleteButton={true}
-            onSelectSinger={() => handleSongInfo(song)}
             onDeleteItem={() => handleToggleFavorite(song)}
           />
         )}
@@ -58,14 +44,6 @@ const Favorites: React.FC = () => {
         loadingMessage="Please wait while favorites data is being loaded"
       />
 
-      {/* Song Info Modal */}
-      {selectedSong && (
-        <SongInfo
-          isOpen={isSongInfoOpen}
-          onClose={handleCloseSongInfo}
-          song={selectedSong}
-        />
-      )}
     </>
   );
 };

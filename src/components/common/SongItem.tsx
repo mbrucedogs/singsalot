@@ -3,6 +3,9 @@ import { IonItem, IonLabel } from '@ionic/react';
 import ActionButton from './ActionButton';
 import { useAppSelector } from '../../redux';
 import { selectQueue, selectFavorites } from '../../redux';
+import { useSongOperations } from '../../hooks/useSongOperations';
+import { useToast } from '../../hooks/useToast';
+import { useSongInfo } from '../../hooks/useSongInfoContext';
 import { debugLog } from '../../utils/logger';
 import type { SongItemProps, QueueItem, Song } from '../../types';
 import { ActionButtonVariant, ActionButtonSize, ActionButtonIconSlot } from '../../types';
@@ -92,11 +95,11 @@ export const SongActionButtons: React.FC<{
   showRemoveButton?: boolean;
   showDeleteButton?: boolean;
   showFavoriteButton?: boolean;
+  onDeleteItem?: () => void;
   onAddToQueue?: () => void;
   onRemoveFromQueue?: () => void;
   onToggleFavorite?: () => void;
-  onDeleteItem?: () => void;
-  onSelectSinger?: () => void;
+  onShowSongInfo?: () => void;
 }> = ({
   isAdmin,
   isInQueue,
@@ -106,20 +109,20 @@ export const SongActionButtons: React.FC<{
   showRemoveButton = false,
   showDeleteButton = false,
   showFavoriteButton = false,
+  onDeleteItem,
   onAddToQueue,
   onRemoveFromQueue,
   onToggleFavorite,
-  onDeleteItem,
-  onSelectSinger
+  onShowSongInfo
 }) => {
   const buttons = [];
 
   // Info button
-  if (showInfoButton && onSelectSinger) {
+  if (showInfoButton && onShowSongInfo) {
     buttons.push(
       <ActionButton
         key="info"
-        onClick={onSelectSinger}
+        onClick={onShowSongInfo}
         variant={ActionButtonVariant.SECONDARY}
         size={ActionButtonSize.SMALL}
         icon={Icons.INFORMATION_CIRCLE}
@@ -129,11 +132,11 @@ export const SongActionButtons: React.FC<{
   }
 
   // Add to Queue button
-  if (showAddButton && !isInQueue) {
+  if (showAddButton && !isInQueue && onAddToQueue) {
     buttons.push(
       <ActionButton
         key="add"
-        onClick={onAddToQueue || (() => {})}
+        onClick={onAddToQueue}
         variant={ActionButtonVariant.PRIMARY}
         size={ActionButtonSize.SMALL}
         icon={Icons.ADD}
@@ -171,11 +174,11 @@ export const SongActionButtons: React.FC<{
   }
 
   // Toggle Favorite button
-  if (showFavoriteButton) {
+  if (showFavoriteButton && onToggleFavorite) {
     buttons.push(
       <ActionButton
         key="favorite"
-        onClick={onToggleFavorite || (() => {})}
+        onClick={onToggleFavorite}
         variant={isInFavorites ? ActionButtonVariant.DANGER : ActionButtonVariant.SECONDARY}
         size={ActionButtonSize.SMALL}
         icon={isInFavorites ? Icons.HEART : Icons.HEART_OUTLINE}
@@ -195,11 +198,7 @@ export const SongActionButtons: React.FC<{
 const SongItem: React.FC<SongItemProps> = ({
   song,
   context,
-  onAddToQueue,
-  onRemoveFromQueue,
-  onToggleFavorite,
   onDeleteItem,
-  onSelectSinger,
   isAdmin = false,
   className = '',
   showActions = true,
@@ -215,9 +214,19 @@ const SongItem: React.FC<SongItemProps> = ({
   const queue = useAppSelector(selectQueue);
   const favorites = useAppSelector(selectFavorites);
   
+  // Get song operations and hooks
+  const { addToQueue, removeFromQueue, toggleFavorite } = useSongOperations();
+  const { showSuccess, showError } = useToast();
+  const { openSongInfo } = useSongInfo();
+  
   // Check if song is in queue or favorites based on path
   const isInQueue = (Object.values(queue) as QueueItem[]).some(item => item.song.path === song.path);
   const isInFavorites = (Object.values(favorites) as Song[]).some(favSong => favSong.path === song.path);
+
+  // Find queue item key for removal (only needed for queue context)
+  const queueItemKey = context === 'queue' 
+    ? (Object.entries(queue) as [string, QueueItem][]).find(([, item]) => item.song.path === song.path)?.[0]
+    : null;
 
   // Debug logging for favorites
   debugLog('SongItem render:', {
@@ -239,6 +248,40 @@ const SongItem: React.FC<SongItemProps> = ({
   const shouldShowDeleteButton = showDeleteButton !== undefined ? showDeleteButton : context === 'history' && isAdmin;
   const shouldShowFavoriteButton = showFavoriteButton !== undefined ? showFavoriteButton : false; // Disabled for all contexts
 
+  // Handle song operations internally
+  const handleAddToQueue = async () => {
+    try {
+      await addToQueue(song);
+      showSuccess('Song added to queue');
+    } catch {
+      showError('Failed to add song to queue');
+    }
+  };
+
+  const handleRemoveFromQueue = async () => {
+    if (!queueItemKey) return;
+    
+    try {
+      await removeFromQueue(queueItemKey);
+      showSuccess('Song removed from queue');
+    } catch {
+      showError('Failed to remove song from queue');
+    }
+  };
+
+  const handleToggleFavorite = async () => {
+    try {
+      await toggleFavorite(song);
+      showSuccess(isInFavorites ? 'Removed from favorites' : 'Added to favorites');
+    } catch {
+      showError('Failed to update favorites');
+    }
+  };
+
+  const handleSelectSinger = () => {
+    openSongInfo(song);
+  };
+
   return (
     <IonItem className={className}>
       <SongInfoDisplay 
@@ -258,11 +301,11 @@ const SongItem: React.FC<SongItemProps> = ({
             showRemoveButton={shouldShowRemoveButton}
             showDeleteButton={shouldShowDeleteButton}
             showFavoriteButton={shouldShowFavoriteButton}
-            onAddToQueue={onAddToQueue}
-            onRemoveFromQueue={onRemoveFromQueue}
-            onToggleFavorite={onToggleFavorite}
             onDeleteItem={onDeleteItem}
-            onSelectSinger={onSelectSinger}
+            onAddToQueue={context === 'queue' ? handleRemoveFromQueue : handleAddToQueue}
+            onRemoveFromQueue={context === 'queue' ? handleRemoveFromQueue : onDeleteItem}
+            onToggleFavorite={context === 'favorites' ? onDeleteItem : handleToggleFavorite}
+            onShowSongInfo={handleSelectSinger}
           />
         </div>
       )}

@@ -165,11 +165,7 @@ export interface ActionButtonProps {
 export interface SongItemProps {
   song: Song;
   context: 'search' | 'queue' | 'favorites' | 'history' | 'songlists' | 'top100' | 'new';
-  onAddToQueue?: () => void;
-  onRemoveFromQueue?: () => void;
-  onToggleFavorite?: () => void;
   onDeleteItem?: () => void;
-  onSelectSinger?: () => void;
   isAdmin?: boolean;
   className?: string;
   showActions?: boolean;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { IonSearchbar } from '@ionic/react';
-import { InfiniteScrollList, SongItem, SongInfo } from '../../components/common';
-import { useSearch, useSongInfo } from '../../hooks';
+import { InfiniteScrollList, SongItem } from '../../components/common';
+import { useSearch } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectIsAdmin, selectSongs } from '../../redux';
 import { debugLog } from '../../utils/logger';
@@ -12,11 +12,8 @@ const Search: React.FC = () => {
     searchTerm,
     searchResults,
     handleSearchChange,
-    handleAddToQueue,
     loadMore,
   } = useSearch();
-  
-  const { isOpen, selectedSong, openSongInfo, closeSongInfo } = useSongInfo();
   
   const isAdmin = useAppSelector(selectIsAdmin);
   const songs = useAppSelector(selectSongs);
@@ -63,8 +60,6 @@ const Search: React.FC = () => {
             <SongItem
               song={song}
               context="search"
-              onAddToQueue={() => handleAddToQueue(song)}
-              onSelectSinger={() => openSongInfo(song)}
               isAdmin={isAdmin}
               showAddButton={true}
               showInfoButton={true}
@@ -86,14 +81,6 @@ const Search: React.FC = () => {
         )}
       </div>
 
-      {/* Song Info Modal */}
-      {selectedSong && (
-        <SongInfo
-          isOpen={isOpen}
-          onClose={closeSongInfo}
-          song={selectedSong}
-        />
-      )}
     </>
   );
 };

@@ -5,6 +5,7 @@ import TopPlayed from './features/TopPlayed/Top100';
 import { FirebaseProvider } from './firebase/FirebaseProvider';
 import { ErrorBoundary } from './components/common';
 import { AuthInitializer } from './components/Auth';
+import { SongInfoProvider } from './components/common/SongInfoProvider';
 
 function App() {
   return (
@@ -12,22 +13,24 @@ function App() {
       <FirebaseProvider>
         <Router>
           <AuthInitializer>
-            <Layout>
-              <Routes>
-                <Route path="/" element={<Navigate to="/queue" replace />} />
-                <Route path="/search" element={<Search />} />
-                <Route path="/queue" element={<Queue />} />
-                <Route path="/favorites" element={<Favorites />} />
-                <Route path="/new-songs" element={<NewSongs />} />
-                <Route path="/artists" element={<Artists />} />
-                <Route path="/song-lists" element={<SongLists />} />
-                <Route path="/history" element={<History />} />
-                <Route path="/top-played" element={<TopPlayed />} />
-                <Route path="/singers" element={<Singers />} />
-                <Route path="/settings" element={<Settings />} />
-                <Route path="*" element={<Navigate to="/queue" replace />} />
-              </Routes>
-            </Layout>
+            <SongInfoProvider>
+              <Layout>
+                <Routes>
+                  <Route path="/" element={<Navigate to="/queue" replace />} />
+                  <Route path="/search" element={<Search />} />
+                  <Route path="/queue" element={<Queue />} />
+                  <Route path="/favorites" element={<Favorites />} />
+                  <Route path="/new-songs" element={<NewSongs />} />
+                  <Route path="/artists" element={<Artists />} />
+                  <Route path="/song-lists" element={<SongLists />} />
+                  <Route path="/history" element={<History />} />
+                  <Route path="/top-played" element={<TopPlayed />} />
+                  <Route path="/singers" element={<Singers />} />
+                  <Route path="/settings" element={<Settings />} />
+                  <Route path="*" element={<Navigate to="/queue" replace />} />
+                </Routes>
+              </Layout>
+            </SongInfoProvider>
           </AuthInitializer>
         </Router>
       </FirebaseProvider>

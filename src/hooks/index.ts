@@ -12,5 +12,6 @@ export { useSingers } from './useSingers';
 export { useSongLists } from './useSongLists';
 export { useDisabledSongs } from './useDisabledSongs';
 export { useActions } from './useActions';
+export { usePagination } from './usePagination';
 
 export { useSongInfo } from './useSongInfo'; 

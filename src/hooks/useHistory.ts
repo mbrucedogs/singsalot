@@ -1,20 +1,17 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useAppSelector, selectHistoryArray } from '../redux';
 import { debugLog } from '../utils/logger';
 import { useActions } from './useActions';
+import { usePagination } from './usePagination';
 import { useDisabledSongs } from './useDisabledSongs';
-
-const ITEMS_PER_PAGE = 20;
 
 export const useHistory = () => {
   const allHistoryItems = useAppSelector(selectHistoryArray);
   const { handleAddToQueue, handleToggleFavorite, handleToggleDisabled, handleDeleteFromHistory, isSongDisabled } = useActions();
   const { disabledSongPaths, loading: disabledSongsLoading } = useDisabledSongs();
-  
-  const [currentPage, setCurrentPage] = useState(1);
 
-  // Filter out disabled songs and paginate
-  const historyItems = useMemo(() => {
+  // Filter out disabled songs
+  const filteredItems = useMemo(() => {
     // Don't return any results if disabled songs are still loading
     if (disabledSongsLoading) {
       debugLog('useHistory - disabled songs still loading, returning empty array');
@@ -22,37 +19,23 @@ export const useHistory = () => {
     }
 
     // Filter out disabled songs first
-    const filteredItems = allHistoryItems.filter(song => !disabledSongPaths.has(song.path));
-    const endIndex = currentPage * ITEMS_PER_PAGE;
+    const filtered = allHistoryItems.filter(song => !disabledSongPaths.has(song.path));
     
     debugLog('useHistory - filtering history:', {
       totalHistory: allHistoryItems.length,
-      afterDisabledFilter: filteredItems.length,
-      currentPage,
-      endIndex
+      afterDisabledFilter: filtered.length,
     });
     
-    return filteredItems.slice(0, endIndex);
-  }, [allHistoryItems, currentPage, disabledSongPaths, disabledSongsLoading]);
+    return filtered;
+  }, [allHistoryItems, disabledSongPaths, disabledSongsLoading]);
 
-  const hasMore = useMemo(() => {
-    if (disabledSongsLoading) return false;
-    
-    const filteredItems = allHistoryItems.filter(song => !disabledSongPaths.has(song.path));
-    return filteredItems.length > ITEMS_PER_PAGE && historyItems.length < filteredItems.length;
-  }, [historyItems.length, allHistoryItems, disabledSongPaths, disabledSongsLoading]);
-
-  const loadMore = useCallback(() => {
-    debugLog('useHistory - loadMore called:', { hasMore, currentPage, allHistoryItemsLength: allHistoryItems.length });
-    if (hasMore) {
-      setCurrentPage(prev => prev + 1);
-    }
-  }, [hasMore, currentPage, allHistoryItems.length]);
+  // Use unified pagination hook
+  const pagination = usePagination(filteredItems);
 
   return {
-    historyItems,
-    hasMore,
-    loadMore,
+    historyItems: pagination.items,
+    hasMore: pagination.hasMore,
+    loadMore: pagination.loadMore,
     handleAddToQueue,
     handleToggleFavorite,
     handleToggleDisabled,

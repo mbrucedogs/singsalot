@@ -1,56 +1,16 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback } from 'react';
 import { useAppSelector, selectSongListArray, selectSongsArray } from '../redux';
-import { debugLog } from '../utils/logger';
-import { useSongOperations } from './useSongOperations';
-import { useToast } from './useToast';
-import type { SongListSong, Song } from '../types';
-
-const ITEMS_PER_PAGE = 20;
+import { useActions } from './useActions';
+import { usePagination } from './usePagination';
+import type { SongListSong } from '../types';
 
 export const useSongLists = () => {
   const allSongLists = useAppSelector(selectSongListArray);
   const allSongs = useAppSelector(selectSongsArray);
-  const { addToQueue, toggleFavorite } = useSongOperations();
-  const { showSuccess, showError } = useToast();
-  
-  const [currentPage, setCurrentPage] = useState(1);
+  const { handleAddToQueue, handleToggleFavorite } = useActions();
 
-  // Paginate the song lists - show all items up to current page
-  const songLists = useMemo(() => {
-    const endIndex = currentPage * ITEMS_PER_PAGE;
-    return allSongLists.slice(0, endIndex);
-  }, [allSongLists, currentPage]);
-
-  const hasMore = useMemo(() => {
-    // Show "hasMore" if there are more items than currently loaded
-    const hasMoreItems = songLists.length < allSongLists.length;
-    debugLog('useSongLists - hasMore calculation:', { 
-      songListsLength: songLists.length, 
-      allSongListsLength: allSongLists.length, 
-      hasMore: hasMoreItems,
-      currentPage 
-    });
-    return hasMoreItems;
-  }, [songLists.length, allSongLists.length, currentPage]);
-
-  const loadMore = useCallback(() => {
-    const endIndex = currentPage * ITEMS_PER_PAGE;
-    const hasMoreItems = endIndex < allSongLists.length;
-    
-    debugLog('useSongLists - loadMore called:', { 
-      hasMoreItems, 
-      currentPage, 
-      allSongListsLength: allSongLists.length,
-      endIndex 
-    });
-    
-    if (hasMoreItems) {
-      debugLog('useSongLists - Incrementing page from', currentPage, 'to', currentPage + 1);
-      setCurrentPage(prev => prev + 1);
-    } else {
-      debugLog('useSongLists - Not loading more because hasMore is false');
-    }
-  }, [currentPage, allSongLists.length]);
+  // Use unified pagination hook
+  const pagination = usePagination(allSongLists);
 
   // Check if a song exists in the catalog
   const checkSongAvailability = useCallback((songListSong: SongListSong) => {
@@ -67,31 +27,13 @@ export const useSongLists = () => {
     return matchingSongs;
   }, [allSongs]);
 
-  const handleAddToQueue = useCallback(async (song: Song) => {
-    try {
-      await addToQueue(song);
-      showSuccess('Song added to queue');
-    } catch {
-      showError('Failed to add song to queue');
-    }
-  }, [addToQueue, showSuccess, showError]);
-
-  const handleToggleFavorite = useCallback(async (song: Song) => {
-    try {
-      await toggleFavorite(song);
-      showSuccess(song.favorite ? 'Removed from favorites' : 'Added to favorites');
-    } catch {
-      showError('Failed to update favorites');
-    }
-  }, [toggleFavorite, showSuccess, showError]);
-
   return {
-    songLists,
+    songLists: pagination.items,
     allSongLists,
-    hasMore,
-    loadMore,
-    currentPage,
-    totalPages: Math.ceil(allSongLists.length / ITEMS_PER_PAGE),
+    hasMore: pagination.hasMore,
+    loadMore: pagination.loadMore,
+    currentPage: pagination.currentPage,
+    totalPages: pagination.totalPages,
     checkSongAvailability,
     handleAddToQueue,
     handleToggleFavorite,

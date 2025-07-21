@@ -1,20 +1,15 @@
 import { useCallback, useMemo, useState } from 'react';
 import { useAppSelector, selectArtistsArray, selectSongsArray } from '../redux';
-import { debugLog } from '../utils/logger';
-import { useSongOperations } from './useSongOperations';
-import { useToast } from './useToast';
+import { useActions } from './useActions';
+import { usePagination } from './usePagination';
 import type { Song } from '../types';
-
-const ITEMS_PER_PAGE = 20;
 
 export const useArtists = () => {
   const allArtists = useAppSelector(selectArtistsArray);
   const allSongs = useAppSelector(selectSongsArray);
-  const { addToQueue, toggleFavorite } = useSongOperations();
-  const { showSuccess, showError } = useToast();
+  const { handleAddToQueue, handleToggleFavorite } = useActions();
   
   const [searchTerm, setSearchTerm] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
 
   // Pre-compute songs by artist and song counts for performance
   const songsByArtist = useMemo(() => {
@@ -44,31 +39,8 @@ export const useArtists = () => {
     );
   }, [allArtists, searchTerm]);
 
-  // Paginate the filtered artists - show all items up to current page
-  const artists = useMemo(() => {
-    const endIndex = currentPage * ITEMS_PER_PAGE;
-    return filteredArtists.slice(0, endIndex);
-  }, [filteredArtists, currentPage]);
-
-  const hasMore = useMemo(() => {
-    // Show "hasMore" if there are more items than currently loaded
-    return filteredArtists.length > ITEMS_PER_PAGE && artists.length < filteredArtists.length;
-  }, [artists.length, filteredArtists.length]);
-
-  const loadMore = useCallback(() => {
-    debugLog('useArtists - loadMore called:', { 
-      hasMore, 
-      currentPage, 
-      filteredArtistsLength: filteredArtists.length,
-      artistsLength: artists.length 
-    });
-    if (hasMore) {
-      debugLog('useArtists - Incrementing page from', currentPage, 'to', currentPage + 1);
-      setCurrentPage(prev => prev + 1);
-    } else {
-      debugLog('useArtists - Not loading more because hasMore is false');
-    }
-  }, [hasMore, currentPage, filteredArtists.length, artists.length]);
+  // Use unified pagination hook
+  const pagination = usePagination(filteredArtists);
 
   // Get songs by artist (now using cached data)
   const getSongsByArtist = useCallback((artistName: string) => {
@@ -82,35 +54,17 @@ export const useArtists = () => {
 
   const handleSearchChange = useCallback((value: string) => {
     setSearchTerm(value);
-    setCurrentPage(1); // Reset to first page when searching
-  }, []);
-
-  const handleAddToQueue = useCallback(async (song: Song) => {
-    try {
-      await addToQueue(song);
-      showSuccess('Song added to queue');
-    } catch {
-      showError('Failed to add song to queue');
-    }
-  }, [addToQueue, showSuccess, showError]);
-
-  const handleToggleFavorite = useCallback(async (song: Song) => {
-    try {
-      await toggleFavorite(song);
-      showSuccess(song.favorite ? 'Removed from favorites' : 'Added to favorites');
-    } catch {
-      showError('Failed to update favorites');
-    }
-  }, [toggleFavorite, showSuccess, showError]);
+    pagination.resetPage(); // Reset to first page when searching
+  }, [pagination]);
 
   return {
-    artists,
+    artists: pagination.items,
     allArtists: filteredArtists,
     searchTerm,
-    hasMore,
-    loadMore,
-    currentPage,
-    totalPages: Math.ceil(filteredArtists.length / ITEMS_PER_PAGE),
+    hasMore: pagination.hasMore,
+    loadMore: pagination.loadMore,
+    currentPage: pagination.currentPage,
+    totalPages: pagination.totalPages,
     handleSearchChange,
     getSongsByArtist,
     getSongCountByArtist,

@@ -1,16 +1,14 @@
 import { useState, useCallback, useMemo } from 'react';
 import { useAppSelector, selectSongsArray } from '../redux';
 import { useActions } from './useActions';
+import { usePagination } from './usePagination';
 import { useDisabledSongs } from './useDisabledSongs';
 import { UI_CONSTANTS } from '../constants';
 import { filterSongs } from '../utils/dataProcessing';
 import { debugLog } from '../utils/logger';
 
-const ITEMS_PER_PAGE = 20;
-
 export const useSearch = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
   const { handleAddToQueue, handleToggleFavorite, handleToggleDisabled, isSongDisabled } = useActions();
   const { disabledSongPaths, loading: disabledSongsLoading } = useDisabledSongs();
 
@@ -58,30 +56,22 @@ export const useSearch = () => {
     return filtered;
   }, [allSongs, searchTerm, disabledSongPaths, disabledSongsLoading]);
 
-  // Paginate the filtered results - show all items up to current page
-  const searchResults = useMemo(() => {
-    const endIndex = currentPage * ITEMS_PER_PAGE;
-    const paginatedSongs = filteredSongs.slice(0, endIndex);
-    
-    return {
-      songs: paginatedSongs,
-      count: filteredSongs.length,
-      hasMore: endIndex < filteredSongs.length,
-      currentPage,
-      totalPages: Math.ceil(filteredSongs.length / ITEMS_PER_PAGE),
-    };
-  }, [filteredSongs, currentPage]);
+  // Use unified pagination hook
+  const pagination = usePagination(filteredSongs);
 
   const handleSearchChange = useCallback((value: string) => {
     setSearchTerm(value);
-    setCurrentPage(1); // Reset to first page when searching
-  }, []);
+    pagination.resetPage(); // Reset to first page when searching
+  }, [pagination]);
 
-  const loadMore = useCallback(() => {
-    if (searchResults.hasMore) {
-      setCurrentPage(prev => prev + 1);
-    }
-  }, [searchResults.hasMore]);
+  // Create search results object for backward compatibility
+  const searchResults = useMemo(() => ({
+    songs: pagination.items,
+    count: pagination.totalItems,
+    hasMore: pagination.hasMore,
+    currentPage: pagination.currentPage,
+    totalPages: pagination.totalPages,
+  }), [pagination]);
 
   return {
     searchTerm,
@@ -90,7 +80,7 @@ export const useSearch = () => {
     handleAddToQueue,
     handleToggleFavorite,
     handleToggleDisabled,
-    loadMore,
+    loadMore: pagination.loadMore,
     isSongDisabled,
   };
 }; 

@@ -26,6 +26,9 @@ export const UI_CONSTANTS = {
     DEBOUNCE_DELAY: 300,
     MIN_SEARCH_LENGTH: 2,
   },
+  PAGINATION: {
+    ITEMS_PER_PAGE: 20,
+  },
   QUEUE: {
     MAX_ITEMS: 100,
   },

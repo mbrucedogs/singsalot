@@ -1,5 +1,4 @@
 import React from 'react';
-import { IonContent } from '@ionic/react';
 import type { EmptyStateProps } from '../../types';
 
 const EmptyState: React.FC<EmptyStateProps> = ({ 
@@ -9,7 +8,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({
   action 
 }) => {
   return (
-    <IonContent className="ion-padding">
+    <div className="ion-padding">
       <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
         {icon && (
           <div className="mb-4 text-gray-400">
@@ -30,7 +29,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({
           </div>
         )}
       </div>
-    </IonContent>
+    </div>
   );
 };
 

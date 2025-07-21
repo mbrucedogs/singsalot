@@ -493,6 +493,15 @@ controllers: {
 - **Data Models** shared across all layers
 - **Firebase Integration** abstracted through service layer
 
+### **Architecture Principles:**
+- **Separation of Concerns** - UI components handle presentation, business logic in services
+- **Reusable Business Logic** - Business rules implemented in platform-agnostic services
+- **Testable Code** - Business logic separated from UI for easy testing
+- **Maintainability** - Changes to logic don't affect UI
+- **Performance** - Optimized data access and state management
+- **Type Safety** - Strong typing throughout the codebase
+- **Single Responsibility** - Each file has one clear purpose
+
 ### **Platform Implementation:**
 - **Web:** See `platforms/web/PRD-web.md#codebase-organization` for React/Ionic structure
 - **iOS:** See `platforms/ios/PRD-ios.md#codebase-organization` (future)
@@ -541,6 +550,15 @@ controllers: {
 - **Optimized state management** to prevent unnecessary re-renders
 - **Caching strategy** for frequently accessed data
 - **Memory management** for large datasets
+
+### **Performance Requirements:**
+- **Real-time synchronization** with minimal latency
+- **Efficient data loading** with pagination and infinite scroll
+- **Optimized state management** to prevent unnecessary re-renders
+- **Caching strategy** for frequently accessed data
+- **Memory management** for large datasets
+- **Component optimization** for expensive UI operations
+- **Data filtering and search** with efficient algorithms
 
 ### **Platform Implementation:**
 - **Web:** See `platforms/web/PRD-web.md#performance` for React/Ionic optimization

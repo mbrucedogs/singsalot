@@ -12,11 +12,197 @@ This document contains **web-specific implementation details** for the Karaoke A
 | Section | Purpose |
 |---------|---------|
 | [UI/UX Behavior](#uiux-behavior) | Web-specific UI patterns and interactions |
+| [Refactored Architecture](#refactored-architecture) | Latest architecture improvements and patterns |
 | [Component Architecture](#component-architecture) | React/Ionic component structure |
 | [State Management](#state-management) | Redux Toolkit implementation |
+| [Performance Optimizations](#performance-optimizations) | Web-specific performance strategies |
 | [Development Setup](#development-setup) | Web project configuration |
 | [Design Assets](#design-assets) | Web-specific visual references |
 | [Toolset Choices](#toolset-choices) | Web technology rationale |
+
+---
+
+## Refactored Architecture
+
+### **Overview**
+The web implementation has been completely refactored to improve maintainability, performance, and developer experience. This section documents the latest architecture patterns and implementation details.
+
+### **Key Architectural Improvements**
+
+#### **1. Domain-Specific Redux Slices**
+Replaced the monolithic `controllerSlice` with focused, domain-specific slices:
+
+```typescript
+// Before: Monolithic controllerSlice
+src/redux/controllerSlice.ts (1000+ lines)
+
+// After: Domain-specific slices
+src/redux/songsSlice.ts      // Song catalog management
+src/redux/queueSlice.ts      // Queue operations and state
+src/redux/favoritesSlice.ts  // Favorites management
+src/redux/historySlice.ts    // History tracking
+```
+
+**Benefits:**
+- **Better Performance** - Smaller slices mean faster state updates
+- **Easier Testing** - Isolated business logic for each domain
+- **Improved Maintainability** - Clear separation of concerns
+- **Reduced Bundle Size** - Only load necessary slice logic
+
+#### **2. Composable Hooks**
+Extracted common patterns into reusable, composable hooks:
+
+```typescript
+// Reusable filtering logic
+useFilteredSongs(songs, searchTerm, disabledSongs)
+
+// Generic pagination with search
+usePaginatedData(data, pageSize, searchTerm)
+
+// Centralized error handling
+useErrorHandler(operation, fallbackMessage)
+
+// Performance monitoring
+usePerformanceMonitor(componentName, props)
+```
+
+**Benefits:**
+- **Code Reuse** - Common patterns shared across features
+- **Performance Optimized** - Each hook can be optimized independently
+- **Type Safety** - Full TypeScript support with proper typing
+- **Easier Testing** - Isolated business logic
+
+#### **3. Optimized Components**
+Enhanced components with performance optimizations:
+
+```typescript
+// Memoized SongItem with optimized rendering
+const SongItem = React.memo<SongItemProps>(({ song, context, ...props }) => {
+  const isInQueue = useMemo(() => /* expensive computation */, [queue, song.path]);
+  const handleAddToQueue = useCallback(() => /* action */, [handleAddToQueue, song]);
+  
+  return <IonItem>...</IonItem>;
+});
+
+// Generic ListItem for any data type
+const ListItem = React.memo<GenericListItemProps>(({ 
+  primaryText, secondaryText, onClick, ...props 
+}) => {
+  return <IonItem>...</IonItem>;
+});
+
+// High-performance virtualized list
+const VirtualizedList = <T,>({ 
+  items, renderItem, itemHeight, ...props 
+}: VirtualizedListProps<T>) => {
+  // Only renders visible items
+  return <div>...</div>;
+};
+```
+
+**Benefits:**
+- **React.memo** - Prevents unnecessary re-renders
+- **Generic Components** - Reusable across different data types
+- **Virtualized Rendering** - Handles large datasets efficiently
+- **Performance Monitoring** - Built-in tracking capabilities
+
+### **Implementation Patterns**
+
+#### **State Management Pattern**
+```typescript
+// Domain-specific slice
+export const songsSlice = createSlice({
+  name: 'songs',
+  initialState,
+  reducers: { /* domain-specific actions */ },
+  extraReducers: (builder) => {
+    builder.addCase(fetchSongs.fulfilled, (state, action) => {
+      // Handle async operations
+    });
+  },
+});
+
+// Composable hook using the slice
+export const useSongs = () => {
+  const dispatch = useAppDispatch();
+  const songs = useAppSelector(selectSongs);
+  
+  const fetchSongs = useCallback(async () => {
+    try {
+      await dispatch(fetchSongsThunk());
+    } catch (error) {
+      // Error handling
+    }
+  }, [dispatch]);
+  
+  return { songs, fetchSongs };
+};
+```
+
+#### **Component Pattern**
+```typescript
+// Feature component using composable hooks
+const Search: React.FC = () => {
+  const { songs, loading, error } = useSongs();
+  const { filteredSongs, searchTerm, setSearchTerm } = useFilteredSongs(songs);
+  const { paginatedData, hasMore, loadMore } = usePaginatedData(filteredSongs);
+  
+  return (
+    <div>
+      <SearchInput value={searchTerm} onChange={setSearchTerm} />
+      <VirtualizedList
+        items={paginatedData}
+        renderItem={(song) => <SongItem song={song} context="search" />}
+        hasMore={hasMore}
+        onLoadMore={loadMore}
+      />
+    </div>
+  );
+};
+```
+
+### **Performance Optimizations**
+
+#### **Component-Level Optimizations**
+- **React.memo** - Prevents re-renders when props haven't changed
+- **useMemo** - Memoizes expensive computations
+- **useCallback** - Memoizes event handlers and functions
+- **Virtualized Lists** - Only renders visible items for large datasets
+
+#### **State Management Optimizations**
+- **Domain-Specific Slices** - Smaller, focused state management
+- **Memoized Selectors** - Efficient state access with reselect
+- **Lazy Loading** - Load components and data only when needed
+- **Incremental Updates** - Target specific Firebase nodes for efficiency
+
+#### **Data Handling Optimizations**
+- **Pagination** - Load data in chunks to prevent UI blocking
+- **Search Debouncing** - Reduce unnecessary API calls during typing
+- **Filtering Optimization** - Efficient algorithms for large datasets
+- **Memory Management** - Proper cleanup of listeners and subscriptions
+
+### **Development Guidelines**
+
+#### **Adding New Features**
+1. **Create domain-specific slice** if needed
+2. **Implement composable hooks** for business logic
+3. **Build optimized components** with React.memo and useCallback
+4. **Add TypeScript types** for type safety
+5. **Implement error handling** using useErrorHandler
+
+#### **Performance Best Practices**
+- **Use React.memo** for expensive components
+- **Implement useMemo/useCallback** for expensive operations
+- **Leverage virtualized lists** for large datasets
+- **Optimize Redux selectors** with memoization
+- **Monitor performance** with usePerformanceMonitor
+
+#### **Code Organization**
+- **Domain-specific slices** in `/redux/`
+- **Composable hooks** in `/hooks/`
+- **Generic components** in `/components/common/`
+- **Feature components** in `/features/`
+- **TypeScript types** in `/types/`
 
 ---
 
@@ -55,7 +241,7 @@ This document contains **web-specific implementation details** for the Karaoke A
 
 ## Codebase Organization & File Structure
 
-### **Web Project Structure:**
+### **Refactored Web Project Structure (Latest):**
 ```
 src/
 ├── components/          # Reusable UI components
@@ -78,28 +264,55 @@ src/
 │   ├── config.ts       # Firebase configuration
 │   ├── services.ts     # Firebase service layer
 │   └── useFirebase.ts  # Firebase hooks
-├── hooks/              # Custom React hooks
+├── hooks/              # Custom React hooks (refactored)
+│   ├── useFilteredSongs.ts    # Reusable song filtering logic
+│   ├── usePaginatedData.ts    # Generic pagination with search
+│   ├── useErrorHandler.ts     # Centralized error handling
+│   ├── usePerformanceMonitor.ts # Performance tracking
 │   ├── useQueue.ts     # Queue management hooks
 │   ├── useSearch.ts    # Search functionality hooks
 │   ├── useFavorites.ts # Favorites management hooks
 │   └── ...            # Other feature hooks
-├── redux/              # State management
+├── redux/              # State management (domain-specific slices)
 │   ├── store.ts        # Redux store configuration
-│   ├── slices/         # Redux slices
+│   ├── songsSlice.ts   # Song catalog management
+│   ├── queueSlice.ts   # Queue operations and state
+│   ├── favoritesSlice.ts # Favorites management
+│   ├── historySlice.ts # History tracking
 │   ├── selectors.ts    # Memoized selectors
 │   └── hooks.ts        # Redux hooks
 ├── types/              # TypeScript type definitions
 └── utils/              # Utility functions
 ```
 
+### **Refactored Architecture Benefits:**
+
+#### **Domain-Specific Redux Slices:**
+- **Modular Design** - Each slice handles a specific domain (songs, queue, favorites, history)
+- **Better Performance** - Smaller slices mean faster state updates and re-renders
+- **Easier Testing** - Isolated business logic for each domain
+- **Improved Maintainability** - Clear separation of concerns
+
+#### **Composable Hooks:**
+- **Reusable Logic** - Common patterns extracted into reusable hooks
+- **Performance Optimized** - Each hook can be optimized independently
+- **Type Safety** - Full TypeScript support with proper typing
+- **Error Handling** - Centralized error management across the app
+
+#### **Optimized Components:**
+- **React.memo** - Prevents unnecessary re-renders for expensive components
+- **Generic Components** - Reusable across different data types (ListItem, VirtualizedList)
+- **Performance Monitoring** - Built-in performance tracking
+- **Error Boundaries** - Graceful error handling and recovery
+
 ### **File Organization Rules:**
 | Folder | Purpose | Key Files | Import Pattern |
 |--------|---------|-----------|----------------|
-| `/components` | Reusable UI components | `SongItem.tsx`, `ActionButton.tsx` | `import { SongItem } from '../components/common'` |
+| `/components` | Reusable UI components | `SongItem.tsx`, `ActionButton.tsx`, `ListItem.tsx` | `import { SongItem } from '../components/common'` |
 | `/features` | Feature-specific pages | `Queue.tsx`, `Search.tsx` | `import { Queue } from '../features/Queue'` |
 | `/firebase` | Firebase integration | `services.ts`, `config.ts` | `import { queueService } from '../firebase/services'` |
-| `/hooks` | Custom business logic | `useQueue.ts`, `useSearch.ts` | `import { useQueue } from '../hooks/useQueue'` |
-| `/redux` | State management | `controllerSlice.ts`, `authSlice.ts`, `selectors.ts` | `import { useAppDispatch, selectQueue } from '../redux'` |
+| `/hooks` | Composable business logic | `useFilteredSongs.ts`, `usePaginatedData.ts` | `import { useFilteredSongs } from '../hooks'` |
+| `/redux` | Domain-specific state | `songsSlice.ts`, `queueSlice.ts` | `import { songsSlice } from '../redux'` |
 | `/types` | TypeScript definitions | `index.ts` (extends docs/types.ts) | `import type { Song, QueueItem } from '../types'` |
 
 ### **Import Patterns:**
@@ -709,11 +922,55 @@ const Queue: React.FC = () => {
 ```
 
 ### **Performance Optimizations:**
-- **React.memo** for expensive components
-- **useMemo** and **useCallback** for expensive calculations
-- **Redux selectors** with memoization
-- **Lazy loading** for route-based code splitting
-- **Service worker** for PWA caching
+
+#### **Component-Level Optimizations:**
+- **React.memo** - Prevents unnecessary re-renders for expensive components like `SongItem`
+- **useMemo/useCallback** - Memoizes expensive computations and event handlers
+- **Virtualized Lists** - `VirtualizedList` component renders only visible items for large datasets
+- **Generic Components** - `ListItem` component works with any data type for reusability
+
+#### **State Management Optimizations:**
+- **Domain-Specific Slices** - Smaller, focused Redux slices (songs, queue, favorites, history)
+- **Composable Hooks** - Reusable logic (`useFilteredSongs`, `usePaginatedData`, `useErrorHandler`)
+- **Optimized Selectors** - Memoized Redux selectors for efficient state access
+- **Lazy Loading** - Components and data loaded only when needed
+
+#### **Data Handling Optimizations:**
+- **Pagination** - `usePaginatedData` hook loads data in chunks to prevent UI blocking
+- **Search Debouncing** - Reduces unnecessary API calls during typing
+- **Filtering Optimization** - `useFilteredSongs` hook provides efficient filtering algorithms
+- **Memory Management** - Proper cleanup of listeners and subscriptions
+
+#### **Performance Monitoring:**
+- **Built-in Performance Hooks** - `usePerformanceMonitor` tracks component render times
+- **Error Tracking** - Centralized error handling with performance impact monitoring
+- **Bundle Analysis** - Optimized bundle size with code splitting
+
+#### **Specific Optimizations:**
+- **SongItem Component** - Fully memoized with React.memo, useMemo, and useCallback
+- **ListItem Component** - Generic component supporting multiple data types
+- **VirtualizedList Component** - High-performance list rendering with windowing
+- **ActionButton Component** - Reusable buttons with consistent styling and behavior
+
+### **Refactoring Benefits & Migration Notes:**
+
+#### **Architecture Improvements:**
+- **Modular Redux Slices** - Replaced monolithic `controllerSlice` with domain-specific slices
+- **Composable Hooks** - Extracted common patterns into reusable hooks
+- **Performance Optimizations** - Added React.memo, useMemo, useCallback throughout
+- **Type Safety** - Enhanced TypeScript support with strict typing
+
+#### **Component Enhancements:**
+- **Generic ListItem** - Replaced song-specific component with generic, reusable component
+- **VirtualizedList** - Added high-performance list rendering for large datasets
+- **Performance Monitoring** - Built-in performance tracking with `usePerformanceMonitor`
+- **Error Boundaries** - Centralized error handling across the application
+
+#### **Development Experience:**
+- **Better Maintainability** - Clear separation of concerns with domain-specific slices
+- **Easier Testing** - Isolated business logic for each domain
+- **Improved Performance** - Optimized rendering and state management
+- **Enhanced Type Safety** - Full TypeScript coverage with proper typing
 
 ### **Critical Implementation Rules:**
 - **Never import directly from slice files** - always use the main redux index
@@ -721,6 +978,8 @@ const Queue: React.FC = () => {
 - **Implement business logic in hooks**, not components
 - **Use memoization** for expensive operations
 - **Handle loading and error states** in all async operations
+- **Use React.memo** for performance-critical components
+- **Leverage composable hooks** for reusable business logic
 
 ---
 

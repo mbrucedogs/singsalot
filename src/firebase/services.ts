@@ -236,7 +236,7 @@ export const singerService = {
     
     // Check if singer already exists
     const existingSinger = Object.values(currentSingers).find((singer) => 
-      (singer as Singer).name.toLowerCase() === singerName.toLowerCase()
+      (String((singer as Singer).name || '').toLowerCase() === String(singerName || '').toLowerCase())
     );
     
     if (existingSinger) {

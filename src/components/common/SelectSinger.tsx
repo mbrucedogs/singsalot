@@ -49,7 +49,7 @@ const SelectSinger: React.FC<SelectSingerProps> = ({ isOpen, onClose, song }) =>
         order: nextOrder,
         singer: {
           name: singer.name,
-          lastLogin: singer.lastLogin,
+          lastLogin: singer.lastLogin || '',
         },
         song: song,
       };

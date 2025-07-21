@@ -27,10 +27,12 @@ export const SongInfoDisplay: React.FC<{
   song: Song; 
   showPath?: boolean;
   showCount?: boolean;
+  showFullPath?: boolean;
 }> = React.memo(({ 
   song, 
   showPath = false,
-  showCount = false
+  showCount = false,
+  showFullPath = false
 }) => {
   return (
     <IonLabel>
@@ -56,7 +58,7 @@ export const SongInfoDisplay: React.FC<{
       >
         {song.artist}
       </div>
-      {/* Show filename if showPath is true */}
+      {/* Show filename or full path if showPath is true */}
       {showPath && song.path && (
         <div 
           className="ion-text-sm ion-color-medium"
@@ -65,7 +67,7 @@ export const SongInfoDisplay: React.FC<{
             color: 'var(--ion-color-medium)'
           }}
         >
-          {extractFilename(song.path)}
+          {showFullPath ? song.path : extractFilename(song.path)}
         </div>
       )}
       {/* Show play count if showCount is true */}
@@ -200,7 +202,8 @@ const SongItem: React.FC<SongItemProps> = React.memo(({
   showAddButton,
   showRemoveButton,
   showDeleteButton,
-  showFavoriteButton
+  showFavoriteButton,
+  showFullPath
 }) => {
   // Get current state from Redux
   const queue = useAppSelector(selectQueue);
@@ -277,6 +280,7 @@ const SongItem: React.FC<SongItemProps> = React.memo(({
         song={song} 
         showPath={shouldShowPath} 
         showCount={shouldShowCount} 
+        showFullPath={showFullPath}
       />
       
       {showActions && (

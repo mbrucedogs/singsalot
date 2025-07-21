@@ -177,6 +177,7 @@ export interface SongItemProps {
   showRemoveButton?: boolean;
   showDeleteButton?: boolean;
   showFavoriteButton?: boolean;
+  showFullPath?: boolean;
 }
 
 export interface LayoutProps {

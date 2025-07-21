@@ -4,7 +4,7 @@ import { ban } from 'ionicons/icons';
 import { useAppSelector } from '../../redux';
 import { selectIsAdmin, selectSettings } from '../../redux';
 import { useDisabledSongs } from '../../hooks';
-import { InfiniteScrollList, ActionButton } from '../../components/common';
+import { InfiniteScrollList, ActionButton, SongItem } from '../../components/common';
 import { ActionButtonVariant, ActionButtonSize, ActionButtonIconSlot } from '../../types';
 import { Icons } from '../../constants';
 import { filterSongs } from '../../utils/dataProcessing';
@@ -166,34 +166,23 @@ const Settings: React.FC = () => {
               hasMore={false}
               onLoadMore={() => {}}
               renderItem={(song) => (
-                <IonItem>
-                  <IonLabel>
-                    <h3 className="text-sm font-medium text-gray-900">
-                      {song.title || 'Unknown Title'}
-                    </h3>
-                    <p className="text-sm text-gray-500">
-                      {song.artist || 'Unknown Artist'}
-                    </p>
-                    <p className="text-xs text-gray-400 break-words">
-                      {song.path}
-                    </p>
-                    <p className="text-xs text-gray-400">
-                      Disabled: {new Date(song.disabledAt || '').toLocaleDateString()}
-                    </p>
-                  </IonLabel>
-                  
-                  <div slot="end" className="flex items-center gap-2 ml-2">
-                    <div onClick={(e) => e.stopPropagation()}>
-                      <ActionButton
-                        onClick={() => handleRemoveDisabledSong(song)}
-                        variant={ActionButtonVariant.DANGER}
-                        size={ActionButtonSize.SMALL}
-                        icon={Icons.TRASH}
-                        iconSlot={ActionButtonIconSlot.ICON_ONLY}
-                      />
-                    </div>
+                <div className="flex items-center">
+                  <div className="flex-1">
+                    <SongItem
+                      song={song}
+                      context="history"
+                      showDeleteButton={true}
+                      showInfoButton={false}
+                      showAddButton={false}
+                      showFavoriteButton={false}
+                      onDeleteItem={() => handleRemoveDisabledSong(song)}
+                      showFullPath={true}
+                    />
                   </div>
-                </IonItem>
+                  <div className="flex items-center gap-2 ml-2">
+                    {/* Delete button is now handled by SongItem */}
+                  </div>
+                </div>
               )}
               emptyTitle="No disabled songs"
               emptyMessage="Songs marked as disabled will appear here"

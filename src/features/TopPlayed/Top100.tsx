@@ -104,7 +104,6 @@ const Top100: React.FC = () => {
                 <IonChip color="primary">
                   {item.count} plays
                 </IonChip>
-                <IonIcon icon={list} color="primary" />
               </>
             }
           />

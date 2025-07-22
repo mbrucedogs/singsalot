@@ -279,51 +279,86 @@ export const playerService = {
 
 // History operations
 export const historyService = {
-  // Add song to history
+  // Add song to history (by path, with count)
   addToHistory: async (controllerName: string, song: Omit<Song, 'key'>) => {
     const historyRef = ref(database, `controllers/${controllerName}/history`);
     const historySnapshot = await get(historyRef);
     const currentHistory = historySnapshot.exists() ? historySnapshot.val() : {};
-    
-    // Find the next available sequential key
-    const nextKey = findNextSequentialKey(Object.keys(currentHistory));
-    debugLog('addToHistory - existing keys:', Object.keys(currentHistory));
-    debugLog('addToHistory - next key:', nextKey);
-    
-    const newHistoryRef = ref(database, `controllers/${controllerName}/history/${nextKey}`);
-    await set(newHistoryRef, song);
-    return { key: nextKey.toString() };
+    const now = Date.now();
+    // Find if song with same path exists
+    const existingEntry = Object.entries(currentHistory).find(
+      ([, item]) => typeof item === 'object' && item !== null && 'path' in item && (item as { path: string }).path === song.path
+    );
+    if (existingEntry) {
+      const [key, item] = existingEntry;
+      await update(ref(database, `controllers/${controllerName}/history/${key}`), {
+        count: (item.count || 1) + 1,
+        lastPlayed: now,
+      });
+      // Move this entry to the most recent by updating lastPlayed
+      // (No need to reorder keys, just use lastPlayed for recency)
+      // Cap size after update
+    } else {
+      // Add new entry with count: 1 and lastPlayed
+      const nextKey = findNextSequentialKey(Object.keys(currentHistory));
+      await set(ref(database, `controllers/${controllerName}/history/${nextKey}`), {
+        ...song,
+        count: 1,
+        lastPlayed: now,
+      });
+    }
+    // Cap history size (remove oldest by lastPlayed if over 250)
+    const updatedSnapshot = await get(historyRef);
+    const updatedHistory = updatedSnapshot.exists() ? updatedSnapshot.val() : {};
+    const entries = Object.entries(updatedHistory);
+    if (entries.length > 250) {
+      // Find the oldest entry by lastPlayed using a for loop for type safety
+      let oldestKey: string | null = null;
+      let oldestTime: number | null = null;
+      for (const [key, item] of entries) {
+        if (typeof item === 'object' && item !== null && 'lastPlayed' in item && typeof (item as { lastPlayed?: number }).lastPlayed === 'number') {
+          const lastPlayed = (item as { lastPlayed: number }).lastPlayed;
+          if (oldestTime === null || lastPlayed < oldestTime) {
+            oldestTime = lastPlayed;
+            oldestKey = key;
+          }
+        }
+      }
+      if (oldestKey) {
+        await remove(ref(database, `controllers/${controllerName}/history/${oldestKey}`));
+      }
+    }
   },
 
-  // Remove song from history
-  removeFromHistory: async (controllerName: string, historyItemKey: string) => {
+  // Remove song from history (by path, with count logic)
+  removeFromHistory: async (controllerName: string, songPath: string) => {
     const historyRef = ref(database, `controllers/${controllerName}/history`);
     const historySnapshot = await get(historyRef);
-    
     if (!historySnapshot.exists()) {
       throw new Error('History not found');
     }
-    
     const history = historySnapshot.val();
-    debugLog('removeFromHistory - original history:', history);
-    
-    // Find the item to remove and get its key
-    const itemToRemove = Object.entries(history).find(([key, item]) => 
-      key === historyItemKey && item
+    // Find entry by path
+    const existingEntry = Object.entries(history).find(
+      ([, item]) => typeof item === 'object' && item !== null && 'path' in item && (item as { path: string }).path === songPath
     );
-    
-    if (!itemToRemove) {
+    if (!existingEntry) {
       throw new Error('History item not found');
     }
-    
-    const [removedKey, removedItem] = itemToRemove;
-    debugLog('removeFromHistory - removing item:', removedItem, 'with key:', removedKey);
-    
-    // Use utility function to create shift-down updates
-    const updates = shiftDownAfterDeletion(history, removedKey, 'history item');
-    
-    // Apply all updates atomically
-    await update(historyRef, updates);
+    const [key, item] = existingEntry;
+    let count = 1;
+    if (typeof item === 'object' && item !== null && 'count' in item) {
+      count = (item as { count?: number }).count ?? 1;
+    }
+    const now = Date.now();
+    if (count > 1) {
+      await update(ref(database, `controllers/${controllerName}/history/${key}`), {
+        count: count - 1,
+        lastPlayed: now,
+      });
+    } else {
+      await remove(ref(database, `controllers/${controllerName}/history/${key}`));
+    }
   },
 
   // Listen to history changes

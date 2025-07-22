@@ -2,7 +2,7 @@ import React, { useMemo, useCallback } from 'react';
 import { IonItem, IonLabel } from '@ionic/react';
 import ActionButton from './ActionButton';
 import { useAppSelector } from '../../redux';
-import { selectQueue, selectFavorites } from '../../redux';
+import { selectQueue, selectFavorites, selectCurrentSinger } from '../../redux';
 import { useActions } from '../../hooks/useActions';
 import { useModal } from '../../hooks/useModalContext';
 import { debugLog } from '../../utils/logger';
@@ -209,6 +209,7 @@ const SongItem: React.FC<SongItemProps> = React.memo(({
   // Get current state from Redux
   const queue = useAppSelector(selectQueue);
   const favorites = useAppSelector(selectFavorites);
+  const currentSingerName = useAppSelector(selectCurrentSinger);
   
   // Get unified action handlers
   const { handleAddToQueue, handleToggleFavorite, handleRemoveFromQueue } = useActions();
@@ -255,8 +256,15 @@ const SongItem: React.FC<SongItemProps> = React.memo(({
 
   // Memoized handler functions for performance
   const handleAddToQueueClick = useCallback(async () => {
-    await handleAddToQueue(song);
-  }, [handleAddToQueue, song]);
+    // Find the current singer object from the queue or create a minimal one
+    let singer = undefined;
+    if (currentSingerName) {
+      // Try to find a matching singer in the queue (for lastLogin)
+      const queueSingers = (Object.values(queue) as QueueItem[]).map(item => item.singer);
+      singer = queueSingers.find(s => s.name === currentSingerName) || { name: currentSingerName, lastLogin: '' };
+    }
+    await handleAddToQueue(song, singer);
+  }, [handleAddToQueue, song, currentSingerName, queue]);
 
   const handleToggleFavoriteClick = useCallback(async () => {
     await handleToggleFavorite(song);

@@ -10,6 +10,7 @@ import { useAppSelector } from '../../redux';
 import { selectSingersArray, selectControllerName, selectQueueObject } from '../../redux';
 import { queueService } from '../../firebase/services';
 import { useToast } from '../../hooks/useToast';
+import { useActions } from '../../hooks';
 import { ModalHeader } from './ModalHeader';
 import { NumberDisplay } from './NumberDisplay';
 import { SongInfoDisplay } from './SongItem';
@@ -29,6 +30,7 @@ const SelectSinger: React.FC<SelectSingerProps> = ({ isOpen, onClose, song }) =>
   const showSuccess = toast?.showSuccess;
   const showError = toast?.showError;
   const [isLoading, setIsLoading] = useState(false);
+  const { handleAddToQueue } = useActions();
 
   const handleSelectSinger = async (singer: Singer) => {
     if (!controllerName) {
@@ -38,23 +40,7 @@ const SelectSinger: React.FC<SelectSingerProps> = ({ isOpen, onClose, song }) =>
 
     setIsLoading(true);
     try {
-      // Calculate the next order by finding the highest order value and adding 1
-      const queueItems = Object.values(currentQueue) as QueueItem[];
-      const maxOrder = queueItems.length > 0 
-        ? Math.max(...queueItems.map(item => item.order || 0))
-        : 0;
-      const nextOrder = maxOrder + 1;
-
-      const queueItem: Omit<QueueItem, 'key'> = {
-        order: nextOrder,
-        singer: {
-          name: singer.name,
-          lastLogin: singer.lastLogin || '',
-        },
-        song: song,
-      };
-
-      await queueService.addToQueue(controllerName, queueItem);
+      await handleAddToQueue(song, singer);
       if (showSuccess) showSuccess(`${song.title} added to queue for ${singer.name}`);
       onClose();
     } catch (error) {

@@ -2,13 +2,14 @@ import { useState, useCallback } from 'react';
 import { useAppSelector, useAppDispatch } from '../redux';
 import { selectControllerName, selectPlayerStateMemoized, selectIsAdmin } from '../redux';
 import { reorderQueueAsync } from '../redux/queueSlice';
+import { addToQueue as addToQueueThunk } from '../redux/queueSlice';
 import { useSongOperations } from './useSongOperations';
 import { useToast } from './useToast';
 import { useDisabledSongs } from './useDisabledSongs';
 import { historyService } from '../firebase/services';
 import { debugLog } from '../utils/logger';
 import { PlayerState } from '../types';
-import type { Song, QueueItem } from '../types';
+import type { Song, QueueItem, Singer } from '../types';
 
 export type QueueMode = 'delete' | 'reorder';
 
@@ -31,14 +32,56 @@ export const useActions = () => {
   const canDeleteFirstItem = isAdmin && (playerState?.state === PlayerState.stopped || playerState?.state === PlayerState.paused); // Only allow deleting first item if not playing
 
   // Song operations
-  const handleAddToQueue = useCallback(async (song: Song) => {
+  const handleAddToQueue = useCallback(async (song: Song, singerOverride?: Singer) => {
     try {
-      await addToQueue(song);
+      // If a singer is provided, use it; otherwise, use the current singer from state
+      let singer = singerOverride;
+      if (!singer) {
+        // Try to get from Redux state
+        const state = (window as unknown as { store?: { getState?: () => unknown } }).store?.getState?.();
+        if (state && typeof state === 'object' && 'auth' in state) {
+          const authState = (state as { auth?: { data?: { singer?: Singer } } }).auth;
+          if (authState && authState.data && authState.data.singer) {
+            singer = authState.data.singer;
+          }
+        }
+      }
+      if (!singer) throw new Error('No singer specified');
+      // Calculate order
+      const state = (window as unknown as { store?: { getState?: () => unknown } }).store?.getState?.();
+      let queueItems: Array<QueueItem & { key: string }> = [];
+      if (state && typeof state === 'object' && 'queue' in state) {
+        const queueState = (state as { queue?: { data?: Record<string, QueueItem> } }).queue;
+        if (queueState && queueState.data && typeof queueState.data === 'object') {
+          queueItems = Object.entries(queueState.data).map(([key, item]) => ({ ...item, key }));
+        }
+      }
+      const maxOrder = queueItems.length > 0 
+        ? Math.max(...queueItems.map(item => item.order || 0))
+        : 0;
+      const nextOrder = maxOrder + 1;
+      const queueItem: Omit<QueueItem, 'key'> = {
+        order: nextOrder,
+        singer: {
+          name: singer.name,
+          lastLogin: singer.lastLogin || '',
+        },
+        song: song,
+      };
+      await dispatch(addToQueueThunk({ controllerName, queueItem })).unwrap();
+      if (controllerName) {
+        try {
+          await historyService.addToHistory(controllerName, song);
+          if (showSuccess) showSuccess('Song added to history');
+        } catch {
+          if (showError) showError('Failed to add song to history');
+        }
+      }
       if (showSuccess) showSuccess('Song added to queue');
     } catch {
       if (showError) showError('Failed to add song to queue');
     }
-  }, [addToQueue, showSuccess, showError]);
+  }, [addToQueue, showSuccess, showError, controllerName]);
 
   // Utility to fix queue order after deletes
   const fixQueueOrder = useCallback(async () => {
@@ -69,13 +112,21 @@ export const useActions = () => {
     
     try {
       await removeFromQueue(queueItem.key);
+      if (controllerName && queueItem.song && queueItem.song.path) {
+        try {
+          await historyService.removeFromHistory(controllerName, queueItem.song.path);
+          if (showSuccess) showSuccess('Song removed from history');
+        } catch {
+          if (showError) showError('Failed to remove song from history');
+        }
+      }
       if (showSuccess) showSuccess('Song removed from queue');
       // After removal, fix the order of all items
       await fixQueueOrder();
     } catch {
       if (showError) showError('Failed to remove song from queue');
     }
-  }, [removeFromQueue, showSuccess, showError, fixQueueOrder]);
+  }, [removeFromQueue, showSuccess, showError, fixQueueOrder, controllerName]);
 
   const handleToggleFavorite = useCallback(async (song: Song) => {
     try {

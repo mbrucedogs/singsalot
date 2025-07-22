@@ -27,25 +27,20 @@ exports.updateTopPlayedOnHistoryChange = functions.database
             console.log('No history data found, skipping TopPlayed update');
             return;
         }
-        // Aggregate history items by artist + title combination
+        // Aggregate history items by path
         const aggregation = {};
         Object.values(historyData).forEach((song) => {
             const historySong = song;
-            if (historySong && historySong.artist && historySong.title) {
-                // Create a unique key based on artist and title (case-insensitive)
-                // Replace invalid Firebase key characters with underscores
-                const sanitizedArtist = String(historySong.artist || '').toLowerCase().trim().replace(/[.#$/[\]]/g, '_');
-                const sanitizedTitle = String(historySong.title || '').toLowerCase().trim().replace(/[.#$/[\]]/g, '_');
-                const key = `${sanitizedArtist}_${sanitizedTitle}`;
-                if (aggregation[key]) {
-                    // Increment count for existing song
-                    aggregation[key].count += historySong.count || 1;
+            if (historySong && historySong.path) {
+                const path = historySong.path;
+                if (aggregation[path]) {
+                    aggregation[path].count += historySong.count || 1;
                 }
                 else {
-                    // Create new entry
-                    aggregation[key] = {
+                    aggregation[path] = {
                         artist: historySong.artist,
                         title: historySong.title,
+                        path: historySong.path,
                         count: historySong.count || 1
                     };
                 }
@@ -53,26 +48,17 @@ exports.updateTopPlayedOnHistoryChange = functions.database
         });
         // Convert aggregation to array, sort by count (descending), and take top 100
         const sortedSongs = Object.entries(aggregation)
-            .map(([key, songData]) => ({
-            key,
+            .map(([, songData]) => ({
             artist: songData.artist,
             title: songData.title,
+            path: songData.path,
             count: songData.count
         }))
-            .sort((a, b) => b.count - a.count) // Sort by count descending
-            .slice(0, 100); // Take only top 100
-        // Convert back to object format for Firebase
-        const topPlayedData = {};
-        sortedSongs.forEach((song) => {
-            topPlayedData[song.key] = {
-                artist: song.artist,
-                title: song.title,
-                count: song.count
-            };
-        });
-        // Update the topPlayed collection
-        await controllerRef.child('topPlayed').set(topPlayedData);
-        console.log(`Successfully updated TopPlayed for controller ${controllerName} with ${Object.keys(topPlayedData).length} unique songs`);
+            .sort((a, b) => b.count - a.count)
+            .slice(0, 100);
+        // Write as an array so Firebase uses numeric keys
+        await controllerRef.child('topPlayed').set(sortedSongs);
+        console.log(`Successfully updated TopPlayed for controller ${controllerName} with ${sortedSongs.length} unique songs (by path)`);
     }
     catch (error) {
         console.error('Error updating TopPlayed:', error);
@@ -83,7 +69,7 @@ exports.updateTopPlayedOnHistoryChange = functions.database
  * Alternative function that can be called manually to recalculate TopPlayed
  * This is useful for initial setup or data migration
  */
-exports.recalculateTopPlayed = functions.https.onCall(async (data, context) => {
+exports.recalculateTopPlayed = functions.https.onCall(async (data) => {
     const { controllerName } = data;
     if (!controllerName) {
         throw new functions.https.HttpsError('invalid-argument', 'controllerName is required');
@@ -100,25 +86,20 @@ exports.recalculateTopPlayed = functions.https.onCall(async (data, context) => {
             await controllerRef.child('topPlayed').set({});
             return { success: true, message: 'No history data found, TopPlayed cleared' };
         }
-        // Aggregate history items by artist + title combination
+        // Aggregate history items by path
         const aggregation = {};
         Object.values(historyData).forEach((song) => {
             const historySong = song;
-            if (historySong && historySong.artist && historySong.title) {
-                // Create a unique key based on artist and title (case-insensitive)
-                // Replace invalid Firebase key characters with underscores
-                const sanitizedArtist = String(historySong.artist || '').toLowerCase().trim().replace(/[.#$/[\]]/g, '_');
-                const sanitizedTitle = String(historySong.title || '').toLowerCase().trim().replace(/[.#$/[\]]/g, '_');
-                const key = `${sanitizedArtist}_${sanitizedTitle}`;
-                if (aggregation[key]) {
-                    // Increment count for existing song
-                    aggregation[key].count += historySong.count || 1;
+            if (historySong && historySong.path) {
+                const path = historySong.path;
+                if (aggregation[path]) {
+                    aggregation[path].count += historySong.count || 1;
                 }
                 else {
-                    // Create new entry
-                    aggregation[key] = {
+                    aggregation[path] = {
                         artist: historySong.artist,
                         title: historySong.title,
+                        path: historySong.path,
                         count: historySong.count || 1
                     };
                 }
@@ -126,30 +107,21 @@ exports.recalculateTopPlayed = functions.https.onCall(async (data, context) => {
         });
         // Convert aggregation to array, sort by count (descending), and take top 100
         const sortedSongs = Object.entries(aggregation)
-            .map(([key, songData]) => ({
-            key,
+            .map(([, songData]) => ({
             artist: songData.artist,
             title: songData.title,
+            path: songData.path,
             count: songData.count
         }))
-            .sort((a, b) => b.count - a.count) // Sort by count descending
-            .slice(0, 100); // Take only top 100
-        // Convert back to object format for Firebase
-        const topPlayedData = {};
-        sortedSongs.forEach((song) => {
-            topPlayedData[song.key] = {
-                artist: song.artist,
-                title: song.title,
-                count: song.count
-            };
-        });
-        // Update the topPlayed collection
-        await controllerRef.child('topPlayed').set(topPlayedData);
-        console.log(`Successfully recalculated TopPlayed for controller ${controllerName} with ${Object.keys(topPlayedData).length} unique songs`);
+            .sort((a, b) => b.count - a.count)
+            .slice(0, 100);
+        // Write as an array so Firebase uses numeric keys
+        await controllerRef.child('topPlayed').set(sortedSongs);
+        console.log(`Successfully recalculated TopPlayed for controller ${controllerName} with ${sortedSongs.length} unique songs (by path)`);
         return {
             success: true,
             message: `TopPlayed recalculated successfully`,
-            songCount: Object.keys(topPlayedData).length
+            songCount: sortedSongs.length
         };
     }
     catch (error) {

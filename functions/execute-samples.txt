@@ -1,0 +1,4 @@
+ Invoke-WebRequest -Uri "https://us-central1-firebase-herse.cloudfunctions.net/recalculateTopPlayed" `
+>>   -Method POST `
+>>   -Headers @{"Content-Type"="application/json"} `
+>>   -Body '{"data": {"controllerName": "bsully5150"}}'

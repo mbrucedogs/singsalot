@@ -556,9 +556,9 @@ export const disabledSongsService = {
       throw new Error('Song path is required');
     }
     
-    if (!song.artist || !song.title) {
-      throw new Error('Song artist and title are required');
-    }
+    // Use empty strings as fallbacks for missing artist or title
+    const artist = song.artist || '';
+    const title = song.title || '';
     
     const songKey = disabledSongsService.generateSongKey(song.path);
     debugLog('Generated song key:', songKey);
@@ -566,8 +566,8 @@ export const disabledSongsService = {
     const disabledSongRef = ref(database, `controllers/${controllerName}/disabledSongs/${songKey}`);
     const disabledSong = {
       path: song.path,
-      artist: song.artist,
-      title: song.title,
+      artist: artist,
+      title: title,
       key: song.key,
       disabledAt: new Date().toISOString(),
     };

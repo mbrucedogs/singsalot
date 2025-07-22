@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback } from 'react';
-import { IonChip, IonModal, IonIcon, IonContent, IonList } from '@ionic/react';
-import { list } from 'ionicons/icons';
+import { IonChip, IonModal, IonIcon, IonContent, IonList, IonItem } from '@ionic/react';
+import { list, star, layers } from 'ionicons/icons';
 import { useTopPlayed } from '../../hooks';
 import { useAppSelector } from '../../redux';
 import { selectTopPlayed, selectSongsArray } from '../../redux';
@@ -63,6 +63,9 @@ const Top100: React.FC = () => {
     return filteredSongs;
   }, [selectedTopPlayed, allSongs]);
 
+  // Separate the most played song from other variations
+  const mostPlayedSong = selectedSongs.find(song => song.path === selectedTopPlayed?.path);
+  const otherVariations = selectedSongs.filter(song => song.path !== selectedTopPlayed?.path);
 
 
   // Use real Firebase data from the hook
@@ -118,18 +121,60 @@ const Top100: React.FC = () => {
         <ModalHeader title={selectedTopPlayed?.artist || ''} onClose={handleCloseModal} />
         
         <IonContent>
-          <IonList>
-            {selectedSongs.map((song) => (
-              <SongItem
-                key={song.key || `${song.title}-${song.artist}`}
-                song={song}
-                context={SongItemContext.SEARCH}
-                showAddButton={true}
-                showInfoButton={true}
-                showFavoriteButton={false}
-              />
-            ))}
-          </IonList>
+          {/* Most Played Section */}
+          {mostPlayedSong && (
+            <>
+              <IonItem className="section-header" lines="none">
+                <h3>
+                  <IonIcon icon={star} color="warning" />
+                  Most Played Version
+                </h3>
+              </IonItem>
+              <IonList>
+                <SongItem
+                  key={mostPlayedSong.key || `${mostPlayedSong.title}-${mostPlayedSong.artist}`}
+                  song={mostPlayedSong}
+                  context={SongItemContext.SEARCH}
+                  showAddButton={true}
+                  showInfoButton={true}
+                  showFavoriteButton={false}
+                  className="highlighted-song"
+                />
+              </IonList>
+            </>
+          )}
+
+          {/* Other Variations Section */}
+          {otherVariations.length > 0 && (
+            <>
+              <IonItem className="section-header other-variations" lines="none">
+                <h3>
+                  <IonIcon icon={layers} color="medium" />
+                  Other Variations ({otherVariations.length})
+                </h3>
+              </IonItem>
+              <IonList>
+                {otherVariations.map((song) => (
+                  <SongItem
+                    key={song.key || `${song.title}-${song.artist}`}
+                    song={song}
+                    context={SongItemContext.SEARCH}
+                    showAddButton={true}
+                    showInfoButton={true}
+                    showFavoriteButton={false}
+                  />
+                ))}
+              </IonList>
+            </>
+          )}
+
+          {/* No variations found */}
+          {selectedSongs.length === 0 && (
+            <div className="ion-padding text-center text-gray-500 dark:text-gray-400">
+              <IonIcon icon={list} size="large" color="medium" />
+              <p className="mt-2">No other variations found for this song</p>
+            </div>
+          )}
         </IonContent>
       </IonModal>
 

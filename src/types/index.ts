@@ -84,6 +84,7 @@ export interface SongListSong extends Keyable {
 export interface TopPlayed extends Keyable {
   artist: string;
   title: string;
+  path: string;
   count: number;
 }
 

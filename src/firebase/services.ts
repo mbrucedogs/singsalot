@@ -11,6 +11,57 @@ import { database } from './config';
 import { debugLog } from '../utils/logger';
 import type { Song, QueueItem, Controller, Singer, DisabledSong } from '../types';
 
+// Utility functions for sequential key management
+const findNextSequentialKey = (existingKeys: string[]): number => {
+  const numericKeys = existingKeys
+    .filter(key => /^\d+$/.test(key)) // Only consider numerical keys
+    .map(key => parseInt(key, 10))
+    .sort((a, b) => a - b);
+  
+  // Find the first gap in the sequence, or use the next number after the highest
+  let nextKey = 0;
+  for (let i = 0; i < numericKeys.length; i++) {
+    if (numericKeys[i] !== i) {
+      nextKey = i;
+      break;
+    }
+    nextKey = i + 1;
+  }
+  
+  return nextKey;
+};
+
+const shiftDownAfterDeletion = <T>(
+  items: Record<string, T>,
+  removedKey: string,
+  itemName: string = 'item'
+): Record<string, T | null> => {
+  const updates: Record<string, T | null> = {};
+  const removedKeyNum = parseInt(removedKey, 10);
+  
+  debugLog(`shiftDownAfterDeletion - removing ${itemName} with key:`, removedKeyNum);
+  
+  // Remove the target item
+  updates[removedKey] = null;
+  
+  // Shift down all items that come after the removed one
+  Object.entries(items).forEach(([key, item]) => {
+    if (item && key !== removedKey) {
+      const keyNum = parseInt(key, 10);
+      if (keyNum > removedKeyNum) {
+        // This item comes after the removed one, shift it down
+        const newKey = (keyNum - 1).toString();
+        debugLog(`shiftDownAfterDeletion - shifting: ${key} -> ${newKey}`);
+        updates[newKey] = item;
+        updates[key] = null; // Remove from old position
+      }
+    }
+  });
+  
+  debugLog(`shiftDownAfterDeletion - updates to apply:`, updates);
+  return updates;
+};
+
 // Basic CRUD operations for controllers
 export const controllerService = {
   // Get a specific controller
@@ -46,37 +97,19 @@ export const controllerService = {
 
 // Queue management operations
 export const queueService = {
-  // Add song to queue
+  // Add a song to the queue
   addToQueue: async (controllerName: string, queueItem: Omit<QueueItem, 'key'>) => {
     const queueRef = ref(database, `controllers/${controllerName}/player/queue`);
+    const queueSnapshot = await get(queueRef);
+    const currentQueue = queueSnapshot.exists() ? queueSnapshot.val() : {};
     
-    // Get current queue to find the next sequential key
-    const snapshot = await get(queueRef);
-    const currentQueue = snapshot.exists() ? snapshot.val() : {};
-    
-    // Find the next available sequential key (0, 1, 2, etc.)
-    const existingKeys = Object.keys(currentQueue)
-      .filter(key => /^\d+$/.test(key)) // Only consider numerical keys
-      .map(key => parseInt(key, 10))
-      .sort((a, b) => a - b);
-    
-    // Find the first gap in the sequence, or use the next number after the highest
-    let nextKey = 0;
-    for (let i = 0; i < existingKeys.length; i++) {
-      if (existingKeys[i] !== i) {
-        nextKey = i;
-        break;
-      }
-      nextKey = i + 1;
-    }
-    
-    debugLog('addToQueue - existing keys:', existingKeys);
+    // Find the next available sequential key
+    const nextKey = findNextSequentialKey(Object.keys(currentQueue));
+    debugLog('addToQueue - existing keys:', Object.keys(currentQueue));
     debugLog('addToQueue - next key:', nextKey);
     
-    // Add the item with the sequential key
-    const newItemRef = ref(database, `controllers/${controllerName}/player/queue/${nextKey}`);
-    await set(newItemRef, queueItem);
-    
+    const newQueueItemRef = ref(database, `controllers/${controllerName}/player/queue/${nextKey}`);
+    await set(newQueueItemRef, queueItem);
     return { key: nextKey.toString() };
   },
 
@@ -102,32 +135,22 @@ export const queueService = {
     }
     
     const [removedKey, removedItem] = itemToRemove;
-    const removedKeyNum = parseInt(removedKey, 10);
+    debugLog('removeFromQueue - removing item:', removedItem, 'with key:', removedKey);
     
-    debugLog('removeFromQueue - removing item:', removedItem, 'with key:', removedKeyNum);
+    // Use utility function to create shift-down updates
+    const updates = shiftDownAfterDeletion(queue, removedKey, 'queue item');
     
-    // Create updates object
-    const updates: Record<string, QueueItem | null> = {};
-    
-    // Remove the target item
-    updates[removedKey] = null;
-    
-    // Shift down all items that come after the removed one
-    Object.entries(queue).forEach(([key, item]) => {
-      if (item && key !== queueItemKey) {
+    // Update order property for shifted items
+    Object.entries(updates).forEach(([key, item]) => {
+      if (item && key !== removedKey) {
         const keyNum = parseInt(key, 10);
-        if (keyNum > removedKeyNum) {
-          // This item comes after the removed one, shift it down
-          const newKey = (keyNum - 1).toString();
-          const shiftedItem = { ...item as QueueItem, order: keyNum - 1 };
-          debugLog(`removeFromQueue - shifting: ${key} -> ${newKey}, order: ${keyNum} -> ${keyNum - 1}`);
-          updates[newKey] = shiftedItem;
-          updates[key] = null; // Remove from old position
+        const originalKeyNum = parseInt(removedKey, 10);
+        if (keyNum > originalKeyNum) {
+          // This is a shifted item, update its order
+          (updates[key] as QueueItem).order = keyNum;
         }
       }
     });
-    
-    debugLog('removeFromQueue - updates to apply:', updates);
     
     // Apply all updates atomically
     await update(queueRef, updates);
@@ -262,23 +285,9 @@ export const historyService = {
     const historySnapshot = await get(historyRef);
     const currentHistory = historySnapshot.exists() ? historySnapshot.val() : {};
     
-    // Find the next available sequential key (0, 1, 2, etc.)
-    const existingKeys = Object.keys(currentHistory)
-      .filter(key => /^\d+$/.test(key)) // Only consider numerical keys
-      .map(key => parseInt(key, 10))
-      .sort((a, b) => a - b);
-    
-    // Find the first gap in the sequence, or use the next number after the highest
-    let nextKey = 0;
-    for (let i = 0; i < existingKeys.length; i++) {
-      if (existingKeys[i] !== i) {
-        nextKey = i;
-        break;
-      }
-      nextKey = i + 1;
-    }
-    
-    debugLog('addToHistory - existing keys:', existingKeys);
+    // Find the next available sequential key
+    const nextKey = findNextSequentialKey(Object.keys(currentHistory));
+    debugLog('addToHistory - existing keys:', Object.keys(currentHistory));
     debugLog('addToHistory - next key:', nextKey);
     
     const newHistoryRef = ref(database, `controllers/${controllerName}/history/${nextKey}`);
@@ -308,31 +317,10 @@ export const historyService = {
     }
     
     const [removedKey, removedItem] = itemToRemove;
-    const removedKeyNum = parseInt(removedKey, 10);
+    debugLog('removeFromHistory - removing item:', removedItem, 'with key:', removedKey);
     
-    debugLog('removeFromHistory - removing item:', removedItem, 'with key:', removedKeyNum);
-    
-    // Create updates object
-    const updates: Record<string, Song | null> = {};
-    
-    // Remove the target item
-    updates[removedKey] = null;
-    
-    // Shift down all items that come after the removed one
-    Object.entries(history).forEach(([key, item]) => {
-      if (item && key !== historyItemKey) {
-        const keyNum = parseInt(key, 10);
-        if (keyNum > removedKeyNum) {
-          // This item comes after the removed one, shift it down
-          const newKey = (keyNum - 1).toString();
-          debugLog(`removeFromHistory - shifting: ${key} -> ${newKey}, song: ${(item as Song).title}`);
-          updates[newKey] = item as Song;
-          updates[key] = null; // Remove from old position
-        }
-      }
-    });
-    
-    debugLog('removeFromHistory - updates to apply:', updates);
+    // Use utility function to create shift-down updates
+    const updates = shiftDownAfterDeletion(history, removedKey, 'history item');
     
     // Apply all updates atomically
     await update(historyRef, updates);
@@ -357,23 +345,9 @@ export const favoritesService = {
     const favoritesSnapshot = await get(favoritesRef);
     const currentFavorites = favoritesSnapshot.exists() ? favoritesSnapshot.val() : {};
     
-    // Find the next available sequential key (0, 1, 2, etc.)
-    const existingKeys = Object.keys(currentFavorites)
-      .filter(key => /^\d+$/.test(key)) // Only consider numerical keys
-      .map(key => parseInt(key, 10))
-      .sort((a, b) => a - b);
-    
-    // Find the first gap in the sequence, or use the next number after the highest
-    let nextKey = 0;
-    for (let i = 0; i < existingKeys.length; i++) {
-      if (existingKeys[i] !== i) {
-        nextKey = i;
-        break;
-      }
-      nextKey = i + 1;
-    }
-    
-    debugLog('addToFavorites - existing keys:', existingKeys);
+    // Find the next available sequential key
+    const nextKey = findNextSequentialKey(Object.keys(currentFavorites));
+    debugLog('addToFavorites - existing keys:', Object.keys(currentFavorites));
     debugLog('addToFavorites - next key:', nextKey);
     
     const newFavoriteRef = ref(database, `controllers/${controllerName}/favorites/${nextKey}`);
@@ -403,31 +377,10 @@ export const favoritesService = {
     }
     
     const [removedKey, removedItem] = itemToRemove;
-    const removedKeyNum = parseInt(removedKey, 10);
+    debugLog('removeFromFavorites - removing item:', removedItem, 'with key:', removedKey);
     
-    debugLog('removeFromFavorites - removing item:', removedItem, 'with key:', removedKeyNum);
-    
-    // Create updates object
-    const updates: Record<string, Song | null> = {};
-    
-    // Remove the target item
-    updates[removedKey] = null;
-    
-    // Shift down all items that come after the removed one
-    Object.entries(favorites).forEach(([key, item]) => {
-      if (item && key !== songKey) {
-        const keyNum = parseInt(key, 10);
-        if (keyNum > removedKeyNum) {
-          // This item comes after the removed one, shift it down
-          const newKey = (keyNum - 1).toString();
-          debugLog(`removeFromFavorites - shifting: ${key} -> ${newKey}, song: ${(item as Song).title}`);
-          updates[newKey] = item as Song;
-          updates[key] = null; // Remove from old position
-        }
-      }
-    });
-    
-    debugLog('removeFromFavorites - updates to apply:', updates);
+    // Use utility function to create shift-down updates
+    const updates = shiftDownAfterDeletion(favorites, removedKey, 'favorite item');
     
     // Apply all updates atomically
     await update(favoritesRef, updates);
@@ -462,23 +415,9 @@ export const singerService = {
       throw new Error('Singer already exists');
     }
     
-    // Find the next available sequential key (0, 1, 2, etc.)
-    const existingKeys = Object.keys(currentSingers)
-      .filter(key => /^\d+$/.test(key)) // Only consider numerical keys
-      .map(key => parseInt(key, 10))
-      .sort((a, b) => a - b);
-    
-    // Find the first gap in the sequence, or use the next number after the highest
-    let nextKey = 0;
-    for (let i = 0; i < existingKeys.length; i++) {
-      if (existingKeys[i] !== i) {
-        nextKey = i;
-        break;
-      }
-      nextKey = i + 1;
-    }
-    
-    debugLog('addSinger - existing keys:', existingKeys);
+    // Find the next available sequential key
+    const nextKey = findNextSequentialKey(Object.keys(currentSingers));
+    debugLog('addSinger - existing keys:', Object.keys(currentSingers));
     debugLog('addSinger - next key:', nextKey);
     
     // Create new singer with current timestamp
@@ -536,31 +475,10 @@ export const singerService = {
       }
       
       const [removedKey, removedSinger] = singerToRemove;
-      const removedKeyNum = parseInt(removedKey, 10);
+      debugLog('removeSinger - removing singer:', removedSinger, 'with key:', removedKey);
       
-      debugLog('removeSinger - removing singer:', removedSinger, 'with key:', removedKeyNum);
-      
-      // Create updates object
-      const updates: Record<string, Singer | null> = {};
-      
-      // Remove the target singer
-      updates[removedKey] = null;
-      
-      // Shift down all singers that come after the removed one
-      Object.entries(singers).forEach(([key, singer]) => {
-        if (singer && (singer as Singer).name !== singerName) {
-          const keyNum = parseInt(key, 10);
-          if (keyNum > removedKeyNum) {
-            // This singer comes after the removed one, shift them down
-            const newKey = (keyNum - 1).toString();
-            debugLog(`removeSinger - shifting: ${key} -> ${newKey}, singer: ${(singer as Singer).name}`);
-            updates[newKey] = singer as Singer;
-            updates[key] = null; // Remove from old position
-          }
-        }
-      });
-      
-      debugLog('removeSinger - updates to apply:', updates);
+      // Use utility function to create shift-down updates
+      const updates = shiftDownAfterDeletion(singers, removedKey, 'singer');
       
       // Apply all updates atomically
       if (Object.keys(updates).length > 0) {

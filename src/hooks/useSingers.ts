@@ -1,13 +1,15 @@
 import { useCallback } from 'react';
-import { useAppSelector, selectSingersArray, selectIsAdmin, selectControllerName } from '../redux';
+import { useAppSelector, useAppDispatch } from '../redux';
+import { selectSingersArray, selectIsAdmin, selectControllerName } from '../redux';
+import { addSinger, removeSinger } from '../redux/controllerSlice';
 import { useToast } from './useToast';
-import { singerService } from '../firebase/services';
 import type { Singer } from '../types';
 
 export const useSingers = () => {
   const singers = useAppSelector(selectSingersArray);
   const isAdmin = useAppSelector(selectIsAdmin);
   const controllerName = useAppSelector(selectControllerName);
+  const dispatch = useAppDispatch();
   const toast = useToast();
   const showSuccess = toast?.showSuccess;
   const showError = toast?.showError;
@@ -24,13 +26,13 @@ export const useSingers = () => {
     }
 
     try {
-      await singerService.removeSinger(controllerName, singer.name);
+      await dispatch(removeSinger({ controllerName, singerName: singer.name })).unwrap();
       showSuccess && showSuccess(`${singer.name} removed from singers list and queue`);
     } catch (error) {
       console.error('Failed to remove singer:', error);
       showError && showError('Failed to remove singer');
     }
-  }, [isAdmin, controllerName, showSuccess, showError]);
+  }, [isAdmin, controllerName, dispatch, showSuccess, showError]);
 
   const handleAddSinger = useCallback(async (singerName: string) => {
     if (!isAdmin) {
@@ -49,7 +51,7 @@ export const useSingers = () => {
     }
 
     try {
-      await singerService.addSinger(controllerName, singerName.trim());
+      await dispatch(addSinger({ controllerName, singerName: singerName.trim() })).unwrap();
       showSuccess && showSuccess(`${singerName} added to singers list`);
     } catch (error) {
       console.error('Failed to add singer:', error);
@@ -59,7 +61,7 @@ export const useSingers = () => {
         showError && showError('Failed to add singer');
       }
     }
-  }, [isAdmin, controllerName, showSuccess, showError]);
+  }, [isAdmin, controllerName, dispatch, showSuccess, showError]);
 
   return {
     singers,

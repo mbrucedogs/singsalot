@@ -327,12 +327,24 @@ export const singerService = {
       throw new Error('Singer already exists');
     }
     
-    // Find the next available numeric key
-    const numericKeys = Object.keys(currentSingers)
-      .map((key) => parseInt(key, 10))
-      .filter((num) => !isNaN(num));
-    const nextKey = numericKeys.length > 0 ? Math.max(...numericKeys) + 1 : 0;
-    const nextKeyStr = String(nextKey);
+    // Find the next available sequential key (0, 1, 2, etc.)
+    const existingKeys = Object.keys(currentSingers)
+      .filter(key => /^\d+$/.test(key)) // Only consider numerical keys
+      .map(key => parseInt(key, 10))
+      .sort((a, b) => a - b);
+    
+    // Find the first gap in the sequence, or use the next number after the highest
+    let nextKey = 0;
+    for (let i = 0; i < existingKeys.length; i++) {
+      if (existingKeys[i] !== i) {
+        nextKey = i;
+        break;
+      }
+      nextKey = i + 1;
+    }
+    
+    debugLog('addSinger - existing keys:', existingKeys);
+    debugLog('addSinger - next key:', nextKey);
     
     // Create new singer with current timestamp
     const newSinger: Omit<Singer, 'key'> = {
@@ -340,11 +352,11 @@ export const singerService = {
       lastLogin: new Date().toISOString()
     };
     
-    // Add to singers list with numeric key
-    const newSingerRef = ref(database, `controllers/${controllerName}/player/singers/${nextKeyStr}`);
+    // Add to singers list with sequential key
+    const newSingerRef = ref(database, `controllers/${controllerName}/player/singers/${nextKey}`);
     await set(newSingerRef, newSinger);
     
-    return { key: nextKeyStr };
+    return { key: nextKey.toString() };
   },
 
   // Remove singer and all their queue items
@@ -370,22 +382,40 @@ export const singerService = {
       }
     }
     
-    // Then, remove the singer from the singers list
+    // Then, remove the singer from the singers list and reindex
     const singersRef = ref(database, `controllers/${controllerName}/player/singers`);
     const singersSnapshot = await get(singersRef);
     
     if (singersSnapshot.exists()) {
       const singers = singersSnapshot.val();
+      debugLog('removeSinger - original singers:', singers);
+      
+      // Get all remaining singers (excluding the one to be removed)
+      const remainingSingers = Object.entries(singers)
+        .filter(([, singer]) => singer && (singer as Singer).name !== singerName)
+        .map(([key, singer]) => ({ key, singer: singer as Singer }))
+        .sort((a, b) => a.singer.name.localeCompare(b.singer.name)); // Keep alphabetical order
+      
+      debugLog('removeSinger - remaining singers:', remainingSingers);
+      
+      // Create a completely new singers list with sequential keys
       const updates: Record<string, Singer | null> = {};
       
-      // Find the singer by name and mark for removal
-      Object.entries(singers).forEach(([key, singer]) => {
-        if (singer && (singer as Singer).name === singerName) {
-          updates[key] = null; // Mark for removal
-        }
+      // First, remove all existing singers
+      Object.keys(singers).forEach(key => {
+        updates[key] = null;
       });
       
-      // Remove the singer
+      // Then, add back the remaining singers with sequential keys
+      remainingSingers.forEach(({ singer }, index) => {
+        const newKey = index.toString();
+        debugLog(`removeSinger - reindexing: old key ${singer.key} -> new key ${newKey}, singer: ${singer.name}`);
+        updates[newKey] = singer;
+      });
+      
+      debugLog('removeSinger - updates to apply:', updates);
+      
+      // Apply all updates atomically
       if (Object.keys(updates).length > 0) {
         await update(singersRef, updates);
       }

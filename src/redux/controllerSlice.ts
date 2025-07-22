@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import type { Controller, Song, QueueItem, TopPlayed } from '../types';
-import { controllerService } from '../firebase/services';
+import type { Controller, Song, QueueItem, TopPlayed, Singer } from '../types';
+import { controllerService, singerService } from '../firebase/services';
 
 // Async thunks for Firebase operations
 export const fetchController = createAsyncThunk(
@@ -20,6 +20,22 @@ export const updateController = createAsyncThunk(
   async ({ controllerName, updates }: { controllerName: string; updates: Partial<Controller> }) => {
     await controllerService.updateController(controllerName, updates);
     return updates;
+  }
+);
+
+export const addSinger = createAsyncThunk(
+  'controller/addSinger',
+  async ({ controllerName, singerName }: { controllerName: string; singerName: string }) => {
+    const result = await singerService.addSinger(controllerName, singerName);
+    return { key: result.key, singerName };
+  }
+);
+
+export const removeSinger = createAsyncThunk(
+  'controller/removeSinger',
+  async ({ controllerName, singerName }: { controllerName: string; singerName: string }) => {
+    await singerService.removeSinger(controllerName, singerName);
+    return { singerName };
   }
 );
 
@@ -85,6 +101,13 @@ const controllerSlice = createSlice({
       }
     },
     
+    updateSingers: (state, action: PayloadAction<Record<string, Singer>>) => {
+      if (state.data) {
+        state.data.player.singers = action.payload;
+        state.lastUpdated = Date.now();
+      }
+    },
+    
     clearError: (state) => {
       state.error = null;
     },
@@ -129,6 +152,36 @@ const controllerSlice = createSlice({
       .addCase(updateController.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Failed to update controller';
+      })
+      // addSinger
+      .addCase(addSinger.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(addSinger.fulfilled, (state) => {
+        state.loading = false;
+        // The real-time sync will handle the update
+        state.lastUpdated = Date.now();
+        state.error = null;
+      })
+      .addCase(addSinger.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Failed to add singer';
+      })
+      // removeSinger
+      .addCase(removeSinger.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(removeSinger.fulfilled, (state) => {
+        state.loading = false;
+        // The real-time sync will handle the update
+        state.lastUpdated = Date.now();
+        state.error = null;
+      })
+      .addCase(removeSinger.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Failed to remove singer';
       });
   },
 });
@@ -141,6 +194,7 @@ export const {
   updateFavorites,
   updateHistory,
   updateTopPlayed,
+  updateSingers,
   clearError,
   resetController,
 } = controllerSlice.actions;

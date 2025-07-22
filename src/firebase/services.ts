@@ -80,38 +80,51 @@ export const queueService = {
     return { key: nextKey.toString() };
   },
 
-  // Remove song from queue
+  // Remove a song from the queue
   removeFromQueue: async (controllerName: string, queueItemKey: string) => {
     const queueRef = ref(database, `controllers/${controllerName}/player/queue`);
-    const snapshot = await get(queueRef);
+    const queueSnapshot = await get(queueRef);
     
-    if (!snapshot.exists()) return { updates: {} };
+    if (!queueSnapshot.exists()) {
+      throw new Error('Queue not found');
+    }
     
-    const queue = snapshot.val();
+    const queue = queueSnapshot.val();
     debugLog('removeFromQueue - original queue:', queue);
     
-    // Get all remaining items sorted by order
-    const remainingItems = Object.entries(queue)
-      .filter(([key]) => key !== queueItemKey)
-      .map(([key, item]) => ({ key, item: item as QueueItem }))
-      .sort((a, b) => a.item.order - b.item.order);
+    // Find the item to remove and get its key
+    const itemToRemove = Object.entries(queue).find(([key, item]) => 
+      key === queueItemKey && item
+    );
     
-    debugLog('removeFromQueue - remaining items:', remainingItems);
+    if (!itemToRemove) {
+      throw new Error('Queue item not found');
+    }
     
-    // Create a completely new queue with sequential keys
+    const [removedKey, removedItem] = itemToRemove;
+    const removedKeyNum = parseInt(removedKey, 10);
+    
+    debugLog('removeFromQueue - removing item:', removedItem, 'with key:', removedKeyNum);
+    
+    // Create updates object
     const updates: Record<string, QueueItem | null> = {};
     
-    // First, remove all existing items
-    Object.keys(queue).forEach(key => {
-      updates[key] = null;
-    });
+    // Remove the target item
+    updates[removedKey] = null;
     
-    // Then, add back the remaining items with sequential keys and order
-    remainingItems.forEach(({ item }, index) => {
-      const newKey = index.toString();
-      const newOrder = index + 1;
-      debugLog(`removeFromQueue - reindexing: old key ${item.key} -> new key ${newKey}, order ${item.order} -> ${newOrder}`);
-      updates[newKey] = { ...item, order: newOrder };
+    // Shift down all items that come after the removed one
+    Object.entries(queue).forEach(([key, item]) => {
+      if (item && key !== queueItemKey) {
+        const keyNum = parseInt(key, 10);
+        if (keyNum > removedKeyNum) {
+          // This item comes after the removed one, shift it down
+          const newKey = (keyNum - 1).toString();
+          const shiftedItem = { ...item as QueueItem, order: keyNum - 1 };
+          debugLog(`removeFromQueue - shifting: ${key} -> ${newKey}, order: ${keyNum} -> ${keyNum - 1}`);
+          updates[newKey] = shiftedItem;
+          updates[key] = null; // Remove from old position
+        }
+      }
     });
     
     debugLog('removeFromQueue - updates to apply:', updates);
@@ -128,18 +141,20 @@ export const queueService = {
     await update(queueItemRef, updates);
   },
 
-  // Reorder queue with zero-bound sequential ordering
-  reorderQueue: async (controllerName: string, newOrder: QueueItem[]) => {
+  // Reorder the queue
+  reorderQueue: async (controllerName: string, reorderedItems: QueueItem[]) => {
     const queueRef = ref(database, `controllers/${controllerName}/player/queue`);
-    const snapshot = await get(queueRef);
+    const queueSnapshot = await get(queueRef);
     
-    if (!snapshot.exists()) return { updates: {} };
+    if (!queueSnapshot.exists()) {
+      throw new Error('Queue not found');
+    }
     
-    const queue = snapshot.val();
+    const queue = queueSnapshot.val();
     debugLog('reorderQueue - original queue:', queue);
-    debugLog('reorderQueue - new order:', newOrder);
+    debugLog('reorderQueue - reordered items:', reorderedItems);
     
-    // Create a completely new queue with sequential keys
+    // Create updates object
     const updates: Record<string, QueueItem | null> = {};
     
     // First, remove all existing items
@@ -147,20 +162,18 @@ export const queueService = {
       updates[key] = null;
     });
     
-    // Then, add back the items in the new order with sequential keys
-    newOrder.forEach((item, index) => {
+    // Then, add back the reordered items with sequential keys and order
+    reorderedItems.forEach((item, index) => {
       const newKey = index.toString();
       const newOrder = index + 1;
-      debugLog(`reorderQueue - reindexing: old key ${item.key} -> new key ${newKey}, order ${item.order} -> ${newOrder}`);
+      debugLog(`reorderQueue - setting: key ${newKey}, order ${newOrder}, song: ${item.song.title}`);
       updates[newKey] = { ...item, order: newOrder };
     });
     
     debugLog('reorderQueue - updates to apply:', updates);
     
     // Apply all updates atomically
-    if (Object.keys(updates).length > 0) {
-      await update(queueRef, updates);
-    }
+    await update(queueRef, updates);
     
     return { updates };
   },
@@ -382,7 +395,7 @@ export const singerService = {
       }
     }
     
-    // Then, remove the singer from the singers list and reindex
+    // Then, remove the singer from the singers list and shift down
     const singersRef = ref(database, `controllers/${controllerName}/player/singers`);
     const singersSnapshot = await get(singersRef);
     
@@ -390,27 +403,39 @@ export const singerService = {
       const singers = singersSnapshot.val();
       debugLog('removeSinger - original singers:', singers);
       
-      // Get all remaining singers (excluding the one to be removed)
-      const remainingSingers = Object.entries(singers)
-        .filter(([, singer]) => singer && (singer as Singer).name !== singerName)
-        .map(([key, singer]) => ({ key, singer: singer as Singer }))
-        .sort((a, b) => a.singer.name.localeCompare(b.singer.name)); // Keep alphabetical order
+      // Find the singer to remove and get their key
+      const singerToRemove = Object.entries(singers).find(([, singer]) => 
+        singer && (singer as Singer).name === singerName
+      );
       
-      debugLog('removeSinger - remaining singers:', remainingSingers);
+      if (!singerToRemove) {
+        debugLog('removeSinger - singer not found:', singerName);
+        return;
+      }
       
-      // Create a completely new singers list with sequential keys
+      const [removedKey, removedSinger] = singerToRemove;
+      const removedKeyNum = parseInt(removedKey, 10);
+      
+      debugLog('removeSinger - removing singer:', removedSinger, 'with key:', removedKeyNum);
+      
+      // Create updates object
       const updates: Record<string, Singer | null> = {};
       
-      // First, remove all existing singers
-      Object.keys(singers).forEach(key => {
-        updates[key] = null;
-      });
+      // Remove the target singer
+      updates[removedKey] = null;
       
-      // Then, add back the remaining singers with sequential keys
-      remainingSingers.forEach(({ singer }, index) => {
-        const newKey = index.toString();
-        debugLog(`removeSinger - reindexing: old key ${singer.key} -> new key ${newKey}, singer: ${singer.name}`);
-        updates[newKey] = singer;
+      // Shift down all singers that come after the removed one
+      Object.entries(singers).forEach(([key, singer]) => {
+        if (singer && (singer as Singer).name !== singerName) {
+          const keyNum = parseInt(key, 10);
+          if (keyNum > removedKeyNum) {
+            // This singer comes after the removed one, shift them down
+            const newKey = (keyNum - 1).toString();
+            debugLog(`removeSinger - shifting: ${key} -> ${newKey}, singer: ${(singer as Singer).name}`);
+            updates[newKey] = singer as Singer;
+            updates[key] = null; // Remove from old position
+          }
+        }
       });
       
       debugLog('removeSinger - updates to apply:', updates);

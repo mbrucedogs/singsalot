@@ -261,20 +261,81 @@ export const historyService = {
     const historyRef = ref(database, `controllers/${controllerName}/history`);
     const historySnapshot = await get(historyRef);
     const currentHistory = historySnapshot.exists() ? historySnapshot.val() : {};
-    const numericKeys = Object.keys(currentHistory)
-      .map((key) => parseInt(key, 10))
-      .filter((num) => !isNaN(num));
-    const nextKey = numericKeys.length > 0 ? Math.max(...numericKeys) + 1 : 0;
-    const nextKeyStr = String(nextKey);
-    const newHistoryRef = ref(database, `controllers/${controllerName}/history/${nextKeyStr}`);
+    
+    // Find the next available sequential key (0, 1, 2, etc.)
+    const existingKeys = Object.keys(currentHistory)
+      .filter(key => /^\d+$/.test(key)) // Only consider numerical keys
+      .map(key => parseInt(key, 10))
+      .sort((a, b) => a - b);
+    
+    // Find the first gap in the sequence, or use the next number after the highest
+    let nextKey = 0;
+    for (let i = 0; i < existingKeys.length; i++) {
+      if (existingKeys[i] !== i) {
+        nextKey = i;
+        break;
+      }
+      nextKey = i + 1;
+    }
+    
+    debugLog('addToHistory - existing keys:', existingKeys);
+    debugLog('addToHistory - next key:', nextKey);
+    
+    const newHistoryRef = ref(database, `controllers/${controllerName}/history/${nextKey}`);
     await set(newHistoryRef, song);
-    return { key: nextKeyStr };
+    return { key: nextKey.toString() };
   },
 
   // Remove song from history
   removeFromHistory: async (controllerName: string, historyItemKey: string) => {
-    const historyItemRef = ref(database, `controllers/${controllerName}/history/${historyItemKey}`);
-    await remove(historyItemRef);
+    const historyRef = ref(database, `controllers/${controllerName}/history`);
+    const historySnapshot = await get(historyRef);
+    
+    if (!historySnapshot.exists()) {
+      throw new Error('History not found');
+    }
+    
+    const history = historySnapshot.val();
+    debugLog('removeFromHistory - original history:', history);
+    
+    // Find the item to remove and get its key
+    const itemToRemove = Object.entries(history).find(([key, item]) => 
+      key === historyItemKey && item
+    );
+    
+    if (!itemToRemove) {
+      throw new Error('History item not found');
+    }
+    
+    const [removedKey, removedItem] = itemToRemove;
+    const removedKeyNum = parseInt(removedKey, 10);
+    
+    debugLog('removeFromHistory - removing item:', removedItem, 'with key:', removedKeyNum);
+    
+    // Create updates object
+    const updates: Record<string, Song | null> = {};
+    
+    // Remove the target item
+    updates[removedKey] = null;
+    
+    // Shift down all items that come after the removed one
+    Object.entries(history).forEach(([key, item]) => {
+      if (item && key !== historyItemKey) {
+        const keyNum = parseInt(key, 10);
+        if (keyNum > removedKeyNum) {
+          // This item comes after the removed one, shift it down
+          const newKey = (keyNum - 1).toString();
+          debugLog(`removeFromHistory - shifting: ${key} -> ${newKey}, song: ${(item as Song).title}`);
+          updates[newKey] = item as Song;
+          updates[key] = null; // Remove from old position
+        }
+      }
+    });
+    
+    debugLog('removeFromHistory - updates to apply:', updates);
+    
+    // Apply all updates atomically
+    await update(historyRef, updates);
   },
 
   // Listen to history changes
@@ -295,20 +356,81 @@ export const favoritesService = {
     const favoritesRef = ref(database, `controllers/${controllerName}/favorites`);
     const favoritesSnapshot = await get(favoritesRef);
     const currentFavorites = favoritesSnapshot.exists() ? favoritesSnapshot.val() : {};
-    const numericKeys = Object.keys(currentFavorites)
-      .map((key) => parseInt(key, 10))
-      .filter((num) => !isNaN(num));
-    const nextKey = numericKeys.length > 0 ? Math.max(...numericKeys) + 1 : 0;
-    const nextKeyStr = String(nextKey);
-    const newFavoriteRef = ref(database, `controllers/${controllerName}/favorites/${nextKeyStr}`);
+    
+    // Find the next available sequential key (0, 1, 2, etc.)
+    const existingKeys = Object.keys(currentFavorites)
+      .filter(key => /^\d+$/.test(key)) // Only consider numerical keys
+      .map(key => parseInt(key, 10))
+      .sort((a, b) => a - b);
+    
+    // Find the first gap in the sequence, or use the next number after the highest
+    let nextKey = 0;
+    for (let i = 0; i < existingKeys.length; i++) {
+      if (existingKeys[i] !== i) {
+        nextKey = i;
+        break;
+      }
+      nextKey = i + 1;
+    }
+    
+    debugLog('addToFavorites - existing keys:', existingKeys);
+    debugLog('addToFavorites - next key:', nextKey);
+    
+    const newFavoriteRef = ref(database, `controllers/${controllerName}/favorites/${nextKey}`);
     await set(newFavoriteRef, song);
-    return { key: nextKeyStr };
+    return { key: nextKey.toString() };
   },
 
   // Remove song from favorites
   removeFromFavorites: async (controllerName: string, songKey: string) => {
-    const songRef = ref(database, `controllers/${controllerName}/favorites/${songKey}`);
-    await remove(songRef);
+    const favoritesRef = ref(database, `controllers/${controllerName}/favorites`);
+    const favoritesSnapshot = await get(favoritesRef);
+    
+    if (!favoritesSnapshot.exists()) {
+      throw new Error('Favorites not found');
+    }
+    
+    const favorites = favoritesSnapshot.val();
+    debugLog('removeFromFavorites - original favorites:', favorites);
+    
+    // Find the item to remove and get its key
+    const itemToRemove = Object.entries(favorites).find(([key, item]) => 
+      key === songKey && item
+    );
+    
+    if (!itemToRemove) {
+      throw new Error('Favorite item not found');
+    }
+    
+    const [removedKey, removedItem] = itemToRemove;
+    const removedKeyNum = parseInt(removedKey, 10);
+    
+    debugLog('removeFromFavorites - removing item:', removedItem, 'with key:', removedKeyNum);
+    
+    // Create updates object
+    const updates: Record<string, Song | null> = {};
+    
+    // Remove the target item
+    updates[removedKey] = null;
+    
+    // Shift down all items that come after the removed one
+    Object.entries(favorites).forEach(([key, item]) => {
+      if (item && key !== songKey) {
+        const keyNum = parseInt(key, 10);
+        if (keyNum > removedKeyNum) {
+          // This item comes after the removed one, shift it down
+          const newKey = (keyNum - 1).toString();
+          debugLog(`removeFromFavorites - shifting: ${key} -> ${newKey}, song: ${(item as Song).title}`);
+          updates[newKey] = item as Song;
+          updates[key] = null; // Remove from old position
+        }
+      }
+    });
+    
+    debugLog('removeFromFavorites - updates to apply:', updates);
+    
+    // Apply all updates atomically
+    await update(favoritesRef, updates);
   },
 
   // Listen to favorites changes

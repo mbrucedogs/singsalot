@@ -1,17 +1,19 @@
 import { useCallback } from 'react';
-import { useAppSelector } from '../redux';
-import { selectControllerName, selectCurrentSinger, selectQueueObject } from '../redux';
-import { queueService, favoritesService } from '../firebase/services';
+import { useAppSelector, useAppDispatch } from '../redux';
+import { selectControllerName, selectCurrentSinger, selectQueue } from '../redux';
+import { addToQueue as addToQueueThunk, removeFromQueue as removeFromQueueThunk } from '../redux/queueSlice';
+import { useErrorHandler } from './useErrorHandler';
+import { favoritesService } from '../firebase/services';
+import { debugLog } from '../utils/logger';
 import { ref, get } from 'firebase/database';
 import { database } from '../firebase/config';
-import { debugLog } from '../utils/logger';
-import { useErrorHandler } from './index';
 import type { Song, QueueItem } from '../types';
 
 export const useSongOperations = () => {
   const controllerName = useAppSelector(selectControllerName);
   const currentSinger = useAppSelector(selectCurrentSinger);
-  const currentQueue = useAppSelector(selectQueueObject);
+  const currentQueue = useAppSelector(selectQueue);
+  const dispatch = useAppDispatch();
   const { handleFirebaseError } = useErrorHandler({ context: 'useSongOperations' });
 
   const addToQueue = useCallback(async (song: Song) => {
@@ -41,12 +43,12 @@ export const useSongOperations = () => {
         song,
       };
 
-      await queueService.addToQueue(controllerName, queueItem);
+      await dispatch(addToQueueThunk({ controllerName, queueItem })).unwrap();
     } catch (error) {
       handleFirebaseError(error, 'add song to queue');
       throw error;
     }
-  }, [controllerName, currentSinger, currentQueue, handleFirebaseError]);
+  }, [controllerName, currentSinger, currentQueue, dispatch, handleFirebaseError]);
 
   const removeFromQueue = useCallback(async (queueItemKey: string) => {
     if (!controllerName) {
@@ -54,12 +56,12 @@ export const useSongOperations = () => {
     }
 
     try {
-      await queueService.removeFromQueue(controllerName, queueItemKey);
+      await dispatch(removeFromQueueThunk({ controllerName, queueItemKey })).unwrap();
     } catch (error) {
       handleFirebaseError(error, 'remove song from queue');
       throw error;
     }
-  }, [controllerName, handleFirebaseError]);
+  }, [controllerName, dispatch, handleFirebaseError]);
 
   const toggleFavorite = useCallback(async (song: Song) => {
     if (!controllerName) {

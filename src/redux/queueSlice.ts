@@ -23,8 +23,16 @@ export const addToQueue = createAsyncThunk(
 export const removeFromQueue = createAsyncThunk(
   'queue/removeFromQueue',
   async ({ controllerName, queueItemKey }: { controllerName: string; queueItemKey: string }) => {
-    await queueService.removeFromQueue(controllerName, queueItemKey);
-    return queueItemKey;
+    const result = await queueService.removeFromQueue(controllerName, queueItemKey);
+    return { key: queueItemKey, updates: result.updates };
+  }
+);
+
+export const reorderQueueAsync = createAsyncThunk(
+  'queue/reorderQueueAsync',
+  async ({ controllerName, newOrder }: { controllerName: string; newOrder: QueueItem[] }) => {
+    const result = await queueService.reorderQueue(controllerName, newOrder);
+    return { updates: result.updates };
   }
 );
 
@@ -80,6 +88,18 @@ const queueSlice = createSlice({
     removeQueueItem: (state, action: PayloadAction<string>) => {
       const key = action.payload;
       delete state.data[key];
+      state.lastUpdated = Date.now();
+    },
+    
+    updateQueueItemsBulk: (state, action: PayloadAction<Record<string, QueueItem | null>>) => {
+      const updates = action.payload;
+      Object.entries(updates).forEach(([key, item]) => {
+        if (item === null) {
+          delete state.data[key];
+        } else {
+          state.data[key] = item;
+        }
+      });
       state.lastUpdated = Date.now();
     },
     
@@ -154,8 +174,11 @@ const queueSlice = createSlice({
       })
       .addCase(removeFromQueue.fulfilled, (state, action) => {
         state.loading = false;
-        const key = action.payload;
-        delete state.data[key];
+        const { key } = action.payload;
+        console.log('removeFromQueue.fulfilled - removing key:', key);
+        
+        // Clear the queue state - the real-time sync will update it with the new data
+        state.data = {};
         state.lastUpdated = Date.now();
         state.error = null;
       })
@@ -180,6 +203,25 @@ const queueSlice = createSlice({
       .addCase(updateQueueItem.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Failed to update queue item';
+      })
+      // reorderQueueAsync
+      .addCase(reorderQueueAsync.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(reorderQueueAsync.fulfilled, (state, action) => {
+        state.loading = false;
+        const { updates } = action.payload;
+        console.log('reorderQueueAsync.fulfilled - updates:', updates);
+        
+        // Clear the queue state - the real-time sync will update it with the new data
+        state.data = {};
+        state.lastUpdated = Date.now();
+        state.error = null;
+      })
+      .addCase(reorderQueueAsync.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Failed to reorder queue';
       });
   },
 });
@@ -190,6 +232,7 @@ export const {
   addQueueItem,
   updateQueueItemSync,
   removeQueueItem,
+  updateQueueItemsBulk,
   reorderQueue,
   clearError,
   resetQueue,

@@ -54,13 +54,24 @@ export const queueService = {
     const snapshot = await get(queueRef);
     const currentQueue = snapshot.exists() ? snapshot.val() : {};
     
-    // Find the next available numerical key
+    // Find the next available sequential key (0, 1, 2, etc.)
     const existingKeys = Object.keys(currentQueue)
       .filter(key => /^\d+$/.test(key)) // Only consider numerical keys
       .map(key => parseInt(key, 10))
       .sort((a, b) => a - b);
     
-    const nextKey = existingKeys.length > 0 ? Math.max(...existingKeys) + 1 : 0;
+    // Find the first gap in the sequence, or use the next number after the highest
+    let nextKey = 0;
+    for (let i = 0; i < existingKeys.length; i++) {
+      if (existingKeys[i] !== i) {
+        nextKey = i;
+        break;
+      }
+      nextKey = i + 1;
+    }
+    
+    debugLog('addToQueue - existing keys:', existingKeys);
+    debugLog('addToQueue - next key:', nextKey);
     
     // Add the item with the sequential key
     const newItemRef = ref(database, `controllers/${controllerName}/player/queue/${nextKey}`);
@@ -71,14 +82,87 @@ export const queueService = {
 
   // Remove song from queue
   removeFromQueue: async (controllerName: string, queueItemKey: string) => {
-    const queueItemRef = ref(database, `controllers/${controllerName}/player/queue/${queueItemKey}`);
-    await remove(queueItemRef);
+    const queueRef = ref(database, `controllers/${controllerName}/player/queue`);
+    const snapshot = await get(queueRef);
+    
+    if (!snapshot.exists()) return { updates: {} };
+    
+    const queue = snapshot.val();
+    debugLog('removeFromQueue - original queue:', queue);
+    
+    // Get all remaining items sorted by order
+    const remainingItems = Object.entries(queue)
+      .filter(([key]) => key !== queueItemKey)
+      .map(([key, item]) => ({ key, item: item as QueueItem }))
+      .sort((a, b) => a.item.order - b.item.order);
+    
+    debugLog('removeFromQueue - remaining items:', remainingItems);
+    
+    // Create a completely new queue with sequential keys
+    const updates: Record<string, QueueItem | null> = {};
+    
+    // First, remove all existing items
+    Object.keys(queue).forEach(key => {
+      updates[key] = null;
+    });
+    
+    // Then, add back the remaining items with sequential keys and order
+    remainingItems.forEach(({ item }, index) => {
+      const newKey = index.toString();
+      const newOrder = index + 1;
+      debugLog(`removeFromQueue - reindexing: old key ${item.key} -> new key ${newKey}, order ${item.order} -> ${newOrder}`);
+      updates[newKey] = { ...item, order: newOrder };
+    });
+    
+    debugLog('removeFromQueue - updates to apply:', updates);
+    
+    // Apply all updates atomically
+    await update(queueRef, updates);
+    
+    return { updates };
   },
 
   // Update queue item
   updateQueueItem: async (controllerName: string, queueItemKey: string, updates: Partial<QueueItem>) => {
     const queueItemRef = ref(database, `controllers/${controllerName}/player/queue/${queueItemKey}`);
     await update(queueItemRef, updates);
+  },
+
+  // Reorder queue with zero-bound sequential ordering
+  reorderQueue: async (controllerName: string, newOrder: QueueItem[]) => {
+    const queueRef = ref(database, `controllers/${controllerName}/player/queue`);
+    const snapshot = await get(queueRef);
+    
+    if (!snapshot.exists()) return { updates: {} };
+    
+    const queue = snapshot.val();
+    debugLog('reorderQueue - original queue:', queue);
+    debugLog('reorderQueue - new order:', newOrder);
+    
+    // Create a completely new queue with sequential keys
+    const updates: Record<string, QueueItem | null> = {};
+    
+    // First, remove all existing items
+    Object.keys(queue).forEach(key => {
+      updates[key] = null;
+    });
+    
+    // Then, add back the items in the new order with sequential keys
+    newOrder.forEach((item, index) => {
+      const newKey = index.toString();
+      const newOrder = index + 1;
+      debugLog(`reorderQueue - reindexing: old key ${item.key} -> new key ${newKey}, order ${item.order} -> ${newOrder}`);
+      updates[newKey] = { ...item, order: newOrder };
+    });
+    
+    debugLog('reorderQueue - updates to apply:', updates);
+    
+    // Apply all updates atomically
+    if (Object.keys(updates).length > 0) {
+      await update(queueRef, updates);
+    }
+    
+    return { updates };
   },
 
   // Clean up queue with inconsistent keys (migrate push ID keys to sequential numerical keys)

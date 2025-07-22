@@ -1,10 +1,11 @@
 import { useState, useCallback } from 'react';
-import { useAppSelector } from '../redux';
+import { useAppSelector, useAppDispatch } from '../redux';
 import { selectControllerName, selectPlayerStateMemoized, selectIsAdmin } from '../redux';
+import { reorderQueueAsync } from '../redux/queueSlice';
 import { useSongOperations } from './useSongOperations';
 import { useToast } from './useToast';
 import { useDisabledSongs } from './useDisabledSongs';
-import { queueService, historyService } from '../firebase/services';
+import { historyService } from '../firebase/services';
 import { debugLog } from '../utils/logger';
 import { PlayerState } from '../types';
 import type { Song, QueueItem } from '../types';
@@ -17,6 +18,7 @@ export const useActions = () => {
   const controllerName = useAppSelector(selectControllerName);
   const playerState = useAppSelector(selectPlayerStateMemoized);
   const isAdmin = useAppSelector(selectIsAdmin);
+  const dispatch = useAppDispatch();
   const { addToQueue, removeFromQueue, toggleFavorite } = useSongOperations();
   const toast = useToast();
   const showSuccess = toast?.showSuccess;
@@ -113,24 +115,15 @@ export const useActions = () => {
       const newQueueItems = [queueItems[0], ...copy];
       debugLog('New queue order:', newQueueItems);
       
-      // Update all items with their new order values
-      const updatePromises = newQueueItems.map((item, index) => {
-        const newOrder = index + 1;
-        if (item.key && item.order !== newOrder) {
-          debugLog(`Updating item ${item.key} from order ${item.order} to ${newOrder}`);
-          return queueService.updateQueueItem(controllerName, item.key, { order: newOrder });
-        }
-        return Promise.resolve();
-      });
-      
-      await Promise.all(updatePromises);
+      // Use the Redux thunk for reordering
+      await dispatch(reorderQueueAsync({ controllerName, newOrder: newQueueItems })).unwrap();
       debugLog('Queue reorder completed successfully');
       if (showSuccess) showSuccess('Queue reordered successfully');
     } catch (error) {
       console.error('Failed to reorder queue:', error);
       if (showError) showError('Failed to reorder queue');
     }
-  }, [controllerName, showSuccess, showError]);
+  }, [controllerName, dispatch, showSuccess, showError]);
 
   return {
     // Song operations

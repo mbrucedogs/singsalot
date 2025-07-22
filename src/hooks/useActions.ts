@@ -26,8 +26,9 @@ export const useActions = () => {
   const { isSongDisabled, addDisabledSong, removeDisabledSong } = useDisabledSongs();
 
   // Queue permissions
-  const canDeleteItems = isAdmin && (playerState?.state === PlayerState.stopped || playerState?.state === PlayerState.paused);
-  const canDeleteFirstItem = isAdmin && (playerState?.state === PlayerState.stopped || playerState?.state === PlayerState.paused);
+  // Allow admin to delete/reorder all except the first song while playing
+  const canDeleteItems = isAdmin; // Admin can always delete/reorder (except first song)
+  const canDeleteFirstItem = isAdmin && (playerState?.state === PlayerState.stopped || playerState?.state === PlayerState.paused); // Only allow deleting first item if not playing
 
   // Song operations
   const handleAddToQueue = useCallback(async (song: Song) => {
@@ -39,16 +40,42 @@ export const useActions = () => {
     }
   }, [addToQueue, showSuccess, showError]);
 
+  // Utility to fix queue order after deletes
+  const fixQueueOrder = useCallback(async () => {
+    if (!controllerName) return;
+    // Get the latest queue from the store
+    const state = (window as unknown as { store?: { getState?: () => unknown } }).store?.getState?.();
+    let queueItems: Array<QueueItem & { key: string }> = [];
+    if (state && typeof state === 'object' && 'queue' in state) {
+      const queueState = (state as { queue?: { data?: Record<string, QueueItem> } }).queue;
+      if (queueState && queueState.data && typeof queueState.data === 'object') {
+        queueItems = Object.entries(queueState.data).map(([key, item]) => ({ ...item, key }));
+      }
+    }
+    if (queueItems.length > 0) {
+      const updatePromises = queueItems.map((item, index) => {
+        const newOrder = index + 1;
+        if (item.key && item.order !== newOrder) {
+          return import('../firebase/services').then(s => s.queueService.updateQueueItem(controllerName, item.key, { order: newOrder }));
+        }
+        return Promise.resolve();
+      });
+      await Promise.all(updatePromises);
+    }
+  }, [controllerName]);
+
   const handleRemoveFromQueue = useCallback(async (queueItem: QueueItem) => {
     if (!queueItem.key) return;
     
     try {
       await removeFromQueue(queueItem.key);
       if (showSuccess) showSuccess('Song removed from queue');
+      // After removal, fix the order of all items
+      await fixQueueOrder();
     } catch {
       if (showError) showError('Failed to remove song from queue');
     }
-  }, [removeFromQueue, showSuccess, showError]);
+  }, [removeFromQueue, showSuccess, showError, fixQueueOrder]);
 
   const handleToggleFavorite = useCallback(async (song: Song) => {
     try {
@@ -112,7 +139,8 @@ export const useActions = () => {
       // Complete the reorder animation
       complete();
       
-      const newQueueItems = [queueItems[0], ...copy];
+      // Set correct order property for all items
+      const newQueueItems = [queueItems[0], ...copy].map((item, idx) => ({ ...item, order: idx + 1 }));
       debugLog('New queue order:', newQueueItems);
       
       // Use the Redux thunk for reordering

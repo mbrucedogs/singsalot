@@ -199,6 +199,20 @@ export const selectQueueWithUserInfo = createSelector(
   }
 );
 
+// Return queue as array sorted by Firebase object key (numeric ascending)
+export const selectQueueSortedByKey = createSelector(
+  [selectQueue],
+  (queue) => {
+    return Object.entries(queue)
+      .sort(([a], [b]) => parseInt(a, 10) - parseInt(b, 10))
+      .map(([key, item]) => (
+        typeof item === 'object' && item !== null
+          ? { ...item, key }
+          : { item, key }
+      ));
+  }
+);
+
 // Memoized selector for queue length to prevent unnecessary re-renders
 export const selectQueueLength = createSelector(
   [selectQueue],

@@ -291,8 +291,14 @@ export const historyService = {
     );
     if (existingEntry) {
       const [key, item] = existingEntry;
+      let count = 1;
+      if (typeof item === 'object' && item !== null && 'count' in item) {
+        const itemObj = item as { count?: number };
+        count = typeof itemObj.count === 'number' ? itemObj.count : 1;
+      }
+      count = count + 1;
       await update(ref(database, `controllers/${controllerName}/history/${key}`), {
-        count: (item.count || 1) + 1,
+        count,
         lastPlayed: now,
       });
       // Move this entry to the most recent by updating lastPlayed
@@ -348,8 +354,10 @@ export const historyService = {
     const [key, item] = existingEntry;
     let count = 1;
     if (typeof item === 'object' && item !== null && 'count' in item) {
-      count = (item as { count?: number }).count ?? 1;
+      const itemWithCount = item as { count?: number };
+      count = typeof itemWithCount.count === 'number' ? itemWithCount.count : 1;
     }
+    count = count + 1;
     const now = Date.now();
     if (count > 1) {
       await update(ref(database, `controllers/${controllerName}/history/${key}`), {

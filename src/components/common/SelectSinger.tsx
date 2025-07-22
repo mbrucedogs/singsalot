@@ -7,14 +7,13 @@ import {
   IonLabel
 } from '@ionic/react';
 import { useAppSelector } from '../../redux';
-import { selectSingersArray, selectControllerName, selectQueueObject } from '../../redux';
-import { queueService } from '../../firebase/services';
+import { selectSingersArray, selectControllerName } from '../../redux';
 import { useToast } from '../../hooks/useToast';
 import { useActions } from '../../hooks';
 import { ModalHeader } from './ModalHeader';
 import { NumberDisplay } from './NumberDisplay';
 import { SongInfoDisplay } from './SongItem';
-import type { Song, Singer, QueueItem } from '../../types';
+import type { Song, Singer } from '../../types';
 
 interface SelectSingerProps {
   isOpen: boolean;
@@ -25,7 +24,6 @@ interface SelectSingerProps {
 const SelectSinger: React.FC<SelectSingerProps> = ({ isOpen, onClose, song }) => {
   const singers = useAppSelector(selectSingersArray);
   const controllerName = useAppSelector(selectControllerName);
-  const currentQueue = useAppSelector(selectQueueObject);
   const toast = useToast();
   const showSuccess = toast?.showSuccess;
   const showError = toast?.showError;

@@ -47,8 +47,6 @@ export const useActions = () => {
         }
       }
       if (!singer) throw new Error('No singer specified');
-      // Calculate order
-      const state = (window as unknown as { store?: { getState?: () => unknown } }).store?.getState?.();
       // Remove unused queueItems
       // Always append new items to the end by using a high order number
       const queueItem: Omit<QueueItem, 'key'> = {

@@ -126,7 +126,9 @@ const Top100: React.FC = () => {
             <>
               <IonItem className="section-header" lines="none">
                 <h3>
-                  <IonIcon icon={star} color="warning" />
+                  <span className="icon-wrapper" style={{ marginRight: '12px', display: 'inline-block' }}>
+                    <IonIcon icon={star} color="warning" />
+                  </span>
                   Most Played Version
                 </h3>
               </IonItem>
@@ -149,7 +151,9 @@ const Top100: React.FC = () => {
             <>
               <IonItem className="section-header other-variations" lines="none">
                 <h3>
-                  <IonIcon icon={layers} color="medium" />
+                  <span className="icon-wrapper" style={{ marginRight: '12px', display: 'inline-block' }}>
+                    <IonIcon icon={layers} color="medium" />
+                  </span>
                   Other Variations ({otherVariations.length})
                 </h3>
               </IonItem>

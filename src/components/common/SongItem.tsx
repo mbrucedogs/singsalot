@@ -217,8 +217,8 @@ const SongItem: React.FC<SongItemProps> = React.memo(({
   
   // Memoized computations for performance
   const isInQueue = useMemo(() => 
-    (Object.values(queue) as QueueItem[]).some(item => item.song.path === song.path),
-    [queue, song.path]
+    (Object.values(queue) as QueueItem[]).some(item => item.song.path === song.path && item.singer.name === currentSingerName),
+    [queue, song.path, currentSingerName]
   );
   
   const isInFavorites = useMemo(() => 
@@ -248,11 +248,13 @@ const SongItem: React.FC<SongItemProps> = React.memo(({
   const shouldShowCount = showCount !== undefined ? showCount : context === SongItemContext.QUEUE;
   
   // Default values for action buttons based on context if not explicitly provided
-  const shouldShowInfoButton = showInfoButton !== undefined ? showInfoButton : [SongItemContext.SEARCH, SongItemContext.HISTORY].includes(context);
-  const shouldShowAddButton = showAddButton !== undefined ? showAddButton : [SongItemContext.SEARCH, SongItemContext.HISTORY].includes(context);
+  let shouldShowAddButton = showAddButton !== undefined ? showAddButton : [SongItemContext.SEARCH, SongItemContext.HISTORY].includes(context);
+  // Always hide the add button if the song is already in the queue for the current singer
+  if (isInQueue) shouldShowAddButton = false;
   const shouldShowRemoveButton = showRemoveButton !== undefined ? showRemoveButton : context === SongItemContext.QUEUE && isAdmin;
   const shouldShowDeleteButton = showDeleteButton !== undefined ? showDeleteButton : context === SongItemContext.HISTORY && isAdmin;
   const shouldShowFavoriteButton = showFavoriteButton !== undefined ? showFavoriteButton : false; // Disabled for all contexts
+  const shouldShowInfoButton = showInfoButton !== undefined ? showInfoButton : [SongItemContext.SEARCH, SongItemContext.HISTORY].includes(context);
 
   // Memoized handler functions for performance
   const handleAddToQueueClick = useCallback(async () => {

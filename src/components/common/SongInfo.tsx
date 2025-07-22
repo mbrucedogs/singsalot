@@ -7,7 +7,7 @@ import {
   add, heart, heartOutline, ban, checkmark, people
 } from 'ionicons/icons';
 import { useAppSelector } from '../../redux';
-import { selectIsAdmin, selectFavorites, selectSongs, selectQueue } from '../../redux';
+import { selectIsAdmin, selectFavorites, selectSongs, selectQueue, selectCurrentSinger } from '../../redux';
 import { useActions } from '../../hooks/useActions';
 import { useModal } from '../../hooks/useModalContext';
 
@@ -27,6 +27,7 @@ const SongInfo: React.FC<SongInfoProps> = ({ isOpen, onClose, song }) => {
   const favorites = useAppSelector(selectFavorites);
   const allSongs = useAppSelector(selectSongs);
   const queue = useAppSelector(selectQueue);
+  const currentSingerName = useAppSelector(selectCurrentSinger);
   const { handleToggleFavorite, handleToggleDisabled, isSongDisabled } = useActions();
   
   const { openSelectSinger } = useModal();
@@ -34,7 +35,7 @@ const SongInfo: React.FC<SongInfoProps> = ({ isOpen, onClose, song }) => {
 
   const isInFavorites = (Object.values(favorites) as Song[]).some(favSong => favSong.path === song.path);
   const isDisabled = isSongDisabled(song);
-  const isInQueue = (Object.values(queue) as QueueItem[]).some(queueItem => queueItem.song && queueItem.song.path === song.path);
+  const isInQueue = (Object.values(queue) as QueueItem[]).some(queueItem => queueItem.song && queueItem.song.path === song.path && queueItem.singer.name === currentSingerName);
 
   const artistSongs = (Object.values(allSongs) as Song[]).filter(s => 
     (s.artist || '').toLowerCase() === (song.artist || '').toLowerCase() && s.path !== song.path

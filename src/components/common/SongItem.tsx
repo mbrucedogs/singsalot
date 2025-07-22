@@ -1,8 +1,8 @@
 import React, { useMemo, useCallback } from 'react';
-import { IonItem, IonLabel } from '@ionic/react';
+import { IonItem, IonLabel, IonIcon } from '@ionic/react';
 import ActionButton from './ActionButton';
 import { useAppSelector } from '../../redux';
-import { selectQueue, selectFavorites, selectCurrentSinger } from '../../redux';
+import { selectQueue, selectFavorites, selectCurrentSinger, selectTopPlayedArray } from '../../redux';
 import { useActions } from '../../hooks/useActions';
 import { useModal } from '../../hooks/useModalContext';
 import { debugLog } from '../../utils/logger';
@@ -10,6 +10,7 @@ import type { SongItemProps, QueueItem, Song } from '../../types';
 import { SongItemContext } from '../../types';
 import { ActionButtonVariant, ActionButtonSize, ActionButtonIconSlot } from '../../types';
 import { Icons } from '../../constants';
+import { star } from 'ionicons/icons';
 
 // Utility function to extract filename from path
 const extractFilename = (path: string): string => {
@@ -29,11 +30,13 @@ export const SongInfoDisplay: React.FC<{
   showPath?: boolean;
   showCount?: boolean;
   showFullPath?: boolean;
+  showTopPlayedStar?: boolean;
 }> = React.memo(({ 
   song, 
   showPath = false,
   showCount = false,
-  showFullPath = false
+  showFullPath = false,
+  showTopPlayedStar = false
 }) => {
   return (
     <IonLabel>
@@ -43,9 +46,19 @@ export const SongInfoDisplay: React.FC<{
           fontWeight: 'bold', 
           fontSize: '1rem', 
           color: 'var(--ion-color-dark)',
-          marginBottom: '4px'
+          marginBottom: '4px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px'
         }}
       >
+        {showTopPlayedStar && (
+          <IonIcon 
+            icon={star} 
+            color="warning" 
+            style={{ fontSize: '1rem' }}
+          />
+        )}
         {song.title}
       </div>
       <div 
@@ -210,6 +223,7 @@ const SongItem: React.FC<SongItemProps> = React.memo(({
   const queue = useAppSelector(selectQueue);
   const favorites = useAppSelector(selectFavorites);
   const currentSingerName = useAppSelector(selectCurrentSinger);
+  const topPlayedArray = useAppSelector(selectTopPlayedArray);
   
   // Get unified action handlers
   const { handleAddToQueue, handleToggleFavorite, handleRemoveFromQueue } = useActions();
@@ -224,6 +238,11 @@ const SongItem: React.FC<SongItemProps> = React.memo(({
   const isInFavorites = useMemo(() => 
     (Object.values(favorites) as Song[]).some(favSong => favSong.path === song.path),
     [favorites, song.path]
+  );
+
+  const isInTopPlayed = useMemo(() => 
+    (Object.values(topPlayedArray) as Song[]).some(topSong => topSong.path === song.path),
+    [topPlayedArray, song.path]
   );
 
   // Find queue item key for removal (only needed for queue context)
@@ -292,6 +311,7 @@ const SongItem: React.FC<SongItemProps> = React.memo(({
         showPath={shouldShowPath} 
         showCount={shouldShowCount} 
         showFullPath={showFullPath}
+        showTopPlayedStar={isInTopPlayed}
       />
       
       {showActions && (

@@ -49,19 +49,10 @@ export const useActions = () => {
       if (!singer) throw new Error('No singer specified');
       // Calculate order
       const state = (window as unknown as { store?: { getState?: () => unknown } }).store?.getState?.();
-      let queueItems: Array<QueueItem & { key: string }> = [];
-      if (state && typeof state === 'object' && 'queue' in state) {
-        const queueState = (state as { queue?: { data?: Record<string, QueueItem> } }).queue;
-        if (queueState && queueState.data && typeof queueState.data === 'object') {
-          queueItems = Object.entries(queueState.data).map(([key, item]) => ({ ...item, key }));
-        }
-      }
-      const maxOrder = queueItems.length > 0 
-        ? Math.max(...queueItems.map(item => item.order || 0))
-        : 0;
-      const nextOrder = maxOrder + 1;
+      // Remove unused queueItems
+      // Always append new items to the end by using a high order number
       const queueItem: Omit<QueueItem, 'key'> = {
-        order: nextOrder,
+        order: 1000,
         singer: {
           name: singer.name,
           lastLogin: singer.lastLogin || '',

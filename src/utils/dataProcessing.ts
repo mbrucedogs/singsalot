@@ -122,3 +122,40 @@ export const getQueueStats = (queue: Record<string, QueueItem>) => {
     estimatedDuration: queueArray.length * 3, // Rough estimate: 3 minutes per song
   };
 }; 
+
+// Get songs by artist and title combination
+export const getSongsByArtistTitle = (songs: Song[], artist: string, title: string): Song[] => {
+  const artistLower = (artist || '').toLowerCase();
+  const titleLower = (title || '').toLowerCase();
+  
+  return songs.filter(song => 
+    (song.artist || '').toLowerCase() === artistLower &&
+    (song.title || '').toLowerCase() === titleLower
+  );
+};
+
+// Get song count by artist and title combination
+export const getSongCountByArtistTitle = (songs: Song[], artist: string, title: string): number => {
+  return getSongsByArtistTitle(songs, artist, title).length;
+};
+
+// Create a map of song counts by artist and title for performance
+export const createSongCountMapByArtistTitle = (songs: Song[]): Map<string, number> => {
+  const countsMap = new Map<string, number>();
+  
+  songs.forEach(song => {
+    const artist = (song.artist || '').toLowerCase();
+    const title = (song.title || '').toLowerCase();
+    const key = `${artist}|${title}`;
+    
+    countsMap.set(key, (countsMap.get(key) || 0) + 1);
+  });
+  
+  return countsMap;
+};
+
+// Get song count using a pre-computed map
+export const getSongCountFromMap = (countsMap: Map<string, number>, artist: string, title: string): number => {
+  const key = `${(artist || '').toLowerCase()}|${(title || '').toLowerCase()}`;
+  return countsMap.get(key) || 0;
+}; 

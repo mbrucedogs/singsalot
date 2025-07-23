@@ -11,4 +11,5 @@ export { TwoLineDisplay } from './TwoLineDisplay';
 export { default as ListItem } from './ListItem';
 export { NumberDisplay } from './NumberDisplay';
 export { ModalHeader } from './ModalHeader';
-export { default as VirtualizedList } from './VirtualizedList'; 
+export { default as VirtualizedList } from './VirtualizedList';
+export { default as SongCountDisplay } from './SongCountDisplay'; 

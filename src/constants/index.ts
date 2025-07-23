@@ -33,7 +33,7 @@ export const UI_CONSTANTS = {
     MAX_ITEMS: 100,
   },
   HISTORY: {
-    MAX_ITEMS: 50,
+    MAX_ITEMS: 250, // Increased from 50 to show more history items
   },
   TOP_PLAYED: {
     MAX_ITEMS: 20,

@@ -16,6 +16,7 @@ const SongLists: React.FC = () => {
     hasMore,
     loadMore,
     checkSongAvailability,
+    getSongCountForSongListSong,
   } = useSongLists();
 
   const songListData = useAppSelector(selectSongList);
@@ -94,7 +95,8 @@ const SongLists: React.FC = () => {
             <IonAccordionGroup value={expandedSongKey}>
               {selectedListWithAvailability?.songs.map((songListSong: SongListSong & { availableSongs: Song[] }, index) => {
                 const availableSongs = songListSong.availableSongs;
-                const isAvailable = availableSongs.length > 0;
+                const songCount = getSongCountForSongListSong(songListSong);
+                const isAvailable = songCount > 0;
                 const songKey = songListSong.key || `${songListSong.title}-${songListSong.position}-${index}`;
 
                 if (isAvailable) {
@@ -114,7 +116,7 @@ const SongLists: React.FC = () => {
                         onClick={() => handleSongItemClick(songKey)}
                         endContent={
                           <IonChip color="primary">
-                            {availableSongs.length} version{availableSongs.length !== 1 ? 's' : ''}
+                            {songCount} version{songCount !== 1 ? 's' : ''}
                           </IonChip>
                         }
                       />

@@ -1,5 +1,6 @@
 import { debugLog } from './logger';
 import type { Song, QueueItem, TopPlayed } from '../types';
+import Fuse from 'fuse.js';
 
 // Convert Firebase object to array with keys
 export const objectToArray = <T extends { key?: string }>(
@@ -18,8 +19,11 @@ export const filterDisabledSongs = (songs: Song[], disabledSongPaths: Set<string
   return songs.filter(song => !disabledSongPaths.has(song.path));
 };
 
-// Filter songs by search term with intelligent multi-word handling
+// Filter songs by search term with FUZZY MATCHING using Fuse.js (90% threshold)
+// TODO: REVERT - This is the new fuzzy matching implementation. To revert, replace with the old filterSongs function below
 export const filterSongs = (songs: Song[], searchTerm: string, disabledSongPaths?: Set<string>): Song[] => {
+  debugLog('🚀 FILTER SONGS CALLED with:', { searchTerm, songsCount: songs.length });
+  
   let filteredSongs = songs;
   
   // First filter out disabled songs if disabledSongPaths is provided
@@ -27,26 +31,273 @@ export const filterSongs = (songs: Song[], searchTerm: string, disabledSongPaths
     filteredSongs = filterDisabledSongs(songs, disabledSongPaths);
   }
   
-  if (!searchTerm.trim()) return filteredSongs;
+  if (!searchTerm.trim()) {
+    debugLog('📝 No search term, returning all songs');
+    return filteredSongs;
+  }
   
-  const terms = (searchTerm || '').toLowerCase().split(/\s+/).filter(term => term.length > 0);
+  // Configure Fuse.js for fuzzy matching with 90% threshold
+  // Note: Fuse.js threshold is 0.0 (exact) to 1.0 (very loose), so 0.1 = 90% similarity
+  const fuseOptions = {
+    keys: ['title', 'artist'],
+    threshold: 0.2, // 80% similarity threshold (more reasonable)
+    includeScore: true,
+    includeMatches: false,
+    minMatchCharLength: 2, // Allow shorter matches
+    shouldSort: true,
+    findAllMatches: true,
+    location: 0,
+    distance: 100, // More reasonable distance
+    useExtendedSearch: false,
+    ignoreLocation: true, // Allow words anywhere in the text
+    ignoreFieldNorm: false,
+  };
   
-  if (terms.length === 0) return filteredSongs;
+  // Split search term into individual words for better matching
+  const searchWords = searchTerm.toLowerCase().split(/\s+/).filter(word => word.length >= 2);
   
-  return filteredSongs.filter(song => {
-    const songTitle = (song.title || '').toLowerCase();
-    const songArtist = (song.artist || '').toLowerCase();
+  debugLog('🔍 FUZZY SEARCH DEBUG:', {
+    originalSearchTerm: searchTerm,
+    searchWords: searchWords,
+    totalSongsToSearch: filteredSongs.length,
+    firstFewSongs: filteredSongs.slice(0, 3).map(s => `${s.artist} - ${s.title}`)
+  });
+  
+  if (searchWords.length === 0) {
+    debugLog('❌ No search words found, returning all songs');
+    return filteredSongs;
+  }
+  
+  // Search for each word individually and find songs that contain ALL words
+  const songsWithAllWords = new Map<Song, number[]>(); // Song -> array of scores for each word
+  
+  searchWords.forEach((word, wordIndex) => {
+    debugLog(`\n🔤 Searching for word ${wordIndex + 1}: "${word}"`);
     
-    // If only one term, use OR logic (title OR artist)
-    if (terms.length === 1) {
-      return songTitle.includes(terms[0]) || songArtist.includes(terms[0]);
+    const fuse = new Fuse(filteredSongs, fuseOptions);
+    const wordResults = fuse.search(word);
+    
+    debugLog(`   Found ${wordResults.length} matches for "${word}":`);
+    
+    if (wordResults.length === 0) {
+      debugLog(`   ❌ No matches found for "${word}"`);
+    } else {
+      wordResults.slice(0, 5).forEach((result, resultIndex) => {
+        const song = result.item;
+        const score = result.score || 1;
+        const similarity = Math.round((1 - score) * 100);
+        
+        debugLog(`   ${resultIndex + 1}. "${song.artist} - ${song.title}" (Score: ${score.toFixed(3)}, ${similarity}% match)`);
+      });
+      
+      if (wordResults.length > 5) {
+        debugLog(`   ... and ${wordResults.length - 5} more results`);
+      }
     }
     
-    // If multiple terms, use AND logic (all terms must match somewhere)
-    return terms.every(term => 
-      songTitle.includes(term) || songArtist.includes(term)
-    );
+    // Add songs that match this word to our tracking map
+    wordResults.forEach(result => {
+      const song = result.item;
+      const score = result.score || 1;
+      
+      if (!songsWithAllWords.has(song)) {
+        songsWithAllWords.set(song, new Array(searchWords.length).fill(1)); // Initialize with worst scores
+      }
+      
+      // Store the score for this word
+      songsWithAllWords.get(song)![wordIndex] = score;
+    });
   });
+  
+  // Only keep songs that have ALL words (no missing words)
+  const allResults = new Map<Song, number>(); // Song -> best score
+  
+  songsWithAllWords.forEach((scores, song) => {
+    // Check if this song has all words (no missing words with score 1)
+    const hasAllWords = scores.every(score => score < 1);
+    
+    if (hasAllWords) {
+      // Use the best (lowest) score for ranking
+      const bestScore = Math.min(...scores);
+      allResults.set(song, bestScore);
+    }
+  });
+  
+  // Convert back to array and sort by score
+  const fuzzyFilteredSongs = Array.from(allResults.entries())
+    .sort(([, scoreA], [, scoreB]) => scoreA - scoreB)
+    .map(([song]) => song);
+  
+  debugLog('\n🎯 FINAL COMBINED RESULTS:');
+  debugLog(`   Total unique songs found: ${fuzzyFilteredSongs.length}`);
+  debugLog('   Top 10 results:');
+  
+  fuzzyFilteredSongs.slice(0, 10).forEach((song, index) => {
+    const score = allResults.get(song) || 1;
+    const similarity = Math.round((1 - score) * 100);
+    debugLog(`   ${index + 1}. "${song.artist} - ${song.title}" (Best score: ${score.toFixed(3)}, ${similarity}% match)`);
+  });
+  
+  if (fuzzyFilteredSongs.length > 10) {
+    debugLog(`   ... and ${fuzzyFilteredSongs.length - 10} more results`);
+  }
+  
+  debugLog('Fuzzy search results:', {
+    searchTerm,
+    searchWords,
+    totalSongs: filteredSongs.length,
+    fuzzyResults: fuzzyFilteredSongs.length,
+    firstFewResults: fuzzyFilteredSongs.slice(0, 3).map(s => `${s.artist} - ${s.title}`)
+  });
+  
+  return fuzzyFilteredSongs;
+};
+
+// OLD IMPLEMENTATION (for easy revert):
+// export const filterSongs = (songs: Song[], searchTerm: string, disabledSongPaths?: Set<string>): Song[] => {
+//   let filteredSongs = songs;
+//   
+//   // First filter out disabled songs if disabledSongPaths is provided
+//   if (disabledSongPaths) {
+//     filteredSongs = filterDisabledSongs(songs, disabledSongPaths);
+//   }
+//   
+//   if (!searchTerm.trim()) return filteredSongs;
+//   
+//   const terms = (searchTerm || '').toLowerCase().split(/\s+/).filter(term => term.length > 0);
+//   
+//   if (terms.length === 0) return filteredSongs;
+//   
+//   return filteredSongs.filter(song => {
+//     const songTitle = (song.title || '').toLowerCase();
+//     const songArtist = (song.artist || '').toLowerCase();
+//     
+//     // If only one term, use OR logic (title OR artist)
+//     if (terms.length === 1) {
+//       return songTitle.includes(terms[0]) || songArtist.includes(terms[0]);
+//     }
+//     
+//     // If multiple terms, use AND logic (all terms must match somewhere)
+//     return terms.every(term => 
+//       songTitle.includes(term) || songArtist.includes(term)
+//     );
+//   });
+// };
+
+// Filter artists by search term with FUZZY MATCHING using Fuse.js
+export const filterArtists = (artists: string[], searchTerm: string): string[] => {
+  debugLog('🎤 ARTIST SEARCH CALLED with:', { searchTerm, artistsCount: artists.length });
+  
+  if (!searchTerm.trim()) {
+    debugLog('📝 No search term, returning all artists');
+    return artists;
+  }
+  
+  // Configure Fuse.js for fuzzy matching artists
+  const fuseOptions = {
+    threshold: 0.2, // 80% similarity threshold
+    includeScore: true,
+    includeMatches: false,
+    minMatchCharLength: 2,
+    shouldSort: true,
+    findAllMatches: true,
+    location: 0,
+    distance: 100,
+    useExtendedSearch: false,
+    ignoreLocation: true,
+    ignoreFieldNorm: false,
+  };
+  
+  // Split search term into individual words
+  const searchWords = searchTerm.toLowerCase().split(/\s+/).filter(word => word.length >= 2);
+  
+  debugLog('🔍 ARTIST FUZZY SEARCH DEBUG:', {
+    originalSearchTerm: searchTerm,
+    searchWords: searchWords,
+    totalArtistsToSearch: artists.length,
+    firstFewArtists: artists.slice(0, 3)
+  });
+  
+  if (searchWords.length === 0) {
+    debugLog('❌ No search words found, returning all artists');
+    return artists;
+  }
+  
+  // Search for each word individually and find artists that contain ALL words
+  const artistsWithAllWords = new Map<string, number[]>(); // Artist -> array of scores for each word
+  
+  searchWords.forEach((word, wordIndex) => {
+    debugLog(`\n🔤 Searching for artist word ${wordIndex + 1}: "${word}"`);
+    
+    const fuse = new Fuse(artists, fuseOptions);
+    const wordResults = fuse.search(word);
+    
+    debugLog(`   Found ${wordResults.length} artist matches for "${word}":`);
+    
+    if (wordResults.length === 0) {
+      debugLog(`   ❌ No artist matches found for "${word}"`);
+    } else {
+      wordResults.slice(0, 5).forEach((result, resultIndex) => {
+        const artist = result.item;
+        const score = result.score || 1;
+        const similarity = Math.round((1 - score) * 100);
+        
+        debugLog(`   ${resultIndex + 1}. "${artist}" (Score: ${score.toFixed(3)}, ${similarity}% match)`);
+      });
+      
+      if (wordResults.length > 5) {
+        debugLog(`   ... and ${wordResults.length - 5} more results`);
+      }
+    }
+    
+    // Add artists that match this word to our tracking map
+    wordResults.forEach(result => {
+      const artist = result.item;
+      const score = result.score || 1;
+      
+      if (!artistsWithAllWords.has(artist)) {
+        artistsWithAllWords.set(artist, new Array(searchWords.length).fill(1)); // Initialize with worst scores
+      }
+      
+      // Store the score for this word
+      artistsWithAllWords.get(artist)![wordIndex] = score;
+    });
+  });
+  
+  // Only keep artists that have ALL words (no missing words)
+  const allResults = new Map<string, number>(); // Artist -> best score
+  
+  artistsWithAllWords.forEach((scores, artist) => {
+    // Check if this artist has all words (no missing words with score 1)
+    const hasAllWords = scores.every(score => score < 1);
+    
+    if (hasAllWords) {
+      // Use the best (lowest) score for ranking
+      const bestScore = Math.min(...scores);
+      allResults.set(artist, bestScore);
+    }
+  });
+  
+  // Convert back to array and sort by score
+  const fuzzyFilteredArtists = Array.from(allResults.entries())
+    .sort(([, scoreA], [, scoreB]) => scoreA - scoreB)
+    .map(([artist]) => artist);
+  
+  debugLog('\n🎯 ARTIST FINAL COMBINED RESULTS:');
+  debugLog(`   Total unique artists found: ${fuzzyFilteredArtists.length}`);
+  debugLog('   Top 10 results:');
+  
+  fuzzyFilteredArtists.slice(0, 10).forEach((artist, index) => {
+    const score = allResults.get(artist) || 1;
+    const similarity = Math.round((1 - score) * 100);
+    debugLog(`   ${index + 1}. "${artist}" (Best score: ${score.toFixed(3)}, ${similarity}% match)`);
+  });
+  
+  if (fuzzyFilteredArtists.length > 10) {
+    debugLog(`   ... and ${fuzzyFilteredArtists.length - 10} more results`);
+  }
+  
+  return fuzzyFilteredArtists;
 };
 
 // Sort queue items by order

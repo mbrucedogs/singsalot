@@ -175,7 +175,6 @@ const queueSlice = createSlice({
       .addCase(removeFromQueue.fulfilled, (state, action) => {
         state.loading = false;
         const { key } = action.payload;
-        console.log('removeFromQueue.fulfilled - removing key:', key);
         
         // Clear the queue state - the real-time sync will update it with the new data
         state.data = {};
@@ -212,7 +211,6 @@ const queueSlice = createSlice({
       .addCase(reorderQueueAsync.fulfilled, (state, action) => {
         state.loading = false;
         const { updates } = action.payload;
-        console.log('reorderQueueAsync.fulfilled - updates:', updates);
         
         // Clear the queue state - the real-time sync will update it with the new data
         state.data = {};

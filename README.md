@@ -15,7 +15,7 @@ A real-time karaoke application designed for in-home party use with multi-user s
 - **Artist Browsing** - Browse songs by artist with modal views
 - **Song Lists** - Predefined song collections with availability matching
 - **Top Played** - Popular songs based on play history
-- **New Songs** - Recently added songs to the catalog
+- **New Songs** - Recently added songs to the catalog (see PRD for implementation details)
 
 ### **Admin Features**
 - **Queue Control** - Reorder and delete queue items

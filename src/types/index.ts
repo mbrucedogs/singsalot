@@ -93,7 +93,7 @@ export interface Controller {
   favorites: Record<string, Song>;
   history: Record<string, Song>;
   topPlayed: Record<string, TopPlayed>;
-  newSongs: Record<string, Song>;
+  newSongs: Record<string, Song | { path: string }>; // Can be either Song objects or objects with only path property
   player: {
     queue: Record<string, QueueItem>;
     settings: Settings;

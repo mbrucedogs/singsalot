@@ -148,6 +148,19 @@ This document defines the functional, technical, and UX requirements for the Kar
 **Requirements (Platform-Agnostic):**
 - Shows recently added songs from the `newSongs` node
 - Real-time updates and infinite scroll
+- **Data Format Support**: Handles both full song objects and path-only references
+- **Reverse Lookup**: Automatically resolves song paths to full song objects from main catalog
+- **Backward Compatibility**: Works with both old and new data formats
+
+**Implementation Details:**
+- **Format Detection**: Automatically detects whether `newSongs` contains full song objects or path-only references
+- **Reverse Lookup**: When path-only data is detected, performs lookup against main songs catalog
+- **Error Resilience**: Gracefully handles missing songs without breaking the UI
+- **Debug Logging**: Provides detailed logging for troubleshooting missing songs
+
+**Data Formats Supported:**
+1. **New Format**: `{ path: "song_path", key: "firebase_key" }` → Performs reverse lookup
+2. **Old Format**: Full song objects with `artist`, `title`, `path`, etc. → Uses as-is
 
 **Platform Implementation:**
 - **Web:** See `platforms/web/PRD-web.md#new-songs` for React/Ionic implementation

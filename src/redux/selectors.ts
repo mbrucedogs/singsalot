@@ -108,14 +108,50 @@ export const selectFavoritesArrayWithoutDisabled = createSelector(
 );
 
 export const selectNewSongsArray = createSelector(
-  [selectNewSongs],
-  (newSongs) => sortSongsByArtistAndTitle(objectToArray(newSongs))
+  [selectNewSongs, selectSongs],
+  (newSongs, songs) => {
+    // Handle both formats:
+    // 1. Array of objects with only path property (new format)
+    // 2. Array of full song objects (old format)
+    
+    const newSongsArray = objectToArray(newSongs);
+    
+    // Check if the first item has only path and key properties (new format) or is a full song object (old format)
+    if (newSongsArray.length > 0 && 
+        typeof newSongsArray[0] === 'object' && 
+        newSongsArray[0] !== null &&
+        'path' in newSongsArray[0] && 
+        !('artist' in newSongsArray[0]) && 
+        !('title' in newSongsArray[0])) {
+      // New format: array of objects with only path property - do reverse lookup
+      const songPaths = (newSongsArray as { path: string }[]).map(item => item.path);
+      const songsMap = new Map(Object.values(songs as Record<string, Song>).map(song => [song.path, song]));
+      
+      const resolvedSongs = songPaths
+        .map(path => songsMap.get(path))
+        .filter((song): song is Song => song !== undefined);
+      
+      debugLog('selectNewSongsArray - reverse lookup:', {
+        pathsCount: songPaths.length,
+        resolvedCount: resolvedSongs.length,
+        missingPaths: songPaths.filter(path => !songsMap.has(path))
+      });
+      
+      return sortSongsByArtistAndTitle(resolvedSongs);
+    } else {
+      // Old format: array of full song objects
+      return sortSongsByArtistAndTitle(newSongsArray as Song[]);
+    }
+  }
 );
 
 // New songs array without disabled songs
 export const selectNewSongsArrayWithoutDisabled = createSelector(
   [selectNewSongsArray, (_state: RootState, disabledSongPaths: Set<string>) => disabledSongPaths],
-  (newSongs, disabledSongPaths) => newSongs.filter(song => !disabledSongPaths.has(song.path))
+  (newSongs, disabledSongPaths) => {
+    // The selectNewSongsArray already handles the reverse lookup, so we just filter disabled songs
+    return newSongs.filter(song => !disabledSongPaths.has(song.path));
+  }
 );
 
 export const selectSingersArray = createSelector(

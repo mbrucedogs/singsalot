@@ -34,7 +34,7 @@ const Favorites: React.FC = () => {
             song={song}
             context={SongItemContext.FAVORITES}
             showInfoButton={true}
-            showAddButton={false}
+            showAddButton={true}
             showDeleteButton={true}
             onDeleteItem={() => handleToggleFavorite(song)}
           />

@@ -10,7 +10,7 @@ import type { SongItemProps, QueueItem, Song } from '../../types';
 import { SongItemContext } from '../../types';
 import { ActionButtonVariant, ActionButtonSize, ActionButtonIconSlot } from '../../types';
 import { Icons } from '../../constants';
-import { star } from 'ionicons/icons';
+import { star, heart } from 'ionicons/icons';
 
 // Utility function to extract filename from path
 const extractFilename = (path: string): string => {
@@ -31,12 +31,14 @@ export const SongInfoDisplay: React.FC<{
   showCount?: boolean;
   showFullPath?: boolean;
   showTopPlayedStar?: boolean;
+  showFavoriteHeart?: boolean;
 }> = React.memo(({ 
   song, 
   showPath = false,
   showCount = false,
   showFullPath = false,
-  showTopPlayedStar = false
+  showTopPlayedStar = false,
+  showFavoriteHeart = false
 }) => {
   return (
     <IonLabel>
@@ -56,6 +58,13 @@ export const SongInfoDisplay: React.FC<{
           <IonIcon 
             icon={star} 
             color="warning" 
+            style={{ fontSize: '1rem' }}
+          />
+        )}
+        {showFavoriteHeart && (
+          <IonIcon 
+            icon={heart} 
+            color="danger" 
             style={{ fontSize: '1rem' }}
           />
         )}
@@ -312,6 +321,7 @@ const SongItem: React.FC<SongItemProps> = React.memo(({
         showCount={shouldShowCount} 
         showFullPath={showFullPath}
         showTopPlayedStar={isInTopPlayed}
+        showFavoriteHeart={isInFavorites}
       />
       
       {showActions && (

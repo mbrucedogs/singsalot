@@ -1,4 +1,5 @@
- Invoke-WebRequest -Uri "https://us-central1-firebase-herse.cloudfunctions.net/recalculateTopPlayed" `
->>   -Method POST `
->>   -Headers @{"Content-Type"="application/json"} `
->>   -Body '{"data": {"controllerName": "bsully5150"}}'
+Invoke-WebRequest -Uri "https://us-central1-firebase-herse.cloudfunctions.net/recalculateTopPlayed" ` -Method POST ` -Headers @{"Content-Type"="application/json"} ` -Body '{"data": {"controllerName": "bsully5150"}}'
+
+Invoke-WebRequest -Uri "https://us-central1-firebase-herse.cloudfunctions.net/precompileSongListMatches" -Method POST -Headers @{"Content-Type"="application/json"} -Body '{"data": {"controllerName": "mbrucedogs"}}'
+
+Invoke-WebRequest -Uri "https://us-central1-firebase-herse.cloudfunctions.net/processAllSongListsFullDatasetCallable" -Method POST -Headers @{"Content-Type"="application/json"} -Body '{"data": {"controllerName": "mbrucedogs"}}'

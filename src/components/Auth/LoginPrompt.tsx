@@ -6,6 +6,7 @@ import { debugLog } from '../../utils/logger';
 import { setAuth } from '../../redux/authSlice';
 import { database } from '../../firebase/config';
 import { ref, get } from 'firebase/database';
+import { singerService } from '../../firebase/services';
 import type { Authentication } from '../../types';
 
 interface LoginPromptProps {
@@ -46,6 +47,21 @@ const LoginPrompt: React.FC<LoginPromptProps> = ({ isAdmin, onComplete }) => {
       };
       debugLog('Dispatching auth:', auth);
       dispatch(setAuth(auth));
+      
+      // Automatically add singer to the singers list if they don't exist
+      try {
+        await singerService.addSinger(partyId.trim(), singerName.trim());
+        debugLog('Singer automatically added to singers list');
+      } catch (error) {
+        // If singer already exists, that's fine - just log it
+        if (error instanceof Error && error.message === 'Singer already exists') {
+          debugLog('Singer already exists in singers list');
+        } else {
+          console.error('Error adding singer automatically:', error);
+          // Don't block login if singer addition fails
+        }
+      }
+      
       debugLog('Calling onComplete');
       onComplete();
     } catch (error) {

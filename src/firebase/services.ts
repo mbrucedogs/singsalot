@@ -338,35 +338,31 @@ export const historyService = {
 
   // Remove song from history (by path, with count logic)
   removeFromHistory: async (controllerName: string, songPath: string) => {
+    console.log('removeFromHistory called with:', { controllerName, songPath });
+    
     const historyRef = ref(database, `controllers/${controllerName}/history`);
     const historySnapshot = await get(historyRef);
     if (!historySnapshot.exists()) {
+      console.log('History not found');
       throw new Error('History not found');
     }
     const history = historySnapshot.val();
+    console.log('Current history:', history);
+    
     // Find entry by path
     const existingEntry = Object.entries(history).find(
       ([, item]) => typeof item === 'object' && item !== null && 'path' in item && (item as { path: string }).path === songPath
     );
     if (!existingEntry) {
+      console.log('History item not found for path:', songPath);
       throw new Error('History item not found');
     }
     const [key, item] = existingEntry;
-    let count = 1;
-    if (typeof item === 'object' && item !== null && 'count' in item) {
-      const itemWithCount = item as { count?: number };
-      count = typeof itemWithCount.count === 'number' ? itemWithCount.count : 1;
-    }
-    count = count + 1;
-    const now = Date.now();
-    if (count > 1) {
-      await update(ref(database, `controllers/${controllerName}/history/${key}`), {
-        count: count - 1,
-        lastPlayed: now,
-      });
-    } else {
-      await remove(ref(database, `controllers/${controllerName}/history/${key}`));
-    }
+    console.log('Found history item to remove:', { key, item });
+    
+    // Simply remove the history item entirely
+    await remove(ref(database, `controllers/${controllerName}/history/${key}`));
+    console.log('Successfully removed history item with key:', key);
   },
 
   // Listen to history changes

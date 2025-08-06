@@ -30,6 +30,10 @@ const History: React.FC = () => {
     'history items': historyItems,
   });
 
+  // Debug logging for delete function
+  console.log('History component - handleDeleteFromHistory function:', !!handleDeleteFromHistory);
+  console.log('History component - isAdmin:', isAdmin);
+
   // Render extra content for history items (play date)
   const renderExtraContent = (item: Song) => {
     if (item.date) {
@@ -50,23 +54,29 @@ const History: React.FC = () => {
         isLoading={historyCount === 0}
         hasMore={hasMore}
         onLoadMore={loadMore}
-        renderItem={(song) => (
-          <div className="flex items-center">
-            <div className="flex-1">
-              <SongItem
-                song={song}
-                context={SongItemContext.HISTORY}
-                onDeleteItem={() => handleDeleteFromHistory(song)}
-                isAdmin={isAdmin}
-                showAddButton={true}
-                showInfoButton={true}
-                showDeleteButton={true}
-                showFavoriteButton={false}
-              />
+        renderItem={(song) => {
+          console.log('History renderItem - song:', song.title, 'isAdmin:', isAdmin);
+          return (
+            <div className="flex items-center">
+              <div className="flex-1">
+                <SongItem
+                  song={song}
+                  context={SongItemContext.HISTORY}
+                  onDeleteItem={() => {
+                    console.log('Delete button clicked for song:', song.title);
+                    handleDeleteFromHistory(song);
+                  }}
+                  isAdmin={isAdmin}
+                  showAddButton={true}
+                  showInfoButton={true}
+                  showDeleteButton={true}
+                  showFavoriteButton={false}
+                />
+              </div>
+              {renderExtraContent(song)}
             </div>
-            {renderExtraContent(song)}
-          </div>
-        )}
+          );
+        }}
         emptyTitle="No history yet"
         emptyMessage="Songs will appear here after they've been played"
         loadingTitle="Loading history..."

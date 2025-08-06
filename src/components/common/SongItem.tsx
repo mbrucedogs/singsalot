@@ -179,6 +179,7 @@ export const SongActionButtons: React.FC<{
   }
 
   if (showDeleteButton && onDeleteItem) {
+    debugLog('Adding delete button to SongActionButtons');
     buttons.push(
       <ActionButton
         key="delete"
@@ -189,6 +190,8 @@ export const SongActionButtons: React.FC<{
         iconSlot={ActionButtonIconSlot.ICON_ONLY}
       />
     );
+  } else {
+    debugLog('Not adding delete button:', { showDeleteButton, onDeleteItem: !!onDeleteItem });
   }
 
   if (showFavoriteButton && onToggleFavorite) {
@@ -262,15 +265,6 @@ const SongItem: React.FC<SongItemProps> = React.memo(({
     [context, queue, song.path]
   );
 
-  // Debug logging for favorites
-  debugLog('SongItem render:', {
-    songTitle: song.title,
-    songPath: song.path,
-    favoritesCount: Object.keys(favorites).length,
-    isInFavorites,
-    favorites: (Object.values(favorites) as Song[]).map(f => f.path)
-  });
-
   // Default values based on context if not explicitly provided
   const shouldShowPath = showPath !== undefined ? showPath : context !== SongItemContext.QUEUE;
   const shouldShowCount = showCount !== undefined ? showCount : context === SongItemContext.QUEUE;
@@ -283,6 +277,17 @@ const SongItem: React.FC<SongItemProps> = React.memo(({
   const shouldShowDeleteButton = showDeleteButton !== undefined ? showDeleteButton : context === SongItemContext.HISTORY && isAdmin;
   const shouldShowFavoriteButton = showFavoriteButton !== undefined ? showFavoriteButton : false; // Disabled for all contexts
   const shouldShowInfoButton = showInfoButton !== undefined ? showInfoButton : [SongItemContext.SEARCH, SongItemContext.HISTORY].includes(context);
+
+  // Debug logging for favorites
+  console.log('SongItem render:', {
+    songTitle: song.title,
+    songPath: song.path,
+    context,
+    isAdmin,
+    showDeleteButton,
+    shouldShowDeleteButton,
+    onDeleteItem: !!onDeleteItem
+  });
 
   // Memoized handler functions for performance
   const handleAddToQueueClick = useCallback(async () => {

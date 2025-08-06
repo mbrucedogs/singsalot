@@ -22,9 +22,9 @@ export const addToHistory = createAsyncThunk(
 
 export const removeFromHistory = createAsyncThunk(
   'history/removeFromHistory',
-  async ({ controllerName, songKey }: { controllerName: string; songKey: string }) => {
-    await historyService.removeFromHistory(controllerName, songKey);
-    return songKey;
+  async ({ controllerName, songPath }: { controllerName: string; songPath: string }) => {
+    await historyService.removeFromHistory(controllerName, songPath);
+    return songPath;
   }
 );
 
@@ -130,8 +130,14 @@ const historySlice = createSlice({
       })
       .addCase(removeFromHistory.fulfilled, (state, action) => {
         state.loading = false;
-        const songKey = action.payload;
-        delete state.data[songKey];
+        const songPath = action.payload;
+        // Find the key for this song by path and remove it
+        const existingKey = Object.keys(state.data).find(key => 
+          state.data[key].path === songPath
+        );
+        if (existingKey) {
+          delete state.data[existingKey];
+        }
         state.lastUpdated = Date.now();
         state.error = null;
       })

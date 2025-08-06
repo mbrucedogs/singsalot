@@ -3,6 +3,7 @@ import { useAppSelector, useAppDispatch } from '../redux';
 import { selectControllerName, selectPlayerStateMemoized, selectIsAdmin } from '../redux';
 import { reorderQueueAsync } from '../redux/queueSlice';
 import { addToQueue as addToQueueThunk } from '../redux/queueSlice';
+import { removeFromHistory as removeFromHistoryThunk } from '../redux/historySlice';
 import { useSongOperations } from './useSongOperations';
 import { useToast } from './useToast';
 import { useDisabledSongs } from './useDisabledSongs';
@@ -125,18 +126,29 @@ export const useActions = () => {
   }, [isSongDisabled, addDisabledSong, removeDisabledSong, showSuccess, showError]);
 
   const handleDeleteFromHistory = useCallback(async (song: Song) => {
-    if (!controllerName || !song.key) {
-      if (showError) showError('Cannot delete history item - missing data');
+    console.log('handleDeleteFromHistory called with song:', song);
+    
+    if (!controllerName || !song.path) {
+      console.log('Missing data:', { controllerName, songPath: song.path });
+      if (showError) showError('Cannot delete history item - missing song path');
       return;
     }
 
+    debugLog('Attempting to delete from history:', {
+      songTitle: song.title,
+      songPath: song.path,
+      controllerName
+    });
+
     try {
-      await historyService.removeFromHistory(controllerName, song.key);
+      await dispatch(removeFromHistoryThunk({ controllerName, songPath: song.path })).unwrap();
+      debugLog('Successfully removed from history:', song.title);
       if (showSuccess) showSuccess('Removed from history');
-    } catch {
+    } catch (error) {
+      console.error('Failed to remove from history:', error);
       if (showError) showError('Failed to remove from history');
     }
-  }, [controllerName, showSuccess, showError]);
+  }, [controllerName, dispatch, showSuccess, showError]);
 
   // Queue UI operations
   const toggleQueueMode = useCallback(() => {

@@ -35,10 +35,14 @@ interface HistoryAggregationByPath {
  */
 export const updateTopPlayedOnHistoryChange = functions.database
   .ref('/controllers/{controllerName}/history/{historyId}')
-  .onCreate(async (snapshot, context) => {
-    const { controllerName } = context.params;
+  .onWrite(async (change, context) => {
+    const { controllerName, historyId } = context.params;
     
-    console.log(`TopPlayed update triggered for controller: ${controllerName}`);
+    console.log(`TopPlayed update triggered for controller: ${controllerName}, historyId: ${historyId}`);
+    console.log('Change type:', change.before.exists() ? (change.after.exists() ? 'update' : 'delete') : 'create');
+    if (change.after.exists()) {
+      console.log('New/updated history item data:', change.after.val());
+    }
     
     try {
       // Get the controller reference

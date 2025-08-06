@@ -30,9 +30,6 @@ const History: React.FC = () => {
     'history items': historyItems,
   });
 
-  // Debug logging for delete function
-  console.log('History component - handleDeleteFromHistory function:', !!handleDeleteFromHistory);
-  console.log('History component - isAdmin:', isAdmin);
 
   // Render extra content for history items (play date and count)
   const renderExtraContent = (item: Song) => {
@@ -69,7 +66,6 @@ const History: React.FC = () => {
         hasMore={hasMore}
         onLoadMore={loadMore}
         renderItem={(song) => {
-          console.log('History renderItem - song:', song.title, 'isAdmin:', isAdmin, 'song data:', song);
           return (
             <div className="flex items-center">
               <div className="flex-1">
@@ -77,7 +73,6 @@ const History: React.FC = () => {
                   song={song}
                   context={SongItemContext.HISTORY}
                   onDeleteItem={() => {
-                    console.log('Delete button clicked for song:', song.title);
                     handleDeleteFromHistory(song);
                   }}
                   isAdmin={isAdmin}

@@ -278,17 +278,6 @@ const SongItem: React.FC<SongItemProps> = React.memo(({
   const shouldShowFavoriteButton = showFavoriteButton !== undefined ? showFavoriteButton : false; // Disabled for all contexts
   const shouldShowInfoButton = showInfoButton !== undefined ? showInfoButton : [SongItemContext.SEARCH, SongItemContext.HISTORY].includes(context);
 
-  // Debug logging for favorites
-  console.log('SongItem render:', {
-    songTitle: song.title,
-    songPath: song.path,
-    context,
-    isAdmin,
-    showDeleteButton,
-    shouldShowDeleteButton,
-    onDeleteItem: !!onDeleteItem
-  });
-
   // Memoized handler functions for performance
   const handleAddToQueueClick = useCallback(async () => {
     // Find the current singer object from the queue or create a minimal one

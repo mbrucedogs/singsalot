@@ -281,8 +281,7 @@ export const playerService = {
 export const historyService = {
   // Add song to history (by path, with count)
   addToHistory: async (controllerName: string, song: Omit<Song, 'key'>) => {
-    console.log('addToHistory called for:', song.title, 'path:', song.path, 'timestamp:', Date.now());
-    
+   
     const historyRef = ref(database, `controllers/${controllerName}/history`);
     const historySnapshot = await get(historyRef);
     const currentHistory = historySnapshot.exists() ? historySnapshot.val() : {};
@@ -292,10 +291,7 @@ export const historyService = {
     const existingEntry = Object.entries(currentHistory).find(
       ([, item]) => typeof item === 'object' && item !== null && 'path' in item && (item as { path: string }).path === song.path
     );
-    
-    console.log('Current history entries:', Object.keys(currentHistory).length);
-    console.log('Existing entry found:', !!existingEntry);
-    
+        
     if (existingEntry) {
       const [key, item] = existingEntry;
       let count = 1;
@@ -303,14 +299,7 @@ export const historyService = {
         const itemObj = item as { count?: number };
         count = typeof itemObj.count === 'number' ? itemObj.count : 1;
       }
-      const newCount = count + 1;
-      console.log('Existing history item found:', { 
-        key, 
-        currentCount: count, 
-        newCount, 
-        songTitle: song.title 
-      });
-      
+      const newCount = count + 1;      
       await update(ref(database, `controllers/${controllerName}/history/${key}`), {
         count: newCount,
         lastPlayed: now,
@@ -318,21 +307,14 @@ export const historyService = {
     } else {
       // Add new entry with count: 1 and lastPlayed
       const nextKey = findNextSequentialKey(Object.keys(currentHistory));
-      console.log('Adding new history item:', { 
-        key: nextKey, 
-        songTitle: song.title, 
-        count: 1  // First play
-      });
-      
+     
       const newHistoryItem = {
         ...song,
         count: 1,  // Start at 1 for new songs (first play)
         lastPlayed: now,
       };
       
-      console.log('About to write to Firebase:', newHistoryItem);
       await set(ref(database, `controllers/${controllerName}/history/${nextKey}`), newHistoryItem);
-      console.log('Successfully wrote to Firebase with count: 1');
     }
     // Cap history size (remove oldest by lastPlayed if over 250)
     const updatedSnapshot = await get(historyRef);
@@ -359,31 +341,25 @@ export const historyService = {
 
   // Remove song from history (by path, with count logic)
   removeFromHistory: async (controllerName: string, songPath: string) => {
-    console.log('removeFromHistory called with:', { controllerName, songPath });
     
     const historyRef = ref(database, `controllers/${controllerName}/history`);
     const historySnapshot = await get(historyRef);
     if (!historySnapshot.exists()) {
-      console.log('History not found');
       throw new Error('History not found');
     }
     const history = historySnapshot.val();
-    console.log('Current history:', history);
     
     // Find entry by path
     const existingEntry = Object.entries(history).find(
       ([, item]) => typeof item === 'object' && item !== null && 'path' in item && (item as { path: string }).path === songPath
     );
     if (!existingEntry) {
-      console.log('History item not found for path:', songPath);
       throw new Error('History item not found');
     }
     const [key, item] = existingEntry;
-    console.log('Found history item to remove:', { key, item });
     
     // Simply remove the history item entirely
     await remove(ref(database, `controllers/${controllerName}/history/${key}`));
-    console.log('Successfully removed history item with key:', key);
   },
 
   // Listen to history changes
@@ -391,23 +367,6 @@ export const historyService = {
     const historyRef = ref(database, `controllers/${controllerName}/history`);
     onValue(historyRef, (snapshot) => {
       const data = snapshot.exists() ? snapshot.val() : {};
-      console.log('Firebase history data received:', data);
-      
-      // Log each history item individually for clarity
-      if (data && Object.keys(data).length > 0) {
-        Object.entries(data).forEach(([key, item]) => {
-          console.log(`History item ${key}:`, {
-            title: (item as any).title,
-            artist: (item as any).artist,
-            count: (item as any).count,
-            lastPlayed: (item as any).lastPlayed,
-            path: (item as any).path
-          });
-        });
-      } else {
-        console.log('No history items found');
-      }
-      
       callback(data);
     });
     

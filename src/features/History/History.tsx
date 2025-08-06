@@ -34,17 +34,31 @@ const History: React.FC = () => {
   console.log('History component - handleDeleteFromHistory function:', !!handleDeleteFromHistory);
   console.log('History component - isAdmin:', isAdmin);
 
-  // Render extra content for history items (play date)
+  // Render extra content for history items (play date and count)
   const renderExtraContent = (item: Song) => {
-    if (item.date) {
-      return (
-        <IonChip color="medium" className="ml-2">
-          <IonIcon icon={time} />
-          {formatDate(item.date)}
+    const chips = [];
+    
+    // Add count chip if count > 1
+    if (item.count && item.count > 1) {
+      chips.push(
+        <IonChip key="count" color="primary" className="ml-2">
+          <span className="font-semibold">{item.count}×</span>
         </IonChip>
       );
     }
-    return null;
+    
+    // Add date chip if lastPlayed exists
+    const lastPlayed = (item as any).lastPlayed;
+    if (lastPlayed) {
+      chips.push(
+        <IonChip key="date" color="medium" className="ml-2">
+          <IonIcon icon={time} />
+          {formatDate(lastPlayed)}
+        </IonChip>
+      );
+    }
+    
+    return chips.length > 0 ? chips : null;
   };
 
   return (
@@ -55,7 +69,7 @@ const History: React.FC = () => {
         hasMore={hasMore}
         onLoadMore={loadMore}
         renderItem={(song) => {
-          console.log('History renderItem - song:', song.title, 'isAdmin:', isAdmin);
+          console.log('History renderItem - song:', song.title, 'isAdmin:', isAdmin, 'song data:', song);
           return (
             <div className="flex items-center">
               <div className="flex-1">

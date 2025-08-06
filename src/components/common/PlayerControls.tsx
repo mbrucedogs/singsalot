@@ -46,10 +46,11 @@ const PlayerControls: React.FC<PlayerControlsProps> = ({ className = '', variant
         
         if (firstSong && queueItemKey && !firstQueueItem.didAddHistory) {
           try {
-            await historyService.addToHistory(controllerName, firstSong);
-            
-            // Mark this queue item as having been added to history
+            // First, mark this queue item as having been added to history (to prevent race condition)
             await queueService.updateQueueItem(controllerName, queueItemKey, { didAddHistory: true });
+            
+            // Then add to history
+            await historyService.addToHistory(controllerName, firstSong);
             
             debugLog('Added first song to history when playback started:', firstSong.title);
             if (showSuccess) showSuccess(`${firstSong.title} added to history`);

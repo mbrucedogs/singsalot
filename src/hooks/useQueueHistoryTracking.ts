@@ -29,9 +29,15 @@ export const useQueueHistoryTracking = () => {
     // Add removed songs to history (they were likely played)
     removedSongs.forEach(async (queueItem) => {
       if (queueItem.song) {
+        console.log('useQueueHistoryTracking - checking song:', {
+          title: queueItem.song.title,
+          didAddHistory: queueItem.didAddHistory
+        });
+        
         // Only add to history if it hasn't been added already while in the queue
         if (!queueItem.didAddHistory) {
           try {
+            console.log('useQueueHistoryTracking - adding to history:', queueItem.song.title);
             await historyService.addToHistory(controllerName, queueItem.song);
             debugLog('Added song to history after queue removal:', {
               title: queueItem.song.title,

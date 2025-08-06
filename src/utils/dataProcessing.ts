@@ -308,8 +308,12 @@ export const sortQueueByOrder = (queueItems: QueueItem[]): QueueItem[] => {
 // Sort history by date (most recent first)
 export const sortHistoryByDate = (songs: Song[]): Song[] => {
   return [...songs].sort((a, b) => {
-    if (!a.date || !b.date) return 0;
-    return new Date(b.date).getTime() - new Date(a.date).getTime();
+    // History items use 'lastPlayed' field (numeric timestamp)
+    const lastPlayedA = (a as any).lastPlayed;
+    const lastPlayedB = (b as any).lastPlayed;
+    
+    if (!lastPlayedA || !lastPlayedB) return 0;
+    return lastPlayedB - lastPlayedA; // Sort by timestamp (newest first)
   });
 };
 
@@ -350,8 +354,9 @@ export const limitArray = <T>(array: T[], limit: number): T[] => {
 };
 
 // Format date for display
-export const formatDate = (dateString: string): string => {
-  const date = new Date(dateString);
+export const formatDate = (dateInput: string | number): string => {
+  // Handle both string dates and numeric timestamps
+  const date = typeof dateInput === 'number' ? new Date(dateInput) : new Date(dateInput);
   const now = new Date();
   const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
   

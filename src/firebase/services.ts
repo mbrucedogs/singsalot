@@ -281,14 +281,21 @@ export const playerService = {
 export const historyService = {
   // Add song to history (by path, with count)
   addToHistory: async (controllerName: string, song: Omit<Song, 'key'>) => {
+    console.log('addToHistory called for:', song.title, 'path:', song.path, 'timestamp:', Date.now());
+    
     const historyRef = ref(database, `controllers/${controllerName}/history`);
     const historySnapshot = await get(historyRef);
     const currentHistory = historySnapshot.exists() ? historySnapshot.val() : {};
     const now = Date.now();
+    
     // Find if song with same path exists
     const existingEntry = Object.entries(currentHistory).find(
       ([, item]) => typeof item === 'object' && item !== null && 'path' in item && (item as { path: string }).path === song.path
     );
+    
+    console.log('Current history entries:', Object.keys(currentHistory).length);
+    console.log('Existing entry found:', !!existingEntry);
+    
     if (existingEntry) {
       const [key, item] = existingEntry;
       let count = 1;
@@ -296,22 +303,36 @@ export const historyService = {
         const itemObj = item as { count?: number };
         count = typeof itemObj.count === 'number' ? itemObj.count : 1;
       }
-      count = count + 1;
+      const newCount = count + 1;
+      console.log('Existing history item found:', { 
+        key, 
+        currentCount: count, 
+        newCount, 
+        songTitle: song.title 
+      });
+      
       await update(ref(database, `controllers/${controllerName}/history/${key}`), {
-        count,
+        count: newCount,
         lastPlayed: now,
       });
-      // Move this entry to the most recent by updating lastPlayed
-      // (No need to reorder keys, just use lastPlayed for recency)
-      // Cap size after update
     } else {
       // Add new entry with count: 1 and lastPlayed
       const nextKey = findNextSequentialKey(Object.keys(currentHistory));
-      await set(ref(database, `controllers/${controllerName}/history/${nextKey}`), {
-        ...song,
-        count: 1,
-        lastPlayed: now,
+      console.log('Adding new history item:', { 
+        key: nextKey, 
+        songTitle: song.title, 
+        count: 1  // First play
       });
+      
+      const newHistoryItem = {
+        ...song,
+        count: 1,  // Start at 1 for new songs (first play)
+        lastPlayed: now,
+      };
+      
+      console.log('About to write to Firebase:', newHistoryItem);
+      await set(ref(database, `controllers/${controllerName}/history/${nextKey}`), newHistoryItem);
+      console.log('Successfully wrote to Firebase with count: 1');
     }
     // Cap history size (remove oldest by lastPlayed if over 250)
     const updatedSnapshot = await get(historyRef);
@@ -369,7 +390,25 @@ export const historyService = {
   subscribeToHistory: (controllerName: string, callback: (data: Record<string, Song>) => void) => {
     const historyRef = ref(database, `controllers/${controllerName}/history`);
     onValue(historyRef, (snapshot) => {
-      callback(snapshot.exists() ? snapshot.val() : {});
+      const data = snapshot.exists() ? snapshot.val() : {};
+      console.log('Firebase history data received:', data);
+      
+      // Log each history item individually for clarity
+      if (data && Object.keys(data).length > 0) {
+        Object.entries(data).forEach(([key, item]) => {
+          console.log(`History item ${key}:`, {
+            title: (item as any).title,
+            artist: (item as any).artist,
+            count: (item as any).count,
+            lastPlayed: (item as any).lastPlayed,
+            path: (item as any).path
+          });
+        });
+      } else {
+        console.log('No history items found');
+      }
+      
+      callback(data);
     });
     
     return () => off(historyRef);

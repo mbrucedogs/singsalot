@@ -30,6 +30,7 @@ A real-time karaoke application designed for in-home party use with multi-user s
 - **Type Safety** - Full TypeScript implementation
 - **Responsive Design** - Mobile-first with touch-friendly interface
 - **Error Handling** - Graceful degradation and retry patterns
+- **Cloud Functions** - Automatic Top Played calculation and history aggregation
 
 ## 🏗️ Architecture
 
@@ -60,6 +61,35 @@ The codebase has been completely refactored for better maintainability and perfo
 - **Virtualized rendering** for large datasets
 - **Infinite scroll** with pagination
 - **Optimized Redux selectors**
+
+#### **Recent Fixes & Improvements**
+- **History Tracking Fix** - Resolved race condition causing double count increments
+- **Top Played Updates** - Cloud function now triggers on all history changes (create/update/delete)
+- **Count Display** - History items now show play count and last played timestamp
+- **Race Condition Prevention** - Added `didAddHistory` flag to prevent duplicate history entries
+
+## 🔧 Cloud Functions
+
+### **Automatic Top Played Calculation**
+The app uses Firebase Cloud Functions to automatically calculate and update the Top Played list:
+
+- **Function:** `updateTopPlayedOnHistoryChange`
+- **Trigger:** Any change to history items (create, update, delete)
+- **Action:** Aggregates all history items by song path and calculates total play counts
+- **Output:** Updates the `topPlayed` collection with the top 100 most played songs
+
+### **Manual Recalculation**
+- **Function:** `recalculateTopPlayed`
+- **Purpose:** Manual recalculation for data migration or repair
+- **Access:** HTTP callable function
+
+### **Deployment**
+```bash
+# Deploy functions to Firebase
+cd functions
+npm run build
+firebase deploy --only functions
+```
 
 ## 🚀 Quick Start
 

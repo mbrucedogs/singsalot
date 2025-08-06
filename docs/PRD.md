@@ -194,10 +194,17 @@ This document defines the functional, technical, and UX requirements for the Kar
 
 ### **History Tracking**
 **Requirements (Platform-Agnostic):**
-- Songs automatically added to history when played
-- Shows when each song was last played
+- Songs automatically added to history when played (not when added to queue)
+- Shows when each song was last played and play count
 - Append-only, shared across all clients
 - Paginated/infinite scroll display
+- Count increments for repeat plays of the same song
+
+**Implementation Details:**
+- **History Addition Timing:** Songs are added to history when playback starts, not when added to queue
+- **Count Tracking:** Each history item tracks total play count and last played timestamp
+- **Race Condition Prevention:** Uses `didAddHistory` flag to prevent double addition during pause/resume
+- **Data Structure:** `{ artist, title, path, count, lastPlayed }`
 
 **Platform Implementation:**
 - **Web:** See `platforms/web/PRD-web.md#history` for React/Ionic implementation
@@ -214,6 +221,25 @@ This document defines the functional, technical, and UX requirements for the Kar
 - **Web:** See `platforms/web/PRD-web.md#top-played` for React/Ionic implementation
 - **iOS:** See `platforms/ios/PRD-ios.md#top-played` (future)
 - **Android:** See `platforms/android/PRD-android.md#top-played` (future)
+
+### **Cloud Functions**
+**Requirements (Platform-Agnostic):**
+- Automatic Top Played calculation triggered by history changes
+- Real-time aggregation of play counts across all history items
+- Manual recalculation capability for data migration and repair
+
+**Implementation Details:**
+- **Function:** `updateTopPlayedOnHistoryChange`
+- **Trigger:** Firebase `.onWrite` event on history items (create, update, delete)
+- **Aggregation:** Groups by song path, sums play counts, sorts by count descending
+- **Output:** Updates `topPlayed` collection with top 100 most played songs
+- **Manual Function:** `recalculateTopPlayed` for manual recalculation via HTTP call
+
+**Data Flow:**
+1. Song played → History item created/updated
+2. Cloud function triggers → Aggregates all history items by path
+3. Top 100 songs by play count → Updates `topPlayed` collection
+4. Real-time sync → All clients see updated Top Played list
 
 ### **Singer Management**
 **Requirements (Platform-Agnostic):**

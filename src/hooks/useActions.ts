@@ -126,10 +126,8 @@ export const useActions = () => {
   }, [isSongDisabled, addDisabledSong, removeDisabledSong, showSuccess, showError]);
 
   const handleDeleteFromHistory = useCallback(async (song: Song) => {
-    console.log('handleDeleteFromHistory called with song:', song);
     
     if (!controllerName || !song.path) {
-      console.log('Missing data:', { controllerName, songPath: song.path });
       if (showError) showError('Cannot delete history item - missing song path');
       return;
     }

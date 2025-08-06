@@ -6,7 +6,6 @@ import { addToQueue as addToQueueThunk } from '../redux/queueSlice';
 import { useSongOperations } from './useSongOperations';
 import { useToast } from './useToast';
 import { useDisabledSongs } from './useDisabledSongs';
-import { historyService } from '../firebase/services';
 import { debugLog } from '../utils/logger';
 import { PlayerState } from '../types';
 import type { Song, QueueItem, Singer } from '../types';
@@ -56,16 +55,9 @@ export const useActions = () => {
           lastLogin: singer.lastLogin || '',
         },
         song: song,
+        didAddHistory: false, // Initialize as not added to history yet
       };
       await dispatch(addToQueueThunk({ controllerName, queueItem })).unwrap();
-      if (controllerName) {
-        try {
-          await historyService.addToHistory(controllerName, song);
-          if (showSuccess) showSuccess('Song added to history');
-        } catch {
-          if (showError) showError('Failed to add song to history');
-        }
-      }
       if (showSuccess) showSuccess('Song added to queue');
     } catch {
       if (showError) showError('Failed to add song to queue');
@@ -101,14 +93,6 @@ export const useActions = () => {
     
     try {
       await removeFromQueue(queueItem.key);
-      if (controllerName && queueItem.song && queueItem.song.path) {
-        try {
-          await historyService.removeFromHistory(controllerName, queueItem.song.path);
-          if (showSuccess) showSuccess('Song removed from history');
-        } catch {
-          if (showError) showError('Failed to remove song from history');
-        }
-      }
       if (showSuccess) showSuccess('Song removed from queue');
       // After removal, fix the order of all items
       await fixQueueOrder();

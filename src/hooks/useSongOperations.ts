@@ -41,6 +41,7 @@ export const useSongOperations = () => {
           lastLogin: new Date().toISOString(),
         },
         song,
+        didAddHistory: false, // Initialize as not added to history yet
       };
 
       await dispatch(addToQueueThunk({ controllerName, queueItem })).unwrap();

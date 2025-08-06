@@ -14,6 +14,7 @@ export { useDisabledSongs } from './useDisabledSongs';
 export { useActions } from './useActions';
 export { usePagination } from './usePagination';
 export { useDebugLogging } from './useDebugLogging';
+export { useQueueHistoryTracking } from './useQueueHistoryTracking';
 
 export { useSongInfo } from './useSongInfo';
 

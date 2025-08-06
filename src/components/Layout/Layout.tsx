@@ -8,12 +8,16 @@ import { ActionButtonVariant, ActionButtonSize, ActionButtonIconSlot } from '../
 import { Icons } from '../../constants';
 import Navigation from '../Navigation/Navigation';
 import { getPageTitle } from '../../utils/routeUtils';
+import { useQueueHistoryTracking } from '../../hooks/useQueueHistoryTracking';
 import type { LayoutProps } from '../../types';
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const dispatch = useDispatch();
   const location = useLocation();
   const [isLargeScreen, setIsLargeScreen] = useState(false);
+  
+  // Track queue changes for history
+  useQueueHistoryTracking();
   
   // Get the current page title
   const currentPageTitle = getPageTitle(location.pathname);

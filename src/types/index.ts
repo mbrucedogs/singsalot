@@ -31,6 +31,7 @@ export interface QueueItem extends Keyable {
   order: number,
   singer: Singer;
   song: Song;
+  didAddHistory?: boolean; // Track if this song has been added to history while in queue
 }
 
 export interface Settings {

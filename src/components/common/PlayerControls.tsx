@@ -5,8 +5,8 @@ import ActionButton from './ActionButton';
 import { ActionButtonVariant, ActionButtonSize, ActionButtonIconSlot } from '../../types';
 import { Icons } from '../../constants';
 import { useAppSelector } from '../../redux';
-import { selectPlayerState, selectIsAdmin, selectQueueLength, selectControllerName } from '../../redux';
-import { playerService } from '../../firebase/services';
+import { selectPlayerState, selectIsAdmin, selectQueueLength, selectControllerName, selectQueue } from '../../redux';
+import { playerService, historyService, queueService } from '../../firebase/services';
 import { debugLog } from '../../utils/logger';
 import { useToast } from '../../hooks/useToast';
 import { PlayerState } from '../../types';
@@ -21,6 +21,7 @@ const PlayerControls: React.FC<PlayerControlsProps> = ({ className = '', variant
   const playerState = useAppSelector(selectPlayerState);
   const queueLength = useAppSelector(selectQueueLength);
   const controllerName = useAppSelector(selectControllerName);
+  const queue = useAppSelector(selectQueue);
   const toast = useToast();
   const showSuccess = toast?.showSuccess;
   const showError = toast?.showError;
@@ -35,6 +36,35 @@ const PlayerControls: React.FC<PlayerControlsProps> = ({ className = '', variant
     
     try {
       await playerService.updatePlayerStateValue(controllerName, PlayerState.playing);
+      
+      // Add the first song in queue to history when playback starts (only if not already added)
+      const queueItems = Object.values(queue) as any[];
+      if (queueItems.length > 0) {
+        const firstQueueItem = queueItems[0];
+        const firstSong = firstQueueItem?.song;
+        const queueItemKey = Object.keys(queue).find(key => queue[key] === firstQueueItem);
+        
+        if (firstSong && queueItemKey && !firstQueueItem.didAddHistory) {
+          try {
+            await historyService.addToHistory(controllerName, firstSong);
+            
+            // Mark this queue item as having been added to history
+            await queueService.updateQueueItem(controllerName, queueItemKey, { didAddHistory: true });
+            
+            debugLog('Added first song to history when playback started:', firstSong.title);
+            if (showSuccess) showSuccess(`${firstSong.title} added to history`);
+          } catch (error) {
+            console.error('Failed to add song to history:', error);
+            // Don't show error to user as this is not critical
+          }
+        } else if (firstQueueItem.didAddHistory) {
+          debugLog('Song already added to history, skipping:', {
+            title: firstSong?.title,
+            didAddHistory: firstQueueItem.didAddHistory
+          });
+        }
+      }
+      
       if (showSuccess) showSuccess('Playback started');
     } catch (error) {
       console.error('Failed to start playback:', error);
